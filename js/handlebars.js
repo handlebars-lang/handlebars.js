@@ -12,6 +12,7 @@ Handlebars.Compiler = function(string) {
   this.text     = "";
   this.fn       = "var out = ''; ";
   this.newlines = "";
+  this.comment  = false;
 }
 
 Handlebars.Compiler.prototype = {
@@ -22,33 +23,18 @@ Handlebars.Compiler.prototype = {
 
   peek: function(n) {
     n = n || 1;
-    return this.string.slice(this.pointer, this.pointer + n);
+    var start = this.pointer + 1;
+    return this.string.slice(start, start + n);
   },
 
   compile: function() {
-    var chr, mustache;
+    var chr;
     while(chr = this.getChar()) {
       // entering mustache state
       if(chr === "{" && this.peek() === "{" && !this.mustache) {
-        this.fn       = this.fn + "out = out + '" + this.text + "'; ";
-        this.fn       = this.fn + this.newlines;
-        this.newlines = ""
-        this.text     = ""
-        this.mustache = " ";
         this.getChar();
+        this.parseMustache();
 
-      // exiting mustache state
-      } else if(this.mustache && chr === "}" && this.peek() === "}") {
-        mustache = this.mustache.trim();
-        this.fn       = this.fn + "out = out + context['" + mustache + "']; ";
-        this.mustache = false;
-        this.getChar();
-
-      // in mustache state
-      } else if(this.mustache) {
-        this.mustache = this.mustache + chr;
-
-      // in normal state
       } else {
         if(chr === "\n") {
           this.newlines = this.newlines + "\n";
@@ -59,7 +45,36 @@ Handlebars.Compiler.prototype = {
     }
 
     this.fn = this.fn + "\nreturn out;";
-    console.log(this.fn);
     return new Function("context", this.fn);
+  },
+
+  parseMustache: function() {
+    var chr, mustache;
+
+    if(this.peek() === "!") {
+      this.comment = true;
+      this.getChar();
+    }
+
+    this.fn       = this.fn + "out = out + '" + this.text + "'; ";
+    this.fn       = this.fn + this.newlines;
+    this.newlines = ""
+    this.text     = ""
+    this.mustache = " ";
+
+    while(chr = this.getChar()) {
+      if(this.mustache && chr === "}" && this.peek() === "}") {
+        mustache = this.mustache.trim();
+        this.mustache = false;
+        this.getChar();
+        if(this.comment) { this.comment = false; return; }
+        this.fn       = this.fn + "out = out + context['" + mustache + "']; ";
+        return;
+      } else if(this.comment) {
+        ;
+      } else {
+        this.mustache = this.mustache + chr;
+      }
+    }
   }
 }
