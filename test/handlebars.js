@@ -1,28 +1,97 @@
 module("basic context");
 
-test("compiling with a basic context", function() {
-  var string   = "Goodbye\n{{cruel}}\n{{world}}!";
+var shouldCompileTo = function(string, hash, result, message) {
   var template = Handlebars.compile(string);
+  var params = toString.call(hash) === "[object Array]" ? hash : [hash, undefined];
+  equal(template.apply(this, params), result, message);
+}
 
-  result = template({cruel: "cruel", world: "world"});
-  equal(result, "Goodbye\ncruel\nworld!", "it works if all the required keys are provided");
+test("compiling with a basic context", function() {
+  shouldCompileTo("Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
+                  "It works if all the required keys are provided");
 });
 
 test("comments", function() {
-  var string   = "{{! Goodbye}}Goodbye\n{{cruel}}\n{{world}}!";
-  var template = Handlebars.compile(string);
-
-  result = template({cruel: "cruel", world: "world"});
-  equal("Goodbye\ncruel\nworld!", result, "it works if all the required keys are provided");
+  shouldCompileTo("{{! Goodbye}}Goodbye\n{{cruel}}\n{{world}}!", 
+    {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
+    "comments are ignored");
 });
 
 test("boolean", function() {
-  var string   = "{{#goodbye}}GOODBYE {{/goodbye}}cruel {{world}}!"
+  var string   = "{{#goodbye}}GOODBYE {{/goodbye}}cruel {{world}}!";
+  shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!",
+                  "booleans show the contents when true");
+
+  shouldCompileTo(string, {goodbye: false, world: "world"}, "cruel world!",
+                  "booleans do not show the contents when false");
+});
+
+module("blocks");
+
+test("array", function() {
+  var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!"
+  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
+                  "Arrays iterate over the contents when not empty");
+
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
+                  "Arrays ignore the contents when empty");
+});
+
+test("nested iteration", function() {
+
+});
+
+test("block helper", function() {
+  var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var template = Handlebars.compile(string);
 
-  result = template({goodbye: true, world: "world"});
-  equal("GOODBYE cruel world!", result, "booleans work when true");
-
-  result = template({goodbye: false, world: "world"});
-  equal("cruel world!", result, "booleans work when true");
+  result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
+  equal(result, "GOODBYE! cruel world!");
 });
+
+test("block helper staying in the same context", function() {
+  var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
+  var template = Handlebars.compile(string);
+
+  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
+  equal(result, "<form><p>Yehuda</p></form>");
+});
+
+test("block helper passing a new context", function() {
+  var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
+  var template = Handlebars.compile(string);
+
+  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda"}});
+  equal(result, "<form><p>Yehuda</p></form>");
+});
+
+test("nested block helpers", function() {
+  var string   = "{{#form yehuda}}<p>{{name}}</p>{{#link}}Hello{{/link}}{{/form}}"
+  var template = Handlebars.compile(string);
+
+  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda", link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }}});
+  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
+});
+
+module("fallback hash");
+
+test("providing a fallback hash", function() {
+  shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: "world"}], "Goodbye cruel world!",
+                  "Fallback hash is available");
+
+  shouldCompileTo("Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!", [{iter: [{cruel: "cruel"}]}, {world: "world"}],
+                  "Goodbye cruel world!", "Fallback hash is available inside other blocks");
+});
+
+test("in cases of conflict, the explicit hash wins", function() {
+
+});
+
+test("the fallback hash is available is nested contexts", function() {
+
+});
+
+module("partials");
+
+
