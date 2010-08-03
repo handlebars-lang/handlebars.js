@@ -46,7 +46,15 @@ test("block with complex lookup", function() {
   var string = "{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}"
   var hash     = {name: "Alan", goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}]};
 
-  shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ");
+  shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ",
+                  "Templates can access variables in contexts up the stack with relative path syntax");
+});
+
+test("block with deep nested complex lookup", function() {
+  var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
+  var hash = {omg: "OMG!", outer: { inner: { text: "goodbye" } } };
+
+  shouldCompileTo(string, hash, "Goodbye cruel OMG!");
 });
 
 test("block helper", function() {
