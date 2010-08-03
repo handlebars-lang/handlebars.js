@@ -42,6 +42,13 @@ test("nested iteration", function() {
 
 });
 
+test("block with complex lookup", function() {
+  var string = "{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}"
+  var hash     = {name: "Alan", goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}]};
+
+  shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ");
+});
+
 test("block helper", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var template = Handlebars.compile(string);
