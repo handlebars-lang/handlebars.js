@@ -52,7 +52,7 @@ test("block with complex lookup", function() {
 
 test("block with deep nested complex lookup", function() {
   var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
-  var hash = {omg: "OMG!", outer: { inner: { text: "goodbye" } } };
+  var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
 
   shouldCompileTo(string, hash, "Goodbye cruel OMG!");
 });
