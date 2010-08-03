@@ -26,6 +26,11 @@ test("boolean", function() {
                   "booleans do not show the contents when false");
 });
 
+test("nested paths", function() {
+  shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
+                  "Goodbye beautiful world!", "Nested paths access nested objects");
+});
+
 module("blocks");
 
 test("array", function() {
