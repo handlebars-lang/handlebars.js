@@ -31,8 +31,7 @@ test("nested paths", function() {
                   "Goodbye beautiful world!", "Nested paths access nested objects");
 });
 
-test("dumb nested paths", function() {
-  var string = "{{#goodbyes}}{{../name/../name}}{{/goodbyes}}";
+test("bad idea nested paths", function() {
   var caught = false;
   try {
     Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
@@ -41,8 +40,13 @@ test("dumb nested paths", function() {
       caught = true;
     }
   }
-  equals(caught, true, "Jumping out of context (..) doesn't work after moving into context.");
+  equals(caught, true, "Cannot jump (..) into previous context after moving into context.");
+
+  var string = "{{#goodbyes}}{{.././world}} {{/goodbyes}}";
+  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+  shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
+
 
 module("blocks");
 
@@ -54,6 +58,7 @@ test("array", function() {
 
   shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                   "Arrays ignore the contents when empty");
+
 });
 
 test("nested iteration", function() {
