@@ -31,6 +31,19 @@ test("nested paths", function() {
                   "Goodbye beautiful world!", "Nested paths access nested objects");
 });
 
+test("dumb nested paths", function() {
+  var string = "{{#goodbyes}}{{../name/../name}}{{/goodbyes}}";
+  var caught = false;
+  try {
+    Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
+  } catch (e) {
+    if (e instanceof Handlebars.ParseError) {
+      caught = true;
+    }
+  }
+  equals(caught, true, "Jumping out of context (..) doesn't work after moving into context.");
+});
+
 module("blocks");
 
 test("array", function() {
