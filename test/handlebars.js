@@ -47,6 +47,16 @@ test("bad idea nested paths", function() {
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
 
+test("this keyword in paths", function() {
+  var string = "{{#goodbyes}}{{this}}{{/goodbyes}}";
+  var hash = {goodbyes: ["goodbye", "Goodbye", "GOODBYE"]};
+  shouldCompileTo(string, hash, "goodbyeGoodbyeGOODBYE", 
+    "This keyword in paths evaluates to current context"); 
+
+  string = "{{#hellos}}{{this/text}}{{/hellos}}"
+  hash = {hellos: [{text: "hello"}, {text: "Hello"}, {text: "HELLO"}]};
+  shouldCompileTo(string, hash, "helloHelloHELLO", "This keyword evaluates in more complex paths");
+});
 
 module("blocks");
 
