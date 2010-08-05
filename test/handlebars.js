@@ -83,6 +83,16 @@ test("block with complex lookup", function() {
                   "Templates can access variables in contexts up the stack with relative path syntax");
 });
 
+test("helper with complex lookup", function() {
+  var string = "{{#goodbyes}}{{link}}{{/goodbyes}}"
+  var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", link: "goodbye"}]};
+  var fallback = {link: function() { 
+    return "<a href='" + this.__get__("../prefix") + "/" + this.link + "'>" + this.text + "</a>" 
+  }};
+  shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
+});
+
+
 test("block with deep nested complex lookup", function() {
   var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
   var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
