@@ -116,7 +116,7 @@ test("block helper staying in the same context", function() {
   var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(fn) { console.log(fn); return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
+  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
   equal(result, "<form><p>Yehuda</p></form>");
 });
 
