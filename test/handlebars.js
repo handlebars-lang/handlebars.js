@@ -88,6 +88,15 @@ test("block with complex lookup", function() {
                   "Templates can access variables in contexts up the stack with relative path syntax");
 });
 
+test("helper with complex lookup", function() {
+  var string = "{{#goodbyes}}{{link}}{{/goodbyes}}"
+  var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", url: "goodbye"}]};
+  var fallback = {link: function() { 
+    return "<a href='" + this.__get__("../prefix") + "/" + this.url + "'>" + this.text + "</a>" 
+  }};
+  shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
+});
+
 test("block with deep nested complex lookup", function() {
   var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
   var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
@@ -107,7 +116,7 @@ test("block helper staying in the same context", function() {
   var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
+  result = template({form: function(fn) { console.log(fn); return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
   equal(result, "<form><p>Yehuda</p></form>");
 });
 
@@ -117,6 +126,14 @@ test("block helper passing a new context", function() {
 
   result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda"}});
   equal(result, "<form><p>Yehuda</p></form>");
+});
+
+test("block helper passing a complex path context", function() {
+  var string   = "{{#form yehuda/cat}}<p>{{name}}</p>{{/form}}"
+  var template = Handlebars.compile(string);
+
+  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
+  equal(result, "<form><p>Harold</p></form>");
 });
 
 test("nested block helpers", function() {
