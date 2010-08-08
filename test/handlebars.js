@@ -175,4 +175,10 @@ test("the fallback hash is available is nested contexts", function() {
 
 module("partials");
 
+module("safestring");
 
+test("constructing a safestring from a string and checking its type", function() {
+  var safe = new Handlebars.SafeString("testing 1, 2, 3");
+  ok(safe instanceof Handlebars.SafeString, "SafeString is an instance of Handlebars.SafeString");
+  equal(safe, "testing 1, 2, 3", "SafeString is equivalent to its underlying string");
+});
