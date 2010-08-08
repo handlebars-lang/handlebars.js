@@ -35,6 +35,13 @@ test("escaping", function() {
 
  shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with {{& handlebars aren't escaped");
+
+});
+
+test("functions returning safestrings shouldn't be escaped", function() {
+  var hash = {awesome: function() { return new Handlebars.SafeString("&\"\\<>"); }};
+  shouldCompileTo("{{awesome}}", hash, '&\"\\<>', 
+      "functions returning safestrings aren't escaped");
 });
 
 test("functions", function() {
