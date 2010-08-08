@@ -5,6 +5,5 @@
 * try not to hardcode the data-binding strategy (make it pluggable)
 * data-binding for simple block helpers
 * data-binding for iteration-style block helpers
-* escaping
 * README
 * Rationale (how it's different from mustache, and why)
