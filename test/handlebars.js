@@ -27,11 +27,11 @@ test("boolean", function() {
 });
 
 test("escaping", function() {
-  shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\\\&lt;&gt;',
-        "by default expressions should be escaped");
-
-  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
+ shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with 3 handlebars aren't escaped");
+
+ shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\\\&lt;&gt;',
+        "by default expressions should be escaped");
 });
 
 test("functions", function() {
