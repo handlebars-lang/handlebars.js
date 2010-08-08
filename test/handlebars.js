@@ -32,6 +32,9 @@ test("escaping", function() {
 
  shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\\\&lt;&gt;',
         "by default expressions should be escaped");
+
+ shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>',
+        "expressions with {{& handlebars aren't escaped");
 });
 
 test("functions", function() {
