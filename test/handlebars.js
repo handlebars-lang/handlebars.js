@@ -26,6 +26,14 @@ test("boolean", function() {
                   "booleans do not show the contents when false");
 });
 
+test("escaping", function() {
+  shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\\\&lt;&gt;',
+        "by default expressions should be escaped");
+
+  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
+        "expressions with 3 handlebars aren't escaped");
+});
+
 test("functions", function() {
   shouldCompileTo("{{awesome}}", {awesome: function() { return "Awesome"; }}, "Awesome",
                   "functions are called and render their output");
@@ -89,7 +97,7 @@ test("block with complex lookup", function() {
 });
 
 test("helper with complex lookup", function() {
-  var string = "{{#goodbyes}}{{link}}{{/goodbyes}}"
+  var string = "{{#goodbyes}}{{{link}}}{{/goodbyes}}"
   var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", url: "goodbye"}]};
   var fallback = {link: function() { 
     return "<a href='" + this.__get__("../prefix") + "/" + this.url + "'>" + this.text + "</a>" 
