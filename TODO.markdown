@@ -1,4 +1,3 @@
-* Partials (fallback.partials hash)
 * Inverse sections...
 * ...and {{#foo}}...{{^}}...{{/foo}}
 * data-binding for simple {{}}
