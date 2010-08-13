@@ -182,6 +182,22 @@ test("the fallback hash is available is nested contexts", function() {
 
 module("partials");
 
+test("basic partials", function() {
+  var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
+  var partial = "{{name}} ({{url}}) ";
+  var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+  shouldCompileTo(string, [hash, {partials: {dude: partial}}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+                  "Basic partials output based on current context.");
+});
+
+test("partials with context", function() {
+  var string = "Dudes: {{> dude dudes}}";
+  var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
+  var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+  shouldCompileTo(string, [hash, {partials: {dude: partial}}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+                  "Partials can be passed a context");
+});
+
 module("safestring");
 
 test("constructing a safestring from a string and checking its type", function() {
