@@ -26,7 +26,12 @@ test("boolean", function() {
                   "booleans do not show the contents when false");
 });
 
-test("escaping", function() {
+test("escaping text", function() {
+  shouldCompileTo("Awesome's", {}, "Awesome's", "text is escaped so that it doesn't get caught on single quotes");
+  shouldCompileTo("Awesome\\", {}, "Awesome\\", "text is escaped so that the closing quote can't be ignored");
+});
+
+test("escaping expressions", function() {
  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with 3 handlebars aren't escaped");
 
