@@ -206,9 +206,9 @@ test("partials with context", function() {
 test("partial in a partial", function() {
   var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
   var dude = "{{name}} {{> url}} ";
-  var url = "<a href={{url}}>{{url}}</a>";
+  var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {partials: {dude: dude, url: url}}], "Dudes: Yehuda <a href=http://yehuda>http://yehuda</a> Alan <a href=http://alan>http://alan</a> ", "Partials are rendered inside of other partials");
+  shouldCompileTo(string, [hash, {partials: {dude: dude, url: url}}], "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
 });
 
 module("safestring");
