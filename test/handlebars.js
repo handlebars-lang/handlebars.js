@@ -86,6 +86,32 @@ test("this keyword in paths", function() {
   shouldCompileTo(string, hash, "helloHelloHELLO", "This keyword evaluates in more complex paths");
 });
 
+module("inverted sections");
+
+test("inverted sections with unset value", function() {
+  var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+  var hash = {};
+  shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value isn't set.");
+});
+
+test("inverted section with false value", function() {
+  var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+  var hash = {goodbyes: false};
+  shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is false.");
+});
+ 
+test("inverted section with empty set", function() {
+  var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+  var hash = {goodbyes: []};
+  shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is empty set.");
+});
+
+test("inverted section using result of function call", function() {
+  var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+  var hash = {goodbyes: function() { return false; }}
+  shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when result of function in expression is false.");
+});
+
 module("blocks");
 
 test("array", function() {
