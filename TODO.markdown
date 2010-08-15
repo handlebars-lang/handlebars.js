@@ -6,3 +6,6 @@
 * data-binding for iteration-style block helpers
 * README
 * Rationale (how it's different from mustache, and why)
+
+* Partials
+* ... Get compiled partial cache to be used when partials are called inside of partials.
