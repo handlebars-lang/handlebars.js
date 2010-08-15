@@ -64,7 +64,7 @@ test("bad idea nested paths", function() {
   try {
     Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
   } catch (e) {
-    if (e instanceof Handlebars.ParseError) {
+    if (e instanceof Handlebars.Exception) {
       caught = true;
     }
   }
@@ -209,6 +209,19 @@ test("partial in a partial", function() {
   var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
   shouldCompileTo(string, [hash, {partials: {dude: dude, url: url}}], "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
+});
+
+test("rendering undefined partial throws an exception", function() {
+ var caught = false;
+  try {
+    var template = Handlebars.compile("{{> whatever}}"); 
+    template();
+  } catch (e) {
+    if (e instanceof Handlebars.Exception) {
+      caught = true;
+    }
+  }
+  equals(caught, true);
 });
 
 module("safestring");
