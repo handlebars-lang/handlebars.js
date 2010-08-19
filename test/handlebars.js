@@ -107,7 +107,7 @@ test("inverted section with empty set", function() {
 });
 
 test("inverted section using result of function call", function() {
-  var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+  var string = "{{goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
   var hash = {goodbyes: function() { return false; }}
   shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when result of function in expression is false.");
 });
