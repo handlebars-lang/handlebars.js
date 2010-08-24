@@ -2,6 +2,7 @@ module("basic context");
 
 var shouldCompileTo = function(string, hash, result, message) {
   var template = Handlebars.compile(string);
+  console.log(template);
   var params = toString.call(hash) === "[object Array]" ? hash : [hash, undefined];
   equal(template.apply(this, params), result, message);
 }
@@ -191,6 +192,31 @@ test("nested block helpers", function() {
 
   result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda", link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }}});
   equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
+});
+
+test("block inverted sections", function() {
+  var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
+  var list = function(fn) { 
+    if (this.length > 0) {
+      var out = "<ul>";
+      for(var i = 0,j=this.length; i < j; i++) {
+        out += "<li>"; 
+        out += fn(this[i]);
+        out += "</li>";
+      }
+      out += "</ul>";
+      return out;
+    }
+  };
+
+  list.not = function(fn) {
+    return "<p>" + fn(this) + "</p>"; 
+  };
+  var hash = {list: list, people: [{name: "Alan"}, {name: "Yehuda"}]};
+
+  // the meaning here may be kind of hard to catch, but list.not is always called,
+  // so we should see the output of both
+  shouldCompileTo(string, hash, "<ul><li>Alan</li><li>Yehuda</li></ul><p><em>Nobody's here</em></p>", "Not is called when block inverted section is encountered.");
 });
 
 module("fallback hash");
