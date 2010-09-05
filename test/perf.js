@@ -1,21 +1,63 @@
-function perfTest(test) {
-  var testStart = new Date().getTime();
+function perfTest(name, test) {
+  var timings = [];
 
   // run the test 1000 times so we can get a happy average
   for (var i = 0; i < 1000; i++) {
+    var testStart = new Date().getTime();
     test();
+    var testEnd = new Date().getTime();
+    timings.push((testEnd - testStart)/1000);
   }
-
-  var testEnd = new Date().getTime();
-  return (testEnd-testStart)/1000;
+  
+  return analyzeTimes(name, timings);
 }
 
-function perfCompare(test1, test2) {
-  var result1 = perfTest(test1);
-  var result2 = perfTest(test2);
+function analyzeTimes(name, timings) {
+  var stats = {name: name, min: null, max: null, avg: 0, total: 0};
+  var sum = 0;
 
-  console.log("Result 1: " + result1 + ", Result 2: " + result2 + ", Difference: " +
-       (result1 - result2));
+  for (var i = 0; i < timings.length; i++) {
+    stats.total += timings[i];
+
+    if (i == 0) {
+      stats.min = timings[i];
+      stats.max = timings[i];
+    }
+    else {
+      if (timings[i] > stats.max) {
+        stats.max = timings[i];
+      }
+      if (timings[i] < stats.min) {
+        stats.min = timings[i];
+      }
+    }
+  }
+
+  stats.avg = (stats.total / timings.length);
+
+  return stats;
+}
+
+function perfCompare(name, tests) {
+  var results = [];
+  for (var i = 0; j = tests.length, i < j; i++) {
+    results.push(perfTest(tests[i][0], tests[i][1]));
+  }
+
+  var content = '<h2>' + name + '</h2>';
+  content += "<table>";
+  content += "<tr><th>Test</th><th>Total</th><th>Average</th><th>Min</th><th>Max</th></tr>";
+  for (var i = 0; j = results.length, i < j; i++) {
+    var result = results[i];
+    content += "<tr>"
+    content += "<td>" + result.name + "</td>";
+    content += "<td>" + result.total + "</td>";
+    content += "<td>" + result.avg + "</td>";
+    content += "<td>" + result.min + "</td>";
+    content += "<td>" + result.max + "</td>";
+  }
+  content += "</table>";
+  $('#main').append(content);
 }
 
 
@@ -37,10 +79,11 @@ var data = {
   ]
 }
 
+var fn = Handlebars.compile(tmpl);
 var test1 = function() {
-  Handlebars.compile(tmpl)(data, {partials: partials});
+  fn(data, {partials: partials});
 }
 var test2 = function() {
   Mustache.to_html(tmpl, data, partials);
 }
-perfCompare(test1, test2);
+perfCompare("Mustache Compatibility", [["Handlebars", test1], ["Mustache", test2]]);

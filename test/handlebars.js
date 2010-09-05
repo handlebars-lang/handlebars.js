@@ -2,7 +2,6 @@ module("basic context");
 
 var shouldCompileTo = function(string, hash, result, message) {
   var template = Handlebars.compile(string);
-  console.log(template);
   var params = toString.call(hash) === "[object Array]" ? hash : [hash, undefined];
   equal(template.apply(this, params), result, message);
 }
