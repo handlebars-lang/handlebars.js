@@ -164,7 +164,7 @@ test("block helper", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var template = Handlebars.compile(string);
 
-  result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
+  result = template({goodbyes: function(context, fn) { return fn({text: "GOODBYE"}); }, world: "world"});
   equal(result, "GOODBYE! cruel world!");
 });
 
@@ -172,7 +172,7 @@ test("block helper staying in the same context", function() {
   var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
+  result = template({form: function(context, fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
   equal(result, "<form><p>Yehuda</p></form>");
 });
 
@@ -180,7 +180,7 @@ test("block helper passing a new context", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda"}});
+  result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda"}});
   equal(result, "<form><p>Yehuda</p></form>");
 });
 
@@ -188,7 +188,7 @@ test("block helper passing a complex path context", function() {
   var string   = "{{#form yehuda/cat}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
+  result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
   equal(result, "<form><p>Harold</p></form>");
 });
 
@@ -196,18 +196,18 @@ test("nested block helpers", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{#link}}Hello{{/link}}{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, yehuda: {name: "Yehuda", link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }}});
+  result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda", link: function(context, fn) { return "<a href='" + context.name + "'>" + fn(context) + "</a>"; }}});
   equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
 });
 
 test("block inverted sections", function() {
   var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
-  var list = function(fn) { 
-    if (this.length > 0) {
+  var list = function(context, fn) { 
+    if (context.length > 0) {
       var out = "<ul>";
-      for(var i = 0,j=this.length; i < j; i++) {
+      for(var i = 0,j=context.length; i < j; i++) {
         out += "<li>"; 
-        out += fn(this[i]);
+        out += fn(context[i]);
         out += "</li>";
       }
       out += "</ul>";
@@ -215,8 +215,8 @@ test("block inverted sections", function() {
     }
   };
 
-  list.not = function(fn) {
-    return "<p>" + fn(this) + "</p>"; 
+  list.not = function(context, fn) {
+    return "<p>" + fn(context, this) + "</p>"; 
   };
   var hash = {list: list, people: [{name: "Alan"}, {name: "Yehuda"}]};
 
