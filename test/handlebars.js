@@ -54,6 +54,13 @@ test("functions", function() {
                   "functions are called and render their output");
 });
 
+test("functions with context argument", function() {
+  shouldCompileTo("{{awesome frank}}", 
+      {awesome: function(context) { return context; },
+        frank: "Frank"},
+      "Frank", "functions are called with context arguments");
+});
+
 test("nested paths", function() {
   shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
                   "Goodbye beautiful world!", "Nested paths access nested objects");
