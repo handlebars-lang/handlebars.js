@@ -29,6 +29,7 @@ test("boolean", function() {
 test("escaping text", function() {
   shouldCompileTo("Awesome's", {}, "Awesome's", "text is escaped so that it doesn't get caught on single quotes");
   shouldCompileTo("Awesome\\", {}, "Awesome\\", "text is escaped so that the closing quote can't be ignored");
+  shouldCompileTo(' " " ', {}, ' " " ', "double quotes never produce invalid javascript");
 });
 
 test("escaping expressions", function() {
