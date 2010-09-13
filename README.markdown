@@ -58,7 +58,7 @@ would render:
 Handlebars.js also adds the ability to define block helpers. Block helpers are functions that can be called from anywhere in the template. Here's an example:
 
     var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
-    var link = function(fn) {
+    var link = function(context, fn) {
       return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
     };
     var template = Handlebars.compile(source);

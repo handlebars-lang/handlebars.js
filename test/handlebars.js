@@ -177,6 +177,19 @@ test("block helper staying in the same context", function() {
   equal(result, "<form><p>Yehuda</p></form>");
 });
 
+test("block helper should have wrapped context in this", function() {
+  var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
+  var link = function(context, fn) {
+    return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
+  };
+  var data = { "people": [
+    { "name": "Alan", "id": 1 },
+    { "name": "Yehuda", "id": 2 }
+  ]};
+
+  shouldCompileTo(source, [data, {link: link}], "<ul><li><a href=\"/people/1\">Alan</a></li><li><a href=\"/people/2\">Yehuda</a></li></ul>");
+});
+
 test("block helper passing a new context", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
