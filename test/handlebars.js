@@ -26,6 +26,11 @@ test("boolean", function() {
                   "booleans do not show the contents when false");
 });
 
+test("newlines", function() {
+    shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");
+    shouldCompileTo("Alan's\rTest", {}, "Alan's\rTest");
+});
+
 test("escaping text", function() {
   shouldCompileTo("Awesome's", {}, "Awesome's", "text is escaped so that it doesn't get caught on single quotes");
   shouldCompileTo("Awesome\\", {}, "Awesome\\", "text is escaped so that the closing quote can't be ignored");
