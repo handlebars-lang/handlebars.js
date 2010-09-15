@@ -115,3 +115,7 @@ Known Issues
 Helping Out
 -----------
 If you notice any problems, please report them to the GitHub issue tracker at [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues). Feel free to contact commondream or wycats through GitHub with any other questions or feature requests. To submit changes fork the project and send a pull request.
+
+License
+-------
+Handlebars.js is released under the MIT license.
