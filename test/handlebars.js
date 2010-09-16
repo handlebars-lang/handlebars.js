@@ -138,6 +138,16 @@ test("array", function() {
 
 });
 
+test("empty block", function() {
+  var string   = "{{#goodbyes}}{{/goodbyes}}cruel {{world}}!"
+  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+  shouldCompileTo(string, hash, "cruel world!",
+                  "Arrays iterate over the contents when not empty");
+
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
+                  "Arrays ignore the contents when empty");
+});
+
 test("nested iteration", function() {
 
 });
