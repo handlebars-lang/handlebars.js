@@ -6,6 +6,20 @@ var shouldCompileTo = function(string, hash, result, message) {
   equal(template.apply(this, params), result, message);
 }
 
+var shouldThrow = function(fn, exception, message) {
+  var caught = false;
+  try {
+    fn();
+  }
+  catch (e) {
+    if (e instanceof exception) {
+      caught = true;
+    }
+  }
+
+  ok(caught, message || null);
+}
+
 test("compiling with a basic context", function() {
   shouldCompileTo("Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
                   "It works if all the required keys are provided");
@@ -73,15 +87,10 @@ test("nested paths", function() {
 });
 
 test("bad idea nested paths", function() {
-  var caught = false;
-  try {
-    Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
-  } catch (e) {
-    if (e instanceof Handlebars.Exception) {
-      caught = true;
-    }
-  }
-  equals(caught, true, "Cannot jump (..) into previous context after moving into context.");
+  shouldThrow(function() {
+      Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
+    }, Handlebars.Exception, 
+    "Cannot jump (..) into previous context after moving into a context.");
 
   var string = "{{#goodbyes}}{{.././world}} {{/goodbyes}}";
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -146,6 +155,14 @@ test("empty block", function() {
 
   shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                   "Arrays ignore the contents when empty");
+});
+
+test("incorrectly matched blocks", function() {
+  var string = "{{#goodbyes}}{{/hellos}}";
+
+  shouldThrow(function() {
+      Handlebars.compile(string);
+    }, Handlebars.Exception, "Incorrectly matched blocks return an exception at compile time.");
 });
 
 test("nested iteration", function() {
@@ -299,16 +316,10 @@ test("partial in a partial", function() {
 });
 
 test("rendering undefined partial throws an exception", function() {
- var caught = false;
-  try {
-    var template = Handlebars.compile("{{> whatever}}"); 
-    template();
-  } catch (e) {
-    if (e instanceof Handlebars.Exception) {
-      caught = true;
-    }
-  }
-  equals(caught, true);
+  shouldThrow(function() {
+      var template = Handlebars.compile("{{> whatever}}"); 
+      template();
+    }, Handlebars.Exception, "Should throw exception");
 });
 
 module("safestring");
