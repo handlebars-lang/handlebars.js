@@ -84,6 +84,9 @@ test("functions with context argument", function() {
 test("nested paths", function() {
   shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
                   "Goodbye beautiful world!", "Nested paths access nested objects");
+});
+
+test("nested paths with empty string value", function() {
   shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: ""}},
                   "Goodbye  world!", "Nested paths access nested objects with empty string");
 });
