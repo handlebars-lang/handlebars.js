@@ -191,6 +191,15 @@ test("helper with complex lookup", function() {
   shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
 });
 
+test("helper with complex lookup and nested template", function() {
+  var string = "{{#goodbyes}}{{#link}}{{text}}{{/link}}{{/goodbyes}}";
+  var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
+  var fallback = {link: function (context, fn) {
+      return "<a href='" + this.__get__("../../prefix") + "/" + context.url + "'>" + fn(context) + "</a>";
+  }};
+  shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
+});
+
 test("block with deep nested complex lookup", function() {
   var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
   var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
