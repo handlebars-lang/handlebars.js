@@ -75,7 +75,7 @@ Handlebars.js also adds the ability to define block helpers. Block helpers are f
     //   <li><a href="/people/2">Yehuda</a></li>
     // </ul>
 
-Whenever the block helper is called it is given a single parameter, the compiled contents of the block. Inside of the block helper the value of `this` is the current context. The context includes a method `__get__` that helps to translate paths into values for use within the helper.
+Whenever the block helper is called it is given two parameters, the argument that is passed to the helper, or null if no argument is passed and the compiled contents of the block. Inside of the block helper the value of `this` is the current context. The context includes a method `__get__` that helps to translate paths into values for use within the helper.
 
 ### Partials
 
