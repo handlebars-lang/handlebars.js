@@ -103,6 +103,11 @@ test("bad idea nested paths", function() {
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
 
+test("complex but empty paths", function() {
+  shouldCompileTo("{{person/name}}", {person: {name: null}}, "");
+  shouldCompileTo("{{person/name}}", {person: {}}, "");
+});
+
 test("this keyword in paths", function() {
   var string = "{{#goodbyes}}{{this}}{{/goodbyes}}";
   var hash = {goodbyes: ["goodbye", "Goodbye", "GOODBYE"]};
