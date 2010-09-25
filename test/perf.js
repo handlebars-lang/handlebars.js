@@ -79,9 +79,8 @@ var data = {
   ]
 }
 
-var fn = Handlebars.compile(tmpl);
 var test1 = function() {
-  fn(data, {partials: partials});
+  Handlebars.compile(tmpl)(data, {partials: partials});
 }
 var test2 = function() {
   Mustache.to_html(tmpl, data, partials);
