@@ -267,6 +267,11 @@ test("nested block helpers", function() {
 });
 
 test("block inverted sections", function() {
+  shouldCompileTo("{{#people}}{{name}}{{^}}{{../none}}{{/people}}", {none: "No people"}, 
+    "No people");
+});
+
+test("block helper inverted sections", function() {
   var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
   var list = function(context, fn) { 
     if (context.length > 0) {
