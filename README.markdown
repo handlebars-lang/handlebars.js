@@ -75,7 +75,7 @@ Handlebars.js also adds the ability to define block helpers. Block helpers are f
     //   <li><a href="/people/2">Yehuda</a></li>
     // </ul>
 
-Whenever the block helper is called it is given two parameters, the argument that is passed to the helper, or null if no argument is passed and the compiled contents of the block. Inside of the block helper the value of `this` is the current context. The context includes a method `__get__` that helps to translate paths into values for use within the helper.
+Whenever the block helper is called it is given two parameters, the argument that is passed to the helper, or the current context if no argument is passed and the compiled contents of the block. Inside of the block helper the value of `this` is the current context, wrapped to include a method named `__get__` that helps translate paths into values within the helpers.
 
 ### Partials
 
@@ -106,11 +106,15 @@ A node.js compatible command-line tool is included in the lib folder. compiler.j
 
 Performance
 -----------
-In a rough performance test, precompiled Handlebars.js templates rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages.
+In a rough performance test, precompiled Handlebars.js templates rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html).
 
 Known Issues
 ------------
 * Handlebars.js can be a bit cryptic when there's an error during compilation, and it can be even more cryptic when there's an error while rendering.
+
+Handlebars in the Wild
+-----------------
+* Don Park wrote an Express.js view engine adapter for Handlebars called [hbs](http://github.com/donpark/hbs)
 
 Helping Out
 -----------
