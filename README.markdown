@@ -106,7 +106,7 @@ A node.js compatible command-line tool is included in the lib folder. compiler.j
 
 Performance
 -----------
-In a rough performance test, precompiled Handlebars.js templates rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii) confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html).
+In a rough performance test, precompiled Handlebars.js templates rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii), confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html).
 
 Known Issues
 ------------
