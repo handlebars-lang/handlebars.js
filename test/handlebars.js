@@ -325,7 +325,7 @@ test("basic partials", function() {
 });
 
 test("partials with context", function() {
-  var string = "Dudes: {{> dude dudes}}";
+  var string = "Dudes: {{>dude dudes}}";
   var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
   shouldCompileTo(string, [hash, {partials: {dude: partial}}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
@@ -333,7 +333,7 @@ test("partials with context", function() {
 });
 
 test("partial in a partial", function() {
-  var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
+  var string = "Dudes: {{#dudes}}{{>dude}}{{/dudes}}";
   var dude = "{{name}} {{> url}} ";
   var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
@@ -345,6 +345,13 @@ test("rendering undefined partial throws an exception", function() {
       var template = Handlebars.compile("{{> whatever}}"); 
       template();
     }, Handlebars.Exception, "Should throw exception");
+});
+
+test("GH-14: a partial preceding a selector", function() {
+    var string = "Dudes: {{>dude}} {{another_dude}}";
+    var dude = "{{name}}";
+    var hash = {name:"Jeepers", another_dude:"Creepers"};
+    shouldCompileTo(string, [hash, {partials: {dude:dude}}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
 module("safestring");
