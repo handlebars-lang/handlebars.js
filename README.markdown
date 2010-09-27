@@ -114,7 +114,8 @@ Known Issues
 
 Handlebars in the Wild
 -----------------
-* Don Park wrote an Express.js view engine adapter for Handlebars called [hbs](http://github.com/donpark/hbs)
+* Don Park wrote an Express.js view engine adapter for Handlebars.js called [hbs](http://github.com/donpark/hbs)
+* [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey, supports Handlebars.js as one of its template plugins.
 
 Helping Out
 -----------
