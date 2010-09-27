@@ -103,6 +103,11 @@ test("bad idea nested paths", function() {
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
 
+test("complex but empty paths", function() {
+  shouldCompileTo("{{person/name}}", {person: {name: null}}, "");
+  shouldCompileTo("{{person/name}}", {person: {}}, "");
+});
+
 test("this keyword in paths", function() {
   var string = "{{#goodbyes}}{{this}}{{/goodbyes}}";
   var hash = {goodbyes: ["goodbye", "Goodbye", "GOODBYE"]};
@@ -192,6 +197,15 @@ test("helper with complex lookup", function() {
   shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
 });
 
+test("helper with complex lookup and nested template", function() {
+  var string = "{{#goodbyes}}{{#link}}{{text}}{{/link}}{{/goodbyes}}";
+  var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
+  var fallback = {link: function (context, fn) {
+      return "<a href='" + this.__get__("../prefix") + "/" + this.url + "'>" + fn(this) + "</a>";
+  }};
+  shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
+});
+
 test("block with deep nested complex lookup", function() {
   var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
   var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
@@ -253,6 +267,11 @@ test("nested block helpers", function() {
 });
 
 test("block inverted sections", function() {
+  shouldCompileTo("{{#people}}{{name}}{{^}}{{../none}}{{/people}}", {none: "No people"}, 
+    "No people");
+});
+
+test("block helper inverted sections", function() {
   var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
   var list = function(context, fn) { 
     if (context.length > 0) {
@@ -306,7 +325,7 @@ test("basic partials", function() {
 });
 
 test("partials with context", function() {
-  var string = "Dudes: {{> dude dudes}}";
+  var string = "Dudes: {{>dude dudes}}";
   var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
   shouldCompileTo(string, [hash, {partials: {dude: partial}}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
@@ -314,7 +333,7 @@ test("partials with context", function() {
 });
 
 test("partial in a partial", function() {
-  var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
+  var string = "Dudes: {{#dudes}}{{>dude}}{{/dudes}}";
   var dude = "{{name}} {{> url}} ";
   var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
@@ -326,6 +345,13 @@ test("rendering undefined partial throws an exception", function() {
       var template = Handlebars.compile("{{> whatever}}"); 
       template();
     }, Handlebars.Exception, "Should throw exception");
+});
+
+test("GH-14: a partial preceding a selector", function() {
+    var string = "Dudes: {{>dude}} {{another_dude}}";
+    var dude = "{{name}}";
+    var hash = {name:"Jeepers", another_dude:"Creepers"};
+    shouldCompileTo(string, [hash, {partials: {dude:dude}}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
 module("safestring");
