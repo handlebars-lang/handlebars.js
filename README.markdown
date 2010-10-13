@@ -114,7 +114,7 @@ Known Issues
 
 Handlebars Contrib
 ------------------
-Alan (commondream) keeps a repository of useful helpers in the [handlebars-contrib](http://github.com/commondream/handlebars-contrib) repository. Feel free to copy those, or add some of your own.
+Alan, a.k.a. commondream, keeps a repository of useful helpers in the [handlebars-contrib](http://github.com/commondream/handlebars-contrib) repository. Feel free to copy those, or add some of your own.
 
 Handlebars in the Wild
 -----------------
