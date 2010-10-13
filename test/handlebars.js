@@ -40,6 +40,13 @@ test("boolean", function() {
                   "booleans do not show the contents when false");
 });
 
+test("zeros", function() {
+	shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0},
+			"num1: 42, num2: 0");
+	shouldCompileTo("num: {{.}}", 0, "num: 0");
+	shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
+});
+
 test("newlines", function() {
     shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");
     shouldCompileTo("Alan's\rTest", {}, "Alan's\rTest");
