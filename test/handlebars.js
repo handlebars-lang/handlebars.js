@@ -100,13 +100,13 @@ test("nested paths with empty string value", function() {
 });
 
 test("bad idea nested paths", function() {
+	  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
   shouldThrow(function() {
-      Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
+      Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}")(hash);
     }, Handlebars.Exception, 
     "Cannot jump (..) into previous context after moving into a context.");
 
   var string = "{{#goodbyes}}{{.././world}} {{/goodbyes}}";
-  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
 
