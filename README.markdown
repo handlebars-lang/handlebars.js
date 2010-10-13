@@ -112,6 +112,10 @@ Known Issues
 ------------
 * Handlebars.js can be a bit cryptic when there's an error during compilation, and it can be even more cryptic when there's an error while rendering.
 
+Handlebars Contrib
+------------------
+Alan (commondream) keeps a repository of useful helpers in the [handlebars-contrib](http://github.com/commondream/handlebars-contrib) repository. Feel free to copy those, or add some of your own.
+
 Handlebars in the Wild
 -----------------
 * Don Park wrote an Express.js view engine adapter for Handlebars.js called [hbs](http://github.com/donpark/hbs)
