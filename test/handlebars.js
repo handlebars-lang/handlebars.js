@@ -110,6 +110,10 @@ test("bad idea nested paths", function() {
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
 
+test("that current context path ({{.}}) doesn't hit fallback", function() {
+	shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
+});
+
 test("complex but empty paths", function() {
   shouldCompileTo("{{person/name}}", {person: {name: null}}, "");
   shouldCompileTo("{{person/name}}", {person: {}}, "");
