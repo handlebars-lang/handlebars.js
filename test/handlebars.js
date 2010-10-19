@@ -40,6 +40,13 @@ test("boolean", function() {
                   "booleans do not show the contents when false");
 });
 
+test("zeros", function() {
+	shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0},
+			"num1: 42, num2: 0");
+	shouldCompileTo("num: {{.}}", 0, "num: 0");
+	shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
+});
+
 test("newlines", function() {
     shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");
     shouldCompileTo("Alan's\rTest", {}, "Alan's\rTest");
@@ -94,14 +101,18 @@ test("nested paths with empty string value", function() {
 });
 
 test("bad idea nested paths", function() {
+	  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
   shouldThrow(function() {
-      Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}"); 
+      Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}")(hash);
     }, Handlebars.Exception, 
     "Cannot jump (..) into previous context after moving into a context.");
 
   var string = "{{#goodbyes}}{{.././world}} {{/goodbyes}}";
-  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
+});
+
+test("that current context path ({{.}}) doesn't hit fallback", function() {
+	shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
 });
 
 test("complex but empty paths", function() {
