@@ -208,6 +208,20 @@ test("helper with complex lookup", function() {
   shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
 });
 
+test("helper block with complex lookup expression", function() {
+  var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}"
+  var hash = {name: "Alan"};
+  var fallback = {goodbyes: function(context, fn) { 
+		var out = "";
+		var byes = ["Goodbye", "goodbye", "GOODBYE"];
+		for (var i = 0,j = byes.length; i < j; i++) {
+			out += byes[i] + " " + fn(context) + "! ";
+		}
+    return out;
+  }};
+  shouldCompileTo(string, [hash, fallback], "Goodbye Alan! goodbye Alan! GOODBYE Alan! ");
+});
+
 test("helper with complex lookup and nested template", function() {
   var string = "{{#goodbyes}}{{#link}}{{text}}{{/link}}{{/goodbyes}}";
   var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
@@ -359,10 +373,17 @@ test("rendering undefined partial throws an exception", function() {
 });
 
 test("GH-14: a partial preceding a selector", function() {
-    var string = "Dudes: {{>dude}} {{another_dude}}";
-    var dude = "{{name}}";
-    var hash = {name:"Jeepers", another_dude:"Creepers"};
-    shouldCompileTo(string, [hash, {partials: {dude:dude}}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+   var string = "Dudes: {{>dude}} {{another_dude}}";
+   var dude = "{{name}}";
+   var hash = {name:"Jeepers", another_dude:"Creepers"};
+   shouldCompileTo(string, [hash, {partials: {dude:dude}}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+});
+
+test("Partial containing complex expression", function() {
+	var template = "Dudes: {{#dudes}}{{> dude}} {{/dudes}}";
+	var dude = "{{../salutation}} {{name}}";
+	var hash = {salutation: "Mr.", dudes: [{name: "Yehuda"}, {name: "Alan"}]};
+	shouldCompileTo(template, [hash, {partials: {dude: dude}}], "Dudes: Mr. Yehuda Mr. Alan ");
 });
 
 module("safestring");
