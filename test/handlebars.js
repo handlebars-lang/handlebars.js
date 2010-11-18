@@ -89,6 +89,32 @@ test("functions with context argument", function() {
       "Frank", "functions are called with context arguments");
 });
 
+test("functions receive the current path as part of the 'this'", function() {
+  template = "Hello {{#person}}{{show name}}{{/person}}"
+  object   = { person: { name: "Alan" } };
+  fallback = {
+    show: function(context) {
+      return context + " (from " + this.__path__.join("/") + ")";
+    }
+  }
+  shouldCompileTo(template, [object, fallback], "Hello Alan (from person)")
+});
+
+test("block helpers don't mess with the path receive the current path as part of the 'this'", function() {
+  template = "Hello {{#block}}{{#person}}{{#info}}{{show name}}{{/info}}{{/person}}{{/block}}. {{show other/name}}"
+  object   = { person: { info: { name: "Alan" } }, other: { name: "Yehuda" } };
+  fallback = { 
+    show: function(context) { 
+      var ret = context;
+      if(this.__path__) ret += " (from " + this.__path__.join("/") + ")";
+      return ret;
+    }, block: function(context, fn) {
+      return fn(this);
+    }
+  }
+  shouldCompileTo(template, [object, fallback], "Hello Alan (from person/info). Yehuda")
+});
+
 test("nested paths", function() {
   shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
                   "Goodbye beautiful world!", "Nested paths access nested objects");
@@ -432,7 +458,7 @@ test("block multi-params work", function() {
     return fn({greeting: "Goodbye", adj: "cruel", noun: "world"});
   }}
   shouldCompileTo(string, [hash, fallback], "Message: Goodbye cruel world", "block helpers with multiple params");
-})
+});
 
 module("safestring");
 
