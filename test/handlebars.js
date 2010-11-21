@@ -292,13 +292,14 @@ test("nested block helpers", function() {
 });
 
 test("block inverted sections", function() {
-  shouldCompileTo("{{#people}}{{name}}{{^}}{{../none}}{{/people}}", {none: "No people"}, 
+  shouldCompileTo("{{#people}}{{name}}{{^}}{{../none}}{{/people}}", {none: "No people"},
     "No people");
 });
 
 test("block helper inverted sections", function() {
   var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
   var list = function(context, fn) { 
+		console.log(context);
     if (context.length > 0) {
       var out = "<ul>";
       for(var i = 0,j=context.length; i < j; i++) {
