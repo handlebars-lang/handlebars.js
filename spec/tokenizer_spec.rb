@@ -116,4 +116,12 @@ describe "Tokenizer" do
     result.should match_tokens(%w(OPEN ID STRING CLOSE))
     result[2].should be_token("STRING", %{bar"baz})
   end
+
+  it "does not time out with broken input" do
+    lambda do
+      Timeout.timeout(1) do
+        tokenize("{{foo}")
+      end
+    end.should_not raise_error(Timeout::Error)
+  end
 end
