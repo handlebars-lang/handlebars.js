@@ -29,7 +29,7 @@ openBlock
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK id CLOSE { }
+  : OPEN_ENDBLOCK path CLOSE { }
   ;
 
 mustache
@@ -37,7 +37,7 @@ mustache
   ;
 
 partial
-  : OPEN_PARTIAL id CLOSE { $$ = new yy.PartialNode($2) }
+  : OPEN_PARTIAL path CLOSE { $$ = new yy.PartialNode($2) }
   ;
 
 simpleInverse
@@ -45,8 +45,8 @@ simpleInverse
   ;
 
 inMustache
-  : id params { $$ = [$1].concat($2) }
-  | id { $$ = [$1] }
+  : path params { $$ = [$1].concat($2) }
+  | path { $$ = [$1] }
   ;
 
 params
@@ -55,11 +55,16 @@ params
   ;
 
 param
-  : id { $$ = $1 }
+  : path { $$ = $1 }
   | STRING { $$ = new yy.StringNode($1) }
   ;
 
-id
-  : ID { $$ = new yy.IdNode($1) }
+path
+  : pathSegments { $$ = new yy.IdNode($1) }
+  ;
+
+pathSegments
+  : pathSegments SEP ID { $1.push($3); $$ = $1; }
+  | ID { $$ = [$1] }
   ;
 

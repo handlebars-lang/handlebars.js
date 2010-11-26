@@ -36,6 +36,12 @@ describe "Tokenizer" do
     result[1].should be_token("ID", "foo")
   end
 
+  it "tokenizes a path as 'OPEN ID CLOSE'" do
+    result = tokenize("{{../foo/bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
+    result[1].should be_token("ID", "..")
+  end
+
   it "tokenizes a simple mustahe with spaces as 'OPEN ID CLOSE'" do
     result = tokenize("{{  foo  }}")
     result.should match_tokens(%w(OPEN ID CLOSE))
