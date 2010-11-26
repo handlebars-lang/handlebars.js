@@ -117,11 +117,11 @@ describe "Tokenizer" do
     result[2].should be_token("STRING", %{bar"baz})
   end
 
-  it "does not time out with broken input" do
-    lambda do
-      Timeout.timeout(1) do
-        tokenize("{{foo}")
-      end
-    end.should_not raise_error(Timeout::Error)
+  it "does not time out in a mustache with a single } followed by EOF" do
+    Timeout.timeout(1) { tokenize("{{foo}").should match_tokens(%w(OPEN ID)) }
+  end
+
+  it "does not time out in a mustache when invalid ID characters are used" do
+    Timeout.timeout(1) { tokenize("{{foo & }}").should match_tokens(%w(OPEN ID)) }
   end
 end
