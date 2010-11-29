@@ -27,17 +27,31 @@ class V8::JSError
   end
 end
 
-RSpec.configure do |config|
-  config.before(:all) do
-    @context = V8::Context.new
-    @context['exports'] = nil
-    @context.eval("Handlebars = {}");
+module Handlebars
+  module Spec
+    CONTEXT = V8::Context.new
+    CONTEXT.instance_eval do |context|
+      context.eval("exports = null")
+      context.eval("Handlebars = {}")
 
-    @context.load('lib/handlebars/ast.js')
-    @context.load('lib/handlebars/jison_ext.js')
-    @context.load('lib/handlebars/handlebars_lexer.js')
-    @context.load('lib/handlebars/printer.js')
-    @context.load('lib/handlebars/parser.js')
-    @context.load('lib/handlebars.js')
+      context.load('lib/handlebars/ast.js')
+      context.load('lib/handlebars/jison_ext.js')
+      context.load('lib/handlebars/handlebars_lexer.js')
+      context.load('lib/handlebars/printer.js')
+      context.load('lib/handlebars/parser.js')
+      context.load('lib/handlebars/runtime.js')
+      context.load('lib/handlebars.js')
+    end
+  end
+end
+
+
+require "test/unit/assertions"
+
+RSpec.configure do |config|
+  config.include Test::Unit::Assertions
+
+  config.before(:all) do
+    @context = Handlebars::Spec::CONTEXT
   end
 end
