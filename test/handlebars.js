@@ -293,13 +293,14 @@ test("nested block helpers", function() {
 });
 
 test("block inverted sections", function() {
-  shouldCompileTo("{{#people}}{{name}}{{^}}{{../none}}{{/people}}", {none: "No people"}, 
+  shouldCompileTo("{{#people}}{{name}}{{^}}{{../none}}{{/people}}", {none: "No people"},
     "No people");
 });
 
 test("block helper inverted sections", function() {
   var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
   var list = function(context, fn) { 
+		console.log(context);
     if (context.length > 0) {
       var out = "<ul>";
       for(var i = 0,j=context.length; i < j; i++) {
@@ -386,6 +387,54 @@ test("Partial containing complex expression", function() {
 	var hash = {salutation: "Mr.", dudes: [{name: "Yehuda"}, {name: "Alan"}]};
 	shouldCompileTo(template, [hash, {partials: {dude: dude}}], "Dudes: Mr. Yehuda Mr. Alan ");
 });
+
+module("String literal parameters");
+
+test("simple literals work", function() {
+  var string   = 'Message: {{hello "world"}}';
+  var hash     = {}
+  var fallback = {hello: function(param) { return "Hello " + param; }}
+  shouldCompileTo(string, [hash, fallback], "Message: Hello world", "template with a simple String literal");
+});
+
+test("using a quote in the middle of a parameter raises an error", function() {
+  shouldThrow(function() {
+    var string   = 'Message: {{hello wo"rld"}}';
+    Handlebars.compile(string);
+  }, Handlebars.Exception, "should throw exception");
+});
+
+test("escaping a String is possible", function(){
+  var string   = 'Message: {{hello "\\"world\\""}}';
+  var hash     = {}
+  var fallback = {hello: function(param) { return "Hello " + param; }}
+  shouldCompileTo(string, [hash, fallback], "Message: Hello \"world\"", "template with an escaped String literal");
+});
+
+test("it works with ' marks", function() {
+  var string   = 'Message: {{hello "Alan\'s world"}}';
+  var hash     = {}
+  var fallback = {hello: function(param) { return "Hello " + param; }}
+  shouldCompileTo(string, [hash, fallback], "Message: Hello Alan's world", "template with a ' mark");
+});
+
+module("multiple parameters");
+
+test("simple multi-params work", function() {
+  var string   = 'Message: {{goodbye cruel world}}';
+  var hash     = {cruel: "cruel", world: "world"}
+  var fallback = {goodbye: function(cruel, world) { return "Goodbye " + cruel + " " + world; }}
+  shouldCompileTo(string, [hash, fallback], "Message: Goodbye cruel world", "regular helpers with multiple params");
+});
+
+test("block multi-params work", function() {
+  var string   = 'Message: {{#goodbye cruel world}}{{greeting}} {{adj}} {{noun}}{{/goodbye}}';
+  var hash     = {cruel: "cruel", world: "world"}
+  var fallback = {goodbye: function(cruel, world, fn) {
+    return fn({greeting: "Goodbye", adj: "cruel", noun: "world"});
+  }}
+  shouldCompileTo(string, [hash, fallback], "Message: Goodbye cruel world", "block helpers with multiple params");
+})
 
 module("safestring");
 
