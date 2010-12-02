@@ -9,6 +9,7 @@ root
 program
   : statements simpleInverse statements { $$ = new yy.ProgramNode($1, $3) }
   | statements { $$ = new yy.ProgramNode($1) }
+  | "" { $$ = new yy.ProgramNode([]) }
   ;
 
 statements
