@@ -1,11 +1,20 @@
 module("basic context");
 
 var helperMissing = function(context, fn) {
+  var ret = "";
+
   if(context === true) {
     return fn(this);
   } else if(context === false) {
     return "";
-  }
+  } else if(Object.prototype.toString.call(context) === "[object Array]") {
+    for(var i=0, j=context.length; i<j; i++) {
+      ret = ret + fn(context[i]);
+    }
+    return ret;
+  } else {
+		return fn(context);
+	}
 }
 
 var shouldCompileTo = function(string, hash, expected, message) {

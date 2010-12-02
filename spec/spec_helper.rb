@@ -40,6 +40,7 @@ module Handlebars
       context.load('lib/handlebars/printer.js')
       context.load('lib/handlebars/parser.js')
       context.load('lib/handlebars/runtime.js')
+      context.load('lib/handlebars/utils.js')
       context.load('lib/handlebars.js')
     end
   end

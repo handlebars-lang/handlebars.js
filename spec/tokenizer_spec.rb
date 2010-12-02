@@ -36,10 +36,17 @@ describe "Tokenizer" do
     result[1].should be_token("ID", "foo")
   end
 
-  it "tokenizes a path as 'OPEN ID CLOSE'" do
+  it "tokenizes a path as 'OPEN (ID SEP)* ID CLOSE'" do
     result = tokenize("{{../foo/bar}}")
     result.should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
     result[1].should be_token("ID", "..")
+  end
+
+  it "tokenizes a path with this/foo as OPEN ID SEP ID CLOSE" do
+    result = tokenize("{{this/foo}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
+    result[1].should be_token("ID", "this")
+    result[3].should be_token("ID", "foo")
   end
 
   it "tokenizes a simple mustahe with spaces as 'OPEN ID CLOSE'" do
@@ -58,6 +65,11 @@ describe "Tokenizer" do
   it "tokenizes a partial as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{> foo}}")
     result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
+  end
+
+  it "tokenizes a partial with context as 'OPEN_PARTIAL ID ID CLOSE'" do
+    result = tokenize("{{> foo bar }}")
+    result.should match_tokens(%w(OPEN_PARTIAL ID ID CLOSE))
   end
 
   it "tokenizes a partial without spaces as 'OPEN_PARTIAL ID CLOSE'" do

@@ -34,10 +34,13 @@ closeBlock
 
 mustache
   : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2) }
+  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2, true) }
   ;
+
 
 partial
   : OPEN_PARTIAL path CLOSE { $$ = new yy.PartialNode($2) }
+  | OPEN_PARTIAL path path CLOSE { $$ = new yy.PartialNode($2, $3) }
   ;
 
 simpleInverse

@@ -64,8 +64,10 @@ describe "Parser" do
       pad("{{ #{id} [#{params.join(", ")}] }}")
     end
 
-    def partial(id)
-      pad("{{> #{id} }}")
+    def partial(id, context = nil)
+      content = id.dup
+      content << " #{context}" if context
+      pad("{{> #{content} }}")
     end
 
     def comment(comment)
@@ -97,6 +99,10 @@ describe "Parser" do
     ast_for("{{foo/bar}}").should == program { mustache path("foo", "bar") }
   end
 
+  it "parses mustaches with this/foo" do
+    ast_for("{{this/foo}}").should == program { mustache id("foo") }
+  end
+
   it "parses mustaches with parameters" do
     ast_for("{{foo bar}}").should == program { mustache id("foo"), id("bar") }
   end
@@ -114,6 +120,10 @@ describe "Parser" do
 
   it "parses a partial" do
     ast_for("{{> foo }}").should == program { partial id("foo") }
+  end
+
+  it "parses a partial with context" do
+    ast_for("{{> foo bar}}").should == program { partial id("foo"), id("bar") }
   end
 
   it "parses a comment" do
