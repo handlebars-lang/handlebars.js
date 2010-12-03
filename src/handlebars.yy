@@ -18,8 +18,8 @@ statements
   ;
 
 statement
-  : openInverse program closeBlock { $$ = new yy.InverseNode($1, $2) }
-  | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2) }
+  : openInverse program closeBlock { $$ = new yy.InverseNode($1, $2, $3) }
+  | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2, $3) }
   | mustache { $$ = $1 }
   | partial { $$ = $1 }
   | CONTENT { $$ = new yy.ContentNode($1) }
@@ -35,7 +35,7 @@ openInverse
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK path CLOSE { }
+  : OPEN_ENDBLOCK path CLOSE { $$ = $2 }
   ;
 
 mustache

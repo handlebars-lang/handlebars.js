@@ -29,6 +29,14 @@ end
 
 module Handlebars
   module Spec
+    def self.js_backtrace(context)
+      begin
+        context.eval("throw")
+      rescue V8::JSError => e
+        return e.backtrace(:javascript)
+      end
+    end
+
     CONTEXT = V8::Context.new
     CONTEXT.instance_eval do |context|
       context.eval("exports = null")
@@ -45,6 +53,17 @@ module Handlebars
 
       context["p"] = proc do |val|
         p val
+      end
+
+      context["puts"] = proc do |val|
+        puts context["Handlebars"]["PrintVisitor"].new.accept(val)
+        puts
+      end
+
+      context["puts_caller"] = proc do
+        puts "BACKTRACE:"
+        puts Handlebars::Spec.js_backtrace(context)
+        puts
       end
     end
   end

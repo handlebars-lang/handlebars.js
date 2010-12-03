@@ -154,7 +154,7 @@ describe "Parser" do
   end
 
   it "parses a standalone inverse section" do
-    ast_for("{{^foo}}bar{{/baz}}").should == program do
+    ast_for("{{^foo}}bar{{/foo}}").should == program do
       inverted_block do
         mustache id("foo")
 
