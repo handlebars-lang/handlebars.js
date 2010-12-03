@@ -15,6 +15,10 @@ var helperMissing = function(context, fn) {
   } else {
 		return fn(context);
 	}
+};
+
+helperMissing.not = function(context, fn) {
+  return fn(context);
 }
 
 var shouldCompileTo = function(string, hash, expected, message) {
