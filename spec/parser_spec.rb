@@ -55,8 +55,13 @@ describe "Parser" do
       with_padding { yield }
     end
 
-    def block(inverse = false)
-      inverse ? pad("INVERSE:") : pad("BLOCK:")
+    def block
+      pad("BLOCK:")
+      with_padding { yield }
+    end
+
+    def inverted_block
+      pad("INVERSE:")
       with_padding { yield }
     end
 
@@ -150,7 +155,7 @@ describe "Parser" do
 
   it "parses a standalone inverse section" do
     ast_for("{{^foo}}bar{{/baz}}").should == program do
-      block true do
+      inverted_block do
         mustache id("foo")
 
         program do
