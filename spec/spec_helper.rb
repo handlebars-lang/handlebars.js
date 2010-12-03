@@ -42,6 +42,10 @@ module Handlebars
       context.load('lib/handlebars/runtime.js')
       context.load('lib/handlebars/utils.js')
       context.load('lib/handlebars.js')
+
+      context["p"] = proc do |val|
+        p val
+      end
     end
   end
 end
