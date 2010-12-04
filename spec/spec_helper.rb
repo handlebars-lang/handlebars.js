@@ -39,17 +39,7 @@ module Handlebars
 
     CONTEXT = V8::Context.new
     CONTEXT.instance_eval do |context|
-      context.eval("exports = null")
-      context.eval("Handlebars = {}")
-
-      context.load('lib/handlebars/ast.js')
-      context.load('lib/handlebars/jison_ext.js')
-      context.load('lib/handlebars/handlebars_lexer.js')
-      context.load('lib/handlebars/printer.js')
-      context.load('lib/handlebars/parser.js')
-      context.load('lib/handlebars/runtime.js')
-      context.load('lib/handlebars/utils.js')
-      context.load('lib/handlebars.js')
+      context.load('dist/handlebars.debug.js')
 
       context["p"] = proc do |val|
         p val
