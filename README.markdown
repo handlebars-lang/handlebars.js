@@ -171,8 +171,16 @@ TODO in the rewrite. This will use RubyRacer and not node.
 Performance
 -----------
 
-In a rough performance test, precompiled Handlebars.js templates (in the original version of Handlebars.js) rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii), confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html).
+In a rough performance test, precompiled Handlebars.js templates (in the original version of Handlebars.js) rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii), confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The rewritten Handlebars (current version) is faster than the old version, and we will have some benchmarks in the near future.
 
+
+Building
+--------
+
+To build handlebars, just run `rake release`, and you will get two files
+in the `dist` directory. The debug version comes with stack trace
+annotations for webkit browsers, but will slightly increase startup
+time.
 
 
 Known Issues
