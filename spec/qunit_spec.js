@@ -1,33 +1,17 @@
 module("basic context");
 
-var helperMissing = function(context, fn) {
-  var ret = "";
-
-  if(context === true) {
-    return fn(this);
-  } else if(context === false) {
-    return "";
-  } else if(Object.prototype.toString.call(context) === "[object Array]") {
-    for(var i=0, j=context.length; i<j; i++) {
-      ret = ret + fn(context[i]);
-    }
-    return ret;
-  } else {
-		return fn(context);
-	}
-};
-
-helperMissing.not = function(context, fn) {
-  return fn(context);
-}
-
 var shouldCompileTo = function(string, hash, expected, message) {
   var template = Handlebars.compile(string);
   if(Object.prototype.toString.call(hash) === "[object Array]") {
-    hash[1].helperMissing = helperMissing;
+    if(hash[1]) {
+      for(var prop in Handlebars.helpers) {
+        hash[1][prop] = Handlebars.helpers[prop];
+      }
+    }
   } else {
-    hash = [hash, {helperMissing: helperMissing}];
+    hash = [hash];
   }
+
   result = template.apply(this, hash)
   equal(result, expected, "'" + expected + "' should === '" + result + "': " + message);
 }
