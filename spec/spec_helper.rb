@@ -38,8 +38,10 @@ module Handlebars
     end
 
     def self.remove_exports(string)
-      match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
-      match ? match[1] : string
+      match = string.match(%r{\A(.*?)^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)(.*?)\Z}m)
+      prelines = match ? match[1].count("\n") + 1 : 0
+      ret = match ? match[2] : string
+      ("\n" * prelines) + ret
     end
 
     def self.js_load(file)
@@ -51,15 +53,6 @@ module Handlebars
     CONTEXT.instance_eval do |context|
       context["exports"] = nil
       context["Handlebars"] = {}
-
-      Handlebars::Spec.js_load('lib/handlebars/ast.js');
-      Handlebars::Spec.js_load('lib/handlebars/jison_ext.js');
-      Handlebars::Spec.js_load('lib/handlebars/handlebars_lexer.js')
-      Handlebars::Spec.js_load('lib/handlebars/printer.js')
-      Handlebars::Spec.js_load('lib/handlebars/parser.js')
-      Handlebars::Spec.js_load('lib/handlebars/runtime.js')
-      Handlebars::Spec.js_load('lib/handlebars/utils.js')
-      Handlebars::Spec.js_load('lib/handlebars.js')
 
       context["p"] = proc do |val|
         p val
@@ -75,6 +68,15 @@ module Handlebars
         puts Handlebars::Spec.js_backtrace(context)
         puts
       end
+
+      Handlebars::Spec.js_load('lib/handlebars/ast.js');
+      Handlebars::Spec.js_load('lib/handlebars/jison_ext.js');
+      Handlebars::Spec.js_load('lib/handlebars/handlebars_lexer.js')
+      Handlebars::Spec.js_load('lib/handlebars/printer.js')
+      Handlebars::Spec.js_load('lib/handlebars/parser.js')
+      Handlebars::Spec.js_load('lib/handlebars/runtime.js')
+      Handlebars::Spec.js_load('lib/handlebars/utils.js')
+      Handlebars::Spec.js_load('lib/handlebars.js')
     end
   end
 end
