@@ -35,7 +35,7 @@ minimal_deps.unshift "dist"
 debug_deps.unshift   "dist"
 
 def build_for_task(task)
-  FileUtils.rm_rf("dist")
+  FileUtils.rm_rf("dist/*") if File.directory?("dist")
   FileUtils.mkdir_p("dist")
 
   contents = ["var Handlebars = {};"]

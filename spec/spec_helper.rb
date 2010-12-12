@@ -37,9 +37,29 @@ module Handlebars
       end
     end
 
+    def self.remove_exports(string)
+      match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
+      match ? match[1] : string
+    end
+
+    def self.js_load(file)
+      str = File.read(file)
+      CONTEXT.eval(remove_exports(str), file)
+    end
+
     CONTEXT = V8::Context.new
     CONTEXT.instance_eval do |context|
-      context.load('dist/handlebars.debug.js')
+      context["exports"] = nil
+      context["Handlebars"] = {}
+
+      Handlebars::Spec.js_load('lib/handlebars/ast.js');
+      Handlebars::Spec.js_load('lib/handlebars/jison_ext.js');
+      Handlebars::Spec.js_load('lib/handlebars/handlebars_lexer.js')
+      Handlebars::Spec.js_load('lib/handlebars/printer.js')
+      Handlebars::Spec.js_load('lib/handlebars/parser.js')
+      Handlebars::Spec.js_load('lib/handlebars/runtime.js')
+      Handlebars::Spec.js_load('lib/handlebars/utils.js')
+      Handlebars::Spec.js_load('lib/handlebars.js')
 
       context["p"] = proc do |val|
         p val
