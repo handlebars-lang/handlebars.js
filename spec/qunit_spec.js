@@ -378,7 +378,7 @@ test("basic partials", function() {
   var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
   var partial = "{{name}} ({{url}}) ";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {partials: {dude: partial}}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
                   "Basic partials output based on current context.");
 });
 
@@ -386,7 +386,7 @@ test("partials with context", function() {
   var string = "Dudes: {{>dude dudes}}";
   var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {partials: {dude: partial}}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
                   "Partials can be passed a context");
 });
 
@@ -395,7 +395,7 @@ test("partial in a partial", function() {
   var dude = "{{name}} {{> url}} ";
   var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {partials: {dude: dude, url: url}}], "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
+  shouldCompileTo(string, [hash, {}, {dude: dude, url: url}], "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
 });
 
 test("rendering undefined partial throws an exception", function() {
@@ -409,14 +409,14 @@ test("GH-14: a partial preceding a selector", function() {
    var string = "Dudes: {{>dude}} {{another_dude}}";
    var dude = "{{name}}";
    var hash = {name:"Jeepers", another_dude:"Creepers"};
-   shouldCompileTo(string, [hash, {partials: {dude:dude}}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+   shouldCompileTo(string, [hash, {}, {dude:dude}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
 test("Partial containing complex expression", function() {
 	var template = "Dudes: {{#dudes}}{{> dude}} {{/dudes}}";
 	var dude = "{{../salutation}} {{name}}";
 	var hash = {salutation: "Mr.", dudes: [{name: "Yehuda"}, {name: "Alan"}]};
-	shouldCompileTo(template, [hash, {partials: {dude: dude}}], "Dudes: Mr. Yehuda Mr. Alan ");
+	shouldCompileTo(template, [hash, {}, {dude: dude}], "Dudes: Mr. Yehuda Mr. Alan ");
 });
 
 module("String literal parameters");
