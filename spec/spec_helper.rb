@@ -52,7 +52,6 @@ module Handlebars
     CONTEXT = V8::Context.new
     CONTEXT.instance_eval do |context|
       context["exports"] = nil
-      context["Handlebars"] = {}
 
       context["p"] = proc do |val|
         p val
@@ -69,11 +68,12 @@ module Handlebars
         puts
       end
 
+      Handlebars::Spec.js_load('lib/handlebars/parser.js')
+      Handlebars::Spec.js_load('lib/handlebars/compiler.js');
       Handlebars::Spec.js_load('lib/handlebars/ast.js');
       Handlebars::Spec.js_load('lib/handlebars/jison_ext.js');
       Handlebars::Spec.js_load('lib/handlebars/handlebars_lexer.js')
       Handlebars::Spec.js_load('lib/handlebars/printer.js')
-      Handlebars::Spec.js_load('lib/handlebars/parser.js')
       Handlebars::Spec.js_load('lib/handlebars/runtime.js')
       Handlebars::Spec.js_load('lib/handlebars/utils.js')
       Handlebars::Spec.js_load('lib/handlebars.js')

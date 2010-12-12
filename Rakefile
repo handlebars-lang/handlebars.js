@@ -20,11 +20,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(ast jison_ext handlebars_lexer parser runtime utils).map do |file|
+minimal_deps = %w(parser compiler ast jison_ext handlebars_lexer runtime utils).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(ast jison_ext handlebars_lexer printer parser runtime utils).map do |file|
+debug_deps = %w(parser compiler ast jison_ext handlebars_lexer printer runtime utils).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
@@ -38,7 +38,7 @@ def build_for_task(task)
   FileUtils.rm_rf("dist/*") if File.directory?("dist")
   FileUtils.mkdir_p("dist")
 
-  contents = ["var Handlebars = {};"]
+  contents = []
   task.prerequisites.each do |filename|
     next if filename == "dist"
 
