@@ -35,8 +35,7 @@ minimal_deps.unshift "dist"
 debug_deps.unshift   "dist"
 
 def build_for_task(task)
-  FileUtils.rm_rf("dist/*") if File.directory?("dist")
-  FileUtils.mkdir_p("dist")
+  FileUtils.rm_rf("dist/*")
 
   contents = []
   task.prerequisites.each do |filename|
@@ -58,8 +57,12 @@ file "dist/handlebars.debug.js" => debug_deps do |task|
   build_for_task(task)
 end
 
-task :build => [:compile, "dist/handlebars.js"]
-task :debug => [:compile, "dist/handlebars.debug.js"]
+directory "dist" do
+  FileUtils.mkdir_p("dist")
+end
+
+task :build => [:compile, "dist", "dist/handlebars.js"]
+task :debug => [:compile, "dist", "dist/handlebars.debug.js"]
 
 desc "build the build and debug versions of handlebars"
 task :release => [:build, :debug]
