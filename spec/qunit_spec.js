@@ -1,11 +1,5 @@
 module("basic context");
 
-Handlebars.registerHelper('helperMissing', function(helper, context) {
-  if(helper === "link_to") {
-    return new Handlebars.SafeString("<a>" + context + "</a>");
-  }
-});
-
 var shouldCompileTo = function(string, hash, expected, message) {
   var template = Handlebars.compile(string);
   if(Object.prototype.toString.call(hash) === "[object Array]") {
@@ -468,6 +462,12 @@ test("constructing a safestring from a string and checking its type", function()
 module("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
+  Handlebars.registerHelper('blockHelperMissing', function(helper, context) {
+    if(helper === "link_to") {
+      return new Handlebars.SafeString("<a>" + context + "</a>");
+    }
+  });
+
   var string = "{{hello}} {{link_to world}}"
   var context = { hello: "Hello", world: "world" };
 
