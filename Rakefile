@@ -1,8 +1,8 @@
 require "rubygems"
 require "bundler/setup"
 
-file "lib/handlebars/parser.js" => "src/handlebars.yy" do
-  system "jison src/handlebars.yy"
+file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
+  system "jison src/handlebars.yy src/handlebars.l"
   sh "mv handlebars.js lib/handlebars/parser.js"
 end
 
@@ -20,11 +20,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(parser compiler ast jison_ext handlebars_lexer runtime utils).map do |file|
+minimal_deps = %w(parser compiler ast runtime utils).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(parser compiler ast jison_ext handlebars_lexer printer runtime utils).map do |file|
+debug_deps = %w(parser compiler ast printer runtime utils).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
