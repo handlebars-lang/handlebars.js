@@ -13,7 +13,7 @@ task :spec => [:release] do
   system "rspec -cfs spec"
 end
 
-task :default => [:compile, :test]
+task :default => [:compile, :spec]
 
 def remove_exports(string)
   match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
