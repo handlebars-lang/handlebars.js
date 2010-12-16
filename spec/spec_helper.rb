@@ -54,10 +54,14 @@ module Handlebars
       context["exports"] = nil
 
       context["p"] = proc do |val|
-        p val
+        p val if ENV["DEBUG_JS"]
       end
 
       context["puts"] = proc do |val|
+        puts val if ENV["DEBUG_JS"]
+      end
+
+      context["puts_node"] = proc do |val|
         puts context["Handlebars"]["PrintVisitor"].new.accept(val)
         puts
       end
@@ -76,6 +80,7 @@ module Handlebars
       Handlebars::Spec.js_load('lib/handlebars/printer.js')
       Handlebars::Spec.js_load('lib/handlebars/runtime.js')
       Handlebars::Spec.js_load('lib/handlebars/utils.js')
+      Handlebars::Spec.js_load('lib/Handlebars/vm.js')
       Handlebars::Spec.js_load('lib/handlebars.js')
     end
   end

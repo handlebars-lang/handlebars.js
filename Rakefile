@@ -20,11 +20,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(parser compiler ast jison_ext handlebars_lexer runtime utils).map do |file|
+minimal_deps = %w(parser compiler ast jison_ext handlebars_lexer runtime utils vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(parser compiler ast jison_ext handlebars_lexer printer runtime utils).map do |file|
+debug_deps = %w(parser compiler ast jison_ext handlebars_lexer printer runtime utils vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 

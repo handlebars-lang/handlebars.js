@@ -7,7 +7,7 @@ Handlebars.registerHelper('helperMissing', function(helper, context) {
 });
 
 var shouldCompileTo = function(string, hash, expected, message) {
-  var template = Handlebars.compile(string);
+  var template = Handlebars.VM.compile(string);
   if(Object.prototype.toString.call(hash) === "[object Array]") {
     if(hash[1]) {
       for(var prop in Handlebars.helpers) {
@@ -80,7 +80,7 @@ test("escaping expressions", function() {
  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with 3 handlebars aren't escaped");
 
- shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\\\&lt;&gt;',
+ shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\&lt;&gt;',
         "by default expressions should be escaped");
 
  shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>',
@@ -452,7 +452,7 @@ test("block multi-params work", function() {
   var string   = 'Message: {{#goodbye cruel world}}{{greeting}} {{adj}} {{noun}}{{/goodbye}}';
   var hash     = {cruel: "cruel", world: "world"}
   var fallback = {goodbye: function(cruel, world, fn) {
-    return fn({greeting: "Goodbye", adj: "cruel", noun: "world"});
+    return fn({greeting: "Goodbye", adj: cruel, noun: world});
   }}
   shouldCompileTo(string, [hash, fallback], "Message: Goodbye cruel world", "block helpers with multiple params");
 })
