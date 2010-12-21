@@ -82,6 +82,16 @@ module Handlebars
       Handlebars::Spec.js_load('lib/handlebars/utils.js')
       Handlebars::Spec.js_load('lib/Handlebars/vm.js')
       Handlebars::Spec.js_load('lib/handlebars.js')
+
+      context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
+
+      context["Handlebars"]["logger"]["log"] = proc do |level, str|
+        logger_level = context["Handlebars"]["logger"]["level"]
+
+        if logger_level <= level
+          puts str
+        end
+      end
     end
   end
 end
