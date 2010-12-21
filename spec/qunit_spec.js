@@ -486,4 +486,12 @@ test("if a context is not found, helperMissing is used", function() {
   var context = { hello: "Hello", world: "world" };
 
   shouldCompileTo(string, context, "Hello <a>world</a>")
-})
+});
+
+module("built-in helpers");
+
+test("with", function() {
+  var string = "{{#with person}}{{first}} {{last}}{{/with}}";
+
+  shouldCompileTo(string, {person: {first: "Alan", last: "Johnson"}}, "Alan Johnson");
+});
