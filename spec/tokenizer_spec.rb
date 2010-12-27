@@ -1,8 +1,8 @@
 require "spec_helper"
 
 describe "Tokenizer" do
-  let(:handlebars) { @context["Handlebars"] }
-  let(:lexer) { handlebars["HandlebarsLexer"].new }
+  let(:parser) { @context["handlebars"] }
+  let(:lexer) { @context["handlebars"]["lexer"] }
 
   Token = Struct.new(:name, :text)
 
@@ -10,7 +10,7 @@ describe "Tokenizer" do
     lexer.setInput(string)
     out = []
 
-    while result = lexer.lex
+    while result = parser.terminals_[lexer.lex] and result != "EOF"
       out << Token.new(result, lexer.yytext)
     end
 

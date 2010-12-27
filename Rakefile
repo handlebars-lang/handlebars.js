@@ -1,8 +1,8 @@
 require "rubygems"
 require "bundler/setup"
 
-file "lib/handlebars/parser.js" => "src/handlebars.yy" do
-  system "jison src/handlebars.yy"
+file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
+  system "jison src/handlebars.yy src/handlebars.l"
   sh "mv handlebars.js lib/handlebars/parser.js"
 end
 
@@ -13,18 +13,18 @@ task :spec => [:release] do
   system "rspec -cfs spec"
 end
 
-task :default => [:compile, :test]
+task :default => [:compile, :spec]
 
 def remove_exports(string)
   match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
   match ? match[1] : string
 end
 
-minimal_deps = %w(parser compiler ast jison_ext handlebars_lexer runtime utils vm).map do |file|
+minimal_deps = %w(parser compiler ast visitor runtime utils vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(parser compiler ast jison_ext handlebars_lexer printer runtime utils vm).map do |file|
+debug_deps = %w(parser compiler ast visitor printer runtime utils vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 

@@ -3,7 +3,7 @@
 %%
 
 root
-  : program { return $1 }
+  : program EOF { return $1 }
   ;
 
 program
