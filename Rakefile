@@ -63,3 +63,24 @@ task :debug => [:compile, "dist/handlebars.debug.js"]
 
 desc "build the build and debug versions of handlebars"
 task :release => [:build, :debug]
+
+desc "benchmark against dust.js and mustache.js"
+task :bench do
+  require "open-uri"
+  File.open("vendor/mustache.js", "w") do |file|
+    file.puts open("https://github.com/janl/mustache.js/raw/master/mustache.js").read
+    file.puts "module.exports = Mustache;"
+  end
+
+  File.open("vendor/benchmark.js", "w") do |file|
+    file.puts open("https://github.com/mathiasbynens/benchmark.js/raw/master/benchmark.js").read
+  end
+
+  if File.directory?("vendor/dustjs")
+    system "cd vendor/dustjs && git pull"
+  else
+    system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
+  end
+
+  system "node bench/handlebars.js"
+end
