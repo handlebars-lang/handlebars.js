@@ -7,7 +7,7 @@ Handlebars.registerHelper('helperMissing', function(helper, context) {
 });
 
 var shouldCompileTo = function(string, hash, expected, message) {
-  var template = Handlebars.VM.compile(string);
+  var template = Handlebars.compile(string);
   if(Object.prototype.toString.call(hash) === "[object Array]") {
     if(hash[1]) {
       for(var prop in Handlebars.helpers) {
@@ -260,7 +260,7 @@ test("block helper", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var template = Handlebars.compile(string);
 
-  result = template({goodbyes: function(context, fn) { return fn({text: "GOODBYE"}); }, world: "world"});
+  result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
   equal(result, "GOODBYE! cruel world!");
 });
 
@@ -268,7 +268,7 @@ test("block helper staying in the same context", function() {
   var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
 
-  result = template({form: function(context, fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
+  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
   equal(result, "<form><p>Yehuda</p></form>");
 });
 
@@ -308,7 +308,7 @@ test("nested block helpers", function() {
   result = template({
     form: function(context, fn) { return "<form>" + fn(context) + "</form>" },
     yehuda: {name: "Yehuda",
-             link: function(context, fn) { return "<a href='" + context.name + "'>" + fn(context) + "</a>"; }
+             link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }
             }
   });
   equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
