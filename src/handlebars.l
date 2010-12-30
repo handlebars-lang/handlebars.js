@@ -10,6 +10,7 @@
 <mu>"{{#"                    { return 'OPEN_BLOCK'; }
 <mu>"{{/"                    { return 'OPEN_ENDBLOCK'; }
 <mu>"{{^"                    { return 'OPEN_INVERSE'; }
+<mu>"{{"\s*"else"            { return 'OPEN_INVERSE'; }
 <mu>"{{{"                    { return 'OPEN_UNESCAPED'; }
 <mu>"{{&"                    { return 'OPEN_UNESCAPED'; }
 <mu>"{{!".*?"}}"             { yytext = yytext.substr(3,yyleng-5); this.begin("INITIAL"); return 'COMMENT'; }

@@ -95,6 +95,8 @@ describe "Tokenizer" do
 
   it "tokenizes inverse sections as 'OPEN_INVERSE CLOSE'" do
     tokenize("{{^}}").should match_tokens(%w(OPEN_INVERSE CLOSE))
+    tokenize("{{else}}").should match_tokens(%w(OPEN_INVERSE CLOSE))
+    tokenize("{{ else }}").should match_tokens(%w(OPEN_INVERSE CLOSE))
   end
 
   it "tokenizes inverse sections with ID as 'OPEN_INVERSE ID CLOSE'" do
