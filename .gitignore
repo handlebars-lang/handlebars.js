@@ -1,3 +1,4 @@
 dist
 lib/handlebars/parser.js
 vendor
+.rvmrc
