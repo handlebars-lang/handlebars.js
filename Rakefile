@@ -2,7 +2,7 @@ require "rubygems"
 require "bundler/setup"
 
 file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
-  system "jison src/handlebars.yy src/handlebars.l"
+  sh "jison src/handlebars.yy src/handlebars.l"
   sh "mv handlebars.js lib/handlebars/parser.js"
 end
 
@@ -10,7 +10,7 @@ task :compile => "lib/handlebars/parser.js"
 
 desc "run the spec suite"
 task :spec => [:release] do
-  system "rspec -cfs spec"
+  sh "rspec -cfs spec"
 end
 
 task :default => [:compile, :spec]
@@ -86,10 +86,10 @@ task :bench do
   end
 
   if File.directory?("vendor/dustjs")
-    system "cd vendor/dustjs && git pull"
+    sh "cd vendor/dustjs && git pull"
   else
-    system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
+    sh "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
   end
 
-  system "node bench/handlebars.js"
+  sh "node bench/handlebars.js"
 end
