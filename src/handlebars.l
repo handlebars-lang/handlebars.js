@@ -3,8 +3,8 @@
 
 %%
 
-[^]*?/("{{")                 { this.begin("mu"); if (yytext) return 'CONTENT'; }
-[^]+                         { return 'CONTENT'; }
+(.|\n|\r)*?/("{{")                 { this.begin("mu"); if (yytext) return 'CONTENT'; }
+(.|\n|\r)+                         { return 'CONTENT'; }
 
 <mu>"{{>"                    { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                    { return 'OPEN_BLOCK'; }
