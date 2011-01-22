@@ -495,3 +495,27 @@ test("with", function() {
 
   shouldCompileTo(string, {person: {first: "Alan", last: "Johnson"}}, "Alan Johnson");
 });
+
+test("if with non-function argument", function() {
+  var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
+  shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!",
+                  "if with boolean argument shows the contents when true");
+  shouldCompileTo(string, {goodbye: "dummy", world: "world"}, "GOODBYE cruel world!",
+                  "if with string argument shows the contents");
+  shouldCompileTo(string, {goodbye: false, world: "world"}, "cruel world!",
+                  "if with boolean argument does not show the contents when false");
+  shouldCompileTo(string, {world: "world"}, "cruel world!",
+                  "if with undefined does not show the contents");
+});
+
+test("if with function argument", function() {
+  var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
+  shouldCompileTo(string, {goodbye: function() {return true}, world: "world"}, "GOODBYE cruel world!",
+                  "if with function shows the contents when function returns true");
+  shouldCompileTo(string, {goodbye: function() {return this.world}, world: "world"}, "GOODBYE cruel world!",
+                  "if with function shows the contents when function returns string");
+  shouldCompileTo(string, {goodbye: function() {return false}, world: "world"}, "cruel world!",
+                  "if with function does not show the contents when returns false");
+  shouldCompileTo(string, {goodbye: function() {return this.foo}, world: "world"}, "cruel world!",
+                  "if with function does not show the contents when returns undefined");
+});
