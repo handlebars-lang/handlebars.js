@@ -490,10 +490,17 @@ test("if a context is not found, helperMissing is used", function() {
 
 module("built-in helpers");
 
-test("with", function() {
+test("with non-function argument", function() {
   var string = "{{#with person}}{{first}} {{last}}{{/with}}";
 
   shouldCompileTo(string, {person: {first: "Alan", last: "Johnson"}}, "Alan Johnson");
+});
+
+test("with function argument", function() {
+  var string = "{{#with person}}{{first}} {{last}}{{/with}}";
+
+  shouldCompileTo(string, {person: function() {return {first: this.firsName, last: this.lastName};},
+                  firsName: "Alan", lastName: "Johnson"}, "Alan Johnson");
 });
 
 test("if with non-function argument", function() {
@@ -518,4 +525,23 @@ test("if with function argument", function() {
                   "if with function does not show the contents when returns false");
   shouldCompileTo(string, {goodbye: function() {return this.foo}, world: "world"}, "cruel world!",
                   "if with function does not show the contents when returns undefined");
+});
+
+test("each with non-function argument", function() {
+  var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!"
+  var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
+                  "each with array argument iterates over the contents when not empty");
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
+                  "each with array argument ignores the contents when empty");
+});
+
+test("each with function argument", function() {
+  var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!"
+  var hash     = {goodbyes: function() {return this.texts;},
+                  texts: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
+                  "each with function argument returning array iterates over the contents when not empty");
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
+                  "each with function argument returning array ignores the contents when empty");
 });
