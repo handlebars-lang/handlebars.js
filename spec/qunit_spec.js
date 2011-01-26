@@ -285,6 +285,10 @@ test("block helper should have context in this", function() {
   shouldCompileTo(source, [data, {link: link}], "<ul><li><a href=\"/people/1\">Alan</a></li><li><a href=\"/people/2\">Yehuda</a></li></ul>");
 });
 
+test("block helper for undefined value", function() {
+	shouldCompileTo("{{#empty}}shouldn't render{{/empty}}", {}, "");
+});
+
 test("block helper passing a new context", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
   var template = Handlebars.compile(string);
