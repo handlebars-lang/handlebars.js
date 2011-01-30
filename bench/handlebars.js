@@ -1,25 +1,38 @@
 require.paths.push("lib");
 require.paths.push("vendor");
 require.paths.push("vendor/dustjs/lib");
+require.paths.push("vendor/coffee/lib");
+require.paths.push("vendor/eco/lib");
+
 
 var BenchWarmer = require("./benchwarmer");
-Handlebars = require("handlebars").Handlebars;
+Handlebars = require("handlebars");
 
 var dust = require("dust");
 var Mustache = require("mustache");
+var ecoExports = require("eco");
+
+eco = function(str) {
+  var module = {};
+  var template = new Function("module", ecoExports.compile(str));
+  template(module);
+  return module.exports;
+}
 
 var benchDetails = {
   string: {
     context: {},
     handlebars: "Hello world",
     dust: "Hello world",
-    mustache: "Hello world"
+    mustache: "Hello world",
+    eco: "Hello world"
   },
   variables: {
     context: {name: "Mick", count: 30},
     handlebars:  "Hello {{name}}! You have {{count}} new messages.",
     dust: "Hello {name}! You have {count} new messages.",
-    mustache: "Hello {{name}}! You have {{count}} new messages."
+    mustache: "Hello {{name}}! You have {{count}} new messages.",
+    eco: "Hello <%= @name %>! You have <%= @count %> new messages."
   },
   object: {
     context:  { person: { name: "Larry", age: 45 } },
@@ -31,7 +44,8 @@ var benchDetails = {
     context:  { names: [{name: "Moe"}, {name: "Larry"}, {name: "Curly"}, {name: "Shemp"}] },
     handlebars: "{{#each names}}{{name}}{{/each}}",
     dust: "{#names}{name}{/names}",
-    mustache: "{{#names}}{{name}}{{/names}}"
+    mustache: "{{#names}}{{name}}{{/names}}",
+    eco: "<% for item in @names: %><%= item.name %><% end %>"
   },
   partial: {
     context: { peeps: [{name: "Moe", count: 15}, {name: "Larry", count: 5}, {name: "Curly", count: 1}] },
@@ -88,6 +102,7 @@ var benchDetails = {
 };
 
 handlebarsTemplates = {};
+ecoTemplates = {};
 
 var warmer = new BenchWarmer();
 
@@ -99,26 +114,41 @@ var makeSuite = function(name) {
     var mustacheSource = details.mustache;
     var context = details.context;
 
-    bench("dust", function() {
-      dust.render(templateName, context, function(err, out) { });
-    });
+    var error = function() { throw new Error("EWOT"); };
+
+
+    //bench("dust", function() {
+      //dust.render(templateName, context, function(err, out) { });
+    //});
 
     bench("handlebars", function() {
       handlebarsTemplates[templateName](context);
     });
 
-    if(mustacheSource) {
-      bench("mustache", function() {
-        Mustache.to_html(mustacheSource, context, mustachePartials);
-      });
-    }
+    //if(ecoTemplates[templateName]) {
+      //bench("eco", function() {
+        //ecoTemplates[templateName](context);
+      //});
+    //} else {
+      //bench("eco", error);
+    //}
+
+    //if(mustacheSource) {
+      //bench("mustache", function() {
+        //Mustache.to_html(mustacheSource, context, mustachePartials);
+      //});
+    //} else {
+      //bench("mustache", error);
+    //}
   });
 }
 
 for(var name in benchDetails) {
   if(benchDetails.hasOwnProperty(name)) {
     dust.loadSource(dust.compile(benchDetails[name].dust, name));
-    handlebarsTemplates[name] = Handlebars.VM.compile(benchDetails[name].handlebars);
+    handlebarsTemplates[name] = Handlebars.compile(benchDetails[name].handlebars);
+
+    if(benchDetails[name].eco) { ecoTemplates[name] = eco(benchDetails[name].eco); }
 
     var partials = benchDetails[name].partials;
     if(partials) {
