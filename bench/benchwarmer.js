@@ -1,4 +1,4 @@
-var print = require("sys").print;
+
 var Benchmark = require("benchmark");
 
 var BenchWarmer = function(names) {
@@ -7,6 +7,8 @@ var BenchWarmer = function(names) {
   this.names = [];
   this.errors = {};
 };
+
+var print = require("sys").print;
 
 BenchWarmer.prototype = {
   winners: function(benches) {
@@ -56,8 +58,8 @@ BenchWarmer.prototype = {
         if(first) { self.startLine(suiteName); }
         self.writeBench(bench);
         self.currentBenches.push(bench);
-      }, onError: function(bench) {
-        self.errors[bench.name] = bench;
+      }, onError: function() {
+        self.errors[this.name] = this;
       }
     });
 
@@ -89,7 +91,7 @@ BenchWarmer.prototype = {
     print("\n" + new Array(horSize + 1).join("-"));
 
     Benchmark.invoke(this.benchmarks, {
-      methodName: "run",
+      name: "run",
       onComplete: function() {
         var errors = false, prop, bench;
         for(prop in self.errors) { if(self.errors.hasOwnProperty(prop)) { errors = true; break; } }
@@ -129,10 +131,9 @@ BenchWarmer.prototype = {
 
     if(!bench.error) {
       var count = bench.hz,
-          min = count - bench.MoE,
-          max = count + bench.MoE;
+          moe   = count * bench.stats.RME / 100;
 
-      out = Math.round(count / 1000) + " ±" + Math.round(bench.MoE / 1000) + " (" + bench.cycles + ")";
+      out = Math.round(count / 1000) + " ±" + Math.round(moe / 1000) + " (" + bench.cycles + ")";
     } else {
       out = "E";
     }

@@ -73,8 +73,10 @@ task :debug => [:compile, "dist/handlebars.debug.js"]
 desc "build the build, debug and base versions of handlebars"
 task :release => [:build, :debug, :base]
 
+directory "vendor"
+
 desc "benchmark against dust.js and mustache.js"
-task :bench do
+task :bench => "vendor" do
   require "open-uri"
   File.open("vendor/mustache.js", "w") do |file|
     file.puts open("https://github.com/janl/mustache.js/raw/master/mustache.js").read
@@ -89,6 +91,18 @@ task :bench do
     system "cd vendor/dustjs && git pull"
   else
     system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
+  end
+
+  if File.directory?("vendor/coffee")
+    system "cd vendor/coffee && git pull"
+  else
+    system "git clone git://github.com/jashkenas/coffee-script.git vendor/coffee"
+  end
+
+  if File.directory?("vendor/eco")
+    system "cd vendor/eco && git pull"
+  else
+    system "git clone git://github.com/sstephenson/eco.git vendor/eco"
   end
 
   system "node bench/handlebars.js"

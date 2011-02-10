@@ -5,7 +5,7 @@ Handlebars.js is an extension to the [Mustache templating language](http://musta
 
 Installing
 ----------
-Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/downloads/wycats/handlebars.js/handlebars.js) and add it to your web pages. You can also get a [debug version](https://github.com/downloads/wycats/handlebars.js/handlebars.debug.js) which helps newer browsers print out useful stack traces.
+Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/archives/master) and add it to your web pages (you should usually use the most recent version).
 
 Usage
 -----

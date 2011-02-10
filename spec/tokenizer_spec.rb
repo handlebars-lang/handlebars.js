@@ -1,4 +1,5 @@
 require "spec_helper"
+require "timeout"
 
 describe "Tokenizer" do
   let(:parser) { @context["handlebars"] }
