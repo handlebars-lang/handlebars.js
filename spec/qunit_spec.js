@@ -583,4 +583,21 @@ test("passing in data to a compiled function that expects data - works with bloc
   equals("happy world?", result);
 });
 
+test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+
+  var helpers = {
+    hello: function(fn, inverse, data) {
+      return data.accessData + " " + fn({exclaim: "?"});
+    },
+    world: function(thing, data) {
+      return data.adjective + " " + thing + (this.exclaim || "");
+    }
+  };
+
+  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy", accessData: "#win"});
+  equals("#win happy world?", result);
+});
+
+
 
