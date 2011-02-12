@@ -85,7 +85,7 @@ module Handlebars
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
       context["Handlebars"]["logger"]["log"] = proc do |level, str|
-        logger_level = context["Handlebars"]["logger"]["level"]
+        logger_level = context["Handlebars"]["logger"]["level"].to_i
 
         if logger_level <= level
           puts str

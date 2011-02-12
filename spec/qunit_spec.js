@@ -20,7 +20,7 @@ var shouldCompileTo = function(string, hash, expected, message) {
 
   result = template.apply(this, hash)
   equal(result, expected, "'" + expected + "' should === '" + result + "': " + message);
-}
+};
 
 var shouldThrow = function(fn, exception, message) {
   var caught = false;
@@ -519,3 +519,68 @@ test("each", function() {
   shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                   "each with array argument ignores the contents when empty");
 });
+
+test("overriding property lookup", function() {
+
+});
+
+
+test("passing in data to a compiled function that expects data - works with helpers", function() {
+  var template = Handlebars.compile("{{hello}}", true);
+
+  var helpers = {
+    hello: function(data) {
+      return data.adjective + " "  + this.noun;
+    }
+  };
+
+  var result = template({noun: "cat"}, helpers, null, {adjective: "happy"});
+  equals("happy cat", result);
+});
+
+test("passing in data to a compiled function that expects data - works with helpers and parameters", function() {
+  var template = Handlebars.compile("{{hello world}}", true);
+
+  var helpers = {
+    hello: function(noun, data) {
+      return data.adjective + " "  + noun + (this.exclaim ? "!" : "");
+    }
+  };
+
+  var result = template({exclaim: true, world: "world"}, helpers, null, {adjective: "happy"});
+  equals("happy world!", result);
+});
+
+test("passing in data to a compiled function that expects data - works with block helpers", function() {
+  var template = Handlebars.compile("{{#hello}}{{world}}{{/hello}}", true);
+
+  var helpers = {
+    hello: function(fn) {
+      return fn(this);
+    },
+    world: function(data) {
+      return data.adjective + " world" + (this.exclaim ? "!" : "");
+    }
+  };
+
+  var result = template({exclaim: true}, helpers, null, {adjective: "happy"});
+  equals("happy world!", result);
+});
+
+test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+
+  var helpers = {
+    hello: function(fn) {
+      return fn({exclaim: "?"});
+    },
+    world: function(thing, data) {
+      return data.adjective + " " + thing + (this.exclaim || "");
+    }
+  };
+
+  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  equals("happy world?", result);
+});
+
+
