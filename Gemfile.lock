@@ -17,4 +17,4 @@ PLATFORMS
 
 DEPENDENCIES
   rspec
-  therubyracer (>= 0.8.0.pre3)
+  therubyracer (>= 0.8.0)
