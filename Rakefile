@@ -2,8 +2,12 @@ require "rubygems"
 require "bundler/setup"
 
 file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
-  system "jison src/handlebars.yy src/handlebars.l"
-  sh "mv handlebars.js lib/handlebars/parser.js"
+  if ENV['PATH'].split(':').any? {|folder| File.exists?(folder+'/jison')}
+    system "jison src/handlebars.yy src/handlebars.l"
+    sh "mv handlebars.js lib/handlebars/parser.js"
+  else
+    puts "Jison is not installed. Try running `npm install jison`."
+  end
 end
 
 task :compile => "lib/handlebars/parser.js"
