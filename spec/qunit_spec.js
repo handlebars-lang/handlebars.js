@@ -599,5 +599,36 @@ test("passing in data to a compiled function that expects data - works with bloc
   equals("#win happy world?", result);
 });
 
+test("you can override inherited data when invoking a helper", function() {
+  var template = Handlebars.compile("{{#hello}}{{world zomg}}{{/hello}}", true);
 
+  var helpers = {
+    hello: function(fn) {
+      return fn({exclaim: "?", zomg: "world"}, null, null, {adjective: "sad"});
+    },
+    world: function(thing, data) {
+      return data.adjective + " " + thing + (this.exclaim || "");
+    }
+  };
+
+  var result = template({exclaim: true, zomg: "planet"}, helpers, null, {adjective: "happy"});
+  equals("sad world?", result);
+});
+
+
+test("you can override inherited data when invoking a helper with depth", function() {
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+
+  var helpers = {
+    hello: function(fn) {
+      return fn({exclaim: "?"}, null, null, {adjective: "sad"});
+    },
+    world: function(thing, data) {
+      return data.adjective + " " + thing + (this.exclaim || "");
+    }
+  };
+
+  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  equals("sad world?", result);
+});
 
