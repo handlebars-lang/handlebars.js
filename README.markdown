@@ -5,19 +5,19 @@ Handlebars.js is an extension to the [Mustache templating language](http://musta
 
 Installing
 ----------
-Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/zipball/master) and add lib/handlebars.js to your web pages. 
+Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/archives/master) and add it to your web pages (you should usually use the most recent version).
 
 Usage
 -----
-In general, the syntax of Handlebars.js templates is identical to Mustache templates. For basic syntax, check out the [Mustache manpage](http://mustache.github.com/mustache.5.html).
+In general, the syntax of Handlebars.js templates is a superset of Mustache templates. For basic syntax, check out the [Mustache manpage](http://mustache.github.com/mustache.5.html).
 
-Once you have a template, use the Handlebars.compile method to compile the template into a function. The generated function takes two arguments, a hash of data to apply to the template and an option hash of functions to use as helpers. Here's an example:
+Once you have a template, use the Handlebars.compile method to compile the template into a function. The generated function takes a context argument, which will be used to render the template.
 
     var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " + 
         "{{kids/length}} kids:</p>" +
         "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
     var template = Handlebars.compile(source);
-    
+
     var data = { "name": "Alan", "hometown": "Somewhere, TX",
                   "kids": [{"name": "Jimmy", "age": "12"}, {"name": "Sally", "age": "4"}]};
     var result = template(data);
@@ -29,9 +29,45 @@ Once you have a template, use the Handlebars.compile method to compile the templ
     //   <li>Sally is 4</li>
     // </ul>
 
+
+Registering Helpers
+-------------------
+
+You can register helpers that Handlebars will use when evaluating your
+template. Here's an example, which assumes that your objects have a URL
+embedded in them, as well as the text for a link:
+
+    Handlebars.registerHelper('link_to', function(context) {
+      return "<a href='" + context.url + "'>" + context.body + "</a>";
+    });
+
+    var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
+    var source = "<ul>{{#posts}}<li>{{{link_to this}}}</li></ul>"
+
+    var template = Handlebars.compile(source);
+    template(context);
+
+    // Would render:
+    //
+    // <ul>
+    //   <li><a href='/hello-world'>Hello World!</a></li>
+    // </ul>
+
+
+Escaping
+--------
+
+By default, the `{{expression}}` syntax will escape its contents. This
+helps to protect you against accidental XSS problems caused by malicious
+data passed from the server as JSON.
+
+To explicitly *not* escape the contents, use the triple-mustache
+(`{{{}}}`). You have seen this used in the above example.
+
+
 Differences Between Handlebars.js and Mustache
--------------------------
-Handlebars.js adds a couple of additional features to make writing templates easier and also changes a tiny detail of how partials work. 
+----------------------------------------------
+Handlebars.js adds a couple of additional features to make writing templates easier and also changes a tiny detail of how partials work.
 
 ### Paths
 
@@ -53,21 +89,46 @@ would render:
 
     Alan - Rad, Inc.
 
+### Strings
+
+When calling a helper, you can pass paths or Strings as parameters. For
+instance:
+
+    Handlebars.registerHelper('link_to', function(title, context) {
+      return "<a href='/posts" + context.id + "'>" + title + "</a>"
+    });
+
+    var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
+    var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li></ul>'
+
+    var template = Handlebars.compile(source);
+    template(context);
+
+    // Would render:
+    //
+    // <ul>
+    //   <li><a href='/hello-world'>Post!</a></li>
+    // </ul>
+
+When you pass a String as a parameter to a helper, the literal String
+gets passed to the helper function.
+
+
 ### Block Helpers
 
 Handlebars.js also adds the ability to define block helpers. Block helpers are functions that can be called from anywhere in the template. Here's an example:
 
-    var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
-    var link = function(context, fn) {
+    var source = "<ul>{{#people}}<li>{{{#link}}}{{name}}{{/link}}</li>{{/people}}</ul>";
+    Handlebars.registerHelper('link', function(context, fn) {
       return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
-    };
+    });
     var template = Handlebars.compile(source);
 
     var data = { "people": [
         { "name": "Alan", "id": 1 },
         { "name": "Yehuda", "id": 2 }
       ]};
-    template(data, { "link": link });
+    template(data);
 
     // Should render:
     // <ul>
@@ -79,17 +140,22 @@ Whenever the block helper is called it is given two parameters, the argument tha
 
 ### Partials
 
-To specify the set of available partials when rendering a template, set them to the partials key of the blocks hash. Partials can be either the string value of the partial source or a precompiled partial function. Here's an example:
+You can register additional templates as partials, which will be used by
+Handlebars when it encounters a partial (`{{> partialName}}`). Partials
+can either be String templates or compiled template functions. Here's an
+example:
 
     var source = "<ul>{{#people}}<li>{{> link}}</li>{{/people}}</ul>";
-    var partials = { "link": '<a href="/people/{{id}}">{{name}}</a>' };
+
+    Handlebars.registerPartial('link', '<a href="/people/{{id}}">{{name}}</a>')
     var template = Handlebars.compile(source);
-    
+
     var data = { "people": [
         { "name": "Alan", "id": 1 },
         { "name": "Yehuda", "id": 2 }
       ]};
-    template(data, { "partials": partials });
+
+    template(data);
 
     // Should render:
     // <ul>
@@ -100,17 +166,26 @@ To specify the set of available partials when rendering a template, set them to 
 Precompiling Templates
 ----------------------
 
-A node.js compatible command-line tool is included in the lib folder. compiler.js takes arguments of the form MethodName=source.hbs and generates a source file with source templates compiled into methods with the given names.
-
-    node lib/compiler.js Template=templates/template.hbs Partial=templates/partial.hbs
+TODO in the rewrite. This will use RubyRacer and not node.
 
 Performance
 -----------
-In a rough performance test, precompiled Handlebars.js templates rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii), confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html).
+
+In a rough performance test, precompiled Handlebars.js templates (in the original version of Handlebars.js) rendered in about half the time of Mustache templates. It would be a shame if it were any other way, since they were precompiled, but the difference in architecture does have some big performance advantages. Justin Marney, a.k.a. [gotascii](http://github.com/gotascii), confirmed that with an [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The rewritten Handlebars (current version) is faster than the old version, and we will have some benchmarks in the near future.
+
+
+Building
+--------
+
+To build handlebars, just run `rake release`, and you will get two files
+in the `dist` directory. The debug version comes with stack trace
+annotations for webkit browsers, but will slightly increase startup
+time.
+
 
 Known Issues
 ------------
-* Handlebars.js can be a bit cryptic when there's an error during compilation, and it can be even more cryptic when there's an error while rendering.
+* Handlebars.js can be cryptic when there's an error while rendering.
 
 Handlebars Contrib
 ------------------

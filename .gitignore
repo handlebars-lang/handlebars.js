@@ -1,0 +1,5 @@
+dist
+lib/handlebars/parser.js
+vendor
+.rvmrc
+.DS_Store
