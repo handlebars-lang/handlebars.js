@@ -632,3 +632,47 @@ test("you can override inherited data when invoking a helper with depth", functi
   equals("sad world?", result);
 });
 
+test("helpers take precedence over same-named context properties", function() {
+  var template = Handlebars.compile("{{goodbye}} {{cruel world}}");
+
+  var helpers = {
+    goodbye: function() {
+      return this.goodbye.toUpperCase();
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, helpers);
+  equals(result, "GOODBYE cruel WORLD");
+});
+
+test("helpers take precedence over same-named context properties", function() {
+  var template = Handlebars.compile("{{#goodbye}} {{cruel world}}{{/goodbye}}");
+
+  var helpers = {
+    goodbye: function(fn) {
+      return this.goodbye.toUpperCase() + fn(this);
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, helpers);
+  equals(result, "GOODBYE cruel WORLD");
+});
+
