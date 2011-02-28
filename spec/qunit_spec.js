@@ -600,5 +600,80 @@ test("passing in data to a compiled function that expects data - works with bloc
   equals("#win happy world?", result);
 });
 
+test("you can override inherited data when invoking a helper", function() {
+  var template = Handlebars.compile("{{#hello}}{{world zomg}}{{/hello}}", true);
 
+  var helpers = {
+    hello: function(fn) {
+      return fn({exclaim: "?", zomg: "world"}, null, null, {adjective: "sad"});
+    },
+    world: function(thing, data) {
+      return data.adjective + " " + thing + (this.exclaim || "");
+    }
+  };
+
+  var result = template({exclaim: true, zomg: "planet"}, helpers, null, {adjective: "happy"});
+  equals("sad world?", result);
+});
+
+
+test("you can override inherited data when invoking a helper with depth", function() {
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+
+  var helpers = {
+    hello: function(fn) {
+      return fn({exclaim: "?"}, null, null, {adjective: "sad"});
+    },
+    world: function(thing, data) {
+      return data.adjective + " " + thing + (this.exclaim || "");
+    }
+  };
+
+  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  equals("sad world?", result);
+});
+
+test("helpers take precedence over same-named context properties", function() {
+  var template = Handlebars.compile("{{goodbye}} {{cruel world}}");
+
+  var helpers = {
+    goodbye: function() {
+      return this.goodbye.toUpperCase();
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, helpers);
+  equals(result, "GOODBYE cruel WORLD");
+});
+
+test("helpers take precedence over same-named context properties", function() {
+  var template = Handlebars.compile("{{#goodbye}} {{cruel world}}{{/goodbye}}");
+
+  var helpers = {
+    goodbye: function(fn) {
+      return this.goodbye.toUpperCase() + fn(this);
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, helpers);
+  equals(result, "GOODBYE cruel WORLD");
+});
 
