@@ -261,7 +261,7 @@ test("block helper", function() {
   var template = Handlebars.compile(string);
 
   result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
-  equal(result, "GOODBYE! cruel world!");
+  equal(result, "GOODBYE! cruel world!", "Testing a block helper");
 });
 
 test("block helper staying in the same context", function() {
@@ -269,7 +269,7 @@ test("block helper staying in the same context", function() {
   var template = Handlebars.compile(string);
 
   result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
-  equal(result, "<form><p>Yehuda</p></form>");
+  equal(result, "<form><p>Yehuda</p></form>", "Testing block helper staying in the same context");
 });
 
 test("block helper should have context in this", function() {
@@ -294,7 +294,7 @@ test("block helper passing a new context", function() {
   var template = Handlebars.compile(string);
 
   result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda"}});
-  equal(result, "<form><p>Yehuda</p></form>");
+  equal(result, "<form><p>Yehuda</p></form>", "Testing block helper passing a new context");
 });
 
 test("block helper passing a complex path context", function() {
@@ -302,7 +302,7 @@ test("block helper passing a complex path context", function() {
   var template = Handlebars.compile(string);
 
   result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
-  equal(result, "<form><p>Harold</p></form>");
+  equal(result, "<form><p>Harold</p></form>", "Testing block helper passing a complex path context");
 });
 
 test("nested block helpers", function() {
@@ -315,7 +315,7 @@ test("nested block helpers", function() {
              link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }
             }
   });
-  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
+  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>", "Testing nested block helpers");
 });
 
 test("block inverted sections", function() {
@@ -535,7 +535,7 @@ test("passing in data to a compiled function that expects data - works with help
   };
 
   var result = template({noun: "cat"}, helpers, null, {adjective: "happy"});
-  equals("happy cat", result);
+  equals("happy cat", result, "Testing passing in data to a compiled function that expects data - works with helpers");
 });
 
 test("passing in data to a compiled function that expects data - works with helpers and parameters", function() {
@@ -548,7 +548,7 @@ test("passing in data to a compiled function that expects data - works with help
   };
 
   var result = template({exclaim: true, world: "world"}, helpers, null, {adjective: "happy"});
-  equals("happy world!", result);
+  equals("happy world!", result, "Testing passing in data to a compiled function that expects data - works with helpers and parameters");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers", function() {
@@ -564,7 +564,7 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true}, helpers, null, {adjective: "happy"});
-  equals("happy world!", result);
+  equals("happy world!", result, "Testing passing in data to a compiled function that expects data - works with block helpers");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
@@ -580,7 +580,7 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
-  equals("happy world?", result);
+  equals("happy world?", result, "Testing passing in data to a compiled function that expects data - works with block helpers that use ..");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
@@ -596,7 +596,7 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy", accessData: "#win"});
-  equals("#win happy world?", result);
+  equals("#win happy world?", result, "Testing passing in data to a compiled function that expects data - works with block helpers that use ..");
 });
 
 test("you can override inherited data when invoking a helper", function() {
@@ -612,7 +612,7 @@ test("you can override inherited data when invoking a helper", function() {
   };
 
   var result = template({exclaim: true, zomg: "planet"}, helpers, null, {adjective: "happy"});
-  equals("sad world?", result);
+  equals("sad world?", result, "Testing you can override inherited data when invoking a helper");
 });
 
 
@@ -629,7 +629,7 @@ test("you can override inherited data when invoking a helper with depth", functi
   };
 
   var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
-  equals("sad world?", result);
+  equals("sad world?", result, "Testing you can override inherited data when invoking a helper with depth");
 });
 
 test("helpers take precedence over same-named context properties", function() {
@@ -651,7 +651,7 @@ test("helpers take precedence over same-named context properties", function() {
   };
 
   var result = template(context, helpers);
-  equals(result, "GOODBYE cruel WORLD");
+  equals(result, "GOODBYE cruel WORLD", "Testing helpers take precedence over same-named context properties");
 });
 
 test("helpers take precedence over same-named context properties", function() {
@@ -673,6 +673,6 @@ test("helpers take precedence over same-named context properties", function() {
   };
 
   var result = template(context, helpers);
-  equals(result, "GOODBYE cruel WORLD");
+  equals(result, "GOODBYE cruel WORLD", "Testing helpers take precedence over same-named context properties");
 });
 
