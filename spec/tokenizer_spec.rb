@@ -12,8 +12,10 @@ describe "Tokenizer" do
     out = []
 
     while token = lexer.lex
-      result = parser.terminals_[token]
-      break if !result || result == "EOF"
+      # p token
+      result = parser.terminals_[token] || token
+      # p result
+      break if !result || result == "EOF" || result == "INVALID"
       out << Token.new(result, lexer.yytext)
     end
 
@@ -161,6 +163,24 @@ describe "Tokenizer" do
     result = tokenize(%|{{ foo "bar\\"baz" }}|)
     result.should match_tokens(%w(OPEN ID STRING CLOSE))
     result[2].should be_token("STRING", %{bar"baz})
+  end
+
+  it "tokenizes hash arguments" do
+    result = tokenize("{{ foo bar=baz }}")
+    result.should match_tokens %w(OPEN ID ID EQUALS ID CLOSE)
+
+    result = tokenize("{{ foo bar baz=bat }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS ID CLOSE)
+
+    result = tokenize("{{ foo bar baz=\"bat\" }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS STRING CLOSE)
+
+    result = tokenize("{{ foo bar baz=\"bat\" bam=wot }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS STRING ID EQUALS ID CLOSE)
+
+    result = tokenize("{{foo omg bar=baz bat=\"bam\"}}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS ID ID EQUALS STRING CLOSE)
+    result[2].should be_token("ID", "omg")
   end
 
   it "does not time out in a mustache with a single } followed by EOF" do

@@ -54,7 +54,9 @@ simpleInverse
   ;
 
 inMustache
-  : path params { $$ = [$1].concat($2) }
+  : path params hash { $$ = [$1].concat($2).concat([$3]) }
+  | path params { $$ = [$1].concat($2) }
+  | path hash { $$ = [$1].concat([$2]) }
   | path { $$ = [$1] }
   ;
 
@@ -66,6 +68,20 @@ params
 param
   : path { $$ = $1 }
   | STRING { $$ = new yy.StringNode($1) }
+  ;
+
+hash
+  : hashSegments { $$ = new yy.HashNode($1) }
+  ;
+
+hashSegments
+  : hashSegments hashSegment { $1.push($2); $$ = $1 }
+  | hashSegment { $$ = [$1] }
+  ;
+
+hashSegment
+  : ID EQUALS path { $$ = [$1, $3] }
+  | ID EQUALS STRING { $$ = [$1, new yy.StringNode($3)] }
   ;
 
 path

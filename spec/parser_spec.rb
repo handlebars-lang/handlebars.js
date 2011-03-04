@@ -87,6 +87,10 @@ describe "Parser" do
       string.inspect
     end
 
+    def hash(*pairs)
+      "HASH{" + pairs.map {|k,v| "#{k}=#{v}" }.join(", ") + "}"
+    end
+
     def id(id)
       "ID:#{id}"
     end
@@ -110,6 +114,24 @@ describe "Parser" do
 
   it "parses mustaches with parameters" do
     ast_for("{{foo bar}}").should == program { mustache id("foo"), id("bar") }
+  end
+
+  it "parses mustaches with hash arguments" do
+    ast_for("{{foo bar=baz}}").should == program do
+      mustache id("foo"), hash(["bar", "ID:baz"])
+    end
+
+    ast_for("{{foo bar=baz bat=bam}}").should == program do
+      mustache id("foo"), hash(["bar", "ID:baz"], ["bat", "ID:bam"])
+    end
+
+    ast_for("{{foo bar=baz bat=\"bam\"}}").should == program do
+      mustache id("foo"), hash(["bar", "ID:baz"], ["bat", "\"bam\""])
+    end
+
+    ast_for("{{foo omg bar=baz bat=\"bam\"}}").should == program do
+      mustache id("foo"), id("omg"), hash(["bar", id("baz")], ["bat", string("bam")])
+    end
   end
 
   it "parses mustaches with string parameters" do
