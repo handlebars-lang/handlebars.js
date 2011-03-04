@@ -576,12 +576,12 @@ test("passing in data to a compiled function that expects data - works with bloc
   equals("happy world?", result);
 });
 
-test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
+test("passing in data to a compiled function that expects data - data is passed to with block helpers where children use ..", function() {
   var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
 
   var helpers = {
-    hello: function(fn, inverse, options) {
-      return options.data.accessData + " " + fn({exclaim: "?"});
+    hello: function(fn, inverse) {
+      return fn.data.accessData + " " + fn({exclaim: "?"});
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
@@ -684,6 +684,15 @@ test("helpers can take an optional hash", function() {
   equals(result, "GOODBYE CRUEL WORLD");
 });
 
-// test("helpers can take an optional hash", function() {
-//   var template = Handlebars.compile('{{#goodbye cruel="CRUEL"}}world{{/goodbye}}')
-// });
+test("block helpers can take an optional hash", function() {
+  var template = Handlebars.compile('{{#goodbye cruel="CRUEL"}}world{{/goodbye}}');
+
+  var helpers = {
+    goodbye: function(options) {
+      return "GOODBYE " + options.hash.cruel + " " + options.fn(this);
+    }
+  };
+
+  var result = template({}, helpers);
+  equals(result, "GOODBYE CRUEL world");
+});
