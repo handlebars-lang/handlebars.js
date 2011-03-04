@@ -27,11 +27,11 @@ statement
   ;
 
 openBlock
-  : OPEN_BLOCK inMustache CLOSE { $$ = new yy.MustacheNode($2) }
+  : OPEN_BLOCK inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
   ;
 
 openInverse
-  : OPEN_INVERSE inMustache CLOSE { $$ = new yy.MustacheNode($2) }
+  : OPEN_INVERSE inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
   ;
 
 closeBlock
@@ -39,8 +39,8 @@ closeBlock
   ;
 
 mustache
-  : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2) }
-  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2, true) }
+  : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
+  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1], true) }
   ;
 
 
@@ -54,10 +54,10 @@ simpleInverse
   ;
 
 inMustache
-  : path params hash { $$ = [$1].concat($2).concat([$3]) }
-  | path params { $$ = [$1].concat($2) }
-  | path hash { $$ = [$1].concat([$2]) }
-  | path { $$ = [$1] }
+  : path params hash { $$ = [[$1].concat($2), $3] }
+  | path params { $$ = [[$1].concat($2), null] }
+  | path hash { $$ = [[$1], $2] }
+  | path { $$ = [[$1], null] }
   ;
 
 params

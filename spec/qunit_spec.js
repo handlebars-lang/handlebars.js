@@ -420,13 +420,6 @@ test("GH-14: a partial preceding a selector", function() {
    shouldCompileTo(string, [hash, {}, {dude:dude}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
-test("Partial containing complex expression", function() {
-	var template = "Dudes: {{#dudes}}{{> dude}} {{/dudes}}";
-	var dude = "{{../salutation}} {{name}}";
-	var hash = {salutation: "Mr.", dudes: [{name: "Yehuda"}, {name: "Alan"}]};
-	shouldCompileTo(template, [hash, {}, {dude: dude}], "Dudes: Mr. Yehuda Mr. Alan ");
-});
-
 module("String literal parameters");
 
 test("simple literals work", function() {
@@ -529,8 +522,8 @@ test("passing in data to a compiled function that expects data - works with help
   var template = Handlebars.compile("{{hello}}", true);
 
   var helpers = {
-    hello: function(data) {
-      return data.adjective + " "  + this.noun;
+    hello: function(options) {
+      return options.data.adjective + " "  + this.noun;
     }
   };
 
@@ -542,8 +535,8 @@ test("passing in data to a compiled function that expects data - works with help
   var template = Handlebars.compile("{{hello world}}", true);
 
   var helpers = {
-    hello: function(noun, data) {
-      return data.adjective + " "  + noun + (this.exclaim ? "!" : "");
+    hello: function(noun, options) {
+      return options.data.adjective + " "  + noun + (this.exclaim ? "!" : "");
     }
   };
 
@@ -558,8 +551,8 @@ test("passing in data to a compiled function that expects data - works with bloc
     hello: function(fn) {
       return fn(this);
     },
-    world: function(data) {
-      return data.adjective + " world" + (this.exclaim ? "!" : "");
+    world: function(options) {
+      return options.data.adjective + " world" + (this.exclaim ? "!" : "");
     }
   };
 
@@ -574,8 +567,8 @@ test("passing in data to a compiled function that expects data - works with bloc
     hello: function(fn) {
       return fn({exclaim: "?"});
     },
-    world: function(thing, data) {
-      return data.adjective + " " + thing + (this.exclaim || "");
+    world: function(thing, options) {
+      return options.data.adjective + " " + thing + (this.exclaim || "");
     }
   };
 
@@ -587,11 +580,11 @@ test("passing in data to a compiled function that expects data - works with bloc
   var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
 
   var helpers = {
-    hello: function(fn, inverse, data) {
-      return data.accessData + " " + fn({exclaim: "?"});
+    hello: function(fn, inverse, options) {
+      return options.data.accessData + " " + fn({exclaim: "?"});
     },
-    world: function(thing, data) {
-      return data.adjective + " " + thing + (this.exclaim || "");
+    world: function(thing, options) {
+      return options.data.adjective + " " + thing + (this.exclaim || "");
     }
   };
 
@@ -606,8 +599,8 @@ test("you can override inherited data when invoking a helper", function() {
     hello: function(fn) {
       return fn({exclaim: "?", zomg: "world"}, null, null, {adjective: "sad"});
     },
-    world: function(thing, data) {
-      return data.adjective + " " + thing + (this.exclaim || "");
+    world: function(thing, options) {
+      return options.data.adjective + " " + thing + (this.exclaim || "");
     }
   };
 
@@ -623,8 +616,8 @@ test("you can override inherited data when invoking a helper with depth", functi
     hello: function(fn) {
       return fn({exclaim: "?"}, null, null, {adjective: "sad"});
     },
-    world: function(thing, data) {
-      return data.adjective + " " + thing + (this.exclaim || "");
+    world: function(thing, options) {
+      return options.data.adjective + " " + thing + (this.exclaim || "");
     }
   };
 
@@ -676,3 +669,21 @@ test("helpers take precedence over same-named context properties", function() {
   equals(result, "GOODBYE cruel WORLD");
 });
 
+test("helpers can take an optional hash", function() {
+  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD"}}');
+
+  var helpers = {
+    goodbye: function(options) {
+      return "GOODBYE " + options.hash.cruel + " " + options.hash.world;
+    }
+  };
+
+  var context = {};
+
+  var result = template(context, helpers);
+  equals(result, "GOODBYE CRUEL WORLD");
+});
+
+// test("helpers can take an optional hash", function() {
+//   var template = Handlebars.compile('{{#goodbye cruel="CRUEL"}}world{{/goodbye}}')
+// });
