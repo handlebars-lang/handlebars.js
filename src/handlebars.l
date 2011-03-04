@@ -16,12 +16,14 @@
 <mu>"{{!".*?"}}"             { yytext = yytext.substr(3,yyleng-5); this.begin("INITIAL"); return 'COMMENT'; }
 <mu>"{{"                     { return 'OPEN'; }
 
-<mu>"/"                      { return 'SEP'; }
+<mu>"."/[} ]                 { return 'ID'; }
+<mu>".."                     { return 'ID'; }
+<mu>[/.]                     { return 'SEP'; }
 <mu>\s+                      { /*ignore whitespace*/ }
 <mu>"}}}"                    { this.begin("INITIAL"); return 'CLOSE'; }
 <mu>"}}"                     { this.begin("INITIAL"); return 'CLOSE'; }
 <mu>'"'("\\"["]|[^"])*'"'    { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
-<mu>[a-zA-Z0-9_.]+/[} /]     { return 'ID'; }
+<mu>[a-zA-Z0-9_]+/[} /.]     { return 'ID'; }
 <mu>.                        { return 'INVALID'; }
 
 <INITIAL,mu><<EOF>>          { return 'EOF'; }

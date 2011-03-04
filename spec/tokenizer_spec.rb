@@ -11,7 +11,9 @@ describe "Tokenizer" do
     lexer.setInput(string)
     out = []
 
-    while result = parser.terminals_[lexer.lex] and result != "EOF"
+    while token = lexer.lex
+      result = parser.terminals_[token]
+      break if !result || result == "EOF"
       out << Token.new(result, lexer.yytext)
     end
 
@@ -37,8 +39,31 @@ describe "Tokenizer" do
     result[1].should be_token("ID", "foo")
   end
 
+  it "tokenizes a simple path" do
+    result = tokenize("{{foo/bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
+  end
+
+  it "allows dot notation" do
+    result = tokenize("{{foo.bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
+
+    tokenize("{{foo.bar.baz}}").should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
+  end
+
+  it "tokenizes {{.}} as OPEN ID CLOSE" do
+    result = tokenize("{{.}}")
+    result.should match_tokens(%w(OPEN ID CLOSE))
+  end
+
   it "tokenizes a path as 'OPEN (ID SEP)* ID CLOSE'" do
     result = tokenize("{{../foo/bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
+    result[1].should be_token("ID", "..")
+  end
+
+  it "tokenizes a path with .. as a parent path" do
+    result = tokenize("{{../foo.bar}}")
     result.should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
     result[1].should be_token("ID", "..")
   end
