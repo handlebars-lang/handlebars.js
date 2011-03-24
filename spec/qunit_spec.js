@@ -681,7 +681,7 @@ test("helpers can take an optional hash", function() {
   var context = {};
 
   var result = template(context, helpers);
-  equals(result, "GOODBYE CRUEL WORLD");
+  equals(result, "GOODBYE CRUEL WORLD", "Helpers can take an optional hash");
 });
 
 // test("helpers can take an optional hash", function() {
