@@ -11,7 +11,11 @@ describe "Tokenizer" do
     lexer.setInput(string)
     out = []
 
-    while result = parser.terminals_[lexer.lex] and result != "EOF"
+    while token = lexer.lex
+      # p token
+      result = parser.terminals_[token] || token
+      # p result
+      break if !result || result == "EOF" || result == "INVALID"
       out << Token.new(result, lexer.yytext)
     end
 
@@ -37,8 +41,31 @@ describe "Tokenizer" do
     result[1].should be_token("ID", "foo")
   end
 
+  it "tokenizes a simple path" do
+    result = tokenize("{{foo/bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
+  end
+
+  it "allows dot notation" do
+    result = tokenize("{{foo.bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
+
+    tokenize("{{foo.bar.baz}}").should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
+  end
+
+  it "tokenizes {{.}} as OPEN ID CLOSE" do
+    result = tokenize("{{.}}")
+    result.should match_tokens(%w(OPEN ID CLOSE))
+  end
+
   it "tokenizes a path as 'OPEN (ID SEP)* ID CLOSE'" do
     result = tokenize("{{../foo/bar}}")
+    result.should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
+    result[1].should be_token("ID", "..")
+  end
+
+  it "tokenizes a path with .. as a parent path" do
+    result = tokenize("{{../foo.bar}}")
     result.should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
     result[1].should be_token("ID", "..")
   end
@@ -136,6 +163,24 @@ describe "Tokenizer" do
     result = tokenize(%|{{ foo "bar\\"baz" }}|)
     result.should match_tokens(%w(OPEN ID STRING CLOSE))
     result[2].should be_token("STRING", %{bar"baz})
+  end
+
+  it "tokenizes hash arguments" do
+    result = tokenize("{{ foo bar=baz }}")
+    result.should match_tokens %w(OPEN ID ID EQUALS ID CLOSE)
+
+    result = tokenize("{{ foo bar baz=bat }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS ID CLOSE)
+
+    result = tokenize("{{ foo bar baz=\"bat\" }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS STRING CLOSE)
+
+    result = tokenize("{{ foo bar baz=\"bat\" bam=wot }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS STRING ID EQUALS ID CLOSE)
+
+    result = tokenize("{{foo omg bar=baz bat=\"bam\"}}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS ID ID EQUALS STRING CLOSE)
+    result[2].should be_token("ID", "omg")
   end
 
   it "does not time out in a mustache with a single } followed by EOF" do

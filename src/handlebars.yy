@@ -27,11 +27,11 @@ statement
   ;
 
 openBlock
-  : OPEN_BLOCK inMustache CLOSE { $$ = new yy.MustacheNode($2) }
+  : OPEN_BLOCK inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
   ;
 
 openInverse
-  : OPEN_INVERSE inMustache CLOSE { $$ = new yy.MustacheNode($2) }
+  : OPEN_INVERSE inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
   ;
 
 closeBlock
@@ -39,8 +39,8 @@ closeBlock
   ;
 
 mustache
-  : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2) }
-  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2, true) }
+  : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
+  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1], true) }
   ;
 
 
@@ -54,8 +54,10 @@ simpleInverse
   ;
 
 inMustache
-  : path params { $$ = [$1].concat($2) }
-  | path { $$ = [$1] }
+  : path params hash { $$ = [[$1].concat($2), $3] }
+  | path params { $$ = [[$1].concat($2), null] }
+  | path hash { $$ = [[$1], $2] }
+  | path { $$ = [[$1], null] }
   ;
 
 params
@@ -66,6 +68,20 @@ params
 param
   : path { $$ = $1 }
   | STRING { $$ = new yy.StringNode($1) }
+  ;
+
+hash
+  : hashSegments { $$ = new yy.HashNode($1) }
+  ;
+
+hashSegments
+  : hashSegments hashSegment { $1.push($2); $$ = $1 }
+  | hashSegment { $$ = [$1] }
+  ;
+
+hashSegment
+  : ID EQUALS path { $$ = [$1, $3] }
+  | ID EQUALS STRING { $$ = [$1, new yy.StringNode($3)] }
   ;
 
 path
