@@ -502,6 +502,10 @@ test("if", function() {
                   "if with boolean argument does not show the contents when false");
   shouldCompileTo(string, {world: "world"}, "cruel world!",
                   "if with undefined does not show the contents");
+  shouldCompileTo(string, {goodbye: ['foo'], world: "world"}, "GOODBYE cruel world!",
+                  "if with non-empty array shows the contents");
+  shouldCompileTo(string, {goodbye: [], world: "world"}, "cruel world!",
+                  "if with empty array does not show the contents");
 });
 
 test("each", function() {
