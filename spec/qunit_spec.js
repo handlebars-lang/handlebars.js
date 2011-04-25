@@ -80,11 +80,11 @@ test("escaping expressions", function() {
  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with 3 handlebars aren't escaped");
 
- shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\&lt;&gt;',
-        "by default expressions should be escaped");
-
  shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with {{& handlebars aren't escaped");
+
+ shouldCompileTo("{{awesome}}", {awesome: "&\"'/\\<>"}, '&amp;&quot;&#x27;&#x2F;\\&lt;&gt;',
+        "by default expressions should be escaped");
 
 });
 
@@ -359,7 +359,7 @@ test("block helper inverted sections", function() {
   // so we should see the output of both
   shouldCompileTo(string, hash, "<ul><li>Alan</li><li>Yehuda</li></ul>", "an inverse wrapper is passed in as a new context");
   shouldCompileTo(string, empty, "<p><em>Nobody's here</em></p>", "an inverse wrapper can be optionally called");
-  shouldCompileTo(messageString, rootMessage, "<p>Nobody's here</p>", "the context of an inverse is the parent of the block");
+  shouldCompileTo(messageString, rootMessage, "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
 });
 
 module("fallback hash");
@@ -386,7 +386,7 @@ test("basic partials", function() {
   var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
   var partial = "{{name}} ({{url}}) ";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http:&#x2F;&#x2F;yehuda) Alan (http:&#x2F;&#x2F;alan) ",
                   "Basic partials output based on current context.");
 });
 
@@ -394,7 +394,7 @@ test("partials with context", function() {
   var string = "Dudes: {{>dude dudes}}";
   var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http:&#x2F;&#x2F;yehuda) Alan (http:&#x2F;&#x2F;alan) ",
                   "Partials can be passed a context");
 });
 
@@ -403,7 +403,7 @@ test("partial in a partial", function() {
   var dude = "{{name}} {{> url}} ";
   var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {}, {dude: dude, url: url}], "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
+  shouldCompileTo(string, [hash, {}, {dude: dude, url: url}], "Dudes: Yehuda <a href='http:&#x2F;&#x2F;yehuda'>http:&#x2F;&#x2F;yehuda</a> Alan <a href='http:&#x2F;&#x2F;alan'>http:&#x2F;&#x2F;alan</a> ", "Partials are rendered inside of other partials");
 });
 
 test("rendering undefined partial throws an exception", function() {
@@ -437,14 +437,14 @@ test("using a quote in the middle of a parameter raises an error", function() {
 });
 
 test("escaping a String is possible", function(){
-  var string   = 'Message: {{hello "\\"world\\""}}';
+  var string   = 'Message: {{{hello "\\"world\\""}}}';
   var hash     = {}
   var fallback = {hello: function(param) { return "Hello " + param; }}
   shouldCompileTo(string, [hash, fallback], "Message: Hello \"world\"", "template with an escaped String literal");
 });
 
 test("it works with ' marks", function() {
-  var string   = 'Message: {{hello "Alan\'s world"}}';
+  var string   = 'Message: {{{hello "Alan\'s world"}}}';
   var hash     = {}
   var fallback = {hello: function(param) { return "Hello " + param; }}
   shouldCompileTo(string, [hash, fallback], "Message: Hello Alan's world", "template with a ' mark");
