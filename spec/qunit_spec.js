@@ -107,6 +107,10 @@ test("functions with context argument", function() {
       "Frank", "functions are called with context arguments");
 });
 
+test("paths with hyphens", function() {
+  shouldCompileTo("{{foo-bar}}", {"foo-bar": "baz"}, "baz", "Paths can contain hyphens (-)");
+});
+
 test("nested paths", function() {
   shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
                   "Goodbye beautiful world!", "Nested paths access nested objects");
