@@ -13,7 +13,7 @@
 <mu>"{{"\s*"else"            { return 'OPEN_INVERSE'; }
 <mu>"{{{"                    { return 'OPEN_UNESCAPED'; }
 <mu>"{{&"                    { return 'OPEN_UNESCAPED'; }
-<mu>"{{!".*?"}}"             { yytext = yytext.substr(3,yyleng-5); this.begin("INITIAL"); return 'COMMENT'; }
+<mu>"{{!"[\s\S]*?"}}"        { yytext = yytext.substr(3,yyleng-5); this.begin("INITIAL"); return 'COMMENT'; }
 <mu>"{{"                     { return 'OPEN'; }
 
 <mu>"="                      { return 'EQUALS'; }
