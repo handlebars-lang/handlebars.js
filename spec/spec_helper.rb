@@ -79,7 +79,7 @@ module Handlebars
       Handlebars::Spec.js_load('lib/handlebars/printer.js')
       Handlebars::Spec.js_load('lib/handlebars/runtime.js')
       Handlebars::Spec.js_load('lib/handlebars/utils.js')
-      Handlebars::Spec.js_load('lib/Handlebars/vm.js')
+      Handlebars::Spec.js_load('lib/handlebars/vm.js')
       Handlebars::Spec.js_load('lib/handlebars.js')
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
