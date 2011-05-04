@@ -183,6 +183,21 @@ annotations for webkit browsers, but will slightly increase startup
 time.
 
 
+Upgrading
+---------
+
+When upgrading from the Handlebars 0.9 series, be aware that the
+signature for passing custom helpers or partials to templates has
+changed.
+
+Instead of:
+
+    template(context, helpers, partials, [data])
+
+Use:
+
+    template(context, {helpers: helpers, partials: partials, data: data}
+
 Known Issues
 ------------
 * Handlebars.js can be cryptic when there's an error while rendering.

@@ -6,19 +6,25 @@ Handlebars.registerHelper('helperMissing', function(helper, context) {
   }
 });
 
-var shouldCompileTo = function(string, hash, expected, message) {
-  var template = Handlebars.compile(string);
-  if(Object.prototype.toString.call(hash) === "[object Array]") {
-    if(hash[1]) {
+var shouldCompileTo = function(string, hashOrArray, expected, message) {
+  var template = Handlebars.compile(string), ary;
+  if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
+    helpers = hashOrArray[1];
+
+    if(helpers) {
       for(var prop in Handlebars.helpers) {
-        hash[1][prop] = Handlebars.helpers[prop];
+        helpers[prop] = Handlebars.helpers[prop];
       }
     }
+
+    ary = [];
+    ary.push(hashOrArray[0]);
+    ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
   } else {
-    hash = [hash];
+    ary = [hashOrArray];
   }
 
-  result = template.apply(this, hash)
+  result = template.apply(this, ary);
   equal(result, expected, "'" + expected + "' should === '" + result + "': " + message);
 };
 
@@ -532,7 +538,7 @@ test("passing in data to a compiled function that expects data - works with help
     }
   };
 
-  var result = template({noun: "cat"}, helpers, null, {adjective: "happy"});
+  var result = template({noun: "cat"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy cat", result);
 });
 
@@ -545,7 +551,7 @@ test("passing in data to a compiled function that expects data - works with help
     }
   };
 
-  var result = template({exclaim: true, world: "world"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, world: "world"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy world!", result);
 });
 
@@ -561,7 +567,7 @@ test("passing in data to a compiled function that expects data - works with bloc
     }
   };
 
-  var result = template({exclaim: true}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy world!", result);
 });
 
@@ -577,7 +583,7 @@ test("passing in data to a compiled function that expects data - works with bloc
     }
   };
 
-  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy world?", result);
 });
 
@@ -593,7 +599,7 @@ test("passing in data to a compiled function that expects data - data is passed 
     }
   };
 
-  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy", accessData: "#win"});
+  var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy", accessData: "#win"}});
   equals("#win happy world?", result);
 });
 
@@ -609,7 +615,7 @@ test("you can override inherited data when invoking a helper", function() {
     }
   };
 
-  var result = template({exclaim: true, zomg: "planet"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, zomg: "planet"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("sad world?", result);
 });
 
@@ -626,7 +632,7 @@ test("you can override inherited data when invoking a helper with depth", functi
     }
   };
 
-  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("sad world?", result);
 });
 
@@ -648,7 +654,7 @@ test("helpers take precedence over same-named context properties", function() {
     world: "world"
   };
 
-  var result = template(context, helpers);
+  var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE cruel WORLD");
 });
 
@@ -670,7 +676,7 @@ test("helpers take precedence over same-named context properties", function() {
     world: "world"
   };
 
-  var result = template(context, helpers);
+  var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE cruel WORLD");
 });
 
@@ -685,7 +691,7 @@ test("helpers can take an optional hash", function() {
 
   var context = {};
 
-  var result = template(context, helpers);
+  var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE CRUEL WORLD");
 });
 
@@ -698,7 +704,7 @@ test("block helpers can take an optional hash", function() {
     }
   };
 
-  var result = template({}, helpers);
+  var result = template({}, {helpers: helpers});
   equals(result, "GOODBYE CRUEL world");
 });
 
@@ -711,7 +717,7 @@ test("arguments to helpers can be retrieved from options hash in string form", f
     }
   };
 
-  var result = template({}, helpers);
+  var result = template({}, {helpers: helpers});
 
   equals(result, "HELP ME MY BOSS is.a slave.driver");
 });
@@ -726,7 +732,7 @@ test("when using block form, arguments to helpers can be retrieved from options 
     }
   };
 
-  var result = template({}, helpers);
+  var result = template({}, {helpers: helpers});
 
   equals(result, "HELP ME MY BOSS is.a slave.driver: help :(");
 });
@@ -749,7 +755,7 @@ test("when inside a block in String mode, .. passes the appropriate context in t
     dale: {},
 
     need: 'need-a'
-  }, helpers);
+  }, {helpers: helpers});
 
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke");
 });
@@ -773,7 +779,7 @@ test("when inside a block in String mode, .. passes the appropriate context in t
     dale: {},
 
     need: 'need-a'
-  }, helpers);
+  }, {helpers: helpers});
 
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot");
 });
