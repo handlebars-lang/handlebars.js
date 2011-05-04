@@ -608,7 +608,7 @@ test("you can override inherited data when invoking a helper", function() {
 
   var helpers = {
     hello: function(fn) {
-      return fn({exclaim: "?", zomg: "world"}, null, null, {adjective: "sad"});
+      return fn({exclaim: "?", zomg: "world"}, { data: {adjective: "sad"} });
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
@@ -625,7 +625,7 @@ test("you can override inherited data when invoking a helper with depth", functi
 
   var helpers = {
     hello: function(fn) {
-      return fn({exclaim: "?"}, null, null, {adjective: "sad"});
+      return fn({exclaim: "?"}, { data: {adjective: "sad"} });
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
