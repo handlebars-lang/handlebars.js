@@ -3,6 +3,9 @@ Handlebars.js
 
 Handlebars.js is an extension to the [Mustache templating language](http://mustache.github.com/) created by Chris Wanstrath. Handlebars.js and Mustache are both logicless templating languages that keep the view and the code separated like we all know they should be.
 
+Checkout the official Handlebars docs site at [http://handlebars.strobeapp.com](http://handlebars.strobeapp.com).
+
+
 Installing
 ----------
 Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/archives/master) and add it to your web pages (you should usually use the most recent version).
