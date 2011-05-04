@@ -80,6 +80,10 @@ describe "Parser" do
       pad("{{! '#{comment}' }}")
     end
 
+    def multiline_comment(comment)
+      pad("{{! '\n#{comment}\n' }}")
+    end
+
     def content(string)
       pad("CONTENT[ '#{string}' ]")
     end
@@ -157,6 +161,12 @@ describe "Parser" do
   it "parses a comment" do
     ast_for("{{! this is a comment }}").should == program do
       comment " this is a comment "
+    end
+  end
+
+  it "parses a multi-line comment" do
+    ast_for("{{!\nthis is a multi-line comment\n}}").should == program do
+      multiline_comment "this is a multi-line comment"
     end
   end
 
