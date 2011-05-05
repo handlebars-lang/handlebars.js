@@ -196,7 +196,7 @@ Instead of:
 
 Use:
 
-    template(context, {helpers: helpers, partials: partials, data: data}
+    template(context, {helpers: helpers, partials: partials, data: data})
 
 Known Issues
 ------------
