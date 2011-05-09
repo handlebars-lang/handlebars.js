@@ -6,8 +6,10 @@
 [^\x00]*?/("{{")                 { this.begin("mu"); if (yytext) return 'CONTENT'; }
 [^\x00]+                         { return 'CONTENT'; }
 
+<mu>"{{#>>"                  { return 'OPEN_INLINE_PARTIAL'; }
 <mu>"{{>"                    { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                    { return 'OPEN_BLOCK'; }
+<mu>"{{/>>"                  { return 'OPEN_ENDINLINE_PARTIAL'; }
 <mu>"{{/"                    { return 'OPEN_ENDBLOCK'; }
 <mu>"{{^"                    { return 'OPEN_INVERSE'; }
 <mu>"{{"\s*"else"            { return 'OPEN_INVERSE'; }
