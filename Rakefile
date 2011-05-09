@@ -4,7 +4,11 @@ require "bundler/setup"
 file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   if ENV['PATH'].split(':').any? {|folder| File.exists?(folder+'/jison')}
     system "jison src/handlebars.yy src/handlebars.l"
-    sh "mv handlebars.js lib/handlebars/parser.js"
+    File.open("lib/handlebars/parser.js", "w") do |file|
+      file.puts File.read("handlebars.js") + ";"
+    end
+
+    sh "rm handlebars.js"
   else
     puts "Jison is not installed. Try running `npm install jison`."
   end
@@ -24,22 +28,17 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(parser base ast visitor utils vm).map do |file|
+minimal_deps = %w(parser base ast visitor utils compiler).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-base_deps = %w(parser base ast visitor runtime utils vm).map do |file|
-  "lib/handlebars/#{file}.js"
-end
-
-debug_deps = %w(parser base ast visitor printer runtime utils vm debug).map do |file|
+debug_deps = %w(parser base ast visitor printer utils compiler debug).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
 directory "dist"
 
 minimal_deps.unshift "dist"
-base_deps.unshift    "dist"
 debug_deps.unshift   "dist"
 
 def build_for_task(task)
@@ -62,20 +61,15 @@ file "dist/handlebars.js" => minimal_deps do |task|
   build_for_task(task)
 end
 
-file "dist/handlebars.base.js" => base_deps do |task|
-  build_for_task(task)
-end
-
 file "dist/handlebars.debug.js" => debug_deps do |task|
   build_for_task(task)
 end
 
 task :build => [:compile, "dist/handlebars.js"]
-task :base  => [:compile, "dist/handlebars.base.js"]
 task :debug => [:compile, "dist/handlebars.debug.js"]
 
-desc "build the build, debug and base versions of handlebars"
-task :release => [:build, :debug, :base]
+desc "build the build and debug versions of handlebars"
+task :release => [:build, :debug]
 
 directory "vendor"
 

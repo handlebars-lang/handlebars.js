@@ -3,6 +3,9 @@ Handlebars.js
 
 Handlebars.js is an extension to the [Mustache templating language](http://mustache.github.com/) created by Chris Wanstrath. Handlebars.js and Mustache are both logicless templating languages that keep the view and the code separated like we all know they should be.
 
+Checkout the official Handlebars docs site at [http://www.handlebarsjs.com](http://www.handlebarsjs.com).
+
+
 Installing
 ----------
 Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/archives/master) and add it to your web pages (you should usually use the most recent version).
@@ -183,6 +186,21 @@ annotations for webkit browsers, but will slightly increase startup
 time.
 
 
+Upgrading
+---------
+
+When upgrading from the Handlebars 0.9 series, be aware that the
+signature for passing custom helpers or partials to templates has
+changed.
+
+Instead of:
+
+    template(context, helpers, partials, [data])
+
+Use:
+
+    template(context, {helpers: helpers, partials: partials, data: data})
+
 Known Issues
 ------------
 * Handlebars.js can be cryptic when there's an error while rendering.
@@ -195,6 +213,7 @@ Handlebars in the Wild
 -----------------
 * Don Park wrote an Express.js view engine adapter for Handlebars.js called [hbs](http://github.com/donpark/hbs)
 * [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey, supports Handlebars.js as one of its template plugins.
+* [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main templating engine, extending it with automatic data binding support.
 
 Helping Out
 -----------

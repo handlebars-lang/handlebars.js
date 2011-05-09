@@ -6,19 +6,25 @@ Handlebars.registerHelper('helperMissing', function(helper, context) {
   }
 });
 
-var shouldCompileTo = function(string, hash, expected, message) {
-  var template = Handlebars.compile(string);
-  if(Object.prototype.toString.call(hash) === "[object Array]") {
-    if(hash[1]) {
+var shouldCompileTo = function(string, hashOrArray, expected, message) {
+  var template = Handlebars.compile(string), ary;
+  if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
+    helpers = hashOrArray[1];
+
+    if(helpers) {
       for(var prop in Handlebars.helpers) {
-        hash[1][prop] = Handlebars.helpers[prop];
+        helpers[prop] = Handlebars.helpers[prop];
       }
     }
+
+    ary = [];
+    ary.push(hashOrArray[0]);
+    ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
   } else {
-    hash = [hash];
+    ary = [hashOrArray];
   }
 
-  result = template.apply(this, hash)
+  result = template.apply(this, ary);
   equal(result, expected, "'" + expected + "' should === '" + result + "': " + message);
 };
 
@@ -72,7 +78,8 @@ test("newlines", function() {
 test("escaping text", function() {
   shouldCompileTo("Awesome's", {}, "Awesome's", "text is escaped so that it doesn't get caught on single quotes");
   shouldCompileTo("Awesome\\", {}, "Awesome\\", "text is escaped so that the closing quote can't be ignored");
-  shouldCompileTo("Awesome\\ foo", {}, "Awesome\\ foo", "text is escaped so that it doesn't mess up backslashes");
+  shouldCompileTo("Awesome\\\\ foo", {}, "Awesome\\\\ foo", "text is escaped so that it doesn't mess up backslashes");
+  shouldCompileTo("Awesome {{foo}}", {foo: '\\'}, "Awesome \\", "text is escaped so that it doesn't mess up backslashes");
   shouldCompileTo(' " " ', {}, ' " " ', "double quotes never produce invalid javascript");
 });
 
@@ -104,6 +111,10 @@ test("functions with context argument", function() {
       {awesome: function(context) { return context; },
         frank: "Frank"},
       "Frank", "functions are called with context arguments");
+});
+
+test("paths with hyphens", function() {
+  shouldCompileTo("{{foo-bar}}", {"foo-bar": "baz"}, "baz", "Paths can contain hyphens (-)");
 });
 
 test("nested paths", function() {
@@ -519,7 +530,7 @@ test("overriding property lookup", function() {
 
 
 test("passing in data to a compiled function that expects data - works with helpers", function() {
-  var template = Handlebars.compile("{{hello}}", true);
+  var template = Handlebars.compile("{{hello}}", {data: true});
 
   var helpers = {
     hello: function(options) {
@@ -527,12 +538,12 @@ test("passing in data to a compiled function that expects data - works with help
     }
   };
 
-  var result = template({noun: "cat"}, helpers, null, {adjective: "happy"});
+  var result = template({noun: "cat"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy cat", result);
 });
 
 test("passing in data to a compiled function that expects data - works with helpers and parameters", function() {
-  var template = Handlebars.compile("{{hello world}}", true);
+  var template = Handlebars.compile("{{hello world}}", {data: true});
 
   var helpers = {
     hello: function(noun, options) {
@@ -540,12 +551,12 @@ test("passing in data to a compiled function that expects data - works with help
     }
   };
 
-  var result = template({exclaim: true, world: "world"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, world: "world"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy world!", result);
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers", function() {
-  var template = Handlebars.compile("{{#hello}}{{world}}{{/hello}}", true);
+  var template = Handlebars.compile("{{#hello}}{{world}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
@@ -556,12 +567,12 @@ test("passing in data to a compiled function that expects data - works with bloc
     }
   };
 
-  var result = template({exclaim: true}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy world!", result);
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
-  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
@@ -572,12 +583,12 @@ test("passing in data to a compiled function that expects data - works with bloc
     }
   };
 
-  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy world?", result);
 });
 
 test("passing in data to a compiled function that expects data - data is passed to with block helpers where children use ..", function() {
-  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn, inverse) {
@@ -588,40 +599,40 @@ test("passing in data to a compiled function that expects data - data is passed 
     }
   };
 
-  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy", accessData: "#win"});
+  var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy", accessData: "#win"}});
   equals("#win happy world?", result);
 });
 
 test("you can override inherited data when invoking a helper", function() {
-  var template = Handlebars.compile("{{#hello}}{{world zomg}}{{/hello}}", true);
+  var template = Handlebars.compile("{{#hello}}{{world zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
-      return fn({exclaim: "?", zomg: "world"}, null, null, {adjective: "sad"});
+      return fn({exclaim: "?", zomg: "world"}, { data: {adjective: "sad"} });
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
     }
   };
 
-  var result = template({exclaim: true, zomg: "planet"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, zomg: "planet"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("sad world?", result);
 });
 
 
 test("you can override inherited data when invoking a helper with depth", function() {
-  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", true);
+  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
-      return fn({exclaim: "?"}, null, null, {adjective: "sad"});
+      return fn({exclaim: "?"}, { data: {adjective: "sad"} });
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
     }
   };
 
-  var result = template({exclaim: true, zomg: "world"}, helpers, null, {adjective: "happy"});
+  var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("sad world?", result);
 });
 
@@ -643,7 +654,7 @@ test("helpers take precedence over same-named context properties", function() {
     world: "world"
   };
 
-  var result = template(context, helpers);
+  var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE cruel WORLD");
 });
 
@@ -665,7 +676,7 @@ test("helpers take precedence over same-named context properties", function() {
     world: "world"
   };
 
-  var result = template(context, helpers);
+  var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE cruel WORLD");
 });
 
@@ -680,7 +691,7 @@ test("helpers can take an optional hash", function() {
 
   var context = {};
 
-  var result = template(context, helpers);
+  var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE CRUEL WORLD");
 });
 
@@ -693,6 +704,83 @@ test("block helpers can take an optional hash", function() {
     }
   };
 
-  var result = template({}, helpers);
+  var result = template({}, {helpers: helpers});
   equals(result, "GOODBYE CRUEL world");
 });
+
+test("arguments to helpers can be retrieved from options hash in string form", function() {
+  var template = Handlebars.compile('{{wycats is.a slave.driver}}', {stringParams: true});
+
+  var helpers = {
+    wycats: function(passiveVoice, noun, options) {
+      return "HELP ME MY BOSS " + passiveVoice + ' ' + noun;
+    }
+  };
+
+  var result = template({}, {helpers: helpers});
+
+  equals(result, "HELP ME MY BOSS is.a slave.driver");
+});
+
+test("when using block form, arguments to helpers can be retrieved from options hash in string form", function() {
+  var template = Handlebars.compile('{{#wycats is.a slave.driver}}help :({{/wycats}}', {stringParams: true});
+
+  var helpers = {
+    wycats: function(passiveVoice, noun, options) {
+      return "HELP ME MY BOSS " + passiveVoice + ' ' +
+              noun + ': ' + options.fn(this);
+    }
+  };
+
+  var result = template({}, {helpers: helpers});
+
+  equals(result, "HELP ME MY BOSS is.a slave.driver: help :(");
+});
+
+test("when inside a block in String mode, .. passes the appropriate context in the options hash", function() {
+  var template = Handlebars.compile('{{#with dale}}{{tomdale ../need dad.joke}}{{/with}}', {stringParams: true});
+
+  var helpers = {
+    tomdale: function(desire, noun, options) {
+      return "STOP ME FROM READING HACKER NEWS I " +
+              options.contexts[0][desire] + " " + noun;
+    },
+
+    "with": function(context, options) {
+      return options.fn(options.contexts[0][context]);
+    }
+  };
+
+  var result = template({
+    dale: {},
+
+    need: 'need-a'
+  }, {helpers: helpers});
+
+  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke");
+});
+
+test("when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper", function() {
+  var template = Handlebars.compile('{{#with dale}}{{#tomdale ../need dad.joke}}wot{{/tomdale}}{{/with}}', {stringParams: true});
+
+  var helpers = {
+    tomdale: function(desire, noun, options) {
+      return "STOP ME FROM READING HACKER NEWS I " +
+              options.contexts[0][desire] + " " + noun + " " +
+              options.fn(this);
+    },
+
+    "with": function(context, options) {
+      return options.fn(options.contexts[0][context]);
+    }
+  };
+
+  var result = template({
+    dale: {},
+
+    need: 'need-a'
+  }, {helpers: helpers});
+
+  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot");
+});
+
