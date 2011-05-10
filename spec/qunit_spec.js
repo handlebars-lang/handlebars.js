@@ -272,7 +272,7 @@ test("block helper", function() {
   var template = Handlebars.compile(string);
 
   result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
-  equal(result, "GOODBYE! cruel world!");
+  equal(result, "GOODBYE! cruel world!","");
 });
 
 test("block helper staying in the same context", function() {
@@ -280,7 +280,7 @@ test("block helper staying in the same context", function() {
   var template = Handlebars.compile(string);
 
   result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
-  equal(result, "<form><p>Yehuda</p></form>");
+  equal(result, "<form><p>Yehuda</p></form>","");
 });
 
 test("block helper should have context in this", function() {
@@ -305,7 +305,7 @@ test("block helper passing a new context", function() {
   var template = Handlebars.compile(string);
 
   result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda"}});
-  equal(result, "<form><p>Yehuda</p></form>");
+  equal(result, "<form><p>Yehuda</p></form>","");
 });
 
 test("block helper passing a complex path context", function() {
@@ -313,7 +313,7 @@ test("block helper passing a complex path context", function() {
   var template = Handlebars.compile(string);
 
   result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
-  equal(result, "<form><p>Harold</p></form>");
+  equal(result, "<form><p>Harold</p></form>","");
 });
 
 test("nested block helpers", function() {
@@ -326,7 +326,7 @@ test("nested block helpers", function() {
              link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }
             }
   });
-  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
+  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>","");
 });
 
 test("block inverted sections", function() {
@@ -539,7 +539,7 @@ test("passing in data to a compiled function that expects data - works with help
   };
 
   var result = template({noun: "cat"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy cat", result);
+  equals("happy cat", result,"");
 });
 
 test("passing in data to a compiled function that expects data - works with helpers and parameters", function() {
@@ -552,7 +552,7 @@ test("passing in data to a compiled function that expects data - works with help
   };
 
   var result = template({exclaim: true, world: "world"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy world!", result);
+  equals("happy world!", result,"");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers", function() {
@@ -568,7 +568,7 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy world!", result);
+  equals("happy world!", result,"");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
@@ -584,7 +584,7 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy world?", result);
+  equals("happy world?", result,"");
 });
 
 test("passing in data to a compiled function that expects data - data is passed to with block helpers where children use ..", function() {
@@ -600,7 +600,7 @@ test("passing in data to a compiled function that expects data - data is passed 
   };
 
   var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy", accessData: "#win"}});
-  equals("#win happy world?", result);
+  equals("#win happy world?", result,"");
 });
 
 test("you can override inherited data when invoking a helper", function() {
@@ -616,7 +616,7 @@ test("you can override inherited data when invoking a helper", function() {
   };
 
   var result = template({exclaim: true, zomg: "planet"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("sad world?", result);
+  equals("sad world?", result,"");
 });
 
 
@@ -633,7 +633,7 @@ test("you can override inherited data when invoking a helper with depth", functi
   };
 
   var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("sad world?", result);
+  equals("sad world?", result,"");
 });
 
 test("helpers take precedence over same-named context properties", function() {
@@ -655,7 +655,7 @@ test("helpers take precedence over same-named context properties", function() {
   };
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE cruel WORLD");
+  equals(result, "GOODBYE cruel WORLD","");
 });
 
 test("helpers take precedence over same-named context properties", function() {
@@ -677,7 +677,7 @@ test("helpers take precedence over same-named context properties", function() {
   };
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE cruel WORLD");
+  equals(result, "GOODBYE cruel WORLD","");
 });
 
 test("helpers can take an optional hash", function() {
@@ -692,7 +692,7 @@ test("helpers can take an optional hash", function() {
   var context = {};
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL WORLD");
+  equals(result, "GOODBYE CRUEL WORLD","");
 });
 
 test("block helpers can take an optional hash", function() {
@@ -705,7 +705,7 @@ test("block helpers can take an optional hash", function() {
   };
 
   var result = template({}, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL world");
+  equals(result, "GOODBYE CRUEL world","");
 });
 
 test("arguments to helpers can be retrieved from options hash in string form", function() {
@@ -719,7 +719,7 @@ test("arguments to helpers can be retrieved from options hash in string form", f
 
   var result = template({}, {helpers: helpers});
 
-  equals(result, "HELP ME MY BOSS is.a slave.driver");
+  equals(result, "HELP ME MY BOSS is.a slave.driver","");
 });
 
 test("when using block form, arguments to helpers can be retrieved from options hash in string form", function() {
@@ -734,7 +734,7 @@ test("when using block form, arguments to helpers can be retrieved from options 
 
   var result = template({}, {helpers: helpers});
 
-  equals(result, "HELP ME MY BOSS is.a slave.driver: help :(");
+  equals(result, "HELP ME MY BOSS is.a slave.driver: help :(","");
 });
 
 test("when inside a block in String mode, .. passes the appropriate context in the options hash", function() {
@@ -757,7 +757,7 @@ test("when inside a block in String mode, .. passes the appropriate context in t
     need: 'need-a'
   }, {helpers: helpers});
 
-  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke");
+  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke","");
 });
 
 test("when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper", function() {
@@ -781,6 +781,6 @@ test("when inside a block in String mode, .. passes the appropriate context in t
     need: 'need-a'
   }, {helpers: helpers});
 
-  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot");
+  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot","");
 });
 
