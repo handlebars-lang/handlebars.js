@@ -24,7 +24,7 @@
 <mu>"}}}"                    { this.begin("INITIAL"); return 'CLOSE'; }
 <mu>"}}"                     { this.begin("INITIAL"); return 'CLOSE'; }
 <mu>'"'("\\"["]|[^"])*'"'    { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
-<mu>[a-zA-Z0-9_-]+/[=}\s/.]  { return 'ID'; }
+<mu>[a-zA-Z0-9_$-]+/[=}\s/.] { return 'ID'; }
 <mu>.                        { return 'INVALID'; }
 
 <INITIAL,mu><<EOF>>          { return 'EOF'; }
