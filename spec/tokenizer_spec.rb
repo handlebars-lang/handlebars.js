@@ -77,9 +77,15 @@ describe "Tokenizer" do
     result[3].should be_token("ID", "foo")
   end
 
-  it "tokenizes a simple mustahe with spaces as 'OPEN ID CLOSE'" do
+  it "tokenizes a simple mustache with spaces as 'OPEN ID CLOSE'" do
     result = tokenize("{{  foo  }}")
     result.should match_tokens(%w(OPEN ID CLOSE))
+    result[1].should be_token("ID", "foo")
+  end
+
+  it "tokenizes a simple mustache with line breaks as 'OPEN ID ID CLOSE'" do
+    result = tokenize("{{  foo  \n   bar }}")
+    result.should match_tokens(%w(OPEN ID ID CLOSE))
     result[1].should be_token("ID", "foo")
   end
 
@@ -170,6 +176,9 @@ describe "Tokenizer" do
     result.should match_tokens %w(OPEN ID ID EQUALS ID CLOSE)
 
     result = tokenize("{{ foo bar baz=bat }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS ID CLOSE)
+
+    result = tokenize("{{ foo bar\n  baz=bat }}")
     result.should match_tokens %w(OPEN ID ID ID EQUALS ID CLOSE)
 
     result = tokenize("{{ foo bar baz=\"bat\" }}")
