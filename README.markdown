@@ -166,6 +166,43 @@ example:
     //   <li><a href="/people/2">Yehuda</a></li>
     // </ul>
 
+You can also set a context for a partial after the partial's name, so in the above example, if we change:
+
+    source = "<ul><li>{{> link person }}</li></ul>";
+    Handlebars.compile(source)({"person":{"name":"Jake", "id":3}});
+
+    // Should render:
+    // <ul>
+    //   <li><a href="/people/3">Jake</a></li>
+    // </ul>
+
+
+#### Inline Partials
+
+In Handlebars, you can also declare a partial in its first use instead of registering it separately.  Inline partials are declared like blocks except they are prefixed with '>>' so:
+
+    var source = "<p>Welcome,{{#>>link}}<a href="/people/{{id}}">{{name}}</a>{{/>>link}} </p>"
+            +"Your friends: <ul>{{#friends}}<li>{{> link}}</li>{{/friends}}</ul>";
+    var template = Handlebars.compile(source);
+    var data = { 
+        "name":"Meghan", "id": 4,
+        "friends": [
+                   { "name": "Alan", "id": 1 },
+                   { "name": "Yehuda", "id": 2 }
+                   ]
+        };
+
+    template(data);
+
+    // Should render:
+    // <p>Welcome,<a href="/people/4">Meghan</a</p>
+    // Your friends:
+    // <ul>
+    //   <li><a href="/people/1">Alan</a></li>
+    //   <li><a href="/people/2">Yehuda</a></li>
+    // </ul>
+
+
 Precompiling Templates
 ----------------------
 
