@@ -87,11 +87,11 @@ test("escaping expressions", function() {
  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with 3 handlebars aren't escaped");
 
- shouldCompileTo("{{awesome}}", {awesome: "&\"\\<>"}, '&amp;\"\\&lt;&gt;',
-        "by default expressions should be escaped");
-
  shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>',
         "expressions with {{& handlebars aren't escaped");
+
+ shouldCompileTo("{{awesome}}", {awesome: "&\"'`\\<>"}, '&amp;&quot;&#x27;&#x60;\\&lt;&gt;',
+        "by default expressions should be escaped");
 
 });
 
@@ -370,7 +370,7 @@ test("block helper inverted sections", function() {
   // so we should see the output of both
   shouldCompileTo(string, hash, "<ul><li>Alan</li><li>Yehuda</li></ul>", "an inverse wrapper is passed in as a new context");
   shouldCompileTo(string, empty, "<p><em>Nobody's here</em></p>", "an inverse wrapper can be optionally called");
-  shouldCompileTo(messageString, rootMessage, "<p>Nobody's here</p>", "the context of an inverse is the parent of the block");
+  shouldCompileTo(messageString, rootMessage, "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
 });
 
 module("fallback hash");
@@ -448,14 +448,14 @@ test("using a quote in the middle of a parameter raises an error", function() {
 });
 
 test("escaping a String is possible", function(){
-  var string   = 'Message: {{hello "\\"world\\""}}';
+  var string   = 'Message: {{{hello "\\"world\\""}}}';
   var hash     = {}
   var fallback = {hello: function(param) { return "Hello " + param; }}
   shouldCompileTo(string, [hash, fallback], "Message: Hello \"world\"", "template with an escaped String literal");
 });
 
 test("it works with ' marks", function() {
-  var string   = 'Message: {{hello "Alan\'s world"}}';
+  var string   = 'Message: {{{hello "Alan\'s world"}}}';
   var hash     = {}
   var fallback = {hello: function(param) { return "Hello " + param; }}
   shouldCompileTo(string, [hash, fallback], "Message: Hello Alan's world", "template with a ' mark");
