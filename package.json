@@ -20,13 +20,15 @@
   ],
   "main" : "lib/handlebars.js",
   "scripts" : {
-    "preinstall" : "rake compile"
+    "prepublish" : "rake compile",
+    "preinstall" : "[ -f lib/handlebars/parser.js ] || rake compile"
   },
   "engines": {
     "node": "0.4.x"
   },
   "dependencies": {
-    "jison" : "0.2.9"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "jison" : "0.2.9"
+  }
 }
