@@ -68,6 +68,7 @@ params
 param
   : path { $$ = $1 }
   | STRING { $$ = new yy.StringNode($1) }
+  | INTEGER { $$ = new yy.IntegerNode($1) }
   ;
 
 hash
@@ -82,6 +83,7 @@ hashSegments
 hashSegment
   : ID EQUALS path { $$ = [$1, $3] }
   | ID EQUALS STRING { $$ = [$1, new yy.StringNode($3)] }
+  | ID EQUALS INTEGER { $$ = [$1, new yy.IntegerNode($3)] }
   ;
 
 path

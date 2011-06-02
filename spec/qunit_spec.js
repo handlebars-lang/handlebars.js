@@ -139,7 +139,7 @@ test("--- TODO --- bad idea nested paths", function() {
   shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
 });
 
-test("that current context path ({{.}}) doesn't hit fallback", function() {
+test("that current context path ({{.}}) doesn't hit helpers", function() {
 	shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
 });
 
@@ -231,16 +231,16 @@ test("block with complex lookup", function() {
 test("helper with complex lookup", function() {
   var string = "{{#goodbyes}}{{{link ../prefix}}}{{/goodbyes}}"
   var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", url: "goodbye"}]};
-  var fallback = {link: function(prefix) {
+  var helpers = {link: function(prefix) {
     return "<a href='" + prefix + "/" + this.url + "'>" + this.text + "</a>"
   }};
-  shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
+  shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>")
 });
 
 test("helper block with complex lookup expression", function() {
   var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}"
   var hash = {name: "Alan"};
-  var fallback = {goodbyes: function(fn) {
+  var helpers = {goodbyes: function(fn) {
 		var out = "";
 		var byes = ["Goodbye", "goodbye", "GOODBYE"];
 		for (var i = 0,j = byes.length; i < j; i++) {
@@ -248,16 +248,16 @@ test("helper block with complex lookup expression", function() {
 		}
     return out;
   }};
-  shouldCompileTo(string, [hash, fallback], "Goodbye Alan! goodbye Alan! GOODBYE Alan! ");
+  shouldCompileTo(string, [hash, helpers], "Goodbye Alan! goodbye Alan! GOODBYE Alan! ");
 });
 
 test("helper with complex lookup and nested template", function() {
   var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
   var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
-  var fallback = {link: function (prefix, fn) {
+  var helpers = {link: function (prefix, fn) {
       return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
   }};
-  shouldCompileTo(string, [hash, fallback], "<a href='/root/goodbye'>Goodbye</a>")
+  shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>")
 });
 
 test("block with deep nested complex lookup", function() {
@@ -373,21 +373,21 @@ test("block helper inverted sections", function() {
   shouldCompileTo(messageString, rootMessage, "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
 });
 
-module("fallback hash");
+module("helpers hash");
 
-test("providing a fallback hash", function() {
+test("providing a helpers hash", function() {
   shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: "world"}], "Goodbye cruel world!",
-                  "Fallback hash is available");
+                  "helpers hash is available");
 
   shouldCompileTo("Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!", [{iter: [{cruel: "cruel"}]}, {world: "world"}],
-                  "Goodbye cruel world!", "Fallback hash is available inside other blocks");
+                  "Goodbye cruel world!", "helpers hash is available inside other blocks");
 });
 
 test("in cases of conflict, the explicit hash wins", function() {
 
 });
 
-test("the fallback hash is available is nested contexts", function() {
+test("the helpers hash is available is nested contexts", function() {
 
 });
 
@@ -434,10 +434,10 @@ test("GH-14: a partial preceding a selector", function() {
 module("String literal parameters");
 
 test("simple literals work", function() {
-  var string   = 'Message: {{hello "world"}}';
+  var string   = 'Message: {{hello "world" 12}}';
   var hash     = {};
-  var fallback = {hello: function(param) { return "Hello " + param; }}
-  shouldCompileTo(string, [hash, fallback], "Message: Hello world", "template with a simple String literal");
+  var helpers  = {hello: function(param, times) { return "Hello " + param + " " + times + " times"; }}
+  shouldCompileTo(string, [hash, helpers], "Message: Hello world 12 times", "template with a simple String literal");
 });
 
 test("using a quote in the middle of a parameter raises an error", function() {
@@ -450,15 +450,15 @@ test("using a quote in the middle of a parameter raises an error", function() {
 test("escaping a String is possible", function(){
   var string   = 'Message: {{{hello "\\"world\\""}}}';
   var hash     = {}
-  var fallback = {hello: function(param) { return "Hello " + param; }}
-  shouldCompileTo(string, [hash, fallback], "Message: Hello \"world\"", "template with an escaped String literal");
+  var helpers = {hello: function(param) { return "Hello " + param; }}
+  shouldCompileTo(string, [hash, helpers], "Message: Hello \"world\"", "template with an escaped String literal");
 });
 
 test("it works with ' marks", function() {
   var string   = 'Message: {{{hello "Alan\'s world"}}}';
   var hash     = {}
-  var fallback = {hello: function(param) { return "Hello " + param; }}
-  shouldCompileTo(string, [hash, fallback], "Message: Hello Alan's world", "template with a ' mark");
+  var helpers = {hello: function(param) { return "Hello " + param; }}
+  shouldCompileTo(string, [hash, helpers], "Message: Hello Alan's world", "template with a ' mark");
 });
 
 module("multiple parameters");
@@ -466,17 +466,17 @@ module("multiple parameters");
 test("simple multi-params work", function() {
   var string   = 'Message: {{goodbye cruel world}}';
   var hash     = {cruel: "cruel", world: "world"}
-  var fallback = {goodbye: function(cruel, world) { return "Goodbye " + cruel + " " + world; }}
-  shouldCompileTo(string, [hash, fallback], "Message: Goodbye cruel world", "regular helpers with multiple params");
+  var helpers = {goodbye: function(cruel, world) { return "Goodbye " + cruel + " " + world; }}
+  shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "regular helpers with multiple params");
 });
 
 test("block multi-params work", function() {
   var string   = 'Message: {{#goodbye cruel world}}{{greeting}} {{adj}} {{noun}}{{/goodbye}}';
   var hash     = {cruel: "cruel", world: "world"}
-  var fallback = {goodbye: function(cruel, world, fn) {
+  var helpers = {goodbye: function(cruel, world, fn) {
     return fn({greeting: "Goodbye", adj: cruel, noun: world});
   }}
-  shouldCompileTo(string, [hash, fallback], "Message: Goodbye cruel world", "block helpers with multiple params");
+  shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "block helpers with multiple params");
 })
 
 module("safestring");
@@ -681,31 +681,31 @@ test("helpers take precedence over same-named context properties", function() {
 });
 
 test("helpers can take an optional hash", function() {
-  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD"}}');
+  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" times=12}}');
 
   var helpers = {
     goodbye: function(options) {
-      return "GOODBYE " + options.hash.cruel + " " + options.hash.world;
+      return "GOODBYE " + options.hash.cruel + " " + options.hash.world + " " + options.hash.times + " TIMES";
     }
   };
 
   var context = {};
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL WORLD");
+  equals(result, "GOODBYE CRUEL WORLD 12 TIMES");
 });
 
 test("block helpers can take an optional hash", function() {
-  var template = Handlebars.compile('{{#goodbye cruel="CRUEL"}}world{{/goodbye}}');
+  var template = Handlebars.compile('{{#goodbye cruel="CRUEL" times=12}}world{{/goodbye}}');
 
   var helpers = {
     goodbye: function(options) {
-      return "GOODBYE " + options.hash.cruel + " " + options.fn(this);
+      return "GOODBYE " + options.hash.cruel + " " + options.fn(this) + " " + options.hash.times + " TIMES";
     }
   };
 
   var result = template({}, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL world");
+  equals(result, "GOODBYE CRUEL world 12 TIMES");
 });
 
 test("arguments to helpers can be retrieved from options hash in string form", function() {

@@ -171,12 +171,21 @@ describe "Tokenizer" do
     result[2].should be_token("STRING", %{bar"baz})
   end
 
+  it "tokenizes numbers" do
+    result = tokenize(%|{{ foo 1 }}|)
+    result.should match_tokens(%w(OPEN ID INTEGER CLOSE))
+    result[2].should be_token("INTEGER", "1")
+  end
+
   it "tokenizes hash arguments" do
     result = tokenize("{{ foo bar=baz }}")
     result.should match_tokens %w(OPEN ID ID EQUALS ID CLOSE)
 
     result = tokenize("{{ foo bar baz=bat }}")
     result.should match_tokens %w(OPEN ID ID ID EQUALS ID CLOSE)
+
+    result = tokenize("{{ foo bar baz=1 }}")
+    result.should match_tokens %w(OPEN ID ID ID EQUALS INTEGER CLOSE)
 
     result = tokenize("{{ foo bar\n  baz=bat }}")
     result.should match_tokens %w(OPEN ID ID ID EQUALS ID CLOSE)
