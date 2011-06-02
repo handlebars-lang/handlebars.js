@@ -434,10 +434,15 @@ test("GH-14: a partial preceding a selector", function() {
 module("String literal parameters");
 
 test("simple literals work", function() {
-  var string   = 'Message: {{hello "world" 12}}';
+  var string   = 'Message: {{hello "world" 12 true false}}';
   var hash     = {};
-  var helpers  = {hello: function(param, times) { return "Hello " + param + " " + times + " times"; }}
-  shouldCompileTo(string, [hash, helpers], "Message: Hello world 12 times", "template with a simple String literal");
+  var helpers  = {hello: function(param, times, bool1, bool2) {
+    if(typeof times !== 'number') { times = "NaN"; }
+    if(typeof bool1 !== 'boolean') { bool1 = "NaB"; }
+    if(typeof bool2 !== 'boolean') { bool2 = "NaB"; }
+    return "Hello " + param + " " + times + " times: " + bool1 + " " + bool2;
+  }}
+  shouldCompileTo(string, [hash, helpers], "Message: Hello world 12 times: true false", "template with a simple String literal");
 });
 
 test("using a quote in the middle of a parameter raises an error", function() {
@@ -695,6 +700,30 @@ test("helpers can take an optional hash", function() {
   equals(result, "GOODBYE CRUEL WORLD 12 TIMES");
 });
 
+test("helpers can take an optional hash with booleans", function() {
+  var helpers = {
+    goodbye: function(options) {
+      if (options.hash.print === true) {
+        return "GOODBYE " + options.hash.cruel + " " + options.hash.world;
+      } else if (options.hash.print === false) {
+        return "NOT PRINTING";
+      } else {
+        return "THIS SHOULD NOT HAPPEN";
+      }
+    }
+  };
+
+  var context = {};
+
+  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" print=true}}');
+  var result = template(context, {helpers: helpers});
+  equals(result, "GOODBYE CRUEL WORLD");
+
+  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" print=false}}');
+  var result = template(context, {helpers: helpers});
+  equals(result, "NOT PRINTING");
+});
+
 test("block helpers can take an optional hash", function() {
   var template = Handlebars.compile('{{#goodbye cruel="CRUEL" times=12}}world{{/goodbye}}');
 
@@ -707,6 +736,29 @@ test("block helpers can take an optional hash", function() {
   var result = template({}, {helpers: helpers});
   equals(result, "GOODBYE CRUEL world 12 TIMES");
 });
+
+test("block helpers can take an optional hash with booleans", function() {
+  var helpers = {
+    goodbye: function(options) {
+      if (options.hash.print === true) {
+        return "GOODBYE " + options.hash.cruel + " " + options.fn(this);
+      } else if (options.hash.print === false) {
+        return "NOT PRINTING";
+      } else {
+        return "THIS SHOULD NOT HAPPEN";
+      }
+    }
+  };
+
+  var template = Handlebars.compile('{{#goodbye cruel="CRUEL" print=true}}world{{/goodbye}}');
+  var result = template({}, {helpers: helpers});
+  equals(result, "GOODBYE CRUEL world");
+
+  var template = Handlebars.compile('{{#goodbye cruel="CRUEL" print=false}}world{{/goodbye}}');
+  var result = template({}, {helpers: helpers});
+  equals(result, "NOT PRINTING");
+});
+
 
 test("arguments to helpers can be retrieved from options hash in string form", function() {
   var template = Handlebars.compile('{{wycats is.a slave.driver}}', {stringParams: true});
