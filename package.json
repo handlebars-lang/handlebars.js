@@ -1,0 +1,34 @@
+{
+  "author": "Yehuda Katz (http://yehudakatz.com)",
+  "name": "handlebars",
+  "description": "Simple, logicless templates",
+  "version": "1.0.2beta",
+  "homepage": "http://handlebars.strobeapp.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wycats/handlebars.js.git"
+  },
+  "files" : [
+    "Gemfile",
+    "Gemfile.lock",
+    "License",
+    "Readme.markdown",
+    "Rakefile",
+    "lib",
+    "spec",
+    "src"
+  ],
+  "main" : "lib/handlebars.js",
+  "scripts" : {
+    "prepublish" : "rake compile",
+    "preinstall" : "[ -f lib/handlebars/parser.js ] || rake compile"
+  },
+  "engines": {
+    "node": "0.4.x"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jison" : "0.2.9"
+  }
+}

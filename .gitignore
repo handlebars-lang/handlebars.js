@@ -1,5 +1,6 @@
 dist
 lib/handlebars/parser.js
 vendor
+node_modules
 .rvmrc
 .DS_Store
