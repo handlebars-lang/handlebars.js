@@ -179,12 +179,6 @@ test("inverted section with empty set", function() {
   shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is empty set.");
 });
 
-test("inverted section using result of function call", function() {
-  var string = "{{goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
-  var hash = {goodbyes: function() { return false; }}
-  shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when result of function in expression is false.");
-});
-
 module("blocks");
 
 test("array", function() {
@@ -341,25 +335,25 @@ test("block inverted sections with empty arrays", function() {
 
 test("block helper inverted sections", function() {
   var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
-  var list = function(context, fn, inverse) {
+  var list = function(context, options) {
     if (context.length > 0) {
       var out = "<ul>";
       for(var i = 0,j=context.length; i < j; i++) {
         out += "<li>";
-        out += fn(context[i]);
+        out += options.fn(context[i]);
         out += "</li>";
       }
       out += "</ul>";
       return out;
     } else {
-      return "<p>" + inverse(this) + "</p>";
+      return "<p>" + options.inverse(this) + "</p>";
     }
   };
 
   var hash = {list: list, people: [{name: "Alan"}, {name: "Yehuda"}]};
   var empty = {list: list, people: []};
   var rootMessage = {
-    list: function(context, fn, inverse) { if(context.length === 0) { return "<p>" + inverse(this) + "</p>"; } },
+    list: function(context, options) { if(context.length === 0) { return "<p>" + options.inverse(this) + "</p>"; } },
     people: [],
     message: "Nobody's here"
   }
