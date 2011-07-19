@@ -92,6 +92,14 @@ describe "Parser" do
       string.inspect
     end
 
+    def integer(string)
+      "INTEGER{#{string}}"
+    end
+
+    def boolean(string)
+      "BOOLEAN{#{string}}"
+    end
+
     def hash(*pairs)
       "HASH{" + pairs.map {|k,v| "#{k}=#{v}" }.join(", ") + "}"
     end
@@ -127,7 +135,19 @@ describe "Parser" do
 
   it "parses mustaches with hash arguments" do
     ast_for("{{foo bar=baz}}").should == program do
-      mustache id("foo"), [], hash(["bar", "ID:baz"])
+      mustache id("foo"), [], hash(["bar", id("baz")])
+    end
+
+    ast_for("{{foo bar=1}}").should == program do
+      mustache id("foo"), [], hash(["bar", integer("1")])
+    end
+
+    ast_for("{{foo bar=true}}").should == program do
+      mustache id("foo"), [], hash(["bar", boolean("true")])
+    end
+
+    ast_for("{{foo bar=false}}").should == program do
+      mustache id("foo"), [], hash(["bar", boolean("false")])
     end
 
     ast_for("{{foo bar=baz bat=bam}}").should == program do
@@ -141,10 +161,31 @@ describe "Parser" do
     ast_for("{{foo omg bar=baz bat=\"bam\"}}").should == program do
       mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")])
     end
+
+    ast_for("{{foo omg bar=baz bat=\"bam\" baz=1}}").should == program do
+      mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")], ["baz", integer("1")])
+    end
+
+    ast_for("{{foo omg bar=baz bat=\"bam\" baz=true}}").should == program do
+      mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")], ["baz", boolean("true")])
+    end
+
+    ast_for("{{foo omg bar=baz bat=\"bam\" baz=false}}").should == program do
+      mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")], ["baz", boolean("false")])
+    end
   end
 
   it "parses mustaches with string parameters" do
     ast_for("{{foo bar \"baz\" }}").should == program { mustache id("foo"), [id("bar"), string("baz")] }
+  end
+
+  it "parses mustaches with INTEGER parameters" do
+    ast_for("{{foo 1}}").should == program { mustache id("foo"), [integer("1")] }
+  end
+
+  it "parses mustaches with BOOLEAN parameters" do
+    ast_for("{{foo true}}").should == program { mustache id("foo"), [boolean("true")] }
+    ast_for("{{foo false}}").should == program { mustache id("foo"), [boolean("false")] }
   end
 
   it "parses contents followed by a mustache" do

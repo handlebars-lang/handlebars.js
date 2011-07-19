@@ -102,7 +102,7 @@ instance:
     });
 
     var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-    var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li></ul>'
+    var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li>{{/posts}}</ul>'
 
     var template = Handlebars.compile(source);
     template(context);
