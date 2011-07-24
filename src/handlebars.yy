@@ -20,6 +20,7 @@ statements
 statement
   : openInverse program closeBlock { $$ = new yy.InverseNode($1, $2, $3) }
   | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2, $3) }
+  | openInlinePartial program closeInlinePartial { $$ = new yy.InlinePartialNode($1, $2, $3) }
   | mustache { $$ = $1 }
   | partial { $$ = $1 }
   | CONTENT { $$ = new yy.ContentNode($1) }
@@ -30,12 +31,22 @@ openBlock
   : OPEN_BLOCK inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
   ;
 
+openInlinePartial
+  : OPEN_INLINE_PARTIAL path CLOSE { $$ = new yy.MustacheNode([$2], null) }
+  | OPEN_INLINE_PARTIAL path path CLOSE { $$ = new yy.MustacheNode([$2, $3], null) }
+
+  ;
+
 openInverse
   : OPEN_INVERSE inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]) }
   ;
 
 closeBlock
   : OPEN_ENDBLOCK path CLOSE { $$ = $2 }
+  ;
+
+closeInlinePartial
+  : OPEN_ENDINLINE_PARTIAL path CLOSE { $$ = $2 }
   ;
 
 mustache

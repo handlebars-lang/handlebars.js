@@ -425,6 +425,12 @@ test("GH-14: a partial preceding a selector", function() {
    shouldCompileTo(string, [hash, {}, {dude:dude}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
+test("inline partials", function() {
+  var string = "Yo! {{#>>dude the_dude}}{{name}}{{/>>dude}}, Meet friends:{{#dudes}} {{>dude}}{{/dudes}}";
+  var hash = {the_dude:{name:"Jeff Lebowski"},dudes:[{name:"Bert"},{name:"Ernie"},{name:"BigBird"}]}
+  shouldCompileTo(string, hash, "Yo! Jeff Lebowski, Meet friends: Bert Ernie BigBird", "");
+});
+
 module("String literal parameters");
 
 test("simple literals work", function() {
