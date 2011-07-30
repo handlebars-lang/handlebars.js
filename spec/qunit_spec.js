@@ -410,6 +410,17 @@ test("rendering undefined partial throws an exception", function() {
     }, Handlebars.Exception, "Should throw exception");
 });
 
+
+test("rendering template partial in vm mode throws an exception", function() {
+  shouldThrow(function() {
+      var template = CompilerContext.compile("{{> whatever}}");
+       var string = "Dudes: {{>dude}} {{another_dude}}";
+       var dude = "{{name}}";
+       var hash = {name:"Jeepers", another_dude:"Creepers"};
+      template();
+    }, Handlebars.Exception, "Should throw exception");
+});
+
 test("GH-14: a partial preceding a selector", function() {
    var string = "Dudes: {{>dude}} {{another_dude}}";
    var dude = "{{name}}";
