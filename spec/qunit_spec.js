@@ -683,6 +683,50 @@ test("helpers take precedence over same-named context properties", function() {
   equals(result, "GOODBYE cruel WORLD", "Helper executed");
 });
 
+test("Scoped names take precedence over helpers", function() {
+  var template = Handlebars.compile("{{this.goodbye}} {{cruel world}} {{cruel this.goodbye}}");
+
+  var helpers = {
+    goodbye: function() {
+      return this.goodbye.toUpperCase();
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, {helpers: helpers});
+  equals(result, "goodbye cruel WORLD cruel GOODBYE", "Helper not executed");
+});
+
+test("Scoped names take precedence over block helpers", function() {
+  var template = Handlebars.compile("{{#goodbye}} {{cruel world}}{{/goodbye}} {{this.goodbye}}");
+
+  var helpers = {
+    goodbye: function(fn) {
+      return this.goodbye.toUpperCase() + fn(this);
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, {helpers: helpers});
+  equals(result, "GOODBYE cruel WORLD goodbye", "Helper executed");
+});
+
 test("helpers can take an optional hash", function() {
   var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" times=12}}');
 
