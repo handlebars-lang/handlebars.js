@@ -3,6 +3,10 @@ require "spec_helper"
 describe "Parser" do
   let(:handlebars) { @context["Handlebars"] }
 
+  before(:all) do
+    @compiles = true
+  end
+
   def program(&block)
     ASTBuilder.build do
       program do
