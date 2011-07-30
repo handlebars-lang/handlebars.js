@@ -32,7 +32,7 @@ minimal_deps = %w(compiler/parser base ast visitor utils compiler/compiler vm).m
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(compiler/parser base ast visitor printer utils compiler/compiler vm debug).map do |file|
+debug_deps = %w(compiler/parser base ast visitor compiler/printer utils compiler/compiler vm debug).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
