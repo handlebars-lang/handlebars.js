@@ -80,7 +80,9 @@ module Handlebars
       Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/vm.js');
 
-      context["Handlebars"]["compile"] = proc do |*args|
+      context["CompilerContext"] = {}
+      CompilerContext = context["CompilerContext"]
+      CompilerContext["compile"] = proc do |*args|
         template, options = args[0], args[1] || nil
         templateSpec = COMPILE_CONTEXT["Handlebars"]["precompile"].call(template, options);
         context["Handlebars"]["template"].call(context.eval("(#{templateSpec})"));
