@@ -74,7 +74,7 @@ module Handlebars
 
       Handlebars::Spec.js_load('lib/handlebars/compiler/parser.js')
       Handlebars::Spec.js_load('lib/handlebars/base.js');
-      Handlebars::Spec.js_load('lib/handlebars/ast.js');
+      Handlebars::Spec.js_load('lib/handlebars/compiler/ast.js');
       Handlebars::Spec.js_load('lib/handlebars/visitor.js');
       Handlebars::Spec.js_load('lib/handlebars/compiler/printer.js')
       Handlebars::Spec.js_load('lib/handlebars/utils.js')
