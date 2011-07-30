@@ -202,14 +202,6 @@ test("empty block", function() {
                   "Arrays ignore the contents when empty");
 });
 
-test("incorrectly matched blocks", function() {
-  var string = "{{#goodbyes}}{{/hellos}}";
-
-  shouldThrow(function() {
-      Handlebars.compile(string);
-    }, Handlebars.Exception, "Incorrectly matched blocks return an exception at compile time.");
-});
-
 test("nested iteration", function() {
 
 });
