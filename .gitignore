@@ -3,3 +3,4 @@ lib/handlebars/parser.js
 vendor
 .rvmrc
 .DS_Store
+lib/handlebars/compiler/parser.js
