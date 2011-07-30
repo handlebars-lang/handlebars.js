@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var fs = require('fs'),
+    handlebars = require('../lib/handlebars');
+
+var argv = require('optimist').argv;
+
+var template = argv._[0];
+
+// Show help prompt if requested or if the 
+// incorrect usage options are supplied
+if (argv.h || argv.help || !template) {
+  console.error("Usage: handlebars.js template");
+  return;
+}
+
+// First figure out what our output looks like
+fs.readFile(template, 'utf8', function(err, data) {
+    if (err) {
+        throw err;
+    }
+
+    var options = {};
+    var ast = handlebars.parse(data);
+    var environment = new handlebars.Compiler().compile(ast, options);
+    console.log(new handlebars.JavaScriptCompiler().compile(environment, options));
+});

@@ -12,5 +12,7 @@
       "optimist": "~0.2"
   },
   "devDependencies": {},
-  "main": "bin/billy"
+  "bin": {
+    "handlebars": "bin/handlebars"
+  }
 }
