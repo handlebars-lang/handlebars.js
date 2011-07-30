@@ -21,7 +21,5 @@ fs.readFile(template, 'utf8', function(err, data) {
     }
 
     var options = {};
-    var ast = handlebars.parse(data);
-    var environment = new handlebars.Compiler().compile(ast, options);
-    console.log(new handlebars.JavaScriptCompiler().compile(environment, options));
+    console.log(handlebars.precompile(data, options));
 });
