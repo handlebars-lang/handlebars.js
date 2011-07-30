@@ -181,9 +181,7 @@ Building
 --------
 
 To build handlebars, just run `rake release`, and you will get two files
-in the `dist` directory. The debug version comes with stack trace
-annotations for webkit browsers, but will slightly increase startup
-time.
+in the `dist` directory.
 
 
 Upgrading

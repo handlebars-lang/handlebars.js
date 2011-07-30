@@ -32,14 +32,9 @@ minimal_deps = %w(compiler/parser base compiler/ast utils compiler/compiler vm).
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(compiler/parser base compiler/ast compiler/visitor compiler/printer utils compiler/compiler vm debug).map do |file|
-  "lib/handlebars/#{file}.js"
-end
-
 directory "dist"
 
 minimal_deps.unshift "dist"
-debug_deps.unshift   "dist"
 
 def build_for_task(task)
   FileUtils.rm_rf("dist/*") if File.directory?("dist")
@@ -61,15 +56,10 @@ file "dist/handlebars.js" => minimal_deps do |task|
   build_for_task(task)
 end
 
-file "dist/handlebars.debug.js" => debug_deps do |task|
-  build_for_task(task)
-end
-
 task :build => [:compile, "dist/handlebars.js"]
-task :debug => [:compile, "dist/handlebars.debug.js"]
 
-desc "build the build and debug versions of handlebars"
-task :release => [:build, :debug]
+desc "build the build version of handlebars"
+task :release => [:build]
 
 directory "vendor"
 
