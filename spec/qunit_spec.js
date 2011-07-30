@@ -246,7 +246,16 @@ test("helper with complex lookup and nested template", function() {
   var helpers = {link: function (prefix, fn) {
       return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
   }};
-  shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>")
+  shouldCompileToWithPartials(string, [hash, helpers], false, "<a href='/root/goodbye'>Goodbye</a>");
+});
+
+test("helper with complex lookup and nested template in VM+Compiler", function() {
+  var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
+  var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
+  var helpers = {link: function (prefix, fn) {
+      return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
+  }};
+  shouldCompileToWithPartials(string, [hash, helpers], true, "<a href='/root/goodbye'>Goodbye</a>");
 });
 
 test("block with deep nested complex lookup", function() {
