@@ -32,6 +32,10 @@ minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler
   "lib/handlebars/#{file}.js"
 end
 
+vm_deps = %w(base utils vm).map do |file|
+  "lib/handlebars/#{file}.js"
+end
+
 directory "dist"
 
 minimal_deps.unshift "dist"
@@ -56,10 +60,15 @@ file "dist/handlebars.js" => minimal_deps do |task|
   build_for_task(task)
 end
 
-task :build => [:compile, "dist/handlebars.js"]
+file "dist/handlebars.vm.js" => vm_deps do |task|
+  build_for_task(task)
+end
 
-desc "build the build version of handlebars"
-task :release => [:build]
+task :build => [:compile, "dist/handlebars.js"]
+task :vm => [:compile, "dist/handlebars.vm.js"]
+
+desc "build the build and vm version of handlebars"
+task :release => [:build, :vm]
 
 directory "vendor"
 
