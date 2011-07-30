@@ -28,11 +28,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(parser base ast visitor utils compiler).map do |file|
+minimal_deps = %w(parser base ast visitor utils compiler/compiler vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(parser base ast visitor printer utils compiler debug).map do |file|
+debug_deps = %w(parser base ast visitor printer utils compiler/compiler vm debug).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
