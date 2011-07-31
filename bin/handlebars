@@ -21,5 +21,5 @@ fs.readFile(template, 'utf8', function(err, data) {
     }
 
     var options = {};
-    console.log(handlebars.precompile(data, options));
+    console.log('Handlebars.template(' + handlebars.precompile(data, options) + ')');
 });
