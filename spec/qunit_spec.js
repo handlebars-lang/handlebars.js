@@ -519,6 +519,46 @@ test("if a context is not found, helperMissing is used", function() {
   shouldCompileTo(string, context, "Hello <a>world</a>")
 });
 
+module("knownHelpers");
+
+test("Known helper should render helper", function() {
+  var template = CompilerContext.compile("{{hello}}", {knownHelpers: {"hello" : true}})
+
+  var result = template({}, {helpers: {hello: function() { return "foo"; }}});
+  equal(result, "foo", "'foo' should === '" + result);
+});
+
+test("Unknown helper in knownHelpers only mode should be passed as undefined", function() {
+  var template = CompilerContext.compile("{{typeof hello}}", {knownHelpers: {'typeof': true}, knownHelpersOnly: true})
+
+  var result = template({}, {helpers: {'typeof': function(arg) { return typeof arg; }, hello: function() { return "foo"; }}});
+  equal(result, "undefined", "'undefined' should === '" + result);
+});
+test("Builtin helpers available in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{#unless foo}}bar{{/unless}}", {knownHelpersOnly: true})
+
+  var result = template({});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+test("Field lookup works in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{foo}}", {knownHelpersOnly: true})
+
+  var result = template({foo: 'bar'});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+test("Conditional blocks work in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{#foo}}bar{{/foo}}", {knownHelpersOnly: true})
+
+  var result = template({foo: 'baz'});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+test("Invert blocks work in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{^foo}}bar{{/foo}}", {knownHelpersOnly: true})
+
+  var result = template({foo: false});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+
 module("built-in helpers");
 
 test("with", function() {
