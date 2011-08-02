@@ -7,7 +7,10 @@ Handlebars.registerHelper('helperMissing', function(helper, context) {
 });
 
 var shouldCompileTo = function(string, hashOrArray, expected, message) {
-  var template = Handlebars.compile(string), ary;
+  shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
+};
+var shouldCompileToWithPartials = function(string, hashOrArray, partials, expected, message) {
+  var template = CompilerContext[partials ? 'compileWithPartial' : 'compile'](string), ary;
   if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
     helpers = hashOrArray[1];
 
@@ -131,7 +134,7 @@ test("--- TODO --- bad idea nested paths", function() {
   return;
 	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
   shouldThrow(function() {
-      Handlebars.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}")(hash);
+      CompilerContext.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}")(hash);
     }, Handlebars.Exception,
     "Cannot jump (..) into previous context after moving into a context.");
 
@@ -202,14 +205,6 @@ test("empty block", function() {
                   "Arrays ignore the contents when empty");
 });
 
-test("incorrectly matched blocks", function() {
-  var string = "{{#goodbyes}}{{/hellos}}";
-
-  shouldThrow(function() {
-      Handlebars.compile(string);
-    }, Handlebars.Exception, "Incorrectly matched blocks return an exception at compile time.");
-});
-
 test("nested iteration", function() {
 
 });
@@ -251,7 +246,16 @@ test("helper with complex lookup and nested template", function() {
   var helpers = {link: function (prefix, fn) {
       return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
   }};
-  shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>")
+  shouldCompileToWithPartials(string, [hash, helpers], false, "<a href='/root/goodbye'>Goodbye</a>");
+});
+
+test("helper with complex lookup and nested template in VM+Compiler", function() {
+  var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
+  var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
+  var helpers = {link: function (prefix, fn) {
+      return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
+  }};
+  shouldCompileToWithPartials(string, [hash, helpers], true, "<a href='/root/goodbye'>Goodbye</a>");
 });
 
 test("block with deep nested complex lookup", function() {
@@ -263,18 +267,18 @@ test("block with deep nested complex lookup", function() {
 
 test("block helper", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
-  var template = Handlebars.compile(string);
+  var template = CompilerContext.compile(string);
 
   result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
-  equal(result, "GOODBYE! cruel world!");
+  equal(result, "GOODBYE! cruel world!", "Block helper executed");
 });
 
 test("block helper staying in the same context", function() {
   var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
-  var template = Handlebars.compile(string);
+  var template = CompilerContext.compile(string);
 
   result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
-  equal(result, "<form><p>Yehuda</p></form>");
+  equal(result, "<form><p>Yehuda</p></form>", "Block helper executed with current context");
 });
 
 test("block helper should have context in this", function() {
@@ -296,23 +300,23 @@ test("block helper for undefined value", function() {
 
 test("block helper passing a new context", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
-  var template = Handlebars.compile(string);
+  var template = CompilerContext.compile(string);
 
   result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda"}});
-  equal(result, "<form><p>Yehuda</p></form>");
+  equal(result, "<form><p>Yehuda</p></form>", "Context variable resolved");
 });
 
 test("block helper passing a complex path context", function() {
   var string   = "{{#form yehuda/cat}}<p>{{name}}</p>{{/form}}"
-  var template = Handlebars.compile(string);
+  var template = CompilerContext.compile(string);
 
   result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
-  equal(result, "<form><p>Harold</p></form>");
+  equal(result, "<form><p>Harold</p></form>", "Complex path variable resolved");
 });
 
 test("nested block helpers", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{#link}}Hello{{/link}}{{/form}}"
-  var template = Handlebars.compile(string);
+  var template = CompilerContext.compile(string);
 
   result = template({
     form: function(context, fn) { return "<form>" + fn(context) + "</form>" },
@@ -320,7 +324,7 @@ test("nested block helpers", function() {
              link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }
             }
   });
-  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>");
+  equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>", "Both blocks executed");
 });
 
 test("block inverted sections", function() {
@@ -391,7 +395,7 @@ test("basic partials", function() {
   var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
   var partial = "{{name}} ({{url}}) ";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+  shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
                   "Basic partials output based on current context.");
 });
 
@@ -399,7 +403,7 @@ test("partials with context", function() {
   var string = "Dudes: {{>dude dudes}}";
   var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+  shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
                   "Partials can be passed a context");
 });
 
@@ -408,21 +412,41 @@ test("partial in a partial", function() {
   var dude = "{{name}} {{> url}} ";
   var url = "<a href='{{url}}'>{{url}}</a>";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileTo(string, [hash, {}, {dude: dude, url: url}], "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
+  shouldCompileToWithPartials(string, [hash, {}, {dude: dude, url: url}], true, "Dudes: Yehuda <a href='http://yehuda'>http://yehuda</a> Alan <a href='http://alan'>http://alan</a> ", "Partials are rendered inside of other partials");
 });
 
 test("rendering undefined partial throws an exception", function() {
   shouldThrow(function() {
-      var template = Handlebars.compile("{{> whatever}}");
+      var template = CompilerContext.compile("{{> whatever}}");
       template();
     }, Handlebars.Exception, "Should throw exception");
+});
+
+test("rendering template partial in vm mode throws an exception", function() {
+  shouldThrow(function() {
+      var template = CompilerContext.compile("{{> whatever}}");
+       var string = "Dudes: {{>dude}} {{another_dude}}";
+       var dude = "{{name}}";
+       var hash = {name:"Jeepers", another_dude:"Creepers"};
+      template();
+    }, Handlebars.Exception, "Should throw exception");
+});
+
+test("rendering function partial in vm mode", function() {
+  var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
+  var partial = function(context) {
+    return context.name + ' (' + context.url + ') ';
+  };
+  var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+  shouldCompileTo(string, [hash, {}, {dude: partial}], "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+                  "Function partials output based in VM.");
 });
 
 test("GH-14: a partial preceding a selector", function() {
    var string = "Dudes: {{>dude}} {{another_dude}}";
    var dude = "{{name}}";
    var hash = {name:"Jeepers", another_dude:"Creepers"};
-   shouldCompileTo(string, [hash, {}, {dude:dude}], "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+   shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
 module("String literal parameters");
@@ -442,7 +466,7 @@ test("simple literals work", function() {
 test("using a quote in the middle of a parameter raises an error", function() {
   shouldThrow(function() {
     var string   = 'Message: {{hello wo"rld"}}';
-    Handlebars.compile(string);
+    CompilerContext.compile(string);
   }, Error, "should throw exception");
 });
 
@@ -495,6 +519,46 @@ test("if a context is not found, helperMissing is used", function() {
   shouldCompileTo(string, context, "Hello <a>world</a>")
 });
 
+module("knownHelpers");
+
+test("Known helper should render helper", function() {
+  var template = CompilerContext.compile("{{hello}}", {knownHelpers: {"hello" : true}})
+
+  var result = template({}, {helpers: {hello: function() { return "foo"; }}});
+  equal(result, "foo", "'foo' should === '" + result);
+});
+
+test("Unknown helper in knownHelpers only mode should be passed as undefined", function() {
+  var template = CompilerContext.compile("{{typeof hello}}", {knownHelpers: {'typeof': true}, knownHelpersOnly: true})
+
+  var result = template({}, {helpers: {'typeof': function(arg) { return typeof arg; }, hello: function() { return "foo"; }}});
+  equal(result, "undefined", "'undefined' should === '" + result);
+});
+test("Builtin helpers available in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{#unless foo}}bar{{/unless}}", {knownHelpersOnly: true})
+
+  var result = template({});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+test("Field lookup works in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{foo}}", {knownHelpersOnly: true})
+
+  var result = template({foo: 'bar'});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+test("Conditional blocks work in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{#foo}}bar{{/foo}}", {knownHelpersOnly: true})
+
+  var result = template({foo: 'baz'});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+test("Invert blocks work in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{^foo}}bar{{/foo}}", {knownHelpersOnly: true})
+
+  var result = template({foo: false});
+  equal(result, "bar", "'bar' should === '" + result);
+});
+
 module("built-in helpers");
 
 test("with", function() {
@@ -533,7 +597,7 @@ test("overriding property lookup", function() {
 
 
 test("passing in data to a compiled function that expects data - works with helpers", function() {
-  var template = Handlebars.compile("{{hello}}", {data: true});
+  var template = CompilerContext.compile("{{hello}}", {data: true});
 
   var helpers = {
     hello: function(options) {
@@ -542,11 +606,11 @@ test("passing in data to a compiled function that expects data - works with help
   };
 
   var result = template({noun: "cat"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy cat", result);
+  equals("happy cat", result, "Data output by helper");
 });
 
 test("passing in data to a compiled function that expects data - works with helpers and parameters", function() {
-  var template = Handlebars.compile("{{hello world}}", {data: true});
+  var template = CompilerContext.compile("{{hello world}}", {data: true});
 
   var helpers = {
     hello: function(noun, options) {
@@ -555,11 +619,11 @@ test("passing in data to a compiled function that expects data - works with help
   };
 
   var result = template({exclaim: true, world: "world"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy world!", result);
+  equals("happy world!", result, "Data output by helper");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers", function() {
-  var template = Handlebars.compile("{{#hello}}{{world}}{{/hello}}", {data: true});
+  var template = CompilerContext.compile("{{#hello}}{{world}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
@@ -571,11 +635,11 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy world!", result);
+  equals("happy world!", result, "Data output by helper");
 });
 
 test("passing in data to a compiled function that expects data - works with block helpers that use ..", function() {
-  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
+  var template = CompilerContext.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
@@ -587,11 +651,11 @@ test("passing in data to a compiled function that expects data - works with bloc
   };
 
   var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("happy world?", result);
+  equals("happy world?", result, "Data output by helper");
 });
 
 test("passing in data to a compiled function that expects data - data is passed to with block helpers where children use ..", function() {
-  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
+  var template = CompilerContext.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn, inverse) {
@@ -603,11 +667,11 @@ test("passing in data to a compiled function that expects data - data is passed 
   };
 
   var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy", accessData: "#win"}});
-  equals("#win happy world?", result);
+  equals("#win happy world?", result, "Data output by helper");
 });
 
 test("you can override inherited data when invoking a helper", function() {
-  var template = Handlebars.compile("{{#hello}}{{world zomg}}{{/hello}}", {data: true});
+  var template = CompilerContext.compile("{{#hello}}{{world zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
@@ -619,12 +683,12 @@ test("you can override inherited data when invoking a helper", function() {
   };
 
   var result = template({exclaim: true, zomg: "planet"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("sad world?", result);
+  equals("sad world?", result, "Overriden data output by helper");
 });
 
 
 test("you can override inherited data when invoking a helper with depth", function() {
-  var template = Handlebars.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
+  var template = CompilerContext.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
     hello: function(fn) {
@@ -636,11 +700,11 @@ test("you can override inherited data when invoking a helper with depth", functi
   };
 
   var result = template({exclaim: true, zomg: "world"}, {helpers: helpers, data: {adjective: "happy"}});
-  equals("sad world?", result);
+  equals("sad world?", result, "Overriden data output by helper");
 });
 
 test("helpers take precedence over same-named context properties", function() {
-  var template = Handlebars.compile("{{goodbye}} {{cruel world}}");
+  var template = CompilerContext.compile("{{goodbye}} {{cruel world}}");
 
   var helpers = {
     goodbye: function() {
@@ -658,11 +722,11 @@ test("helpers take precedence over same-named context properties", function() {
   };
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE cruel WORLD");
+  equals(result, "GOODBYE cruel WORLD", "Helper executed");
 });
 
 test("helpers take precedence over same-named context properties", function() {
-  var template = Handlebars.compile("{{#goodbye}} {{cruel world}}{{/goodbye}}");
+  var template = CompilerContext.compile("{{#goodbye}} {{cruel world}}{{/goodbye}}");
 
   var helpers = {
     goodbye: function(fn) {
@@ -680,11 +744,55 @@ test("helpers take precedence over same-named context properties", function() {
   };
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE cruel WORLD");
+  equals(result, "GOODBYE cruel WORLD", "Helper executed");
+});
+
+test("Scoped names take precedence over helpers", function() {
+  var template = CompilerContext.compile("{{this.goodbye}} {{cruel world}} {{cruel this.goodbye}}");
+
+  var helpers = {
+    goodbye: function() {
+      return this.goodbye.toUpperCase();
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, {helpers: helpers});
+  equals(result, "goodbye cruel WORLD cruel GOODBYE", "Helper not executed");
+});
+
+test("Scoped names take precedence over block helpers", function() {
+  var template = CompilerContext.compile("{{#goodbye}} {{cruel world}}{{/goodbye}} {{this.goodbye}}");
+
+  var helpers = {
+    goodbye: function(fn) {
+      return this.goodbye.toUpperCase() + fn(this);
+    }
+  };
+
+  var context = {
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
+    },
+
+    goodbye: "goodbye",
+    world: "world"
+  };
+
+  var result = template(context, {helpers: helpers});
+  equals(result, "GOODBYE cruel WORLD goodbye", "Helper executed");
 });
 
 test("helpers can take an optional hash", function() {
-  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" times=12}}');
+  var template = CompilerContext.compile('{{goodbye cruel="CRUEL" world="WORLD" times=12}}');
 
   var helpers = {
     goodbye: function(options) {
@@ -695,7 +803,7 @@ test("helpers can take an optional hash", function() {
   var context = {};
 
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL WORLD 12 TIMES");
+  equals(result, "GOODBYE CRUEL WORLD 12 TIMES", "Helper output hash");
 });
 
 test("helpers can take an optional hash with booleans", function() {
@@ -713,17 +821,17 @@ test("helpers can take an optional hash with booleans", function() {
 
   var context = {};
 
-  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" print=true}}');
+  var template = CompilerContext.compile('{{goodbye cruel="CRUEL" world="WORLD" print=true}}');
   var result = template(context, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL WORLD");
+  equals(result, "GOODBYE CRUEL WORLD", "Helper output hash");
 
-  var template = Handlebars.compile('{{goodbye cruel="CRUEL" world="WORLD" print=false}}');
+  var template = CompilerContext.compile('{{goodbye cruel="CRUEL" world="WORLD" print=false}}');
   var result = template(context, {helpers: helpers});
-  equals(result, "NOT PRINTING");
+  equals(result, "NOT PRINTING", "Boolean helper parameter honored");
 });
 
 test("block helpers can take an optional hash", function() {
-  var template = Handlebars.compile('{{#goodbye cruel="CRUEL" times=12}}world{{/goodbye}}');
+  var template = CompilerContext.compile('{{#goodbye cruel="CRUEL" times=12}}world{{/goodbye}}');
 
   var helpers = {
     goodbye: function(options) {
@@ -732,7 +840,7 @@ test("block helpers can take an optional hash", function() {
   };
 
   var result = template({}, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL world 12 TIMES");
+  equals(result, "GOODBYE CRUEL world 12 TIMES", "Hash parameters output");
 });
 
 test("block helpers can take an optional hash with booleans", function() {
@@ -748,18 +856,18 @@ test("block helpers can take an optional hash with booleans", function() {
     }
   };
 
-  var template = Handlebars.compile('{{#goodbye cruel="CRUEL" print=true}}world{{/goodbye}}');
+  var template = CompilerContext.compile('{{#goodbye cruel="CRUEL" print=true}}world{{/goodbye}}');
   var result = template({}, {helpers: helpers});
-  equals(result, "GOODBYE CRUEL world");
+  equals(result, "GOODBYE CRUEL world", "Boolean hash parameter honored");
 
-  var template = Handlebars.compile('{{#goodbye cruel="CRUEL" print=false}}world{{/goodbye}}');
+  var template = CompilerContext.compile('{{#goodbye cruel="CRUEL" print=false}}world{{/goodbye}}');
   var result = template({}, {helpers: helpers});
-  equals(result, "NOT PRINTING");
+  equals(result, "NOT PRINTING", "Boolean hash parameter honored");
 });
 
 
 test("arguments to helpers can be retrieved from options hash in string form", function() {
-  var template = Handlebars.compile('{{wycats is.a slave.driver}}', {stringParams: true});
+  var template = CompilerContext.compile('{{wycats is.a slave.driver}}', {stringParams: true});
 
   var helpers = {
     wycats: function(passiveVoice, noun, options) {
@@ -769,11 +877,11 @@ test("arguments to helpers can be retrieved from options hash in string form", f
 
   var result = template({}, {helpers: helpers});
 
-  equals(result, "HELP ME MY BOSS is.a slave.driver");
+  equals(result, "HELP ME MY BOSS is.a slave.driver", "String parameters output");
 });
 
 test("when using block form, arguments to helpers can be retrieved from options hash in string form", function() {
-  var template = Handlebars.compile('{{#wycats is.a slave.driver}}help :({{/wycats}}', {stringParams: true});
+  var template = CompilerContext.compile('{{#wycats is.a slave.driver}}help :({{/wycats}}', {stringParams: true});
 
   var helpers = {
     wycats: function(passiveVoice, noun, options) {
@@ -784,11 +892,11 @@ test("when using block form, arguments to helpers can be retrieved from options 
 
   var result = template({}, {helpers: helpers});
 
-  equals(result, "HELP ME MY BOSS is.a slave.driver: help :(");
+  equals(result, "HELP ME MY BOSS is.a slave.driver: help :(", "String parameters output");
 });
 
 test("when inside a block in String mode, .. passes the appropriate context in the options hash", function() {
-  var template = Handlebars.compile('{{#with dale}}{{tomdale ../need dad.joke}}{{/with}}', {stringParams: true});
+  var template = CompilerContext.compile('{{#with dale}}{{tomdale ../need dad.joke}}{{/with}}', {stringParams: true});
 
   var helpers = {
     tomdale: function(desire, noun, options) {
@@ -807,11 +915,11 @@ test("when inside a block in String mode, .. passes the appropriate context in t
     need: 'need-a'
   }, {helpers: helpers});
 
-  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke");
+  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke", "Proper context variable output");
 });
 
 test("when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper", function() {
-  var template = Handlebars.compile('{{#with dale}}{{#tomdale ../need dad.joke}}wot{{/tomdale}}{{/with}}', {stringParams: true});
+  var template = CompilerContext.compile('{{#with dale}}{{#tomdale ../need dad.joke}}wot{{/tomdale}}{{/with}}', {stringParams: true});
 
   var helpers = {
     tomdale: function(desire, noun, options) {
@@ -831,6 +939,6 @@ test("when inside a block in String mode, .. passes the appropriate context in t
     need: 'need-a'
   }, {helpers: helpers});
 
-  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot");
+  equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
 });
 

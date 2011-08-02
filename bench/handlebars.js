@@ -13,10 +13,7 @@ var Mustache = require("mustache");
 var ecoExports = require("eco");
 
 eco = function(str) {
-  var module = {};
-  var template = new Function("module", ecoExports.compile(str));
-  template(module);
-  return module.exports;
+  return ecoExports(str);
 }
 
 var benchDetails = {

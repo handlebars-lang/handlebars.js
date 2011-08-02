@@ -1,10 +1,10 @@
 require "rubygems"
 require "bundler/setup"
 
-file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
+file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   if ENV['PATH'].split(':').any? {|folder| File.exists?(folder+'/jison')}
     system "jison src/handlebars.yy src/handlebars.l"
-    File.open("lib/handlebars/parser.js", "w") do |file|
+    File.open("lib/handlebars/compiler/parser.js", "w") do |file|
       file.puts File.read("handlebars.js") + ";"
     end
 
@@ -14,7 +14,7 @@ file "lib/handlebars/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   end
 end
 
-task :compile => "lib/handlebars/parser.js"
+task :compile => "lib/handlebars/compiler/parser.js"
 
 desc "run the spec suite"
 task :spec => [:release] do
@@ -28,18 +28,17 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(parser base ast visitor utils compiler).map do |file|
+minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler/compiler vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-debug_deps = %w(parser base ast visitor printer utils compiler debug).map do |file|
+vm_deps = %w(base utils vm).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
 directory "dist"
 
 minimal_deps.unshift "dist"
-debug_deps.unshift   "dist"
 
 def build_for_task(task)
   FileUtils.rm_rf("dist/*") if File.directory?("dist")
@@ -61,15 +60,15 @@ file "dist/handlebars.js" => minimal_deps do |task|
   build_for_task(task)
 end
 
-file "dist/handlebars.debug.js" => debug_deps do |task|
+file "dist/handlebars.vm.js" => vm_deps do |task|
   build_for_task(task)
 end
 
 task :build => [:compile, "dist/handlebars.js"]
-task :debug => [:compile, "dist/handlebars.debug.js"]
+task :vm => [:compile, "dist/handlebars.vm.js"]
 
-desc "build the build and debug versions of handlebars"
-task :release => [:build, :debug]
+desc "build the build and vm version of handlebars"
+task :release => [:build, :vm]
 
 directory "vendor"
 

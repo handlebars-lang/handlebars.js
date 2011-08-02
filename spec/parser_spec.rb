@@ -3,6 +3,10 @@ require "spec_helper"
 describe "Parser" do
   let(:handlebars) { @context["Handlebars"] }
 
+  before(:all) do
+    @compiles = true
+  end
+
   def program(&block)
     ASTBuilder.build do
       program do
@@ -246,6 +250,7 @@ describe "Parser" do
   it "raises if there's a Parse error" do
     lambda { ast_for("{{foo}") }.should   raise_error(V8::JSError, /Parse error on line 1/)
     lambda { ast_for("{{foo &}}")}.should raise_error(V8::JSError, /Parse error on line 1/)
+    lambda { ast_for("{{#goodbyes}}{{/hellos}}") }.should raise_error(V8::JSError, /goodbyes doesn't match hellos/)
   end
 
   it "knows how to report the correct line number in errors" do

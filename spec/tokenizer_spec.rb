@@ -5,6 +5,9 @@ describe "Tokenizer" do
   let(:parser) { @context["handlebars"] }
   let(:lexer) { @context["handlebars"]["lexer"] }
 
+  before(:all) do
+    @compiles = true
+  end
   Token = Struct.new(:name, :text)
 
   def tokenize(string)

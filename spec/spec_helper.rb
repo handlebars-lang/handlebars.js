@@ -44,13 +44,7 @@ module Handlebars
       ("\n" * prelines) + ret
     end
 
-    def self.js_load(file)
-      str = File.read(file)
-      CONTEXT.eval(remove_exports(str), file)
-    end
-
-    CONTEXT = V8::Context.new
-    CONTEXT.instance_eval do |context|
+    def self.load_helpers(context)
       context["exports"] = nil
 
       context["p"] = proc do |val|
@@ -71,15 +65,71 @@ module Handlebars
         puts Handlebars::Spec.js_backtrace(context)
         puts
       end
+    end
 
-      Handlebars::Spec.js_load('lib/handlebars/parser.js')
-      Handlebars::Spec.js_load('lib/handlebars/base.js');
-      Handlebars::Spec.js_load('lib/handlebars/ast.js');
-      Handlebars::Spec.js_load('lib/handlebars/visitor.js');
-      Handlebars::Spec.js_load('lib/handlebars/printer.js')
-      Handlebars::Spec.js_load('lib/handlebars/utils.js')
-      Handlebars::Spec.js_load('lib/handlebars/compiler.js')
-      Handlebars::Spec.js_load('lib/handlebars.js')
+    def self.js_load(context, file)
+      str = File.read(file)
+      context.eval(remove_exports(str), file)
+    end
+
+    CONTEXT = V8::Context.new
+    CONTEXT.instance_eval do |context|
+      Handlebars::Spec.load_helpers(context);
+
+      Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/vm.js');
+
+      context["CompilerContext"] = {}
+      CompilerContext = context["CompilerContext"]
+      CompilerContext["compile"] = proc do |*args|
+        template, options = args[0], args[1] || nil
+        templateSpec = COMPILE_CONTEXT["Handlebars"]["precompile"].call(template, options);
+        context["Handlebars"]["template"].call(context.eval("(#{templateSpec})"));
+      end
+      CompilerContext["compileWithPartial"] = proc do |*args|
+        template, options = args[0], args[1] || nil
+        FULL_CONTEXT["Handlebars"]["compile"].call(template, options);
+      end
+    end
+
+    COMPILE_CONTEXT = V8::Context.new
+    COMPILE_CONTEXT.instance_eval do |context|
+      Handlebars::Spec.load_helpers(context);
+
+      Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/parser.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/base.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/ast.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/visitor.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/printer.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/compiler.js');
+
+      context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
+
+      context["Handlebars"]["logger"]["log"] = proc do |level, str|
+        logger_level = context["Handlebars"]["logger"]["level"].to_i
+
+        if logger_level <= level
+          puts str
+        end
+      end
+    end
+
+    FULL_CONTEXT = V8::Context.new
+    FULL_CONTEXT.instance_eval do |context|
+      Handlebars::Spec.load_helpers(context);
+
+      Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/parser.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/base.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/ast.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/visitor.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/printer.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/compiler.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/vm.js');
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
@@ -100,7 +150,8 @@ require "test/unit/assertions"
 RSpec.configure do |config|
   config.include Test::Unit::Assertions
 
-  config.before(:all) do
-    @context = Handlebars::Spec::CONTEXT
+  # Each is required to allow classes to mark themselves as compiler tests
+  config.before(:each) do
+    @context = @compiles ? Handlebars::Spec::COMPILE_CONTEXT : Handlebars::Spec::CONTEXT
   end
 end
