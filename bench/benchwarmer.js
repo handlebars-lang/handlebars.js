@@ -112,6 +112,8 @@ BenchWarmer.prototype = {
         }
       }
     });
+
+    print("\n");
   },
   startLine: function(name) {
     var winners = Benchmark.map(this.winners(this.currentBenches), function(bench) {

@@ -17,7 +17,7 @@ In general, the syntax of Handlebars.js templates is a superset of Mustache temp
 Once you have a template, use the Handlebars.compile method to compile the template into a function. The generated function takes a context argument, which will be used to render the template.
 
     var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " + 
-        "{{kids/length}} kids:</p>" +
+        "{{kids.length}} kids:</p>" +
         "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
     var template = Handlebars.compile(source);
 
@@ -74,19 +74,19 @@ Handlebars.js adds a couple of additional features to make writing templates eas
 
 ### Paths
 
-Handlebars.js supports an extended expression syntax that we call paths. Paths are made up of typical expressions and / characters. Expressions allow you to not only display data from the current context, but to display data from contexts that are descendents and ancestors of the current context.
+Handlebars.js supports an extended expression syntax that we call paths. Paths are made up of typical expressions and . characters. Expressions allow you to not only display data from the current context, but to display data from contexts that are descendents and ancestors of the current context.
 
-To display data from descendent contexts, use the `/` character. So, for example, if your data were structured like:
+To display data from descendent contexts, use the `.` character. So, for example, if your data were structured like:
 
     var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
 
 you could display the person's name from the top-level context with the following expression:
 
-    {{person/name}}
+    {{person.name}}
 
-Similarly, if already traversed into the person object you could still display the company's name with an expression like `{{../company/name}}`, so:
+You can backtrack using `../`. For example, if you've already traversed into the person object you could still display the company's name with an expression like `{{../company.name}}`, so:
 
-    {{#person}}{{name}} - {{../company/name}}{{/person}}
+    {{#person}}{{name}} - {{../company.name}}{{/person}}
 
 would render:
 
@@ -203,10 +203,6 @@ Known Issues
 ------------
 * Handlebars.js can be cryptic when there's an error while rendering.
 
-Handlebars Contrib
-------------------
-Alan Johnson, a.k.a. commondream, keeps a repository of useful helpers in the [handlebars-contrib](http://github.com/commondream/handlebars-contrib) repository. Feel free to copy those, or add some of your own.
-
 Handlebars in the Wild
 -----------------
 * Don Park wrote an Express.js view engine adapter for Handlebars.js called [hbs](http://github.com/donpark/hbs)
@@ -215,6 +211,18 @@ Handlebars in the Wild
 
 Helping Out
 -----------
+To build Handlebars.js you'll need a few things installed.
+
+* Node.js
+* Jison, for building the compiler - `npm install jison`
+* Ruby
+* therubyracer, for running tests - `gem install therubyracer`
+* rspec, for running tests - `gem install rspec`
+
+There's a Gemfile in the repo, so you can run `bundle` to install rspec and therubyracer if you've got bundler installed.
+
+To build Handlebars.js from scratch, you'll want to run `rake compile` in the root of the project. That will build Handlebars and output the results to the dist/ folder. To run tests, run `rake spec`. You can also run our set of benchmarks with `rake bench`.
+
 If you notice any problems, please report them to the GitHub issue tracker at [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues). Feel free to contact commondream or wycats through GitHub with any other questions or feature requests. To submit changes fork the project and send a pull request.
 
 License
