@@ -2,6 +2,18 @@
 
 var optimist = require('optimist')
     .usage('Precompile handlebar templates.\nUsage: $0 template', {
+      'k': {
+        'type': 'string',
+        'description': 'Known helpers',
+        'alias': 'known'
+      },
+      'o': {
+        'type': 'boolean',
+        'description': 'Known helpers only',
+        'alias': 'knownOnly'
+      }
+    })
+
     .check(function(argv) {
       var template = argv._[0];
       if (!template) {
@@ -20,6 +32,16 @@ var fs = require('fs'),
 var argv = optimist.argv,
     template = argv._[0];
 
+// Convert the known list into a hash
+var known = {};
+if (argv.known && !Array.isArray(argv.known)) {
+  argv.known = [argv.known];
+}
+if (argv.known) {
+  for (var i = 0, len = argv.known.length; i < len; i++) {
+    known[argv.known[i]] = true;
+  }
+}
 
 // First figure out what our output looks like
 fs.readFile(template, 'utf8', function(err, data) {
@@ -27,6 +49,10 @@ fs.readFile(template, 'utf8', function(err, data) {
         throw err;
     }
 
-    var options = {};
+    var options = {
+      knownHelpers: known,
+      knownHelpersOnly: argv.o
+    };
+
     console.log('Handlebars.template(' + handlebars.precompile(data, options) + ')');
 });
