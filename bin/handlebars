@@ -1,18 +1,25 @@
 #!/usr/bin/env node
 
+var optimist = require('optimist')
+    .usage('Precompile handlebar templates.\nUsage: $0 template', {
+    .check(function(argv) {
+      var template = argv._[0];
+      if (!template) {
+        throw 'Must define at least one template or directories.';
+      }
+      try {
+        fs.statSync(argv._[0]);
+      } catch (err) {
+        throw 'Unable to open template file "' + template + '"';
+      }
+    });
+
 var fs = require('fs'),
     handlebars = require('../lib/handlebars');
 
-var argv = require('optimist').argv;
+var argv = optimist.argv,
+    template = argv._[0];
 
-var template = argv._[0];
-
-// Show help prompt if requested or if the 
-// incorrect usage options are supplied
-if (argv.h || argv.help || !template) {
-  console.error("Usage: handlebars.js template");
-  return;
-}
 
 // First figure out what our output looks like
 fs.readFile(template, 'utf8', function(err, data) {
