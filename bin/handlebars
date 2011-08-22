@@ -25,15 +25,18 @@ var optimist = require('optimist')
     })
 
     .check(function(argv) {
-      var template = argv._[0];
-      if (!template) {
+      var template = [0];
+      if (!argv._.length) {
         throw 'Must define at least one template or directories.';
       }
-      try {
-        fs.statSync(argv._[0]);
-      } catch (err) {
-        throw 'Unable to open template file "' + template + '"';
-      }
+
+      argv._.forEach(function(template) {
+        try {
+          fs.statSync(template);
+        } catch (err) {
+          throw 'Unable to open template file "' + template + '"';
+        }
+      });
     });
 
 var fs = require('fs'),
