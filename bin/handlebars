@@ -57,28 +57,48 @@ if (argv.known) {
   }
 }
 
-// First figure out what our output looks like
-fs.readFile(template, 'utf8', function(err, data) {
-    if (err) {
-        throw err;
-    }
+var output = ['(function() {\n  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n'];
+function processTemplate(template) {
+  var path = template,
+      stat = fs.statSync(path);
+  if (stat.isDirectory()) {
+    fs.readdirSync(template).map(function(file) {
+      var path = template + '/' + file;
+
+      if (/\.handlebars$/.test(path) || fs.statSync(path).isDirectory()) {
+        processTemplate(path);
+      }
+    });
+  } else {
+    var data = fs.readFileSync(path, 'utf8');
 
     var options = {
       knownHelpers: known,
       knownHelpersOnly: argv.o
     };
 
-    var output = 'Handlebars.template(' + handlebars.precompile(data, options) + ')';
-    if (argv.min) {
-      var ast = uglify.parser.parse(output);
-      ast = uglify.uglify.ast_mangle(ast);
-      ast = uglify.uglify.ast_squeeze(ast);
-      output = uglify.uglify.gen_code(ast);
     }
 
-    if (argv.output) {
-      fs.writeFileSync(argv.output, output, 'utf8');
-    } else {
-      console.log(output);
-    }
+    output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
+  }
+}
+
+argv._.forEach(function(template) {
+  processTemplate(template);
 });
+
+// Output the content
+output.push('})()');
+output = output.join('');
+if (argv.min) {
+  var ast = uglify.parser.parse(output);
+  ast = uglify.uglify.ast_mangle(ast);
+  ast = uglify.uglify.ast_squeeze(ast);
+  output = uglify.uglify.gen_code(ast);
+}
+
+if (argv.output) {
+  fs.writeFileSync(argv.output, output, 'utf8');
+} else {
+  console.log(output);
+}
