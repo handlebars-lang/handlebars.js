@@ -9,7 +9,8 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
-      "optimist": "~0.2"
+      "optimist": "~0.2",
+      "uglify": "~1.0"
   },
   "devDependencies": {},
   "bin": {

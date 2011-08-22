@@ -16,6 +16,11 @@ var optimist = require('optimist')
         'type': 'boolean',
         'description': 'Known helpers only',
         'alias': 'knownOnly'
+      },
+      'm': {
+        'type': 'boolean',
+        'description': 'Minimize output',
+        'alias': 'min'
       }
     })
 
@@ -32,7 +37,8 @@ var optimist = require('optimist')
     });
 
 var fs = require('fs'),
-    handlebars = require('../lib/handlebars');
+    handlebars = require('../lib/handlebars'),
+    uglify = require('uglify-js');
 
 var argv = optimist.argv,
     template = argv._[0];
@@ -60,6 +66,13 @@ fs.readFile(template, 'utf8', function(err, data) {
     };
 
     var output = 'Handlebars.template(' + handlebars.precompile(data, options) + ')';
+    if (argv.min) {
+      var ast = uglify.parser.parse(output);
+      ast = uglify.uglify.ast_mangle(ast);
+      ast = uglify.uglify.ast_squeeze(ast);
+      output = uglify.uglify.gen_code(ast);
+    }
+
     if (argv.output) {
       fs.writeFileSync(argv.output, output, 'utf8');
     } else {
