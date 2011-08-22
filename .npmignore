@@ -4,8 +4,8 @@
 Gemfile
 Gemfile.lock
 Rakefile
-bench
-dist
-spec
-src
-vendor
+bench/*
+dist/*
+spec/*
+src/*
+vendor/*
