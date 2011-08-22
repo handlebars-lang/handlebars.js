@@ -22,6 +22,11 @@ var optimist = require('optimist')
         'description': 'Minimize output',
         'alias': 'min'
       },
+      's': {
+        'type': 'boolean',
+        'description': 'Output template function only.',
+        'alias': 'simple'
+      },
       'r': {
         'type': 'string',
         'description': 'Template root. Base value that will be stripped from template names.',
@@ -42,6 +47,14 @@ var optimist = require('optimist')
           throw 'Unable to open template file "' + template + '"';
         }
       });
+    })
+    .check(function(argv) {
+      if (argv.simple && argv.min) {
+        throw 'Unable to minimze simple output';
+      }
+      if (argv.simple && (argv._.length !== 1 || fs.statSync(argv._[0]).isDirectory())) {
+        throw 'Unable to output multiple templates in simple mode';
+      }
     });
 
 var fs = require('fs'),
@@ -63,7 +76,10 @@ if (argv.known) {
   }
 }
 
-var output = ['(function() {\n  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n'];
+var output = [];
+if (!argv.simple) {
+  output.push('(function() {\n  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n');
+}
 function processTemplate(template, root) {
   var path = template,
       stat = fs.statSync(path);
@@ -91,7 +107,11 @@ function processTemplate(template, root) {
     }
     template = template.replace(/\.handlebars$/, '');
 
-    output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
+    if (argv.simple) {
+      output.push(handlebars.precompile(data, options) + '\n');
+    } else {
+      output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
+    }
   }
 }
 
@@ -100,8 +120,11 @@ argv._.forEach(function(template) {
 });
 
 // Output the content
-output.push('})()');
+if (!argv.simple) {
+  output.push('})()');
+}
 output = output.join('');
+
 if (argv.min) {
   var ast = uglify.parser.parse(output);
   ast = uglify.uglify.ast_mangle(ast);
