@@ -2,6 +2,11 @@
 
 var optimist = require('optimist')
     .usage('Precompile handlebar templates.\nUsage: $0 template', {
+      'f': {
+        'type': 'string',
+        'description': 'Output File',
+        'alias': 'output'
+      },
       'k': {
         'type': 'string',
         'description': 'Known helpers',
@@ -54,5 +59,10 @@ fs.readFile(template, 'utf8', function(err, data) {
       knownHelpersOnly: argv.o
     };
 
-    console.log('Handlebars.template(' + handlebars.precompile(data, options) + ')');
+    var output = 'Handlebars.template(' + handlebars.precompile(data, options) + ')';
+    if (argv.output) {
+      fs.writeFileSync(argv.output, output, 'utf8');
+    } else {
+      console.log(output);
+    }
 });
