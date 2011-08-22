@@ -10,7 +10,7 @@
   },
   "dependencies": {
       "optimist": "~0.2",
-      "uglify": "~1.0"
+      "uglify-js": "~1.0"
   },
   "devDependencies": {},
   "bin": {
