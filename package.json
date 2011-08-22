@@ -16,6 +16,7 @@
       "uglify-js": "~1.0"
   },
   "devDependencies": {},
+  "main": "lib/handlebars.js",
   "bin": {
     "handlebars": "bin/handlebars"
   }
