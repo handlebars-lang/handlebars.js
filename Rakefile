@@ -97,9 +97,9 @@ task :bench => "vendor" do
   end
 
   if File.directory?("vendor/eco")
-    system "cd vendor/eco && git pull"
+    system "cd vendor/eco && git pull && npm update"
   else
-    system "git clone git://github.com/sstephenson/eco.git vendor/eco"
+    system "git clone git://github.com/sstephenson/eco.git vendor/eco && cd vendor/eco && npm update"
   end
 
   system "node bench/handlebars.js"
