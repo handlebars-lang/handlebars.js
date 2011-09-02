@@ -958,3 +958,13 @@ test("when inside a block in String mode, .. passes the appropriate context in t
 
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
 });
+
+module("Regressions")
+
+test("GH-94: Cannot read property of undefined", function() {
+	var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
+	var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
+	p(tpl);
+	shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
+                  "Renders without an undefined property error");
+});
