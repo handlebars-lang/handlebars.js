@@ -130,6 +130,11 @@ test("nested paths with empty string value", function() {
                   "Goodbye  world!", "Nested paths access nested objects with empty string");
 });
 
+test("literal paths", function() {
+	shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
+			"Goodbye beautiful world!", "Literal paths can be used");
+});
+
 test("--- TODO --- bad idea nested paths", function() {
   return;
 	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -941,4 +946,3 @@ test("when inside a block in String mode, .. passes the appropriate context in t
 
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
 });
-
