@@ -135,6 +135,11 @@ test("literal paths", function() {
 			"Goodbye beautiful world!", "Literal paths can be used");
 });
 
+test("literal paths with square brackets in them", function() {
+	shouldCompileTo("Goodbye {{[@alan]]/expression}} world!", {"@alan]": {expression: "beautiful"}},
+			"Goodbye beautiful world!", "Literal paths with square brackets in them can be used");
+});
+
 test("--- TODO --- bad idea nested paths", function() {
   return;
 	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
