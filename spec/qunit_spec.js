@@ -459,6 +459,13 @@ test("GH-14: a partial preceding a selector", function() {
    shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
+test("Partials with literal paths", function() {
+	var string = "Dudes: {{> [dude]}}";
+	var dude = "{{name}}";
+	var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
 module("String literal parameters");
 
 test("simple literals work", function() {
