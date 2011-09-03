@@ -130,6 +130,16 @@ test("nested paths with empty string value", function() {
                   "Goodbye  world!", "Nested paths access nested objects with empty string");
 });
 
+test("literal paths", function() {
+	shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
+			"Goodbye beautiful world!", "Literal paths can be used");
+});
+
+test("literal paths with square brackets in them", function() {
+	shouldCompileTo("Goodbye {{[@alan]]/expression}} world!", {"@alan]": {expression: "beautiful"}},
+			"Goodbye beautiful world!", "Literal paths with square brackets in them can be used");
+});
+
 test("--- TODO --- bad idea nested paths", function() {
   return;
 	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -447,6 +457,13 @@ test("GH-14: a partial preceding a selector", function() {
    var dude = "{{name}}";
    var hash = {name:"Jeepers", another_dude:"Creepers"};
    shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+});
+
+test("Partials with literal paths", function() {
+	var string = "Dudes: {{> [dude]}}";
+	var dude = "{{name}}";
+	var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
 module("String literal parameters");
@@ -942,3 +959,11 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
 });
 
+module("Regressions")
+
+test("GH-94: Cannot read property of undefined", function() {
+	var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
+	var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
+	shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
+                  "Renders without an undefined property error");
+});
