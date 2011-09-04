@@ -169,7 +169,47 @@ example:
 Precompiling Templates
 ----------------------
 
-TODO in the rewrite. This will use RubyRacer and not node.
+Handlebars allows templates to be precompiled and included as javascript
+code rather than the handlebars template allowing for faster startup time.
+
+### Installation
+The precompiler script may be installed via npm using the `npm install -g handlebars`
+command.
+
+### Usage
+
+<pre>
+Precompile handlebar templates.
+Usage: handlebars template...
+
+Options:
+  -f, --output     Output File                                                           [string]
+  -k, --known      Known helpers                                                         [string]
+  -o, --knownOnly  Known helpers only                                                    [boolean]
+  -m, --min        Minimize output                                                       [boolean]
+  -s, --simple     Output template function only.                                        [boolean]
+  -r, --root       Template root. Base value that will be stripped from template names.  [string]
+</pre>
+
+If using the precompiler's normal mode, the resulting templates will be stored
+to the `Handlebars.templates` object using the relative template name sans the
+extension. These templates may be executed in the same manner as templates.
+
+If using the simple mode the precompiler will generate a single javascript method.
+To execute this method it must be passed to the using the `Handlebars.template`
+method and the resulting object may be as normal.
+
+### Optimizations
+
+- Rather than using the full _handlebars.js_ library, implementations that
+  do not need to compile templates at runtime may include _handlebars.vm.js_
+  whose min+gzip size is approximately 1k.
+- If a helper is known to exist in the target environment they may be defined
+  using the `--known name` argument may be used to optimize accesses to these
+  helpers for size and speed.
+- When all helpers are known in advance the `--knownOnly` argument may be used
+  to optimize all block helper references.
+
 
 Performance
 -----------
