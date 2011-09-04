@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var optimist = require('optimist')
-    .usage('Precompile handlebar templates.\nUsage: $0 template', {
+    .usage('Precompile handlebar templates.\nUsage: $0 template...', {
       'f': {
         'type': 'string',
         'description': 'Output File',
@@ -37,7 +37,7 @@ var optimist = require('optimist')
     .check(function(argv) {
       var template = [0];
       if (!argv._.length) {
-        throw 'Must define at least one template or directories.';
+        throw 'Must define at least one template or directory.';
       }
 
       argv._.forEach(function(template) {
