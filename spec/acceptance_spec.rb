@@ -64,7 +64,8 @@ Module.new do
 
     result = js_context.eval("$$RSPEC1$$ == $$RSPEC2$$")
 
-    message ||= "#{first} did not == #{second}"
+    additional_message = "#{first.inspect} did not == #{second.inspect}"
+    message = message ? "#{message} (#{additional_message})" : additional_message
 
     unless result
       backtrace = js_backtrace(js_context)
