@@ -121,7 +121,7 @@ argv._.forEach(function(template) {
 
 // Output the content
 if (!argv.simple) {
-  output.push('})()');
+  output.push('})();');
 }
 output = output.join('');
 
