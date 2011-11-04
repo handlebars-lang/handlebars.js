@@ -576,7 +576,11 @@ test("Invert blocks work in knownHelpers only mode", function() {
   equal(result, "bar", "'bar' should === '" + result);
 });
 
-module("built-in helpers");
+var teardown;
+module("built-in helpers", {
+  setup: function(){ teardown = null; },
+  teardown: function(){ if (teardown) { teardown(); } }
+});
 
 test("with", function() {
   var string = "{{#with person}}{{first}} {{last}}{{/with}}";
@@ -606,6 +610,19 @@ test("each", function() {
                   "each with array argument iterates over the contents when not empty");
   shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                   "each with array argument ignores the contents when empty");
+});
+
+test("log", function() {
+  var string = "{{log blah}}"
+  var hash   = { blah: "whee" };
+
+  var logArg;
+  var originalLog = Handlebars.log;
+  Handlebars.log = function(arg){ logArg = arg; }
+  teardown = function(){ Handlebars.log = originalLog; }
+
+  shouldCompileTo(string, hash, "", "log should not display");
+  equals("whee", logArg, "should call log with 'whee'");
 });
 
 test("overriding property lookup", function() {

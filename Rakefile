@@ -4,11 +4,15 @@ require "bundler/setup"
 file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   if ENV['PATH'].split(':').any? {|folder| File.exists?(folder+'/jison')}
     system "jison src/handlebars.yy src/handlebars.l"
-    File.open("lib/handlebars/compiler/parser.js", "w") do |file|
-      file.puts File.read("handlebars.js") + ";"
-    end
+    if $?.success?
+      File.open("lib/handlebars/compiler/parser.js", "w") do |file|
+        file.puts File.read("handlebars.js") + ";"
+      end
 
-    sh "rm handlebars.js"
+      sh "rm handlebars.js"
+    else
+      puts "Failed to run Jison."
+    end
   else
     puts "Jison is not installed. Try running `npm install jison`."
   end

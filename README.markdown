@@ -166,6 +166,21 @@ example:
     //   <li><a href="/people/2">Yehuda</a></li>
     // </ul>
 
+
+### Comments
+
+You can add comments to your templates with the following syntax:
+
+    {{! This is a comment }}
+
+You can also use real html comments if you want them to end up in the output.
+
+    <div>
+        {{! This comment will not end up in the output }}
+        <!-- This comment will show up in the output -->
+    </div>
+
+
 Precompiling Templates
 ----------------------
 
