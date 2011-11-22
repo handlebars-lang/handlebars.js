@@ -510,6 +510,13 @@ test("simple multi-params work", function() {
   shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "regular helpers with multiple params");
 });
 
+test("functions as multi-params work", function() {
+  var string   = 'Message: {{goodbye descriptor location}}';
+  var hash     = {descriptor: function() { return "cruel"}, location: function(){return "world"}}
+  var helpers = {goodbye: function(desc, loc) { return "Goodbye " + desc + " " + loc; }}
+  shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "regular helpers with func params");
+});
+
 test("block multi-params work", function() {
   var string   = 'Message: {{#goodbye cruel world}}{{greeting}} {{adj}} {{noun}}{{/goodbye}}';
   var hash     = {cruel: "cruel", world: "world"}
