@@ -16,21 +16,23 @@ In general, the syntax of Handlebars.js templates is a superset of Mustache temp
 
 Once you have a template, use the Handlebars.compile method to compile the template into a function. The generated function takes a context argument, which will be used to render the template.
 
-    var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " + 
-        "{{kids.length}} kids:</p>" +
-        "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
-    var template = Handlebars.compile(source);
+```js
+var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " + 
+             "{{kids.length}} kids:</p>" +
+             "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
+var template = Handlebars.compile(source);
 
-    var data = { "name": "Alan", "hometown": "Somewhere, TX",
-                  "kids": [{"name": "Jimmy", "age": "12"}, {"name": "Sally", "age": "4"}]};
-    var result = template(data);
+var data = { "name": "Alan", "hometown": "Somewhere, TX",
+             "kids": [{"name": "Jimmy", "age": "12"}, {"name": "Sally", "age": "4"}]};
+var result = template(data);
 
-    // Would render:
-    // <p>Hello, my name is Alan. I am from Somewhere, TX. I have 2 kids:</p>
-    // <ul>
-    //   <li>Jimmy is 12</li>
-    //   <li>Sally is 4</li>
-    // </ul>
+// Would render:
+// <p>Hello, my name is Alan. I am from Somewhere, TX. I have 2 kids:</p>
+// <ul>
+//   <li>Jimmy is 12</li>
+//   <li>Sally is 4</li>
+// </ul>
+```
 
 
 Registering Helpers
@@ -40,22 +42,23 @@ You can register helpers that Handlebars will use when evaluating your
 template. Here's an example, which assumes that your objects have a URL
 embedded in them, as well as the text for a link:
 
-    Handlebars.registerHelper('link_to', function(context) {
-      return "<a href='" + context.url + "'>" + context.body + "</a>";
-    });
+```js
+Handlebars.registerHelper('link_to', function(context) {
+  return "<a href='" + context.url + "'>" + context.body + "</a>";
+});
 
-    var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-    var source = "<ul>{{#posts}}<li>{{{link_to this}}}</li>{{/posts}}</ul>"
+var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
+var source = "<ul>{{#posts}}<li>{{{link_to this}}}</li>{{/posts}}</ul>"
 
-    var template = Handlebars.compile(source);
-    template(context);
+var template = Handlebars.compile(source);
+template(context);
 
-    // Would render:
-    //
-    // <ul>
-    //   <li><a href='/hello-world'>Hello World!</a></li>
-    // </ul>
-
+// Would render:
+//
+// <ul>
+//   <li><a href='/hello-world'>Hello World!</a></li>
+// </ul>
+```
 
 Escaping
 --------
@@ -78,40 +81,50 @@ Handlebars.js supports an extended expression syntax that we call paths. Paths a
 
 To display data from descendent contexts, use the `.` character. So, for example, if your data were structured like:
 
-    var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
+```js
+var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
+```
 
 you could display the person's name from the top-level context with the following expression:
 
-    {{person.name}}
+```
+{{person.name}}
+```
 
 You can backtrack using `../`. For example, if you've already traversed into the person object you could still display the company's name with an expression like `{{../company.name}}`, so:
 
-    {{#person}}{{name}} - {{../company.name}}{{/person}}
+```
+{{#person}}{{name}} - {{../company.name}}{{/person}}
+```
 
 would render:
 
-    Alan - Rad, Inc.
+```
+Alan - Rad, Inc.
+```
 
 ### Strings
 
 When calling a helper, you can pass paths or Strings as parameters. For
 instance:
 
-    Handlebars.registerHelper('link_to', function(title, context) {
-      return "<a href='/posts" + context.id + "'>" + title + "</a>"
-    });
+```js
+Handlebars.registerHelper('link_to', function(title, context) {
+  return "<a href='/posts" + context.id + "'>" + title + "</a>"
+});
 
-    var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-    var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li>{{/posts}}</ul>'
+var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
+var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li>{{/posts}}</ul>'
 
-    var template = Handlebars.compile(source);
-    template(context);
+var template = Handlebars.compile(source);
+template(context);
 
-    // Would render:
-    //
-    // <ul>
-    //   <li><a href='/hello-world'>Post!</a></li>
-    // </ul>
+// Would render:
+//
+// <ul>
+//   <li><a href='/hello-world'>Post!</a></li>
+// </ul>
+```
 
 When you pass a String as a parameter to a helper, the literal String
 gets passed to the helper function.
@@ -121,23 +134,25 @@ gets passed to the helper function.
 
 Handlebars.js also adds the ability to define block helpers. Block helpers are functions that can be called from anywhere in the template. Here's an example:
 
-    var source = "<ul>{{#people}}<li>{{{#link}}}{{name}}{{/link}}</li>{{/people}}</ul>";
-    Handlebars.registerHelper('link', function(context, fn) {
-      return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
-    });
-    var template = Handlebars.compile(source);
+```js
+var source = "<ul>{{#people}}<li>{{{#link}}}{{name}}{{/link}}</li>{{/people}}</ul>";
+Handlebars.registerHelper('link', function(context, fn) {
+  return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
+});
+var template = Handlebars.compile(source);
 
-    var data = { "people": [
-        { "name": "Alan", "id": 1 },
-        { "name": "Yehuda", "id": 2 }
-      ]};
-    template(data);
+var data = { "people": [
+    { "name": "Alan", "id": 1 },
+    { "name": "Yehuda", "id": 2 }
+  ]};
+template(data);
 
-    // Should render:
-    // <ul>
-    //   <li><a href="/people/1">Alan</a></li>
-    //   <li><a href="/people/2">Yehuda</a></li>
-    // </ul>
+// Should render:
+// <ul>
+//   <li><a href="/people/1">Alan</a></li>
+//   <li><a href="/people/2">Yehuda</a></li>
+// </ul>
+```
 
 Whenever the block helper is called it is given two parameters, the argument that is passed to the helper, or the current context if no argument is passed and the compiled contents of the block. Inside of the block helper the value of `this` is the current context, wrapped to include a method named `__get__` that helps translate paths into values within the helpers.
 
@@ -148,37 +163,42 @@ Handlebars when it encounters a partial (`{{> partialName}}`). Partials
 can either be String templates or compiled template functions. Here's an
 example:
 
-    var source = "<ul>{{#people}}<li>{{> link}}</li>{{/people}}</ul>";
+```js
+var source = "<ul>{{#people}}<li>{{> link}}</li>{{/people}}</ul>";
 
-    Handlebars.registerPartial('link', '<a href="/people/{{id}}">{{name}}</a>')
-    var template = Handlebars.compile(source);
+Handlebars.registerPartial('link', '<a href="/people/{{id}}">{{name}}</a>')
+var template = Handlebars.compile(source);
 
-    var data = { "people": [
-        { "name": "Alan", "id": 1 },
-        { "name": "Yehuda", "id": 2 }
-      ]};
+var data = { "people": [
+    { "name": "Alan", "id": 1 },
+    { "name": "Yehuda", "id": 2 }
+  ]};
 
-    template(data);
+template(data);
 
-    // Should render:
-    // <ul>
-    //   <li><a href="/people/1">Alan</a></li>
-    //   <li><a href="/people/2">Yehuda</a></li>
-    // </ul>
-
+// Should render:
+// <ul>
+//   <li><a href="/people/1">Alan</a></li>
+//   <li><a href="/people/2">Yehuda</a></li>
+// </ul>
+```
 
 ### Comments
 
 You can add comments to your templates with the following syntax:
 
-    {{! This is a comment }}
+```js
+{{! This is a comment }}
+```
 
 You can also use real html comments if you want them to end up in the output.
 
-    <div>
-        {{! This comment will not end up in the output }}
-        <!-- This comment will show up in the output -->
-    </div>
+```html
+<div>
+    {{! This comment will not end up in the output }}
+    <!-- This comment will show up in the output -->
+</div>
+```
 
 
 Precompiling Templates
@@ -248,11 +268,15 @@ changed.
 
 Instead of:
 
-    template(context, helpers, partials, [data])
+```js
+template(context, helpers, partials, [data])
+```
 
 Use:
 
-    template(context, {helpers: helpers, partials: partials, data: data})
+```js
+template(context, {helpers: helpers, partials: partials, data: data})
+```
 
 Known Issues
 ------------
