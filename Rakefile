@@ -14,7 +14,8 @@ file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars
       puts "Failed to run Jison."
     end
   else
-    puts "Jison is not installed. Try running `npm install jison`."
+    puts "Jison is not installed. Trying `npm install jison`."
+    sh "npm install jison"
   end
 end
 
