@@ -1,21 +1,26 @@
 require "rubygems"
 require "bundler/setup"
 
+def compile_parser
+  system "jison src/handlebars.yy src/handlebars.l"
+  if $?.success?
+    File.open("lib/handlebars/compiler/parser.js", "w") do |file|
+      file.puts File.read("handlebars.js") + ";"
+    end
+
+    sh "rm handlebars.js"
+  else
+    puts "Failed to run Jison."
+  end
+end
+
 file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   if ENV['PATH'].split(':').any? {|folder| File.exists?(folder+'/jison')}
-    system "jison src/handlebars.yy src/handlebars.l"
-    if $?.success?
-      File.open("lib/handlebars/compiler/parser.js", "w") do |file|
-        file.puts File.read("handlebars.js") + ";"
-      end
-
-      sh "rm handlebars.js"
-    else
-      puts "Failed to run Jison."
-    end
+    compile_parser
   else
     puts "Jison is not installed. Trying `npm install jison`."
-    sh "npm install jison"
+    sh "npm install jison -g"
+    compile_parser
   end
 end
 
