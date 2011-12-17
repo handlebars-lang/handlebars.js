@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/wycats/handlebars.js.png)](http://travis-ci.org/wycats/handlebars.js)
+
 Handlebars.js
 =============
 
