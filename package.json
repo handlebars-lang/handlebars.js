@@ -12,8 +12,8 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
-      "optimist": "~0.2",
-      "uglify-js": "~1.0"
+      "optimist": "~0.3",
+      "uglify-js": "~1.2"
   },
   "devDependencies": {},
   "main": "lib/handlebars.js",
