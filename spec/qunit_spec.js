@@ -984,3 +984,12 @@ test("GH-94: Cannot read property of undefined", function() {
 	shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
                   "Renders without an undefined property error");
 });
+
+test("GH-150: Inverted sections print when they shouldn't", function() {
+  var string = "{{^set}}not set{{/set}} :: {{#set}}set{{/set}}";
+
+  shouldCompileTo(string, {}, "not set :: ", "inverted sections run when property isn't present in context");
+  shouldCompileTo(string, {set: undefined}, "not set :: ", "inverted sections run when property is undefined");
+  shouldCompileTo(string, {set: false}, "not set :: ", "inverted sections run when property is false");
+  shouldCompileTo(string, {set: true}, " :: set", "inverted sections don't run when property is true");
+});
