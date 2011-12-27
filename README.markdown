@@ -291,6 +291,7 @@ like to try out Handlebars.js in their browser.
 * Don Park wrote an Express.js view engine adapter for Handlebars.js called [hbs](http://github.com/donpark/hbs).
 * [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey, supports Handlebars.js as one of its template plugins.
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main templating engine, extending it with automatic data binding support.
+* [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to structure your views, also with automatic data binding support.
 * Les Hill (@leshill) wrote a Rails Asset Pipeline gem named [handlebars_assets](http://github.com/leshill/handlebars_assets).
 
 Helping Out
