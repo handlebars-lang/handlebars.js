@@ -993,3 +993,15 @@ test("GH-150: Inverted sections print when they shouldn't", function() {
   shouldCompileTo(string, {set: false}, "not set :: ", "inverted sections run when property is false");
   shouldCompileTo(string, {set: true}, " :: set", "inverted sections don't run when property is true");
 });
+
+test("Mustache man page", function() {
+  var string = "Hello {{name}}. You have just won ${{value}}!{{#in_ca}} Well, ${{taxed_value}}, after taxes.{{/in_ca}}"
+  var data = {
+    "name": "Chris",
+    "value": 10000,
+    "taxed_value": 10000 - (10000 * 0.4),
+    "in_ca": true
+  }
+
+  shouldCompileTo(string, data, "Hello Chris. You have just won $10000! Well, $6000, after taxes.", "the hello world mustache example works");
+});
