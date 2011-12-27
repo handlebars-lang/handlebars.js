@@ -650,6 +650,23 @@ test("passing in data to a compiled function that expects data - works with help
   equals("happy cat", result, "Data output by helper");
 });
 
+test("passing in data to a compiled function that expects data - works with helpers in partials", function() {
+  var template = CompilerContext.compile("{{>my_partial}}", {data: true});
+
+  var partials = {
+    my_partial: CompilerContext.compile("{{hello}}", {data: true})
+  };
+
+  var helpers = {
+    hello: function(options) {
+      return options.data.adjective + " "  + this.noun;
+    }
+  };
+
+  var result = template({noun: "cat"}, {helpers: helpers, partials: partials, data: {adjective: "happy"}});
+  equals("happy cat", result, "Data output by helper inside partial");
+});
+
 test("passing in data to a compiled function that expects data - works with helpers and parameters", function() {
   var template = CompilerContext.compile("{{hello world}}", {data: true});
 
