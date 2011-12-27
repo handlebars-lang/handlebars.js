@@ -598,6 +598,18 @@ test("if", function() {
                   "if with empty array does not show the contents");
 });
 
+test("if with function argument", function() {
+  var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
+  shouldCompileTo(string, {goodbye: function() {return true}, world: "world"}, "GOODBYE cruel world!",
+                  "if with function shows the contents when function returns true");
+  shouldCompileTo(string, {goodbye: function() {return this.world}, world: "world"}, "GOODBYE cruel world!",
+                  "if with function shows the contents when function returns string");
+  shouldCompileTo(string, {goodbye: function() {return false}, world: "world"}, "cruel world!",
+                  "if with function does not show the contents when returns false");
+  shouldCompileTo(string, {goodbye: function() {return this.foo}, world: "world"}, "cruel world!",
+                  "if with function does not show the contents when returns undefined");
+});
+
 test("each", function() {
   var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!"
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
