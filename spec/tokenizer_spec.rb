@@ -56,6 +56,16 @@ describe "Tokenizer" do
     tokenize("{{foo.bar.baz}}").should match_tokens(%w(OPEN ID SEP ID SEP ID CLOSE))
   end
 
+  it "allows path literals with []" do
+    result = tokenize("{{foo.[bar]}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
+  end
+
+  it "allows multiple path literals on a line with []" do
+    result = tokenize("{{foo.[bar]}}{{foo.[baz]}}")
+    result.should match_tokens(%w(OPEN ID SEP ID CLOSE OPEN ID SEP ID CLOSE))
+  end
+
   it "tokenizes {{.}} as OPEN ID CLOSE" do
     result = tokenize("{{.}}")
     result.should match_tokens(%w(OPEN ID CLOSE))

@@ -135,11 +135,6 @@ test("literal paths", function() {
 			"Goodbye beautiful world!", "Literal paths can be used");
 });
 
-test("literal paths with square brackets in them", function() {
-	shouldCompileTo("Goodbye {{[@alan]]/expression}} world!", {"@alan]": {expression: "beautiful"}},
-			"Goodbye beautiful world!", "Literal paths with square brackets in them can be used");
-});
-
 test("--- TODO --- bad idea nested paths", function() {
   return;
 	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -1004,4 +999,11 @@ test("Mustache man page", function() {
   }
 
   shouldCompileTo(string, data, "Hello Chris. You have just won $10000! Well, $6000, after taxes.", "the hello world mustache example works");
+});
+
+test("GH-158: Using array index twice, breaks the template", function() {
+  var string = "{{arr.[0]}}, {{arr.[1]}}";
+  var data = { "arr": [1,2] };
+
+  shouldCompileTo(string, data, "1, 2", "it works as expected");
 });
