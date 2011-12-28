@@ -38,11 +38,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler/compiler vm).map do |file|
+minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler/compiler runtime).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-vm_deps = %w(base utils vm).map do |file|
+runtime_deps = %w(base utils runtime).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
@@ -70,47 +70,47 @@ file "dist/handlebars.js" => minimal_deps do |task|
   build_for_task(task)
 end
 
-file "dist/handlebars.vm.js" => vm_deps do |task|
+file "dist/handlebars.runtime.js" => runtime_deps do |task|
   build_for_task(task)
 end
 
 task :build => [:compile, "dist/handlebars.js"]
-task :vm => [:compile, "dist/handlebars.vm.js"]
+task :runtime => [:compile, "dist/handlebars.runtime.js"]
 
-desc "build the build and vm version of handlebars"
-task :release => [:build, :vm]
+desc "build the build and runtime version of handlebars"
+task :release => [:build, :runtime]
 
 directory "vendor"
 
 desc "benchmark against dust.js and mustache.js"
 task :bench => "vendor" do
   require "open-uri"
-  File.open("vendor/mustache.js", "w") do |file|
-    file.puts open("https://github.com/janl/mustache.js/raw/master/mustache.js").read
-    file.puts "module.exports = Mustache;"
-  end
+  #File.open("vendor/mustache.js", "w") do |file|
+    #file.puts open("https://github.com/janl/mustache.js/raw/master/mustache.js").read
+    #file.puts "module.exports = Mustache;"
+  #end
 
   File.open("vendor/benchmark.js", "w") do |file|
-    file.puts open("https://github.com/mathiasbynens/benchmark.js/raw/master/benchmark.js").read
+    file.puts open("https://raw.github.com/bestiejs/benchmark.js/master/benchmark.js").read
   end
 
-  if File.directory?("vendor/dustjs")
-    system "cd vendor/dustjs && git pull"
-  else
-    system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
-  end
+  #if File.directory?("vendor/dustjs")
+    #system "cd vendor/dustjs && git pull"
+  #else
+    #system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
+  #end
 
-  if File.directory?("vendor/coffee")
-    system "cd vendor/coffee && git pull"
-  else
-    system "git clone git://github.com/jashkenas/coffee-script.git vendor/coffee"
-  end
+  #if File.directory?("vendor/coffee")
+    #system "cd vendor/coffee && git pull"
+  #else
+    #system "git clone git://github.com/jashkenas/coffee-script.git vendor/coffee"
+  #end
 
-  if File.directory?("vendor/eco")
-    system "cd vendor/eco && git pull && npm update"
-  else
-    system "git clone git://github.com/sstephenson/eco.git vendor/eco && cd vendor/eco && npm update"
-  end
+  #if File.directory?("vendor/eco")
+    #system "cd vendor/eco && git pull && npm update"
+  #else
+    #system "git clone git://github.com/sstephenson/eco.git vendor/eco && cd vendor/eco && npm update"
+  #end
 
   system "node bench/handlebars.js"
 end

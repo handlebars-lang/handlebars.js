@@ -78,7 +78,7 @@ module Handlebars
 
       Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/vm.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/runtime.js');
 
       context["CompilerContext"] = {}
       CompilerContext = context["CompilerContext"]
@@ -129,7 +129,7 @@ module Handlebars
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/visitor.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/printer.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/compiler.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/vm.js');
+      Handlebars::Spec.js_load(context, 'lib/handlebars/runtime.js');
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
