@@ -44,6 +44,20 @@ describe "Tokenizer" do
     result[1].should be_token("ID", "foo")
   end
 
+  it "supports escaping delimiters" do
+    result = tokenize("{{foo}} \\{{bar}} {{baz}}")
+    result.should match_tokens(%w(OPEN ID CLOSE CONTENT CONTENT OPEN ID CLOSE))
+
+    result[4].should be_token("CONTENT", "{{bar}} ")
+  end
+
+  it "supports escaping a triple stash" do
+    result = tokenize("{{foo}} \\{{{bar}}} {{baz}}")
+    result.should match_tokens(%w(OPEN ID CLOSE CONTENT CONTENT OPEN ID CLOSE))
+
+    result[4].should be_token("CONTENT", "{{{bar}}} ")
+  end
+
   it "tokenizes a simple path" do
     result = tokenize("{{foo/bar}}")
     result.should match_tokens(%w(OPEN ID SEP ID CLOSE))
