@@ -274,7 +274,7 @@ test("block helper", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var template = CompilerContext.compile(string);
 
-  result = template({goodbyes: function(fn) { return fn({text: "GOODBYE"}); }, world: "world"});
+  result = template({world: "world"}, { helpers: {goodbyes: function(fn) { return fn({text: "GOODBYE"}); }}});
   equal(result, "GOODBYE! cruel world!", "Block helper executed");
 });
 
@@ -282,7 +282,7 @@ test("block helper staying in the same context", function() {
   var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
   var template = CompilerContext.compile(string);
 
-  result = template({form: function(fn) { return "<form>" + fn(this) + "</form>" }, name: "Yehuda"});
+  result = template({name: "Yehuda"}, {helpers: {form: function(fn) { return "<form>" + fn(this) + "</form>" } }});
   equal(result, "<form><p>Yehuda</p></form>", "Block helper executed with current context");
 });
 
@@ -307,7 +307,7 @@ test("block helper passing a new context", function() {
   var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
   var template = CompilerContext.compile(string);
 
-  result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda"}});
+  result = template({yehuda: {name: "Yehuda"}}, { helpers: {form: function(context, fn) { return "<form>" + fn(context) + "</form>" }}});
   equal(result, "<form><p>Yehuda</p></form>", "Context variable resolved");
 });
 
@@ -315,7 +315,7 @@ test("block helper passing a complex path context", function() {
   var string   = "{{#form yehuda/cat}}<p>{{name}}</p>{{/form}}"
   var template = CompilerContext.compile(string);
 
-  result = template({form: function(context, fn) { return "<form>" + fn(context) + "</form>" }, yehuda: {name: "Yehuda", cat: {name: "Harold"}}});
+  result = template({yehuda: {name: "Yehuda", cat: {name: "Harold"}}}, { helpers: {form: function(context, fn) { return "<form>" + fn(context) + "</form>" }}});
   equal(result, "<form><p>Harold</p></form>", "Complex path variable resolved");
 });
 
@@ -324,10 +324,12 @@ test("nested block helpers", function() {
   var template = CompilerContext.compile(string);
 
   result = template({
-    form: function(context, fn) { return "<form>" + fn(context) + "</form>" },
-    yehuda: {name: "Yehuda",
-             link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>"; }
-            }
+    yehuda: {name: "Yehuda" }
+  }, {
+    helpers: {
+      link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>" },
+      form: function(context, fn) { return "<form>" + fn(context) + "</form>" }
+    }
   });
   equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>", "Both blocks executed");
 });
@@ -359,10 +361,9 @@ test("block helper inverted sections", function() {
     }
   };
 
-  var hash = {list: list, people: [{name: "Alan"}, {name: "Yehuda"}]};
-  var empty = {list: list, people: []};
+  var hash = {people: [{name: "Alan"}, {name: "Yehuda"}]};
+  var empty = {people: []};
   var rootMessage = {
-    list: function(context, options) { if(context.length === 0) { return "<p>" + options.inverse(this) + "</p>"; } },
     people: [],
     message: "Nobody's here"
   }
@@ -371,9 +372,9 @@ test("block helper inverted sections", function() {
 
   // the meaning here may be kind of hard to catch, but list.not is always called,
   // so we should see the output of both
-  shouldCompileTo(string, hash, "<ul><li>Alan</li><li>Yehuda</li></ul>", "an inverse wrapper is passed in as a new context");
-  shouldCompileTo(string, empty, "<p><em>Nobody's here</em></p>", "an inverse wrapper can be optionally called");
-  shouldCompileTo(messageString, rootMessage, "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
+  shouldCompileTo(string, [hash, { list: list }], "<ul><li>Alan</li><li>Yehuda</li></ul>", "an inverse wrapper is passed in as a new context");
+  shouldCompileTo(string, [empty, { list: list }], "<p><em>Nobody's here</em></p>", "an inverse wrapper can be optionally called");
+  shouldCompileTo(messageString, [rootMessage, { list: list }], "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
 });
 
 module("helpers hash");
@@ -569,6 +570,14 @@ test("Invert blocks work in knownHelpers only mode", function() {
 
   var result = template({foo: false});
   equal(result, "bar", "'bar' should === '" + result);
+});
+
+module("blockHelperMissing");
+
+test("lambdas are resolved by blockHelperMissing, not handlebars proper", function() {
+  var string = "{{#truthy}}yep{{/truthy}}";
+  var data = { truthy: function() { return true; } };
+  shouldCompileTo(string, data, "yep");
 });
 
 var teardown;
@@ -1035,4 +1044,24 @@ test("GH-158: Using array index twice, breaks the template", function() {
   var data = { "arr": [1,2] };
 
   shouldCompileTo(string, data, "1, 2", "it works as expected");
+});
+
+test("bug reported by @fat where lambdas weren't being properly resolved", function() {
+  var string = "<strong>This is a slightly more complicated {{thing}}.</strong>.\n{{! Just ignore this business. }}\nCheck this out:\n{{#hasThings}}\n<ul>\n{{#things}}\n<li class={{className}}>{{word}}</li>\n{{/things}}</ul>.\n{{/hasThings}}\n{{^hasThings}}\n\n<small>Nothing to check out...</small>\n{{/hasThings}}";
+  var data = {
+    thing: function() {
+      return "blah";
+    },
+    things: [
+      {className: "one", word: "@fat"},
+      {className: "two", word: "@dhg"},
+      {className: "three", word:"@sayrer"}
+    ],
+    hasThings: function() {
+      return true;
+    }
+  };
+
+  var output = "<strong>This is a slightly more complicated blah.</strong>.\n\nCheck this out:\n\n<ul>\n\n<li class=one>@fat</li>\n\n<li class=two>@dhg</li>\n\n<li class=three>@sayrer</li>\n</ul>.\n\n";
+  shouldCompileTo(string, data, output);
 });
