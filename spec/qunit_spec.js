@@ -96,6 +96,8 @@ test("escaping expressions", function() {
  shouldCompileTo("{{awesome}}", {awesome: "&\"'`\\<>"}, '&amp;&quot;&#x27;&#x60;\\&lt;&gt;',
         "by default expressions should be escaped");
 
+ shouldCompileTo("{{awesome}}", {awesome: "Escaped, <b> looks like: &lt;b&gt;"}, 'Escaped, &lt;b&gt; looks like: &amp;lt;b&amp;gt;',
+        "escaping should properly handle amperstands");
 });
 
 test("functions returning safestrings shouldn't be escaped", function() {
