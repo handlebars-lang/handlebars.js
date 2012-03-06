@@ -239,7 +239,7 @@ method and the resulting object may be as normal.
 ### Optimizations
 
 - Rather than using the full _handlebars.js_ library, implementations that
-  do not need to compile templates at runtime may include _handlebars.vm.js_
+  do not need to compile templates at runtime may include _handlebars.runtime.js_
   whose min+gzip size is approximately 1k.
 - If a helper is known to exist in the target environment they may be defined
   using the `--known name` argument may be used to optimize accesses to these
