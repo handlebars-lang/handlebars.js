@@ -293,6 +293,7 @@ like to try out Handlebars.js in their browser.
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main templating engine, extending it with automatic data binding support.
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to structure your views, also with automatic data binding support.
 * Les Hill (@leshill) wrote a Rails Asset Pipeline gem named [handlebars_assets](http://github.com/leshill/handlebars_assets).
+* [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
 
 Helping Out
 -----------
