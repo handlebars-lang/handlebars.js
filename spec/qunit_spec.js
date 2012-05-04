@@ -628,6 +628,16 @@ test("each", function() {
                   "each with array argument ignores the contents when empty");
 });
 
+
+test("eachUsingFunctionAttribute", function() {
+	  var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!"
+	  var hash     = {goodbyes: function () { return [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}];}, world: "world"};
+	  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
+	                  "each with array function argument iterates over the contents when not empty");
+	  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
+	                  "each with array function argument ignores the contents when empty");
+	});
+
 test("log", function() {
   var string = "{{log blah}}"
   var hash   = { blah: "whee" };
