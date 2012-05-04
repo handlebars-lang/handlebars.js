@@ -591,6 +591,11 @@ test("with", function() {
   shouldCompileTo(string, {person: {first: "Alan", last: "Johnson"}}, "Alan Johnson");
 });
 
+test("with with function argument", function() {
+	  var string = "{{#with person}}{{first}} {{last}}{{/with}}";
+	  shouldCompileTo(string, {person: function() { return {first: "Alan", last: "Johnson"}}}, "Alan Johnson");
+	});
+
 test("if", function() {
   var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
   shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!",
@@ -629,7 +634,7 @@ test("each", function() {
 });
 
 
-test("eachUsingFunctionAttribute", function() {
+test("each with function argument", function() {
 	  var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!"
 	  var hash     = {goodbyes: function () { return [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}];}, world: "world"};
 	  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
