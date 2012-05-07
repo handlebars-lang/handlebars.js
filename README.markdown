@@ -283,6 +283,7 @@ template(context, {helpers: helpers, partials: partials, data: data})
 Known Issues
 ------------
 * Handlebars.js can be cryptic when there's an error while rendering.
+* Using a variable, helper, or partial named `class` causes errors in IE browsers. (Instead, use `className`)
 
 Handlebars in the Wild
 -----------------
