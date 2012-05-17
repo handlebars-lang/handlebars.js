@@ -121,6 +121,9 @@ describe "Parser" do
     ast_for("{{foo}}").should == program { mustache id("foo") }
   end
 
+  it "parses simple mustaches with colons" do
+    ast_for("{{foo:bar}}").should == program { mustache id("foo:bar") }
+  end
   it "parses mustaches with paths" do
     ast_for("{{foo/bar}}").should == program { mustache path("foo", "bar") }
   end
