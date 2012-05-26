@@ -215,7 +215,7 @@ test("nested iteration", function() {
 });
 
 test("block with complex lookup", function() {
-  var string = "{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}"
+  var string = "{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}";
   var hash     = {name: "Alan", goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}]};
 
   shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ",
@@ -223,22 +223,22 @@ test("block with complex lookup", function() {
 });
 
 test("helper with complex lookup", function() {
-  var string = "{{#goodbyes}}{{{link ../prefix}}}{{/goodbyes}}"
+  var string = "{{#goodbyes}}{{{link ../prefix}}}{{/goodbyes}}";
   var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", url: "goodbye"}]};
   var helpers = {link: function(prefix) {
-    return "<a href='" + prefix + "/" + this.url + "'>" + this.text + "</a>"
+    return "<a href='" + prefix + "/" + this.url + "'>" + this.text + "</a>";
   }};
-  shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>")
+  shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>");
 });
 
 test("helper block with complex lookup expression", function() {
-  var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}"
+  var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}";
   var hash = {name: "Alan"};
-  var helpers = {goodbyes: function(fn) {
+  var helpers = {goodbyes: function(options) {
 		var out = "";
 		var byes = ["Goodbye", "goodbye", "GOODBYE"];
 		for (var i = 0,j = byes.length; i < j; i++) {
-			out += byes[i] + " " + fn(this) + "! ";
+			out += byes[i] + " " + options.fn(this) + "! ";
 		}
     return out;
   }};
@@ -248,8 +248,8 @@ test("helper block with complex lookup expression", function() {
 test("helper with complex lookup and nested template", function() {
   var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
   var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
-  var helpers = {link: function (prefix, fn) {
-      return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
+  var helpers = {link: function (prefix, options) {
+      return "<a href='" + prefix + "/" + this.url + "'>" + options.fn(this) + "</a>";
   }};
   shouldCompileToWithPartials(string, [hash, helpers], false, "<a href='/root/goodbye'>Goodbye</a>");
 });
@@ -257,8 +257,8 @@ test("helper with complex lookup and nested template", function() {
 test("helper with complex lookup and nested template in VM+Compiler", function() {
   var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
   var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
-  var helpers = {link: function (prefix, fn) {
-      return "<a href='" + prefix + "/" + this.url + "'>" + fn(this) + "</a>";
+  var helpers = {link: function (prefix, options) {
+      return "<a href='" + prefix + "/" + this.url + "'>" + options.fn(this) + "</a>";
   }};
   shouldCompileToWithPartials(string, [hash, helpers], true, "<a href='/root/goodbye'>Goodbye</a>");
 });
@@ -274,22 +274,22 @@ test("block helper", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var template = CompilerContext.compile(string);
 
-  result = template({world: "world"}, { helpers: {goodbyes: function(fn) { return fn({text: "GOODBYE"}); }}});
+  result = template({world: "world"}, { helpers: {goodbyes: function(options) { return options.fn({text: "GOODBYE"}); }}});
   equal(result, "GOODBYE! cruel world!", "Block helper executed");
 });
 
 test("block helper staying in the same context", function() {
-  var string   = "{{#form}}<p>{{name}}</p>{{/form}}"
+  var string   = "{{#form}}<p>{{name}}</p>{{/form}}";
   var template = CompilerContext.compile(string);
 
-  result = template({name: "Yehuda"}, {helpers: {form: function(fn) { return "<form>" + fn(this) + "</form>" } }});
+  result = template({name: "Yehuda"}, {helpers: {form: function(options) { return "<form>" + options.fn(this) + "</form>"; } }});
   equal(result, "<form><p>Yehuda</p></form>", "Block helper executed with current context");
 });
 
 test("block helper should have context in this", function() {
   var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
-  var link = function(fn) {
-    return '<a href="/people/' + this.id + '">' + fn(this) + '</a>';
+  var link = function(options) {
+    return '<a href="/people/' + this.id + '">' + options.fn(this) + '</a>';
   };
   var data = { "people": [
     { "name": "Alan", "id": 1 },
@@ -304,31 +304,31 @@ test("block helper for undefined value", function() {
 });
 
 test("block helper passing a new context", function() {
-  var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}"
+  var string   = "{{#form yehuda}}<p>{{name}}</p>{{/form}}";
   var template = CompilerContext.compile(string);
 
-  result = template({yehuda: {name: "Yehuda"}}, { helpers: {form: function(context, fn) { return "<form>" + fn(context) + "</form>" }}});
+  result = template({yehuda: {name: "Yehuda"}}, { helpers: {form: function(context, options) { return "<form>" + options.fn(context) + "</form>"; }}});
   equal(result, "<form><p>Yehuda</p></form>", "Context variable resolved");
 });
 
 test("block helper passing a complex path context", function() {
-  var string   = "{{#form yehuda/cat}}<p>{{name}}</p>{{/form}}"
+  var string   = "{{#form yehuda/cat}}<p>{{name}}</p>{{/form}}";
   var template = CompilerContext.compile(string);
 
-  result = template({yehuda: {name: "Yehuda", cat: {name: "Harold"}}}, { helpers: {form: function(context, fn) { return "<form>" + fn(context) + "</form>" }}});
+  result = template({yehuda: {name: "Yehuda", cat: {name: "Harold"}}}, { helpers: {form: function(context, options) { return "<form>" + options.fn(context) + "</form>"; }}});
   equal(result, "<form><p>Harold</p></form>", "Complex path variable resolved");
 });
 
 test("nested block helpers", function() {
-  var string   = "{{#form yehuda}}<p>{{name}}</p>{{#link}}Hello{{/link}}{{/form}}"
+  var string   = "{{#form yehuda}}<p>{{name}}</p>{{#link}}Hello{{/link}}{{/form}}";
   var template = CompilerContext.compile(string);
 
   result = template({
     yehuda: {name: "Yehuda" }
   }, {
     helpers: {
-      link: function(fn) { return "<a href='" + this.name + "'>" + fn(this) + "</a>" },
-      form: function(context, fn) { return "<form>" + fn(context) + "</form>" }
+      link: function(options) { return "<a href='" + this.name + "'>" + options.fn(this) + "</a>"; },
+      form: function(context, options) { return "<form>" + options.fn(context) + "</form>"; }
     }
   });
   equal(result, "<form><p>Yehuda</p><a href='Yehuda'>Hello</a></form>", "Both blocks executed");
@@ -345,7 +345,7 @@ test("block inverted sections with empty arrays", function() {
 });
 
 test("block helper inverted sections", function() {
-  var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}"
+  var string = "{{#list people}}{{name}}{{^}}<em>Nobody's here</em>{{/list}}";
   var list = function(context, options) {
     if (context.length > 0) {
       var out = "<ul>";
@@ -366,7 +366,7 @@ test("block helper inverted sections", function() {
   var rootMessage = {
     people: [],
     message: "Nobody's here"
-  }
+  };
 
   var messageString = "{{#list people}}Hello{{^}}{{message}}{{/list}}";
 
@@ -492,8 +492,8 @@ test("escaping a String is possible", function(){
 
 test("it works with ' marks", function() {
   var string   = 'Message: {{{hello "Alan\'s world"}}}';
-  var hash     = {}
-  var helpers = {hello: function(param) { return "Hello " + param; }}
+  var hash     = {};
+  var helpers = {hello: function(param) { return "Hello " + param; }};
   shouldCompileTo(string, [hash, helpers], "Message: Hello Alan's world", "template with a ' mark");
 });
 
@@ -501,19 +501,19 @@ module("multiple parameters");
 
 test("simple multi-params work", function() {
   var string   = 'Message: {{goodbye cruel world}}';
-  var hash     = {cruel: "cruel", world: "world"}
-  var helpers = {goodbye: function(cruel, world) { return "Goodbye " + cruel + " " + world; }}
+  var hash     = {cruel: "cruel", world: "world"};
+  var helpers = {goodbye: function(cruel, world) { return "Goodbye " + cruel + " " + world; }};
   shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "regular helpers with multiple params");
 });
 
 test("block multi-params work", function() {
   var string   = 'Message: {{#goodbye cruel world}}{{greeting}} {{adj}} {{noun}}{{/goodbye}}';
-  var hash     = {cruel: "cruel", world: "world"}
-  var helpers = {goodbye: function(cruel, world, fn) {
-    return fn({greeting: "Goodbye", adj: cruel, noun: world});
-  }}
+  var hash     = {cruel: "cruel", world: "world"};
+  var helpers = {goodbye: function(cruel, world, options) {
+    return options.fn({greeting: "Goodbye", adj: cruel, noun: world});
+  }};
   shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "block helpers with multiple params");
-})
+});
 
 module("safestring");
 
@@ -526,10 +526,10 @@ test("constructing a safestring from a string and checking its type", function()
 module("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
-  var string = "{{hello}} {{link_to world}}"
+  var string = "{{hello}} {{link_to world}}";
   var context = { hello: "Hello", world: "world" };
 
-  shouldCompileTo(string, context, "Hello <a>world</a>")
+  shouldCompileTo(string, context, "Hello <a>world</a>");
 });
 
 module("knownHelpers");
@@ -693,8 +693,8 @@ test("passing in data to a compiled function that expects data - works with bloc
   var template = CompilerContext.compile("{{#hello}}{{world}}{{/hello}}", {data: true});
 
   var helpers = {
-    hello: function(fn) {
-      return fn(this);
+    hello: function(options) {
+      return options.fn(this);
     },
     world: function(options) {
       return options.data.adjective + " world" + (this.exclaim ? "!" : "");
@@ -709,8 +709,8 @@ test("passing in data to a compiled function that expects data - works with bloc
   var template = CompilerContext.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
-    hello: function(fn) {
-      return fn({exclaim: "?"});
+    hello: function(options) {
+      return options.fn({exclaim: "?"});
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
@@ -725,8 +725,8 @@ test("passing in data to a compiled function that expects data - data is passed 
   var template = CompilerContext.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
-    hello: function(fn, inverse) {
-      return fn.data.accessData + " " + fn({exclaim: "?"});
+    hello: function(options) {
+      return options.data.accessData + " " + options.fn({exclaim: "?"});
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
@@ -741,8 +741,8 @@ test("you can override inherited data when invoking a helper", function() {
   var template = CompilerContext.compile("{{#hello}}{{world zomg}}{{/hello}}", {data: true});
 
   var helpers = {
-    hello: function(fn) {
-      return fn({exclaim: "?", zomg: "world"}, { data: {adjective: "sad"} });
+    hello: function(options) {
+      return options.fn({exclaim: "?", zomg: "world"}, { data: {adjective: "sad"} });
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
@@ -758,8 +758,8 @@ test("you can override inherited data when invoking a helper with depth", functi
   var template = CompilerContext.compile("{{#hello}}{{world ../zomg}}{{/hello}}", {data: true});
 
   var helpers = {
-    hello: function(fn) {
-      return fn({exclaim: "?"}, { data: {adjective: "sad"} });
+    hello: function(options) {
+      return options.fn({exclaim: "?"}, { data: {adjective: "sad"} });
     },
     world: function(thing, options) {
       return options.data.adjective + " " + thing + (this.exclaim || "");
@@ -796,8 +796,8 @@ test("helpers take precedence over same-named context properties", function() {
   var template = CompilerContext.compile("{{#goodbye}} {{cruel world}}{{/goodbye}}");
 
   var helpers = {
-    goodbye: function(fn) {
-      return this.goodbye.toUpperCase() + fn(this);
+    goodbye: function(options) {
+      return this.goodbye.toUpperCase() + options.fn(this);
     }
   };
 
@@ -840,8 +840,8 @@ test("Scoped names take precedence over block helpers", function() {
   var template = CompilerContext.compile("{{#goodbye}} {{cruel world}}{{/goodbye}} {{this.goodbye}}");
 
   var helpers = {
-    goodbye: function(fn) {
-      return this.goodbye.toUpperCase() + fn(this);
+    goodbye: function(options) {
+      return this.goodbye.toUpperCase() + options.fn(this);
     }
   };
 
