@@ -45,6 +45,9 @@ var shouldThrow = function(fn, exception, message) {
   ok(caught, message || null);
 }
 
+test("most basic", function() {
+  shouldCompileTo("{{foo}}", { foo: "foo" }, "foo");
+});
 
 test("compiling with a basic context", function() {
   shouldCompileTo("Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
