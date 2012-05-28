@@ -70,8 +70,8 @@ test("boolean", function() {
 });
 
 test("zeros", function() {
-	shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0},
-			"num1: 42, num2: 0");
+  shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0},
+      "num1: 42, num2: 0");
 	shouldCompileTo("num: {{.}}", 0, "num: 0");
 	shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
 });
@@ -110,13 +110,6 @@ test("functions returning safestrings shouldn't be escaped", function() {
 test("functions", function() {
   shouldCompileTo("{{awesome}}", {awesome: function() { return "Awesome"; }}, "Awesome",
                   "functions are called and render their output");
-});
-
-test("functions with context argument", function() {
-  shouldCompileTo("{{awesome frank}}",
-      {awesome: function(context) { return context; },
-        frank: "Frank"},
-      "Frank", "functions are called with context arguments");
 });
 
 test("paths with hyphens", function() {
@@ -225,7 +218,7 @@ test("block with complex lookup", function() {
                   "Templates can access variables in contexts up the stack with relative path syntax");
 });
 
-test("helper with complex lookup", function() {
+test("helper with complex lookup$", function() {
   var string = "{{#goodbyes}}{{{link ../prefix}}}{{/goodbyes}}";
   var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", url: "goodbye"}]};
   var helpers = {link: function(prefix) {
@@ -779,14 +772,14 @@ test("helpers take precedence over same-named context properties", function() {
   var helpers = {
     goodbye: function() {
       return this.goodbye.toUpperCase();
+    },
+
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
     }
   };
 
   var context = {
-    cruel: function(world) {
-      return "cruel " + world.toUpperCase();
-    },
-
     goodbye: "goodbye",
     world: "world"
   };
@@ -795,20 +788,20 @@ test("helpers take precedence over same-named context properties", function() {
   equals(result, "GOODBYE cruel WORLD", "Helper executed");
 });
 
-test("helpers take precedence over same-named context properties", function() {
+test("helpers take precedence over same-named context properties$", function() {
   var template = CompilerContext.compile("{{#goodbye}} {{cruel world}}{{/goodbye}}");
 
   var helpers = {
     goodbye: function(options) {
       return this.goodbye.toUpperCase() + options.fn(this);
+    },
+
+    cruel: function(world) {
+      return "cruel " + world.toUpperCase();
     }
   };
 
   var context = {
-    cruel: function(world) {
-      return "cruel " + world.toUpperCase();
-    },
-
     goodbye: "goodbye",
     world: "world"
   };
@@ -823,14 +816,14 @@ test("Scoped names take precedence over helpers", function() {
   var helpers = {
     goodbye: function() {
       return this.goodbye.toUpperCase();
-    }
-  };
+    },
 
-  var context = {
     cruel: function(world) {
       return "cruel " + world.toUpperCase();
     },
+  };
 
+  var context = {
     goodbye: "goodbye",
     world: "world"
   };
@@ -845,14 +838,14 @@ test("Scoped names take precedence over block helpers", function() {
   var helpers = {
     goodbye: function(options) {
       return this.goodbye.toUpperCase() + options.fn(this);
-    }
-  };
+    },
 
-  var context = {
     cruel: function(world) {
       return "cruel " + world.toUpperCase();
     },
+  };
 
+  var context = {
     goodbye: "goodbye",
     world: "world"
   };
