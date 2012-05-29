@@ -376,10 +376,10 @@ test("block helper inverted sections", function() {
 module("helpers hash");
 
 test("providing a helpers hash", function() {
-  shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: "world"}], "Goodbye cruel world!",
+  shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: function() { return "world"; }}], "Goodbye cruel world!",
                   "helpers hash is available");
 
-  shouldCompileTo("Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!", [{iter: [{cruel: "cruel"}]}, {world: "world"}],
+  shouldCompileTo("Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!", [{iter: [{cruel: "cruel"}]}, {world: function() { return "world"; }}],
                   "Goodbye cruel world!", "helpers hash is available inside other blocks");
 });
 
@@ -888,8 +888,8 @@ test("helpers can take an optional hash with booleans", function() {
   var result = template(context, {helpers: helpers});
   equals(result, "GOODBYE CRUEL WORLD", "Helper output hash");
 
-  var template = CompilerContext.compile('{{goodbye cruel="CRUEL" world="WORLD" print=false}}');
-  var result = template(context, {helpers: helpers});
+  template = CompilerContext.compile('{{goodbye cruel="CRUEL" world="WORLD" print=false}}');
+  result = template(context, {helpers: helpers});
   equals(result, "NOT PRINTING", "Boolean helper parameter honored");
 });
 

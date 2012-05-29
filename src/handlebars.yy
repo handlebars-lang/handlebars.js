@@ -18,8 +18,8 @@ statements
   ;
 
 statement
-  : openInverse program closeBlock { $$ = new yy.InverseNode($1, $2, $3); }
-  | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2, $3); }
+  : openInverse program closeBlock { $$ = new yy.BlockNode($1, $2.inverse, $2, $3); }
+  | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2, $2.inverse, $3); }
   | mustache { $$ = $1; }
   | partial { $$ = $1; }
   | CONTENT { $$ = new yy.ContentNode($1); }
