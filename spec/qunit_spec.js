@@ -465,6 +465,13 @@ test("Partial names can contain : character", function() {
     shouldCompileToWithPartials(string, [hash, {}, {"std:dude":std_dude}], true, "Namespaced dude: Jeepers", "Partial names can contain : character");    
 });
 
+test("Partial context moves when view contains property matching partial name", function() {
+    var string = "Lovely dude: {{>dude}}";
+    var dude = "{{name}}";
+    var hash = {dude:{name:"Jeepers"}};
+    shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Lovely dude: Jeepers", "Partial context moves when view contains property matching partial name");    
+});
+
 module("String literal parameters");
 
 test("simple literals work", function() {
