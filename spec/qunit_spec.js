@@ -458,6 +458,13 @@ test("Partials with literal paths", function() {
   shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
+test("Partial names can contain : character", function() {
+    var string = "Namespaced dude: {{>std:dude}}";
+    var std_dude = "{{name}}";
+    var hash = {name:"Jeepers"};
+    shouldCompileToWithPartials(string, [hash, {}, {"std:dude":std_dude}], true, "Namespaced dude: Jeepers", "Partial names can contain : character");    
+});
+
 module("String literal parameters");
 
 test("simple literals work", function() {
