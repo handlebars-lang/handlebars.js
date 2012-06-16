@@ -2,8 +2,8 @@ require "spec_helper"
 require "timeout"
 
 describe "Tokenizer" do
-  let(:parser) { @context["handlebars"] }
-  let(:lexer) { @context["handlebars"]["lexer"] }
+  let(:parser) { @context["Handlebars"]["HbParser"].new }
+  let(:lexer) { @context["Handlebars"]["HbLexer"].new }
 
   before(:all) do
     @compiles = true

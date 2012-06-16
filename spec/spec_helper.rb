@@ -47,15 +47,15 @@ module Handlebars
     def self.load_helpers(context)
       context["exports"] = nil
 
-      context["p"] = proc do |val|
+      context["p"] = proc do |this, val|
         p val if ENV["DEBUG_JS"]
       end
 
-      context["puts"] = proc do |val|
+      context["puts"] = proc do |this, val|
         puts val if ENV["DEBUG_JS"]
       end
 
-      context["puts_node"] = proc do |val|
+      context["puts_node"] = proc do |this, val|
         puts context["Handlebars"]["PrintVisitor"].new.accept(val)
         puts
       end
@@ -82,12 +82,12 @@ module Handlebars
 
       context["CompilerContext"] = {}
       CompilerContext = context["CompilerContext"]
-      CompilerContext["compile"] = proc do |*args|
+      CompilerContext["compile"] = proc do |this, *args|
         template, options = args[0], args[1] || nil
         templateSpec = COMPILE_CONTEXT["Handlebars"]["precompile"].call(template, options);
         context["Handlebars"]["template"].call(context.eval("(#{templateSpec})"));
       end
-      CompilerContext["compileWithPartial"] = proc do |*args|
+      CompilerContext["compileWithPartial"] = proc do |this, *args|
         template, options = args[0], args[1] || nil
         FULL_CONTEXT["Handlebars"]["compile"].call(template, options);
       end
@@ -108,7 +108,7 @@ module Handlebars
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
-      context["Handlebars"]["logger"]["log"] = proc do |level, str|
+      context["Handlebars"]["logger"]["log"] = proc do |this, level, str|
         logger_level = context["Handlebars"]["logger"]["level"].to_i
 
         if logger_level <= level
@@ -133,7 +133,7 @@ module Handlebars
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
-      context["Handlebars"]["logger"]["log"] = proc do |level, str|
+      context["Handlebars"]["logger"]["log"] = proc do |this, level, str|
         logger_level = context["Handlebars"]["logger"]["level"].to_i
 
         if logger_level <= level
