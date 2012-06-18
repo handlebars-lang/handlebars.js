@@ -239,7 +239,7 @@ method and the resulting object may be as normal.
 ### Optimizations
 
 - Rather than using the full _handlebars.js_ library, implementations that
-  do not need to compile templates at runtime may include _handlebars.vm.js_
+  do not need to compile templates at runtime may include _handlebars.runtime.js_
   whose min+gzip size is approximately 1k.
 - If a helper is known to exist in the target environment they may be defined
   using the `--known name` argument may be used to optimize accesses to these
@@ -283,6 +283,7 @@ template(context, {helpers: helpers, partials: partials, data: data})
 Known Issues
 ------------
 * Handlebars.js can be cryptic when there's an error while rendering.
+* Using a variable, helper, or partial named `class` causes errors in IE browsers. (Instead, use `className`)
 
 Handlebars in the Wild
 -----------------

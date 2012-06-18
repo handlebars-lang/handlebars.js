@@ -7,11 +7,9 @@ describe "Parser" do
     @compiles = true
   end
 
-  def program(&block)
+  def root(&block)
     ASTBuilder.build do
-      program do
-        instance_eval(&block)
-      end
+      instance_eval(&block)
     end
   end
 
@@ -118,112 +116,112 @@ describe "Parser" do
   end
 
   it "parses simple mustaches" do
-    ast_for("{{foo}}").should == program { mustache id("foo") }
+    ast_for("{{foo}}").should == root { mustache id("foo") }
   end
 
   it "parses simple mustaches with colons" do
     ast_for("{{foo:bar}}").should == program { mustache id("foo:bar") }
   end
   it "parses mustaches with paths" do
-    ast_for("{{foo/bar}}").should == program { mustache path("foo", "bar") }
+    ast_for("{{foo/bar}}").should == root { mustache path("foo", "bar") }
   end
 
   it "parses mustaches with this/foo" do
-    ast_for("{{this/foo}}").should == program { mustache id("foo") }
+    ast_for("{{this/foo}}").should == root { mustache id("foo") }
   end
 
   it "parses mustaches with - in a path" do
-    ast_for("{{foo-bar}}").should == program { mustache id("foo-bar") }
+    ast_for("{{foo-bar}}").should == root { mustache id("foo-bar") }
   end
 
   it "parses mustaches with parameters" do
-    ast_for("{{foo bar}}").should == program { mustache id("foo"), [id("bar")] }
+    ast_for("{{foo bar}}").should == root { mustache id("foo"), [id("bar")] }
   end
 
   it "parses mustaches with hash arguments" do
-    ast_for("{{foo bar=baz}}").should == program do
+    ast_for("{{foo bar=baz}}").should == root do
       mustache id("foo"), [], hash(["bar", id("baz")])
     end
 
-    ast_for("{{foo bar=1}}").should == program do
+    ast_for("{{foo bar=1}}").should == root do
       mustache id("foo"), [], hash(["bar", integer("1")])
     end
 
-    ast_for("{{foo bar=true}}").should == program do
+    ast_for("{{foo bar=true}}").should == root do
       mustache id("foo"), [], hash(["bar", boolean("true")])
     end
 
-    ast_for("{{foo bar=false}}").should == program do
+    ast_for("{{foo bar=false}}").should == root do
       mustache id("foo"), [], hash(["bar", boolean("false")])
     end
 
-    ast_for("{{foo bar=baz bat=bam}}").should == program do
+    ast_for("{{foo bar=baz bat=bam}}").should == root do
       mustache id("foo"), [], hash(["bar", "ID:baz"], ["bat", "ID:bam"])
     end
 
-    ast_for("{{foo bar=baz bat=\"bam\"}}").should == program do
+    ast_for("{{foo bar=baz bat=\"bam\"}}").should == root do
       mustache id("foo"), [], hash(["bar", "ID:baz"], ["bat", "\"bam\""])
     end
 
-    ast_for("{{foo omg bar=baz bat=\"bam\"}}").should == program do
+    ast_for("{{foo omg bar=baz bat=\"bam\"}}").should == root do
       mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")])
     end
 
-    ast_for("{{foo omg bar=baz bat=\"bam\" baz=1}}").should == program do
+    ast_for("{{foo omg bar=baz bat=\"bam\" baz=1}}").should == root do
       mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")], ["baz", integer("1")])
     end
 
-    ast_for("{{foo omg bar=baz bat=\"bam\" baz=true}}").should == program do
+    ast_for("{{foo omg bar=baz bat=\"bam\" baz=true}}").should == root do
       mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")], ["baz", boolean("true")])
     end
 
-    ast_for("{{foo omg bar=baz bat=\"bam\" baz=false}}").should == program do
+    ast_for("{{foo omg bar=baz bat=\"bam\" baz=false}}").should == root do
       mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")], ["baz", boolean("false")])
     end
   end
 
   it "parses mustaches with string parameters" do
-    ast_for("{{foo bar \"baz\" }}").should == program { mustache id("foo"), [id("bar"), string("baz")] }
+    ast_for("{{foo bar \"baz\" }}").should == root { mustache id("foo"), [id("bar"), string("baz")] }
   end
 
   it "parses mustaches with INTEGER parameters" do
-    ast_for("{{foo 1}}").should == program { mustache id("foo"), [integer("1")] }
+    ast_for("{{foo 1}}").should == root { mustache id("foo"), [integer("1")] }
   end
 
   it "parses mustaches with BOOLEAN parameters" do
-    ast_for("{{foo true}}").should == program { mustache id("foo"), [boolean("true")] }
-    ast_for("{{foo false}}").should == program { mustache id("foo"), [boolean("false")] }
+    ast_for("{{foo true}}").should == root { mustache id("foo"), [boolean("true")] }
+    ast_for("{{foo false}}").should == root { mustache id("foo"), [boolean("false")] }
   end
 
   it "parses contents followed by a mustache" do
-    ast_for("foo bar {{baz}}").should == program do
+    ast_for("foo bar {{baz}}").should == root do
       content "foo bar "
       mustache id("baz")
     end
   end
 
   it "parses a partial" do
-    ast_for("{{> foo }}").should == program { partial id("foo") }
+    ast_for("{{> foo }}").should == root { partial id("foo") }
   end
 
   it "parses a partial with context" do
-    ast_for("{{> foo bar}}").should == program { partial id("foo"), id("bar") }
+    ast_for("{{> foo bar}}").should == root { partial id("foo"), id("bar") }
   end
 
   it "parses a comment" do
-    ast_for("{{! this is a comment }}").should == program do
+    ast_for("{{! this is a comment }}").should == root do
       comment " this is a comment "
     end
   end
 
   it "parses a multi-line comment" do
-    ast_for("{{!\nthis is a multi-line comment\n}}").should == program do
+    ast_for("{{!\nthis is a multi-line comment\n}}").should == root do
       multiline_comment "this is a multi-line comment"
     end
   end
 
   it "parses an inverse section" do
-    ast_for("{{#foo}} bar {{^}} baz {{/foo}}").should == program do
+    ast_for("{{#foo}} bar {{^}} baz {{/foo}}").should == root do
       block do
         mustache id("foo")
 
@@ -239,11 +237,11 @@ describe "Parser" do
   end
 
   it "parses a standalone inverse section" do
-    ast_for("{{^foo}}bar{{/foo}}").should == program do
-      inverted_block do
+    ast_for("{{^foo}}bar{{/foo}}").should == root do
+      block do
         mustache id("foo")
 
-        program do
+        inverse do
           content "bar"
         end
       end
