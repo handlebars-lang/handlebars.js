@@ -628,8 +628,8 @@ test("each with @index", function() {
   var string = "{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!";
   var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
 
-  var template = CompilerContext.compile(string, {data: true});
-  var result = template(hash, { data: {} });
+  var template = CompilerContext.compile(string);
+  var result = template(hash);
 
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
 });
@@ -666,13 +666,33 @@ test("passing in data to a compiled function that expects data - works with help
 });
 
 test("data can be looked up via @foo", function() {
-  var template = CompilerContext.compile("{{@hello}}", { data: true });
+  var template = CompilerContext.compile("{{@hello}}");
   var result = template({}, { data: { hello: "hello" } });
   equals("hello", result, "@foo retrieves template data");
 });
 
+var objectCreate = Handlebars.createFrame;
+
+test("deep @foo triggers automatic top-level data", function() {
+  var template = CompilerContext.compile('{{#let world="world"}}{{#if foo}}{{#if foo}}Hello {{@world}}{{/if}}{{/if}}{{/let}}');
+
+  var helpers = objectCreate(Handlebars.helpers);
+
+  helpers.let = function(options) {
+    var frame = Handlebars.createFrame(options.data);
+
+    for (var prop in options.hash) {
+      frame[prop] = options.hash[prop];
+    }
+    return options.fn(this, { data: frame });
+  };
+
+  var result = template({ foo: true }, { helpers: helpers });
+  equals("Hello world", result, "Automatic data was triggered");
+});
+
 test("parameter data can be looked up via @foo", function() {
-  var template = CompilerContext.compile("{{hello @world}}", { data: true });
+  var template = CompilerContext.compile("{{hello @world}}");
   var helpers = {
     hello: function(noun) {
       return "Hello " + noun;
@@ -684,7 +704,7 @@ test("parameter data can be looked up via @foo", function() {
 });
 
 test("hash values can be looked up via @foo", function() {
-  var template = CompilerContext.compile("{{hello noun=@world}}", { data: true });
+  var template = CompilerContext.compile("{{hello noun=@world}}");
   var helpers = {
     hello: function(options) {
       return "Hello " + options.hash.noun;
