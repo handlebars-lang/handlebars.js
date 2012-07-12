@@ -39,11 +39,11 @@ Module.new do
     end
   end
 
-  js_context["p"] = proc do |str|
+  js_context["p"] = proc do |this, str|
     p str
   end
 
-  js_context["ok"] = proc do |ok, message|
+  js_context["ok"] = proc do |this, ok, message|
     js_context["$$RSPEC1$$"] = ok
 
     result = js_context.eval("!!$$RSPEC1$$")
@@ -58,7 +58,7 @@ Module.new do
     assert result, message
   end
 
-  js_context["equals"] = proc do |first, second, message|
+  js_context["equals"] = proc do |this, first, second, message|
     js_context["$$RSPEC1$$"] = first
     js_context["$$RSPEC2$$"] = second
 
@@ -77,11 +77,11 @@ Module.new do
 
   js_context["equal"] = js_context["equals"]
 
-  js_context["module"] = proc do |name|
+  js_context["module"] = proc do |this, name|
     test_context.module(name)
   end
 
-  js_context["test"] = proc do |name, function|
+  js_context["test"] = proc do |this, name, function|
     test_context.test(name, function)
   end
 
