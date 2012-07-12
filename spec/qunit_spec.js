@@ -616,12 +616,22 @@ test("if with function argument", function() {
 });
 
 test("each", function() {
-  var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!"
+  var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!";
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
   shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
                   "each with array argument iterates over the contents when not empty");
   shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                   "each with array argument ignores the contents when empty");
+});
+
+test("each with @index", function() {
+  var string = "{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!";
+  var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+  var template = CompilerContext.compile(string);
+  var result = template(hash);
+
+  equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
 });
 
 test("log", function() {
@@ -653,6 +663,71 @@ test("passing in data to a compiled function that expects data - works with help
 
   var result = template({noun: "cat"}, {helpers: helpers, data: {adjective: "happy"}});
   equals("happy cat", result, "Data output by helper");
+});
+
+test("data can be looked up via @foo", function() {
+  var template = CompilerContext.compile("{{@hello}}");
+  var result = template({}, { data: { hello: "hello" } });
+  equals("hello", result, "@foo retrieves template data");
+});
+
+var objectCreate = Handlebars.createFrame;
+
+test("deep @foo triggers automatic top-level data", function() {
+  var template = CompilerContext.compile('{{#let world="world"}}{{#if foo}}{{#if foo}}Hello {{@world}}{{/if}}{{/if}}{{/let}}');
+
+  var helpers = objectCreate(Handlebars.helpers);
+
+  helpers.let = function(options) {
+    var frame = Handlebars.createFrame(options.data);
+
+    for (var prop in options.hash) {
+      frame[prop] = options.hash[prop];
+    }
+    return options.fn(this, { data: frame });
+  };
+
+  var result = template({ foo: true }, { helpers: helpers });
+  equals("Hello world", result, "Automatic data was triggered");
+});
+
+test("parameter data can be looked up via @foo", function() {
+  var template = CompilerContext.compile("{{hello @world}}");
+  var helpers = {
+    hello: function(noun) {
+      return "Hello " + noun;
+    }
+  };
+
+  var result = template({}, { helpers: helpers, data: { world: "world" } });
+  equals("Hello world", result, "@foo as a parameter retrieves template data");
+});
+
+test("hash values can be looked up via @foo", function() {
+  var template = CompilerContext.compile("{{hello noun=@world}}");
+  var helpers = {
+    hello: function(options) {
+      return "Hello " + options.hash.noun;
+    }
+  };
+
+  var result = template({}, { helpers: helpers, data: { world: "world" } });
+  equals("Hello world", result, "@foo as a parameter retrieves template data");
+});
+
+test("data is inherited downstream", function() {
+  var template = CompilerContext.compile("{{#let foo=bar.baz}}{{@foo}}{{/let}}", { data: true });
+  var helpers = {
+    let: function(options) {
+      for (var prop in options.hash) {
+        options.data[prop] = options.hash[prop];
+      }
+      return options.fn(this);
+    }
+  };
+
+  var result = template({ bar: { baz: "hello world" } }, { helpers: helpers, data: {} });
+  equals("hello world", result, "data variables are inherited downstream");
 });
 
 test("passing in data to a compiled function that expects data - works with helpers in partials", function() {
