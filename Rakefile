@@ -38,19 +38,22 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
+module_wraps = %w(prologue epilogue).map { |file| "src/#{file}.js" }
+module_prologue, module_epilogue = module_wraps
+
 minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler/compiler runtime).map do |file|
   "lib/handlebars/#{file}.js"
-end
+end.unshift(module_prologue).push(module_epilogue)
 
 runtime_deps = %w(base utils runtime).map do |file|
   "lib/handlebars/#{file}.js"
-end
+end.unshift(module_prologue).push(module_epilogue)
 
 directory "dist"
 
 minimal_deps.unshift "dist"
 
-def build_for_task(task)
+def build_for_task(task, no_semicolons)
   FileUtils.rm_rf("dist/*") if File.directory?("dist")
   FileUtils.mkdir_p("dist")
 
@@ -58,7 +61,8 @@ def build_for_task(task)
   task.prerequisites.each do |filename|
     next if filename == "dist"
 
-    contents << "// #{filename}\n" + remove_exports(File.read(filename)) + ";"
+    contents << "// #{filename}\n" + remove_exports(File.read(filename))
+    contents << ";" unless no_semicolons.include?(filename)
   end
 
   File.open(task.name, "w") do |file|
@@ -67,11 +71,11 @@ def build_for_task(task)
 end
 
 file "dist/handlebars.js" => minimal_deps do |task|
-  build_for_task(task)
+  build_for_task(task, module_wraps)
 end
 
 file "dist/handlebars.runtime.js" => runtime_deps do |task|
-  build_for_task(task)
+  build_for_task(task, module_wraps)
 end
 
 task :build => [:compile, "dist/handlebars.js"]
