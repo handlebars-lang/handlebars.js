@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "optimist": "~0.3",
-    "uglify-js": "~1.2"
+    "uglify-js": "~1.2",
+    "file": "*"
   },
   "devDependencies": {},
   "main": "lib/handlebars.js",
