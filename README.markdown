@@ -302,10 +302,11 @@ To build Handlebars.js you'll need a few things installed.
 * Node.js
 * Jison, for building the compiler - `npm install jison`
 * Ruby
+* bundler, for managing required gems - `gem install bundler`
 * therubyracer, for running tests - `gem install therubyracer`
 * rspec, for running tests - `gem install rspec`
 
-There's a Gemfile in the repo, so you can run `bundle` to install rspec and therubyracer if you've got bundler installed.
+Run `bundle install` to install rspec and therubyracer using the Gemfile in the repo.
 
 To build Handlebars.js from scratch, you'll want to run `rake compile` in the root of the project. That will build Handlebars and output the results to the dist/ folder. To run tests, run `rake spec`. You can also run our set of benchmarks with `rake bench`.
 
