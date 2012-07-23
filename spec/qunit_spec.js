@@ -1,3 +1,27 @@
+var Handlebars;
+if (!Handlebars) {
+  // Setup for Node package testing
+  Handlebars = require('../lib/handlebars');
+
+  var assert = require("assert"),
+
+      equal = assert.equal,
+      equals = assert.equal,
+      ok = assert.ok;
+
+  // Note that this doesn't have the same context separation as the rspec test.
+  // Both should be run for full acceptance of the two libary modes.
+  var CompilerContext = {
+    compile: function(template, options) {
+      var templateSpec = Handlebars.precompile(template, options);
+      return Handlebars.template(eval('(' + templateSpec + ')'));
+    },
+    compileWithPartial: function(template, options) {
+      return Handlebars.compile(template, options);
+    }
+  };
+}
+
 suite("basic context");
 
 Handlebars.registerHelper('helperMissing', function(helper, context) {
