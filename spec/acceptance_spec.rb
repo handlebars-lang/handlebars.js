@@ -77,7 +77,7 @@ Module.new do
 
   js_context["equal"] = js_context["equals"]
 
-  js_context["module"] = proc do |this, name|
+  js_context["suite"] = proc do |this, name|
     test_context.module(name)
   end
 

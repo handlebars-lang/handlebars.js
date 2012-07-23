@@ -1,4 +1,4 @@
-module("basic context");
+suite("basic context");
 
 Handlebars.registerHelper('helperMissing', function(helper, context) {
   if(helper === "link_to") {
@@ -163,7 +163,7 @@ test("this keyword in paths", function() {
   shouldCompileTo(string, hash, "helloHelloHELLO", "This keyword evaluates in more complex paths");
 });
 
-module("inverted sections");
+suite("inverted sections");
 
 test("inverted sections with unset value", function() {
   var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
@@ -183,7 +183,7 @@ test("inverted section with empty set", function() {
   shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is empty set.");
 });
 
-module("blocks");
+suite("blocks");
 
 test("array", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!"
@@ -373,7 +373,7 @@ test("block helper inverted sections", function() {
   shouldCompileTo(messageString, [rootMessage, { list: list }], "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
 });
 
-module("helpers hash");
+suite("helpers hash");
 
 test("providing a helpers hash", function() {
   shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: function() { return "world"; }}], "Goodbye cruel world!",
@@ -391,7 +391,7 @@ test("the helpers hash is available is nested contexts", function() {
 
 });
 
-module("partials");
+suite("partials");
 
 test("basic partials", function() {
   var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
@@ -458,7 +458,7 @@ test("Partials with literal paths", function() {
   shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
-module("String literal parameters");
+suite("String literal parameters");
 
 test("simple literals work", function() {
   var string   = 'Message: {{hello "world" 12 true false}}';
@@ -493,7 +493,7 @@ test("it works with ' marks", function() {
   shouldCompileTo(string, [hash, helpers], "Message: Hello Alan's world", "template with a ' mark");
 });
 
-module("multiple parameters");
+suite("multiple parameters");
 
 test("simple multi-params work", function() {
   var string   = 'Message: {{goodbye cruel world}}';
@@ -511,7 +511,7 @@ test("block multi-params work", function() {
   shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "block helpers with multiple params");
 });
 
-module("safestring");
+suite("safestring");
 
 test("constructing a safestring from a string and checking its type", function() {
   var safe = new Handlebars.SafeString("testing 1, 2, 3");
@@ -519,7 +519,7 @@ test("constructing a safestring from a string and checking its type", function()
   equal(safe, "testing 1, 2, 3", "SafeString is equivalent to its underlying string");
 });
 
-module("helperMissing");
+suite("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
   var string = "{{hello}} {{link_to world}}";
@@ -528,7 +528,7 @@ test("if a context is not found, helperMissing is used", function() {
   shouldCompileTo(string, context, "Hello <a>world</a>");
 });
 
-module("knownHelpers");
+suite("knownHelpers");
 
 test("Known helper should render helper", function() {
   var template = CompilerContext.compile("{{hello}}", {knownHelpers: {"hello" : true}})
@@ -568,7 +568,7 @@ test("Invert blocks work in knownHelpers only mode", function() {
   equal(result, "bar", "'bar' should === '" + result);
 });
 
-module("blockHelperMissing");
+suite("blockHelperMissing");
 
 test("lambdas are resolved by blockHelperMissing, not handlebars proper", function() {
   var string = "{{#truthy}}yep{{/truthy}}";
@@ -577,7 +577,7 @@ test("lambdas are resolved by blockHelperMissing, not handlebars proper", functi
 });
 
 var teardown;
-module("built-in helpers", {
+suite("built-in helpers", {
   setup: function(){ teardown = null; },
   teardown: function(){ if (teardown) { teardown(); } }
 });
@@ -1080,7 +1080,7 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
 });
 
-module("Regressions")
+suite("Regressions");
 
 test("GH-94: Cannot read property of undefined", function() {
 	var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
