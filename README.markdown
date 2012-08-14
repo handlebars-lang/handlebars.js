@@ -112,7 +112,7 @@ instance:
 
 ```js
 Handlebars.registerHelper('link_to', function(title, context) {
-  return "<a href='/posts" + context.id + "'>" + title + "</a>"
+  return "<a href='/posts" + context.url + "'>" + title + "!</a>"
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
@@ -124,7 +124,7 @@ template(context);
 // Would render:
 //
 // <ul>
-//   <li><a href='/hello-world'>Post!</a></li>
+//   <li><a href='/posts/hello-world'>Post!</a></li>
 // </ul>
 ```
 
