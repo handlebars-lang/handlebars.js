@@ -995,6 +995,19 @@ test("block helpers can take an optional hash", function() {
   equals(result, "GOODBYE CRUEL world 12 TIMES", "Hash parameters output");
 });
 
+test("block helpers can take an optional hash with single quoted stings", function() {
+  var template = CompilerContext.compile("{{#goodbye cruel='CRUEL' times=12}}world{{/goodbye}}");
+
+  var helpers = {
+    goodbye: function(options) {
+      return "GOODBYE " + options.hash.cruel + " " + options.fn(this) + " " + options.hash.times + " TIMES";
+    }
+  };
+
+  var result = template({}, {helpers: helpers});
+  equals(result, "GOODBYE CRUEL world 12 TIMES", "Hash parameters output");
+});
+
 test("block helpers can take an optional hash with booleans", function() {
   var helpers = {
     goodbye: function(options) {
