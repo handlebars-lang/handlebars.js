@@ -1,7 +1,7 @@
 {
   "name": "handlebars",
   "description": "Extension of the Mustache logicless template language",
-  "version": "1.0.5beta",
+  "version": "1.0.6beta",
   "homepage": "http://www.handlebarsjs.com/",
   "keywords": [
     "handlebars mustache template html"
@@ -17,9 +17,15 @@
     "optimist": "~0.3",
     "uglify-js": "~1.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "*"
+  },
   "main": "lib/handlebars.js",
   "bin": {
     "handlebars": "bin/handlebars"
-  }
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha -u qunit spec/qunit_spec.js"
+  },
+  "optionalDependencies": {}
 }
