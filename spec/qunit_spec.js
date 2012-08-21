@@ -187,6 +187,20 @@ test("this keyword in paths", function() {
   shouldCompileTo(string, hash, "helloHelloHELLO", "This keyword evaluates in more complex paths");
 });
 
+test("this keyword in helpers", function() {
+  var helpers = {foo: function(value, options) {
+      return 'bar ' + value;
+  }};
+  var string = "{{#goodbyes}}{{foo this}}{{/goodbyes}}";
+  var hash = {goodbyes: ["goodbye", "Goodbye", "GOODBYE"]};
+  shouldCompileTo(string, [hash, helpers], "bar goodbyebar Goodbyebar GOODBYE",
+    "This keyword in paths evaluates to current context");
+
+  string = "{{#hellos}}{{foo this/text}}{{/hellos}}";
+  hash = {hellos: [{text: "hello"}, {text: "Hello"}, {text: "HELLO"}]};
+  shouldCompileTo(string, [hash, helpers], "bar hellobar Hellobar HELLO", "This keyword evaluates in more complex paths");
+});
+
 suite("inverted sections");
 
 test("inverted sections with unset value", function() {
@@ -991,6 +1005,19 @@ test("helpers can take an optional hash with booleans", function() {
 
 test("block helpers can take an optional hash", function() {
   var template = CompilerContext.compile('{{#goodbye cruel="CRUEL" times=12}}world{{/goodbye}}');
+
+  var helpers = {
+    goodbye: function(options) {
+      return "GOODBYE " + options.hash.cruel + " " + options.fn(this) + " " + options.hash.times + " TIMES";
+    }
+  };
+
+  var result = template({}, {helpers: helpers});
+  equals(result, "GOODBYE CRUEL world 12 TIMES", "Hash parameters output");
+});
+
+test("block helpers can take an optional hash with single quoted stings", function() {
+  var template = CompilerContext.compile("{{#goodbye cruel='CRUEL' times=12}}world{{/goodbye}}");
 
   var helpers = {
     goodbye: function(options) {

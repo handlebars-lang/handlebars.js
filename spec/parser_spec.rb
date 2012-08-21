@@ -172,6 +172,10 @@ describe "Parser" do
       mustache id("foo"), [], hash(["bar", "ID:baz"], ["bat", "\"bam\""])
     end
 
+    ast_for("{{foo bat='bam'}}").should == root do
+      mustache id("foo"), [], hash(["bat", "\"bam\""])
+    end
+
     ast_for("{{foo omg bar=baz bat=\"bam\"}}").should == root do
       mustache id("foo"), [id("omg")], hash(["bar", id("baz")], ["bat", string("bam")])
     end
