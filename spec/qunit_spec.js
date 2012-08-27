@@ -234,6 +234,16 @@ test("array", function() {
 
 });
 
+test("array with @index", function() {
+  var string = "{{#goodbyes}}{{@index}}. {{text}}! {{/goodbyes}}cruel {{world}}!";
+  var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+  var template = CompilerContext.compile(string);
+  var result = template(hash);
+
+  equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
+});
+
 test("empty block", function() {
   var string   = "{{#goodbyes}}{{/goodbyes}}cruel {{world}}!";
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
