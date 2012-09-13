@@ -11,7 +11,11 @@
 
 [^\x00]+                         { return 'CONTENT'; }
 
-<emu>[^\x00]{2,}?/("{{")         { this.popState(); return 'CONTENT'; }
+<emu>[^\x00]{2,}?/("{{"|<<EOF>>) {
+                                   if(yytext.slice(-1) !== "\\") this.popState();
+                                   if(yytext.slice(-1) === "\\") yytext = yytext.substr(0,yyleng-1);
+                                   return 'CONTENT';
+                                 }
 
 <mu>"{{>"                        { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                        { return 'OPEN_BLOCK'; }
