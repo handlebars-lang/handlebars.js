@@ -138,6 +138,8 @@ test("functions", function() {
 
 test("paths with hyphens", function() {
   shouldCompileTo("{{foo-bar}}", {"foo-bar": "baz"}, "baz", "Paths can contain hyphens (-)");
+  shouldCompileTo("{{foo.foo-bar}}", {foo: {"foo-bar": "baz"}}, "baz", "Paths can contain hyphens (-)");
+  shouldCompileTo("{{foo/foo-bar}}", {foo: {"foo-bar": "baz"}}, "baz", "Paths can contain hyphens (-)");
 });
 
 test("nested paths", function() {
