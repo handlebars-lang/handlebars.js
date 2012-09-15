@@ -28,7 +28,8 @@ task :compile => "lib/handlebars/compiler/parser.js"
 
 desc "run the spec suite"
 task :spec => [:release] do
-  system "rspec -cfs spec"
+  rc = system "rspec -cfs spec"
+  fail "rspec spec failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
 
 task :default => [:compile, :spec]
