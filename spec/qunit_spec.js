@@ -136,6 +136,8 @@ test("functions returning safestrings shouldn't be escaped", function() {
 test("functions", function() {
   shouldCompileTo("{{awesome}}", {awesome: function() { return "Awesome"; }}, "Awesome",
                   "functions are called and render their output");
+  shouldCompileTo("{{awesome}}", {awesome: function() { return this.more; }, more:  "More awesome"}, "More awesome",
+                  "functions are bound to the context");
 });
 
 test("paths with hyphens", function() {
@@ -616,6 +618,11 @@ test("Invert blocks work in knownHelpers only mode", function() {
   var result = template({foo: false});
   equal(result, "bar", "'bar' should === '" + result);
 });
+test("Functions are bound to the context in knownHelpers only mode", function() {
+  var template = CompilerContext.compile("{{foo}}", {knownHelpersOnly: true});
+  var result = template({foo: function() { return this.bar; }, bar: 'bar'});
+  equal(result, "bar", "'bar' should === '" + result);
+});
 
 suite("blockHelperMissing");
 
@@ -623,6 +630,11 @@ test("lambdas are resolved by blockHelperMissing, not handlebars proper", functi
   var string = "{{#truthy}}yep{{/truthy}}";
   var data = { truthy: function() { return true; } };
   shouldCompileTo(string, data, "yep");
+});
+test("lambdas resolved by blockHelperMissing are bound to the context", function() {
+  var string = "{{#truthy}}yep{{/truthy}}";
+  var boundData = { truthy: function() { return this.truthiness(); }, truthiness: function() { return false; } };
+  shouldCompileTo(string, boundData, "");
 });
 
 var teardown;
