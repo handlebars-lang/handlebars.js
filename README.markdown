@@ -137,9 +137,9 @@ gets passed to the helper function.
 Handlebars.js also adds the ability to define block helpers. Block helpers are functions that can be called from anywhere in the template. Here's an example:
 
 ```js
-var source = "<ul>{{#people}}<li>{{{#link}}}{{name}}{{/link}}</li>{{/people}}</ul>";
-Handlebars.registerHelper('link', function(context, fn) {
-  return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
+var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
+Handlebars.registerHelper('link', function(context, options) {
+  return '<a href="/people/' + this.id + '">' + context.fn(this) + '</a>';
 });
 var template = Handlebars.compile(source);
 
