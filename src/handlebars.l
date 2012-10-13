@@ -35,7 +35,7 @@
 <mu>"}}}"                        { this.popState(); return 'CLOSE'; }
 <mu>"}}"                         { this.popState(); return 'CLOSE'; }
 <mu>'"'("\\"["]|[^"])*'"'        { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
-<mu>"'"("\\"[']|[^'])*"'"        { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
+<mu>"'"("\\"[']|[^'])*"'"        { yytext = yytext.substr(1,yyleng-2).replace(/\\'/g,"'"); return 'STRING'; }
 <mu>"@"[a-zA-Z]+                 { yytext = yytext.substr(1); return 'DATA'; }
 <mu>"true"/[}\s]                 { return 'BOOLEAN'; }
 <mu>"false"/[}\s]                { return 'BOOLEAN'; }

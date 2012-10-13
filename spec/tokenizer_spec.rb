@@ -195,6 +195,12 @@ describe "Tokenizer" do
     result[3].should be_token("STRING", "baz")
   end
 
+  it "tokenizes mustaches with String params using single quotes as 'OPEN ID ID STRING CLOSE'" do
+    result = tokenize("{{ foo bar \'baz\' }}")
+    result.should match_tokens(%w(OPEN ID ID STRING CLOSE))
+    result[3].should be_token("STRING", "baz")
+  end
+
   it "tokenizes String params with spaces inside as 'STRING'" do
     result = tokenize("{{ foo bar \"baz bat\" }}")
     result.should match_tokens(%w(OPEN ID ID STRING CLOSE))
@@ -205,6 +211,12 @@ describe "Tokenizer" do
     result = tokenize(%|{{ foo "bar\\"baz" }}|)
     result.should match_tokens(%w(OPEN ID STRING CLOSE))
     result[2].should be_token("STRING", %{bar"baz})
+  end
+
+  it "tokenizes String params using single quotes with escapes quotes as 'STRING'" do
+    result = tokenize(%|{{ foo 'bar\\'baz' }}|)
+    result.should match_tokens(%w(OPEN ID STRING CLOSE))
+    result[2].should be_token("STRING", %{bar'baz})
   end
 
   it "tokenizes numbers" do
