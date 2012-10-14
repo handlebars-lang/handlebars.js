@@ -10,6 +10,10 @@ var shouldCompileTo = function(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };
 var shouldCompileToWithPartials = function(string, hashOrArray, partials, expected, message) {
+  var result = compileWithPartials(string, hashOrArray, partials);
+  equal(result, expected, "'" + expected + "' should === '" + result + "': " + message);
+};
+var compileWithPartials = function(string, hashOrArray, partials) {
   var template = CompilerContext[partials ? 'compileWithPartial' : 'compile'](string), ary;
   if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
     helpers = hashOrArray[1];
@@ -27,8 +31,7 @@ var shouldCompileToWithPartials = function(string, hashOrArray, partials, expect
     ary = [hashOrArray];
   }
 
-  result = template.apply(this, ary);
-  equal(result, expected, "'" + expected + "' should === '" + result + "': " + message);
+  return template.apply(this, ary);
 };
 
 var shouldThrow = function(fn, exception, message) {
@@ -622,6 +625,22 @@ test("each", function() {
                   "each with array argument iterates over the contents when not empty");
   shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                   "each with array argument ignores the contents when empty");
+});
+
+test("each with an object and @key", function() {
+  var string   = "{{#each goodbyes}}{{@key}}. {{text}}! {{/each}}cruel {{world}}!";
+  var hash     = {goodbyes: {"<b>#1</b>": {text: "goodbye"}, 2: {text: "GOODBYE"}}, world: "world"};
+
+  // Object property iteration order is undefined according to ECMA spec,
+  // so we need to check both possible orders
+  // @see http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
+  var actual = compileWithPartials(string, hash);
+  var expected1 = "&lt;b&gt;#1&lt;/b&gt;. goodbye! 2. GOODBYE! cruel world!";
+  var expected2 = "2. GOODBYE! &lt;b&gt;#1&lt;/b&gt;. goodbye! cruel world!";
+
+  ok(actual === expected1 || actual === expected2, "each with object argument iterates over the contents when not empty");
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
+                  "each with object argument ignores the contents when empty");
 });
 
 test("each with @index", function() {
