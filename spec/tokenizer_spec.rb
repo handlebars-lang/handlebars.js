@@ -158,6 +158,18 @@ describe "Tokenizer" do
     result[1].should be_token("COMMENT", " this is a comment ")
   end
 
+  it "tokenizes a block comment as 'COMMENT'" do
+    result = tokenize("foo {{!-- this is a {{comment}} --}} bar {{ baz }}")
+    result.should match_tokens(%w(CONTENT COMMENT CONTENT OPEN ID CLOSE))
+    result[1].should be_token("COMMENT", " this is a {{comment}} ")
+  end
+
+  it "tokenizes a block comment with whitespace as 'COMMENT'" do
+    result = tokenize("foo {{!-- this is a\n{{comment}}\n--}} bar {{ baz }}")
+    result.should match_tokens(%w(CONTENT COMMENT CONTENT OPEN ID CLOSE))
+    result[1].should be_token("COMMENT", " this is a\n{{comment}}\n")
+  end
+
   it "tokenizes open and closing blocks as 'OPEN_BLOCK ID CLOSE ... OPEN_ENDBLOCK ID CLOSE'" do
     result = tokenize("{{#foo}}content{{/foo}}")
     result.should match_tokens(%w(OPEN_BLOCK ID CLOSE CONTENT OPEN_ENDBLOCK ID CLOSE))

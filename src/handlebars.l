@@ -1,5 +1,5 @@
 
-%x mu emu
+%x mu emu com
 
 %%
 
@@ -17,6 +17,8 @@
                                    return 'CONTENT';
                                  }
 
+<com>[\s\S]*?"--}}"              { yytext = yytext.substr(0, yyleng-4); this.popState(); return 'COMMENT'; }
+
 <mu>"{{>"                        { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                        { return 'OPEN_BLOCK'; }
 <mu>"{{/"                        { return 'OPEN_ENDBLOCK'; }
@@ -24,6 +26,7 @@
 <mu>"{{"\s*"else"                { return 'OPEN_INVERSE'; }
 <mu>"{{{"                        { return 'OPEN_UNESCAPED'; }
 <mu>"{{&"                        { return 'OPEN_UNESCAPED'; }
+<mu>"{{!--"                      { this.popState(); this.begin('com'); }
 <mu>"{{!"[\s\S]*?"}}"            { yytext = yytext.substr(3,yyleng-5); this.popState(); return 'COMMENT'; }
 <mu>"{{"                         { return 'OPEN'; }
 
