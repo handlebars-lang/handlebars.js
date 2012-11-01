@@ -110,6 +110,10 @@ describe "Parser" do
       "ID:#{id}"
     end
 
+    def data(id)
+      "@#{id}"
+    end
+
     def path(*parts)
       "PATH:#{parts.join("/")}"
     end
@@ -119,9 +123,10 @@ describe "Parser" do
     ast_for("{{foo}}").should == root { mustache id("foo") }
   end
 
-  it "parses simple mustaches with colons" do
-    ast_for("{{foo:bar}}").should == program { mustache id("foo:bar") }
+  it "parses simple mustaches with data" do
+    ast_for("{{@foo}}").should == root { mustache data("foo") }
   end
+
   it "parses mustaches with paths" do
     ast_for("{{foo/bar}}").should == root { mustache path("foo", "bar") }
   end
@@ -155,12 +160,20 @@ describe "Parser" do
       mustache id("foo"), [], hash(["bar", boolean("false")])
     end
 
+    ast_for("{{foo bar=@baz}}").should == root do
+      mustache id("foo"), [], hash(["bar", data("baz")])
+    end
+
     ast_for("{{foo bar=baz bat=bam}}").should == root do
       mustache id("foo"), [], hash(["bar", "ID:baz"], ["bat", "ID:bam"])
     end
 
     ast_for("{{foo bar=baz bat=\"bam\"}}").should == root do
       mustache id("foo"), [], hash(["bar", "ID:baz"], ["bat", "\"bam\""])
+    end
+
+    ast_for("{{foo bat='bam'}}").should == root do
+      mustache id("foo"), [], hash(["bat", "\"bam\""])
     end
 
     ast_for("{{foo omg bar=baz bat=\"bam\"}}").should == root do
@@ -191,6 +204,10 @@ describe "Parser" do
   it "parses mustaches with BOOLEAN parameters" do
     ast_for("{{foo true}}").should == root { mustache id("foo"), [boolean("true")] }
     ast_for("{{foo false}}").should == root { mustache id("foo"), [boolean("false")] }
+  end
+
+  it "parses mutaches with DATA parameters" do
+    ast_for("{{foo @bar}}").should == root { mustache id("foo"), [data("bar")] }
   end
 
   it "parses contents followed by a mustache" do

@@ -19,7 +19,7 @@ In general, the syntax of Handlebars.js templates is a superset of Mustache temp
 Once you have a template, use the Handlebars.compile method to compile the template into a function. The generated function takes a context argument, which will be used to render the template.
 
 ```js
-var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " + 
+var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " +
              "{{kids.length}} kids:</p>" +
              "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
 var template = Handlebars.compile(source);
@@ -112,7 +112,7 @@ instance:
 
 ```js
 Handlebars.registerHelper('link_to', function(title, context) {
-  return "<a href='/posts" + context.id + "'>" + title + "</a>"
+  return "<a href='/posts" + context.url + "'>" + title + "!</a>"
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
@@ -124,7 +124,7 @@ template(context);
 // Would render:
 //
 // <ul>
-//   <li><a href='/hello-world'>Post!</a></li>
+//   <li><a href='/posts/hello-world'>Post!</a></li>
 // </ul>
 ```
 
@@ -137,9 +137,9 @@ gets passed to the helper function.
 Handlebars.js also adds the ability to define block helpers. Block helpers are functions that can be called from anywhere in the template. Here's an example:
 
 ```js
-var source = "<ul>{{#people}}<li>{{{#link}}}{{name}}{{/link}}</li>{{/people}}</ul>";
-Handlebars.registerHelper('link', function(context, fn) {
-  return '<a href="/people/' + this.__get__("id") + '">' + fn(this) + '</a>';
+var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
+Handlebars.registerHelper('link', function(context, options) {
+  return '<a href="/people/' + this.id + '">' + context.fn(this) + '</a>';
 });
 var template = Handlebars.compile(source);
 
@@ -220,6 +220,7 @@ Precompile handlebar templates.
 Usage: handlebars template...
 
 Options:
+  -a, --amd        Create an AMD format function (allows loading with RequireJS)         [boolean]
   -f, --output     Output File                                                           [string]
   -k, --known      Known helpers                                                         [string]
   -o, --knownOnly  Known helpers only                                                    [boolean]

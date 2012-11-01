@@ -7,6 +7,17 @@ var optimist = require('optimist')
         'description': 'Output File',
         'alias': 'output'
       },
+      'a': {
+        'type': 'boolean',
+        'description': 'Exports amd style (require.js)',
+        'alias': 'amd'
+      },
+      'h': {
+        'type': 'string',
+        'description': 'Path to handlebar.js (only valid for amd-style)',
+        'alias': 'handlebarPath',
+		'default': ''
+      },
       'k': {
         'type': 'string',
         'description': 'Known helpers',
@@ -78,7 +89,12 @@ if (argv.known) {
 
 var output = [];
 if (!argv.simple) {
-  output.push('(function() {\n  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n');
+  if (argv.amd) {
+    output.push('define([\'' + argv.handlebarPath + 'handlebars\'], function(Handlebars) {\n');
+  } else {
+    output.push('(function() {\n');
+  }
+  output.push('  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n');
 }
 function processTemplate(template, root) {
   var path = template,
@@ -121,7 +137,11 @@ argv._.forEach(function(template) {
 
 // Output the content
 if (!argv.simple) {
-  output.push('})();');
+  if (argv.amd) {
+    output.push('});');
+  } else {
+    output.push('})();');
+  }
 }
 output = output.join('');
 
