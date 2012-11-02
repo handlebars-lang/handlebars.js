@@ -151,10 +151,6 @@ test("paths with hyphens", function() {
   shouldCompileTo("{{foo/foo-bar}}", {foo: {"foo-bar": "baz"}}, "baz", "Paths can contain hyphens (-)");
 });
 
-test("names can contain colons", function() {
-  shouldCompileTo("{{foo:bar}}", {"foo:bar": "baz"}, "baz", "Paths can contain hyphens (-)");
-});
-
 test("nested paths", function() {
   shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
                   "Goodbye beautiful world!", "Nested paths access nested objects");
