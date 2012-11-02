@@ -61,13 +61,27 @@ function compileWithPartials(string, hashOrArray, partials) {
 }
 
 function shouldThrow(fn, exception, message) {
-  var caught = false;
+  var caught = false,
+      exType, exMessage;
+
+  if (exception instanceof Array) {
+    exType = exception[0];
+    exMessage = exception[1];
+  } else if (typeof exception === 'string') {
+    exType = Error;
+    exMessage = exception;
+  } else {
+    exType = exception;
+  }
+
   try {
     fn();
   }
   catch (e) {
-    if (e instanceof exception) {
-      caught = true;
+    if (e instanceof exType) {
+      if (!exMessage || e.message === exMessage) {
+        caught = true;
+      }
     }
   }
 
@@ -480,14 +494,14 @@ test("rendering undefined partial throws an exception", function() {
   shouldThrow(function() {
       var template = CompilerContext.compile("{{> whatever}}");
       template();
-    }, Handlebars.Exception, "Should throw exception");
+    }, [Handlebars.Exception, 'The partial whatever could not be found'], "Should throw exception");
 });
 
 test("rendering template partial in vm mode throws an exception", function() {
   shouldThrow(function() {
       var template = CompilerContext.compile("{{> whatever}}");
       template();
-    }, Handlebars.Exception, "Should throw exception");
+    }, [Handlebars.Exception, 'The partial whatever could not be found'], "Should throw exception");
 });
 
 test("rendering function partial in vm mode", function() {
