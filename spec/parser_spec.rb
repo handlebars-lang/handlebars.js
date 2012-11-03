@@ -123,10 +123,13 @@ describe "Parser" do
     ast_for("{{foo}}").should == root { mustache id("foo") }
   end
 
+<<<<<<< HEAD
   it "parses simple mustaches with data" do
     ast_for("{{@foo}}").should == root { mustache data("foo") }
   end
 
+=======
+>>>>>>> parent of 0437766... Add colons to be allowed in IDs
   it "parses mustaches with paths" do
     ast_for("{{foo/bar}}").should == root { mustache path("foo", "bar") }
   end
