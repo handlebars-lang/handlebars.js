@@ -730,6 +730,15 @@ test("each with @index", function() {
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
 });
 
+test("include partials with extendend contexts", function() {
+  var
+    string  = '{{#each dudes}}{{include "dude" greeting=..}} {{/each}}',
+    hash = {hello: "Hi", dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]},
+    partial = "{{greeting.hello}}, {{name}}!";
+  Handlebars.registerPartial('dude', partial);
+  shouldCompileToWithPartials(string, [hash], true, "Hi, Yehuda! Hi, Alan! ");
+});
+
 test("log", function() {
   var string = "{{log blah}}";
   var hash   = { blah: "whee" };
