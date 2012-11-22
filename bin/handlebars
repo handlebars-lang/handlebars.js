@@ -12,11 +12,17 @@ var optimist = require('optimist')
         'description': 'Exports amd style (require.js)',
         'alias': 'amd'
       },
+      'c': {
+        'type': 'string',
+        'description': 'Exports CommonJS style, path to Handlebars module',
+        'alias': 'commonjs',
+        'default': null
+      },
       'h': {
         'type': 'string',
         'description': 'Path to handlebar.js (only valid for amd-style)',
         'alias': 'handlebarPath',
-		'default': ''
+		    'default': ''
       },
       'k': {
         'type': 'string',
@@ -91,6 +97,8 @@ var output = [];
 if (!argv.simple) {
   if (argv.amd) {
     output.push('define([\'' + argv.handlebarPath + 'handlebars\'], function(Handlebars) {\n');
+  } else if (argv.commonjs) {
+    output.push('var Handlebars = require("' + argv.commonjs + '");');
   } else {
     output.push('(function() {\n');
   }
@@ -139,7 +147,7 @@ argv._.forEach(function(template) {
 if (!argv.simple) {
   if (argv.amd) {
     output.push('});');
-  } else {
+  } else if (!argv.commonjs) {
     output.push('})();');
   }
 }
