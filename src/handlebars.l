@@ -1,5 +1,5 @@
 
-%x mu emu
+%x mu emu com
 
 %%
 
@@ -11,7 +11,13 @@
 
 [^\x00]+                         { return 'CONTENT'; }
 
-<emu>[^\x00]{2,}?/("{{")         { this.popState(); return 'CONTENT'; }
+<emu>[^\x00]{2,}?/("{{"|<<EOF>>) {
+                                   if(yytext.slice(-1) !== "\\") this.popState();
+                                   if(yytext.slice(-1) === "\\") yytext = yytext.substr(0,yyleng-1);
+                                   return 'CONTENT';
+                                 }
+
+<com>[\s\S]*?"--}}"              { yytext = yytext.substr(0, yyleng-4); this.popState(); return 'COMMENT'; }
 
 <mu>"{{>"                        { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                        { return 'OPEN_BLOCK'; }
@@ -20,6 +26,7 @@
 <mu>"{{"\s*"else"                { return 'OPEN_INVERSE'; }
 <mu>"{{{"                        { return 'OPEN_UNESCAPED'; }
 <mu>"{{&"                        { return 'OPEN_UNESCAPED'; }
+<mu>"{{!--"                      { this.popState(); this.begin('com'); }
 <mu>"{{!"[\s\S]*?"}}"            { yytext = yytext.substr(3,yyleng-5); this.popState(); return 'COMMENT'; }
 <mu>"{{"                         { return 'OPEN'; }
 
@@ -31,7 +38,7 @@
 <mu>"}}}"                        { this.popState(); return 'CLOSE'; }
 <mu>"}}"                         { this.popState(); return 'CLOSE'; }
 <mu>'"'("\\"["]|[^"])*'"'        { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
-<mu>"'"("\\"[']|[^'])*"'"        { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
+<mu>"'"("\\"[']|[^'])*"'"        { yytext = yytext.substr(1,yyleng-2).replace(/\\'/g,"'"); return 'STRING'; }
 <mu>"@"[a-zA-Z]+                 { yytext = yytext.substr(1); return 'DATA'; }
 <mu>"true"/[}\s]                 { return 'BOOLEAN'; }
 <mu>"false"/[}\s]                { return 'BOOLEAN'; }
