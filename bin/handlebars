@@ -134,7 +134,8 @@ function processTemplate(template, root) {
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
     } else {
-      output.push('return templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
+      if(argv._.length === 1){ output.push('return '); }
+      output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }
   }
 }
