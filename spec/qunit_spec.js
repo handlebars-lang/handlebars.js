@@ -175,6 +175,16 @@ test("nested paths with empty string value", function() {
                   "Goodbye  world!", "Nested paths access nested objects with empty string");
 });
 
+test("nested paths with lambdas", function() {
+  shouldCompileTo("{{outer}} paths with {{nested.inner}}!", {outer: 'Nested', nested: function() { return {inner: 'lambdas'};}},
+                  "Nested paths with lambdas!", "Nested paths evaluate lambdas");
+});
+
+test("deeply nested paths with lambdas", function() {
+  shouldCompileTo("{{outer}} paths with {{one.two.inner}}!", {outer: 'Nested', one: {two: function() { return {inner: 'lambdas'};}}},
+                  "Nested paths with lambdas!", "Nested paths evaluate lambdas");
+});
+
 test("literal paths", function() {
 	shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
 			"Goodbye beautiful world!", "Literal paths can be used");
