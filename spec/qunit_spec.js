@@ -1245,3 +1245,10 @@ test("bug reported by @fat where lambdas weren't being properly resolved", funct
   var output = "<strong>This is a slightly more complicated blah.</strong>.\n\nCheck this out:\n\n<ul>\n\n<li class=one>@fat</li>\n\n<li class=two>@dhg</li>\n\n<li class=three>@sayrer</li>\n</ul>.\n\n";
   shouldCompileTo(string, data, output);
 });
+
+test("GH-386: allow to enumerate over objects with hasOwnProperty as a property name", function() {
+  var string   = "{{#each map}}{{value}}{{/each}}";
+  var hash     = {map: {hasOwnProperty: {value:"Good"}}};
+  shouldCompileTo(string, hash, "Good",
+                  "each should allow objects with hasOwnProperty as a property name");
+});
