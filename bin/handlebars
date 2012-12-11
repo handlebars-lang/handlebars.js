@@ -137,7 +137,7 @@ function processTemplate(template, root) {
       options.data = true;
     }
 
-// Clean the template name
+    // Clean the template name
     if (!root) {
       template = basename(template);
     } else if (template.indexOf(root) === 0) {
