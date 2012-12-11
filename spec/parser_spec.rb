@@ -253,6 +253,130 @@ describe "Parser" do
     end
   end
 
+  it "parses an inverse ('else'-style) section" do
+    ast_for("{{#foo}} bar {{else}} baz {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          content " baz "
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks" do
+    ast_for("{{#foo}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with empty inverse section" do
+    ast_for("{{#foo}}{{^}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with empty inverse ('else'-style) section" do
+    ast_for("{{#foo}}{{else}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses non-empty blocks with empty inverse section" do
+    ast_for("{{#foo}} bar {{^}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses non-empty blocks with empty inverse ('else'-style) section" do
+    ast_for("{{#foo}} bar {{else}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with non-empty inverse section" do
+    ast_for("{{#foo}}{{^}} bar {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          content " bar "
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with non-empty inverse ('else'-style) section" do
+    ast_for("{{#foo}}{{else}} bar {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          content " bar "
+        end
+      end
+    end
+  end
+
   it "parses a standalone inverse section" do
     ast_for("{{^foo}}bar{{/foo}}").should == root do
       block do
