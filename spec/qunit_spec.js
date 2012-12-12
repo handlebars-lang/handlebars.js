@@ -482,6 +482,14 @@ test("partials with context", function() {
                   "Partials can be passed a context");
 });
 
+test("partials resolve context which is lambda", function() {
+  var string = "Path lambdas: {{>result lambda}}";
+  var partial = "implemented for {{name}}";
+  var hash = {lambda: function() { return {name: 'Handlebars'}}};
+  shouldCompileToWithPartials(string, [hash, {}, {result: partial}], true, "Path lambdas: implemented for Handlebars",
+                  "Partials can be passed a context");
+});
+
 test("partial in a partial", function() {
   var string = "Dudes: {{#dudes}}{{>dude}}{{/dudes}}";
   var dude = "{{name}} {{> url}} ";
