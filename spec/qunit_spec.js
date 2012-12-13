@@ -730,6 +730,23 @@ test("each with @index", function() {
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
 });
 
+test("data passed to helpers", function() {
+  var string = "{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}";
+  var hash = {letters: ['a', 'b', 'c']};
+
+  var template = CompilerContext.compile(string);
+  var result = template(hash, {
+    data: {
+      exclaim: '!'
+    }
+  });
+  equal(result, 'a!b!c!');
+});
+
+Handlebars.registerHelper('detectDataInsideEach', function(options) {
+  return options.data && options.data.exclaim;
+});
+
 test("log", function() {
   var string = "{{log blah}}";
   var hash   = { blah: "whee" };
