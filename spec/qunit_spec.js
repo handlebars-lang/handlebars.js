@@ -528,6 +528,14 @@ test("Partials with slash paths", function() {
   shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
+test("Partials with integer path", function() {
+	var string = "Dudes: {{> 404}}";
+	var dude = "{{name}}";
+	var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {404:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
+
 suite("String literal parameters");
 
 test("simple literals work", function() {
