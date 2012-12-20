@@ -48,6 +48,16 @@ var optimist = require('optimist')
         'type': 'string',
         'description': 'Template root. Base value that will be stripped from template names.',
         'alias': 'root'
+      },
+      'p' : {
+        'type': 'boolean',
+        'description': 'Compiling a partial template',
+        'alias': 'partial'
+      },
+      'd' : {
+        'type': 'boolean',
+        'description': 'Include data when compiling',
+        'alias': 'data'
       }
     })
 
@@ -123,6 +133,10 @@ function processTemplate(template, root) {
       knownHelpersOnly: argv.o
     };
 
+    if (argv.data) {
+      options.data = true;
+    }
+
     // Clean the template name
     if (!root) {
       template = basename(template);
@@ -133,6 +147,8 @@ function processTemplate(template, root) {
 
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
+    } else if (argv.partial) {
+      output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     } else {
       output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }
