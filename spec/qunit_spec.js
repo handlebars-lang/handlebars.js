@@ -126,10 +126,16 @@ test("newlines", function() {
 
 test("escaping text", function() {
   shouldCompileTo("Awesome's", {}, "Awesome's", "text is escaped so that it doesn't get caught on single quotes");
-  shouldCompileTo("Awesome\\", {}, "Awesome\\", "text is escaped so that the closing quote can't be ignored");
-  shouldCompileTo("Awesome\\\\ foo", {}, "Awesome\\\\ foo", "text is escaped so that it doesn't mess up backslashes");
+  shouldCompileTo("Awesome\\\\", {}, "Awesome\\", "text is escaped so that the closing quote can't be ignored");
+  shouldCompileTo("Awesome\\\\\\\\ foo", {}, "Awesome\\\\ foo", "text is escaped so that it doesn't mess up backslashes");
   shouldCompileTo("Awesome {{foo}}", {foo: '\\'}, "Awesome \\", "text is escaped so that it doesn't mess up backslashes");
   shouldCompileTo(' " " ', {}, ' " " ', "double quotes never produce invalid javascript");
+});
+
+test("escaping slash",function(){
+	shouldCompileTo("x\\{{mu}}",{mu:"mu"},"x{{mu}}","mu should be escaped");
+	shouldCompileTo("x\\\\{{mu}}",{mu:"mu2"},"x\\mu2","slash should be escaped");
+	shouldCompileTo("x\\\\\\{{mu}}",{mu:"mu3"},"x\\{{mu}}","slash and mu can be both escaped");
 });
 
 test("escaping expressions", function() {
