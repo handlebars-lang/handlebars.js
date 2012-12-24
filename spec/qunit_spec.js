@@ -456,12 +456,17 @@ test("providing a helpers hash", function() {
                   "Goodbye cruel world!", "helpers hash is available inside other blocks");
 });
 
-test("in cases of conflict, the explicit hash wins", function() {
-
+test("in cases of conflict, helpers win", function() {
+  shouldCompileTo("{{{lookup}}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
+                  "helpers hash has precedence escaped expansion");
+  shouldCompileTo("{{lookup}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
+                  "helpers hash has precedence simple expansion");
 });
 
 test("the helpers hash is available is nested contexts", function() {
-
+  shouldCompileTo("{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}",
+                [{'outer': {'inner': {'unused':[]}}},  {'helper': function() { return 'helper'; }}], "helper",
+                "helpers hash is available in nested contexts.");
 });
 
 suite("partials");
