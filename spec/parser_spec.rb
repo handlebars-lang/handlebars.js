@@ -114,6 +114,10 @@ describe "Parser" do
       "@#{id}"
     end
 
+    def partial_name(name)
+      "PARTIAL:#{name}"
+    end
+
     def path(*parts)
       "PATH:#{parts.join("/")}"
     end
@@ -218,11 +222,15 @@ describe "Parser" do
   end
 
   it "parses a partial" do
-    ast_for("{{> foo }}").should == root { partial id("foo") }
+    ast_for("{{> foo }}").should == root { partial partial_name("foo") }
   end
 
   it "parses a partial with context" do
-    ast_for("{{> foo bar}}").should == root { partial id("foo"), id("bar") }
+    ast_for("{{> foo bar}}").should == root { partial partial_name("foo"), id("bar") }
+  end
+
+  it "parses a partial with a complex name" do
+    ast_for("{{> shared/partial}}").should == root { partial partial_name("shared/partial") }
   end
 
   it "parses a comment" do
