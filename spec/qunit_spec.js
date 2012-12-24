@@ -1245,3 +1245,9 @@ test("bug reported by @fat where lambdas weren't being properly resolved", funct
   var output = "<strong>This is a slightly more complicated blah.</strong>.\n\nCheck this out:\n\n<ul>\n\n<li class=one>@fat</li>\n\n<li class=two>@dhg</li>\n\n<li class=three>@sayrer</li>\n</ul>.\n\n";
   shouldCompileTo(string, data, output);
 });
+
+test("Passing falsy values to Handlebars.compile throws an error", function() {
+  shouldThrow(function() {
+    CompilerContext.compile(null);
+  }, "You must pass a string to Handlebars.compile. You passed null");
+});
