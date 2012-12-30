@@ -138,7 +138,7 @@ Handlebars.js also adds the ability to define block helpers. Block helpers are f
 
 ```js
 var source = "<ul>{{#people}}<li>{{#link}}{{name}}{{/link}}</li>{{/people}}</ul>";
-Handlebars.registerHelper('link', function(context, options) {
+Handlebars.registerHelper('link', function(options) {
   return '<a href="/people/' + this.id + '">' + options.fn(this) + '</a>';
 });
 var template = Handlebars.compile(source);
