@@ -456,12 +456,17 @@ test("providing a helpers hash", function() {
                   "Goodbye cruel world!", "helpers hash is available inside other blocks");
 });
 
-test("in cases of conflict, the explicit hash wins", function() {
-
+test("in cases of conflict, helpers win", function() {
+  shouldCompileTo("{{{lookup}}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
+                  "helpers hash has precedence escaped expansion");
+  shouldCompileTo("{{lookup}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
+                  "helpers hash has precedence simple expansion");
 });
 
 test("the helpers hash is available is nested contexts", function() {
-
+  shouldCompileTo("{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}",
+                [{'outer': {'inner': {'unused':[]}}},  {'helper': function() { return 'helper'; }}], "helper",
+                "helpers hash is available in nested contexts.");
 });
 
 suite("partials");
@@ -521,12 +526,20 @@ test("GH-14: a partial preceding a selector", function() {
    shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
-test("Partials with literal paths", function() {
-	var string = "Dudes: {{> [dude]}}";
+test("Partials with slash paths", function() {
+	var string = "Dudes: {{> shared/dude}}";
 	var dude = "{{name}}";
 	var hash = {name:"Jeepers", another_dude:"Creepers"};
-  shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+  shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
+
+test("Partials with integer path", function() {
+	var string = "Dudes: {{> 404}}";
+	var dude = "{{name}}";
+	var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {404:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
 
 suite("String literal parameters");
 
@@ -728,6 +741,23 @@ test("each with @index", function() {
   var result = template(hash);
 
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
+});
+
+test("data passed to helpers", function() {
+  var string = "{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}";
+  var hash = {letters: ['a', 'b', 'c']};
+
+  var template = CompilerContext.compile(string);
+  var result = template(hash, {
+    data: {
+      exclaim: '!'
+    }
+  });
+  equal(result, 'a!b!c!');
+});
+
+Handlebars.registerHelper('detectDataInsideEach', function(options) {
+  return options.data && options.data.exclaim;
 });
 
 test("log", function() {
@@ -1244,4 +1274,10 @@ test("bug reported by @fat where lambdas weren't being properly resolved", funct
 
   var output = "<strong>This is a slightly more complicated blah.</strong>.\n\nCheck this out:\n\n<ul>\n\n<li class=one>@fat</li>\n\n<li class=two>@dhg</li>\n\n<li class=three>@sayrer</li>\n</ul>.\n\n";
   shouldCompileTo(string, data, output);
+});
+
+test("Passing falsy values to Handlebars.compile throws an error", function() {
+  shouldThrow(function() {
+    CompilerContext.compile(null);
+  }, "You must pass a string to Handlebars.compile. You passed null");
 });

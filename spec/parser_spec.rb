@@ -114,6 +114,10 @@ describe "Parser" do
       "@#{id}"
     end
 
+    def partial_name(name)
+      "PARTIAL:#{name}"
+    end
+
     def path(*parts)
       "PATH:#{parts.join("/")}"
     end
@@ -218,11 +222,15 @@ describe "Parser" do
   end
 
   it "parses a partial" do
-    ast_for("{{> foo }}").should == root { partial id("foo") }
+    ast_for("{{> foo }}").should == root { partial partial_name("foo") }
   end
 
   it "parses a partial with context" do
-    ast_for("{{> foo bar}}").should == root { partial id("foo"), id("bar") }
+    ast_for("{{> foo bar}}").should == root { partial partial_name("foo"), id("bar") }
+  end
+
+  it "parses a partial with a complex name" do
+    ast_for("{{> shared/partial}}").should == root { partial partial_name("shared/partial") }
   end
 
   it "parses a comment" do
@@ -248,6 +256,130 @@ describe "Parser" do
 
         inverse do
           content " baz "
+        end
+      end
+    end
+  end
+
+  it "parses an inverse ('else'-style) section" do
+    ast_for("{{#foo}} bar {{else}} baz {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          content " baz "
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks" do
+    ast_for("{{#foo}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with empty inverse section" do
+    ast_for("{{#foo}}{{^}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with empty inverse ('else'-style) section" do
+    ast_for("{{#foo}}{{else}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses non-empty blocks with empty inverse section" do
+    ast_for("{{#foo}} bar {{^}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses non-empty blocks with empty inverse ('else'-style) section" do
+    ast_for("{{#foo}} bar {{else}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with non-empty inverse section" do
+    ast_for("{{#foo}}{{^}} bar {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          content " bar "
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with non-empty inverse ('else'-style) section" do
+    ast_for("{{#foo}}{{else}} bar {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          content " bar "
         end
       end
     end
