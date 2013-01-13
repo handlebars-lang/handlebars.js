@@ -2,10 +2,10 @@ require "rubygems"
 require "bundler/setup"
 
 def compile_parser
-  system "./node_modules/jison/lib/jison/cli-wrapper.js src/handlebars.yy src/handlebars.l"
+  system "./node_modules/jison/lib/jison/cli-wrapper.js -m js src/handlebars.yy src/handlebars.l"
   if $?.success?
     File.open("lib/handlebars/compiler/parser.js", "w") do |file|
-      file.puts File.read("handlebars.js") + ";"
+      file.puts File.read("src/parser-prefix.js") + File.read("handlebars.js") + File.read("src/parser-suffix.js")
     end
 
     sh "rm handlebars.js"
