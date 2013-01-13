@@ -764,12 +764,13 @@ test("log", function() {
   var string = "{{log blah}}";
   var hash   = { blah: "whee" };
 
-  var logArg;
+  var levelArg, logArg;
   var originalLog = Handlebars.log;
-  Handlebars.log = function(arg){ logArg = arg; };
+  Handlebars.log = function(level, arg){ levelArg = level, logArg = arg; };
   teardown = function(){ Handlebars.log = originalLog; };
 
   shouldCompileTo(string, hash, "", "log should not display");
+  equals(1, levelArg, "should call log with 1");
   equals("whee", logArg, "should call log with 'whee'");
 });
 
