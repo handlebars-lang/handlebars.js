@@ -18,6 +18,7 @@
     "uglify-js": "~1.2"
   },
   "devDependencies": {
+    "jison": "~0.3",
     "mocha": "*"
   },
   "main": "lib/handlebars.js",
