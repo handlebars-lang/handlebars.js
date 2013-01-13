@@ -32,7 +32,13 @@ task :spec => [:release] do
   fail "rspec spec failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
 
-task :default => [:compile, :spec]
+desc "run the npm test suite"
+task :npm_test => [:release] do
+  rc = system "npm test"
+  fail "npm test failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
+end
+
+task :default => [:compile, :spec, :npm_test]
 
 def remove_exports(string)
   match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
