@@ -213,7 +213,7 @@ test("this keyword in paths", function() {
 });
 
 test("this keyword in helpers", function() {
-  var helpers = {foo: function(value, options) {
+  var helpers = {foo: function(value) {
       return 'bar ' + value;
   }};
   var string = "{{#goodbyes}}{{foo this}}{{/goodbyes}}";
@@ -753,7 +753,7 @@ test("data passed to helpers", function() {
       exclaim: '!'
     }
   });
-  equal(result, 'a!b!c!');
+  equal(result, 'a!b!c!', 'should output data');
 });
 
 Handlebars.registerHelper('detectDataInsideEach', function(options) {
@@ -1148,7 +1148,7 @@ test("arguments to helpers can be retrieved from options hash in string form", f
   var template = CompilerContext.compile('{{wycats is.a slave.driver}}', {stringParams: true});
 
   var helpers = {
-    wycats: function(passiveVoice, noun, options) {
+    wycats: function(passiveVoice, noun) {
       return "HELP ME MY BOSS " + passiveVoice + ' ' + noun;
     }
   };
