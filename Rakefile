@@ -2,7 +2,7 @@ require "rubygems"
 require "bundler/setup"
 
 def compile_parser
-  system "./node_modules/jison/lib/jison/cli-wrapper.js -m js src/handlebars.yy src/handlebars.l"
+  system "./node_modules/.bin/jison -m js src/handlebars.yy src/handlebars.l"
   if $?.success?
     File.open("lib/handlebars/compiler/parser.js", "w") do |file|
       file.puts File.read("src/parser-prefix.js") + File.read("handlebars.js") + File.read("src/parser-suffix.js")
@@ -15,11 +15,11 @@ def compile_parser
 end
 
 file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
-  if File.exists?('./node_modules/jison/lib/jison/cli-wrapper.js')
+  if File.exists?('./node_modules/jison')
     compile_parser
   else
     puts "Jison is not installed. Trying `npm install jison`."
-    sh "npm install jison"
+    sh "npm install"
     compile_parser
   end
 end
