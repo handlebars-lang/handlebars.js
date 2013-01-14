@@ -1289,8 +1289,8 @@ test('GH-408: Multiple loops fail', function() {
     { name: "Jane Doe", location: { city: "New York"} }
   ];
 
-  var template = CompilerContext.compile('{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}');
+  var template = CompilerContext.compile('{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}');
 
   var result = template(context);
-  equals(result, "John DoeJane DoeJohn DoeJane Doe", 'It should output twice');
+  equals(result, "John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe", 'It should output multiple times');
 });
