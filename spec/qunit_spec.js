@@ -1282,3 +1282,15 @@ test("Passing falsy values to Handlebars.compile throws an error", function() {
     CompilerContext.compile(null);
   }, "You must pass a string to Handlebars.compile. You passed null");
 });
+
+test('GH-408: Multiple loops fail', function() {
+  var context = [
+    { name: "John Doe", location: { city: "Chicago" } },
+    { name: "Jane Doe", location: { city: "New York"} }
+  ];
+
+  var template = CompilerContext.compile('{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}');
+
+  var result = template(context);
+  equals(result, "John DoeJane DoeJohn DoeJane Doe", 'It should output twice');
+});
