@@ -133,7 +133,7 @@ BenchWarmer.prototype = {
 
     if(!bench.error) {
       var count = bench.hz,
-          moe   = count * bench.stats.RME / 100;
+          moe   = count * bench.stats.rme / 100;
 
       out = Math.round(count / 1000) + " ±" + Math.round(moe / 1000) + " (" + bench.cycles + ")";
     } else {

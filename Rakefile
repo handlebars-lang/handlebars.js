@@ -92,20 +92,6 @@ directory "vendor"
 desc "benchmark against dust.js and mustache.js"
 task :bench => "vendor" do
   require "open-uri"
-  #File.open("vendor/mustache.js", "w") do |file|
-    #file.puts open("https://github.com/janl/mustache.js/raw/master/mustache.js").read
-    #file.puts "module.exports = Mustache;"
-  #end
-
-  File.open("vendor/benchmark.js", "w") do |file|
-    file.puts open("https://raw.github.com/bestiejs/benchmark.js/master/benchmark.js").read
-  end
-
-  #if File.directory?("vendor/dustjs")
-    #system "cd vendor/dustjs && git pull"
-  #else
-    #system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
-  #end
 
   #if File.directory?("vendor/coffee")
     #system "cd vendor/coffee && git pull"

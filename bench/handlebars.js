@@ -1,20 +1,22 @@
-require.paths.push("lib");
-require.paths.push("vendor");
-require.paths.push("vendor/dustjs/lib");
-require.paths.push("vendor/coffee/lib");
-require.paths.push("vendor/eco/lib");
-
-
 var BenchWarmer = require("./benchwarmer");
-Handlebars = require("handlebars");
+Handlebars = require("../lib/handlebars");
 
-var dust = require("dust");
-var Mustache = require("mustache");
-var ecoExports = require("eco");
+var dust, Mustache, eco;
 
-eco = function(str) {
-  return ecoExports(str);
-}
+try {
+  dust = require("dust");
+} catch (err) { /* NOP */ }
+
+try {
+  Mustache = require("mustache");
+} catch (err) { /* NOP */ }
+
+try {
+  var ecoExports = require("eco");
+  eco = function(str) {
+    return ecoExports(str);
+  }
+} catch (err) { /* NOP */ }
 
 var benchDetails = {
   string: {
@@ -113,39 +115,46 @@ var makeSuite = function(name) {
 
     var error = function() { throw new Error("EWOT"); };
 
-
-    //bench("dust", function() {
-      //dust.render(templateName, context, function(err, out) { });
-    //});
+    if (dust) {
+      bench("dust", function() {
+        dust.render(templateName, context, function(err, out) { });
+      });
+    }
 
     bench("handlebars", function() {
       handlebarsTemplates[templateName](context);
     });
 
-    //if(ecoTemplates[templateName]) {
-      //bench("eco", function() {
-        //ecoTemplates[templateName](context);
-      //});
-    //} else {
-      //bench("eco", error);
-    //}
+    if (eco) {
+      if(ecoTemplates[templateName]) {
+        bench("eco", function() {
+          ecoTemplates[templateName](context);
+        });
+      } else {
+        bench("eco", error);
+      }
+    }
 
-    //if(mustacheSource) {
-      //bench("mustache", function() {
-        //Mustache.to_html(mustacheSource, context, mustachePartials);
-      //});
-    //} else {
-      //bench("mustache", error);
-    //}
+    if (Mustache && mustacheSource) {
+      bench("mustache", function() {
+        Mustache.to_html(mustacheSource, context, mustachePartials);
+      });
+    } else {
+      bench("mustache", error);
+    }
   });
 }
 
 for(var name in benchDetails) {
   if(benchDetails.hasOwnProperty(name)) {
-    dust.loadSource(dust.compile(benchDetails[name].dust, name));
+    if (dust) {
+      dust.loadSource(dust.compile(benchDetails[name].dust, name));
+    }
     handlebarsTemplates[name] = Handlebars.compile(benchDetails[name].handlebars);
 
-    if(benchDetails[name].eco) { ecoTemplates[name] = eco(benchDetails[name].eco); }
+    if (eco && benchDetails[name].eco) {
+      ecoTemplates[name] = eco(benchDetails[name].eco);
+    }
 
     var partials = benchDetails[name].partials;
     if(partials) {
