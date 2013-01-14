@@ -24,12 +24,6 @@ if (!Handlebars) {
 
 suite("basic context");
 
-Handlebars.registerHelper('helperMissing', function(helper, context) {
-  if(helper === "link_to") {
-    return new Handlebars.SafeString("<a>" + context + "</a>");
-  }
-});
-
 function shouldCompileTo(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 }
@@ -46,7 +40,7 @@ function compileWithPartials(string, hashOrArray, partials) {
 
     if(helpers) {
       for(var prop in Handlebars.helpers) {
-        helpers[prop] = Handlebars.helpers[prop];
+        helpers[prop] = helpers[prop] || Handlebars.helpers[prop];
       }
     }
 
@@ -605,10 +599,25 @@ test("constructing a safestring from a string and checking its type", function()
 suite("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
+  shouldThrow(function() {
+      var template = CompilerContext.compile("{{hello}} {{link_to world}}");
+      template({});
+    }, [Error, "Could not find property 'link_to'"], "Should throw exception");
+});
+
+test("if a context is not found, custom helperMissing is used", function() {
   var string = "{{hello}} {{link_to world}}";
   var context = { hello: "Hello", world: "world" };
 
-  shouldCompileTo(string, context, "Hello <a>world</a>");
+  var helpers = {
+    helperMissing: function(helper, context) {
+      if(helper === "link_to") {
+        return new Handlebars.SafeString("<a>" + context + "</a>");
+      }
+    }
+  };
+
+  shouldCompileTo(string, [context, helpers], "Hello <a>world</a>");
 });
 
 suite("knownHelpers");
