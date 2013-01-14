@@ -39,6 +39,12 @@ var optimist = require('optimist')
         'description': 'Minimize output',
         'alias': 'min'
       },
+      'n': {
+        'type': 'string',
+        'description': 'Template namespace',
+        'alias': 'namespace',
+        'default': 'Handlebars.templates'
+      },
       's': {
         'type': 'boolean',
         'description': 'Output template function only.',
@@ -112,7 +118,11 @@ if (!argv.simple) {
   } else {
     output.push('(function() {\n');
   }
-  output.push('  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n');
+  output.push('  var template = Handlebars.template, templates = ');
+  output.push(argv.namespace);
+  output.push(' = ');
+  output.push(argv.namespace);
+  output.push(' || {};\n');
 }
 function processTemplate(template, root) {
   var path = template,
