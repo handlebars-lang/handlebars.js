@@ -174,18 +174,6 @@ test("literal paths", function() {
 			"Goodbye beautiful world!", "Literal paths can be used");
 });
 
-test("--- TODO --- bad idea nested paths", function() {
-  return;
-	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
-  shouldThrow(function() {
-      CompilerContext.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}")(hash);
-    }, Handlebars.Exception,
-    "Cannot jump (..) into previous context after moving into a context.");
-
-  var string = "{{#goodbyes}}{{.././world}} {{/goodbyes}}";
-  shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
-});
-
 test("that current context path ({{.}}) doesn't hit helpers", function() {
 	shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
 });
@@ -1203,6 +1191,44 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   }, {helpers: helpers});
 
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke", "Proper context variable output");
+});
+
+test("in string mode, information about the types is passed along", function() {
+  var template = CompilerContext.compile('{{tomdale "need" dad.joke true}}', { stringParams: true });
+
+  var helpers = {
+    tomdale: function(desire, noun, bool, options) {
+      equal(options.types[0], 'STRING', "the string type is passed");
+      equal(options.types[1], 'ID', "the expression type is passed");
+      equal(options.types[2], 'BOOLEAN', "the expression type is passed");
+      equal(desire, "need", "the string form is passed for strings");
+      equal(noun, "dad.joke", "the string form is passed for expressions");
+      equal(bool, true, "raw booleans are passed through");
+      return "Helper called";
+    }
+  };
+
+  var result = template({}, { helpers: helpers });
+  equal(result, "Helper called");
+});
+
+test("in string mode, hash parameters get type information", function() {
+  var template = CompilerContext.compile('{{tomdale desire="need" noun=dad.joke bool=true}}', { stringParams: true });
+
+  var helpers = {
+    tomdale: function(options) {
+      equal(options.hashTypes.desire, "STRING");
+      equal(options.hashTypes.noun, "ID");
+      equal(options.hashTypes.bool, "BOOLEAN");
+      equal(options.hash.desire, "need");
+      equal(options.hash.noun, "dad.joke");
+      equal(options.hash.bool, true);
+      return "Helper called";
+    }
+  };
+
+  var result = template({}, { helpers: helpers });
+  equal(result, "Helper called");
 });
 
 test("when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper", function() {
