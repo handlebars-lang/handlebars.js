@@ -1213,10 +1213,13 @@ test("in string mode, information about the types is passed along", function() {
 });
 
 test("in string mode, hash parameters get type information", function() {
-  var template = CompilerContext.compile('{{tomdale desire="need" noun=dad.joke bool=true}}', { stringParams: true });
+  var template = CompilerContext.compile('{{tomdale he.says desire="need" noun=dad.joke bool=true}}', { stringParams: true });
 
   var helpers = {
-    tomdale: function(options) {
+    tomdale: function(exclamation, options) {
+      equal(exclamation, "he.says");
+      equal(options.types[0], "ID");
+
       equal(options.hashTypes.desire, "STRING");
       equal(options.hashTypes.noun, "ID");
       equal(options.hashTypes.bool, "BOOLEAN");
