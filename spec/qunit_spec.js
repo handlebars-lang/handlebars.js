@@ -176,8 +176,15 @@ test("nested paths with empty string value", function() {
 });
 
 test("literal paths", function() {
-	shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
-			"Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
+      "Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[foo bar]/expression}} world!", {"foo bar": {expression: "beautiful"}},
+      "Goodbye beautiful world!", "Literal paths can be used");
+});
+
+test('literal references', function() {
+  shouldCompileTo("Goodbye {{[foo bar]}} world!", {"foo bar": "beautiful"},
+      "Goodbye beautiful world!", "Literal paths can be used");
 });
 
 test("that current context path ({{.}}) doesn't hit helpers", function() {
