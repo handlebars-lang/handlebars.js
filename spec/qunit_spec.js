@@ -1194,16 +1194,17 @@ test("when inside a block in String mode, .. passes the appropriate context in t
 });
 
 test("in string mode, information about the types is passed along", function() {
-  var template = CompilerContext.compile('{{tomdale "need" dad.joke true}}', { stringParams: true });
+  var template = CompilerContext.compile('{{tomdale "need" dad.joke true false}}', { stringParams: true });
 
   var helpers = {
-    tomdale: function(desire, noun, bool, options) {
+    tomdale: function(desire, noun, trueBool, falseBool, options) {
       equal(options.types[0], 'STRING', "the string type is passed");
       equal(options.types[1], 'ID', "the expression type is passed");
       equal(options.types[2], 'BOOLEAN', "the expression type is passed");
       equal(desire, "need", "the string form is passed for strings");
       equal(noun, "dad.joke", "the string form is passed for expressions");
-      equal(bool, true, "raw booleans are passed through");
+      equal(trueBool, true, "raw booleans are passed through");
+      equal(falseBool, false, "raw booleans are passed through");
       return "Helper called";
     }
   };
