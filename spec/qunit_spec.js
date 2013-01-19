@@ -20,6 +20,12 @@ if (!Handlebars) {
       return Handlebars.compile(template, options);
     }
   };
+} else {
+  var _equal = equal;
+  equals = equal = function(a, b, msg) {
+    // Allow exec with missing message params
+    _equal(a, b, msg || '');
+  };
 }
 
 suite("basic context");
