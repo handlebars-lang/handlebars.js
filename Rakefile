@@ -61,7 +61,7 @@ def build_for_task(task)
   FileUtils.rm_rf("dist/*") if File.directory?("dist")
   FileUtils.mkdir_p("dist")
 
-  contents = []
+  contents = ["/*\n\n" + File.read('LICENSE') + "\n*/\n"]
   task.prerequisites.each do |filename|
     next if filename == "dist"
 
