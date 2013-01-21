@@ -207,6 +207,13 @@ test("this keyword in paths", function() {
   shouldCompileTo(string, hash, "helloHelloHELLO", "This keyword evaluates in more complex paths");
 });
 
+test("this keyword nested inside path", function() {
+  var string = "{{#hellos}}{{text/this/foo}}{{/hellos}}";
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
+});
+
 test("this keyword in helpers", function() {
   var helpers = {foo: function(value) {
       return 'bar ' + value;
@@ -219,6 +226,13 @@ test("this keyword in helpers", function() {
   string = "{{#hellos}}{{foo this/text}}{{/hellos}}";
   hash = {hellos: [{text: "hello"}, {text: "Hello"}, {text: "HELLO"}]};
   shouldCompileTo(string, [hash, helpers], "bar hellobar Hellobar HELLO", "This keyword evaluates in more complex paths");
+});
+
+test("this keyword nested inside helpers param", function() {
+  var string = "{{#hellos}}{{foo text/this/foo}}{{/hellos}}";
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
 });
 
 suite("inverted sections");
@@ -284,6 +298,14 @@ test("block with complex lookup", function() {
 
   shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ",
                   "Templates can access variables in contexts up the stack with relative path syntax");
+});
+
+test("block with complex lookup using nested context", function() {
+  var string = "{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}";
+
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
 });
 
 test("helper with complex lookup$", function() {
