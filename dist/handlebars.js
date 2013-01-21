@@ -726,8 +726,11 @@ Handlebars.print = function(ast) {
     for(var i=0,l=parts.length; i<l; i++) {
       var part = parts[i];
 
-      if(part === "..") { depth++; }
-      else if(part === "." || part === "this") { this.isScoped = true; }
+      if (part === ".." || part === "." || part === "this") {
+        if (dig.length > 0) { throw new Handlebars.Exception("Invalid path: " + this.original); }
+        else if (part === "..") { depth++; }
+        else { this.isScoped = true; }
+      }
       else { dig.push(part); }
     }
 
