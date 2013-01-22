@@ -164,6 +164,17 @@ Handlebars.registerHelper('log', function(context, options) {
   Handlebars.log(level, context);
 });
 
+Handlebars.registerHelper('resolve', function(id, options) {
+  var path = id.split('.');
+  var currentValue = options.contexts[0];
+
+  for (var i = 0, l = path.length; i < l; i++) {
+    if (currentValue) { currentValue = currentValue[path[i]]; }
+  }
+
+  return typeof currentValue === 'function' ? currentValue.apply(this) : currentValue;
+});
+
 }(this.Handlebars));
 ;
 // lib/handlebars/compiler/parser.js
@@ -1083,7 +1094,13 @@ Handlebars.JavaScriptCompiler = function() {};
       if (id.type === 'DATA') {
         this.DATA(id);
       } else if (id.parts.length) {
-        this.ID(id);
+        if (this.options.resolve) {
+          this.resolveID(id);
+          return;
+        }
+        else {
+          this.ID(id);
+        }
       } else {
         // Simplified ID for `this`
         this.addDepth(id.depth);
@@ -1121,6 +1138,11 @@ Handlebars.JavaScriptCompiler = function() {};
       for(var i=1, l=id.parts.length; i<l; i++) {
         this.opcode('lookup', id.parts[i]);
       }
+    },
+
+    resolveID: function(id) {
+      this.addDepth(id.depth);
+      this.opcode('invokeResolve', id.stringModeValue, id.depth);
     },
 
     DATA: function(data) {
@@ -1693,6 +1715,17 @@ Handlebars.JavaScriptCompiler = function() {};
       this.push(helper.name + ".call(" + helper.callParams + ")");
     },
 
+    // [invokeResolve]
+    //
+    // On stack, before:
+    // On stack, after: result of resolve invocation
+    //
+    // This operation is used to resolve a path in context when using resolve
+    // mode
+    invokeResolve: function(id, depth) {
+      this.pushStack(this.setupResolve(id, depth));
+    },
+
     // [invokeAmbiguous]
     //
     // On stack, before: hash, inverse, program, params..., ...
@@ -1717,7 +1750,14 @@ Handlebars.JavaScriptCompiler = function() {};
       var nextStack = this.nextStack();
 
       this.source.push('if (' + nextStack + ' = ' + helperName + ') { ' + nextStack + ' = ' + nextStack + '.call(' + helper.callParams + '); }');
-      this.source.push('else { ' + nextStack + ' = ' + nonHelper + '; ' + nextStack + ' = typeof ' + nextStack + ' === functionType ? ' + nextStack + '.apply(depth0) : ' + nextStack + '; }');
+      if (this.options.resolve) {
+        this.source.push('else { ' + nextStack + ' = ');
+        this.source.push(this.setupResolve(name, 0));
+        this.source.push('; }');
+      }
+      else {
+        this.source.push('else { ' + nextStack + ' = ' + nonHelper + '; ' + nextStack + ' = typeof ' + nextStack + ' === functionType ? ' + nextStack + '.apply(depth0) : ' + nextStack + '; }');
+      }
     },
 
     // [invokePartial]
@@ -2023,6 +2063,11 @@ Handlebars.JavaScriptCompiler = function() {};
         params.push(options);
       }
       return params.join(", ");
+    },
+
+    // Call resolve for the name at this depth
+    setupResolve: function(name, depth) {
+      return "helpers.resolve.call(depth0, '" + name + "' ,{hash:{}, contexts:[depth" + depth + "], types:['ID'], hashTypes:{}, data:data})";
     }
   };
 

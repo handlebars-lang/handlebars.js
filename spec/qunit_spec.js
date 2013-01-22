@@ -1294,6 +1294,67 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
 });
 
+test("resolve mode calls resolve for simple mustache paths", function() {
+  var template = CompilerContext.compile('{{simple.path}}', {resolve: true});
+
+  var helpers = {
+    resolve: function(name, options) {
+      equal('simple.path', name);
+      equal('ID', options.types[0]);
+      equal(this, options.contexts[0]);
+      return "resolve called"
+    }
+  };
+
+  var result = template({}, {helpers: helpers});
+
+  equals(result, "resolve called", "resolve mode calls resolve");
+});
+
+test("resolve mode calls resolve for ambiguous mustache that is not a helper", function() {
+  var template = CompilerContext.compile('{{simple}}', {resolve: true});
+
+  var helpers = {
+    resolve: function(name, options) {
+      equal('simple', name);
+      equal('ID', options.types[0]);
+      equal(this, options.contexts[0]);
+      return "resolve called"
+    }
+  };
+
+  var result = template({}, {helpers: helpers});
+
+  equals(result, "resolve called", "resolve mode calls resolve for ambiguous mustache that is not a helper");
+});
+
+test("when inside a block in resolve mode, .. passes the appropriate context in the options hash to resolve", function() {
+  var template = CompilerContext.compile('{{#with outer}}{{../outside}}{{/with}}', {resolve: true});
+  var context = {
+    outer: {
+      inner: 'inner'
+    },
+    outside: 'outside'
+  };
+
+  var helpers = {
+    resolve: function(name, options) {
+      equal('outside', name);
+      equal('ID', options.types[0]);
+      equal(context, options.contexts[0]);
+      return "resolve called"
+    },
+
+    with: function(context, options) {
+      return options.fn(context);
+    }
+  };
+
+  var result = template(context, {helpers: helpers});
+
+  equals(result, "resolve called", "resolve mode passes appropriate context");
+});
+
 suite("Regressions");
 
 test("GH-94: Cannot read property of undefined", function() {

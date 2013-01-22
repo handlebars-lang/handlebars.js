@@ -164,6 +164,17 @@ Handlebars.registerHelper('log', function(context, options) {
   Handlebars.log(level, context);
 });
 
+Handlebars.registerHelper('resolve', function(id, options) {
+  var path = id.split('.');
+  var currentValue = options.contexts[0];
+
+  for (var i = 0, l = path.length; i < l; i++) {
+    if (currentValue) { currentValue = currentValue[path[i]]; }
+  }
+
+  return typeof currentValue === 'function' ? currentValue.apply(this) : currentValue;
+});
+
 }(this.Handlebars));
 ;
 // lib/handlebars/utils.js
