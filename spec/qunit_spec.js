@@ -712,6 +712,11 @@ test("with", function() {
   shouldCompileTo(string, {person: {first: "Alan", last: "Johnson"}}, "Alan Johnson");
 });
 
+test("with with function argument", function() {
+  var string = "{{#with person}}{{first}} {{last}}{{/with}}";
+  shouldCompileTo(string, {person: function() { return {first: "Alan", last: "Johnson"}}}, "Alan Johnson");
+});
+
 test("if", function() {
   var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
   shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!",
