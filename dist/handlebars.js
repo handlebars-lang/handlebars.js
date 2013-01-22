@@ -1723,6 +1723,7 @@ Handlebars.JavaScriptCompiler = function() {};
     // This operation is used to resolve a path in context when using resolve
     // mode
     invokeResolve: function(id, depth) {
+      this.context.aliases.resolve = 'helpers.resolve';
       this.inlineStack.push(this.setupResolve(id, depth));
     },
 
@@ -1751,6 +1752,7 @@ Handlebars.JavaScriptCompiler = function() {};
 
       this.source.push('if (' + nextStack + ' = ' + helperName + ') { ' + nextStack + ' = ' + nextStack + '.call(' + helper.callParams + '); }');
       if (this.options.resolve) {
+        this.context.aliases.resolve = 'helpers.resolve';
         this.source.push('else { ' + nextStack + ' = ');
         this.source.push(this.setupResolve(name, 0));
         this.source.push('; }');
@@ -2067,7 +2069,7 @@ Handlebars.JavaScriptCompiler = function() {};
 
     // Call resolve for the name at this depth
     setupResolve: function(name, depth) {
-      return "helpers.resolve.call(depth0, '" + name + "' ,{hash:{}, contexts:[depth" + depth + "], types:['ID'], hashTypes:{}, data:data})";
+      return "resolve.call(depth0, '" + name + "' ,{hash:{}, contexts:[depth" + depth + "], types:['ID'], hashTypes:{}, data:data})";
     }
   };
 
