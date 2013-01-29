@@ -1380,6 +1380,13 @@ Handlebars.JavaScriptCompiler = function() {};
       // Perform a second pass over the output to merge content when possible
       var source = this.mergeSource();
 
+      if (!this.isChild) {
+        source = "if (Handlebars.VERSION !== '"+Handlebars.VERSION+"') {\n"+
+                   "throw 'Template was compiled with "+Handlebars.VERSION+", but runtime is '+Handlebars.VERSION;\n"+
+                 "}\n"+
+                 source;
+      }
+
       if (asObject) {
         params.push(source);
 
