@@ -1381,10 +1381,7 @@ Handlebars.JavaScriptCompiler = function() {};
       var source = this.mergeSource();
 
       if (!this.isChild) {
-        source = "if (Handlebars.VERSION !== '"+Handlebars.VERSION+"') {\n"+
-                   "throw 'Template was compiled with "+Handlebars.VERSION+", but runtime is '+Handlebars.VERSION;\n"+
-                 "}\n"+
-                 source;
+        source = "this.compiledVersion = '"+Handlebars.VERSION+"';\n"+source;
       }
 
       if (asObject) {
@@ -2126,12 +2123,17 @@ Handlebars.VM = {
         }
       },
       programWithDepth: Handlebars.VM.programWithDepth,
-      noop: Handlebars.VM.noop
+      noop: Handlebars.VM.noop,
+      compiledVersion: null
     };
 
     return function(context, options) {
       options = options || {};
-      return templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
+      var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
+      if (container.compiledVersion !== Handlebars.VERSION) {
+        throw "Template was compiled with "+(container.compiledVersion || 'unknown version')+", but runtime is "+Handlebars.VERSION;
+      }
+      return result;
     };
   },
 
