@@ -1,34 +1,19 @@
-var Handlebars;
-if (!Handlebars) {
-  // Setup for Node package testing
-  Handlebars = require('../lib/handlebars');
+var Handlebars = require('../lib/handlebars');
 
-  var assert = require("assert"),
+var CompilerContext = Handlebars.createFrame({
+  compile: function(template, options) {
+    var templateSpec = Handlebars.precompile(template, options);
+    return Handlebars.template(eval('(' + templateSpec + ')'));
+  },
+  compileWithPartial: function(template, options) {
+    return Handlebars.compile(template, options);
+  }
+});
 
-      equal = assert.equal,
-      equals = assert.equal,
-      ok = assert.ok;
-
-  // Note that this doesn't have the same context separation as the rspec test.
-  // Both should be run for full acceptance of the two libary modes.
-  var CompilerContext = {
-    compile: function(template, options) {
-      var templateSpec = Handlebars.precompile(template, options);
-      return Handlebars.template(eval('(' + templateSpec + ')'));
-    },
-    compileWithPartial: function(template, options) {
-      return Handlebars.compile(template, options);
-    }
-  };
-} else {
-  var _equal = equal;
-  equals = equal = function(a, b, msg) {
-    // Allow exec with missing message params
-    _equal(a, b, msg || '');
-  };
-}
-
-suite("basic context");
+var assert = require("assert"),
+    equal = assert.equal,
+    equals = assert.equal,
+    ok = assert.ok;
 
 function shouldCompileTo(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
@@ -88,6 +73,8 @@ function shouldThrow(fn, exception, message) {
   ok(caught, message || null);
 }
 
+suite("basic context");
+
 test("most basic", function() {
   shouldCompileTo("{{foo}}", { foo: "foo" }, "foo");
 });
@@ -115,8 +102,8 @@ test("boolean", function() {
 test("zeros", function() {
   shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0},
       "num1: 42, num2: 0");
-	shouldCompileTo("num: {{.}}", 0, "num: 0");
-	shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
+        shouldCompileTo("num: {{.}}", 0, "num: 0");
+        shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
 });
 
 test("newlines", function() {
@@ -188,7 +175,7 @@ test('literal references', function() {
 });
 
 test("that current context path ({{.}}) doesn't hit helpers", function() {
-	shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
+        shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
 });
 
 test("complex but empty paths", function() {
@@ -321,11 +308,11 @@ test("helper block with complex lookup expression", function() {
   var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}";
   var hash = {name: "Alan"};
   var helpers = {goodbyes: function(options) {
-		var out = "";
-		var byes = ["Goodbye", "goodbye", "GOODBYE"];
-		for (var i = 0,j = byes.length; i < j; i++) {
-			out += byes[i] + " " + options.fn(this) + "! ";
-		}
+                var out = "";
+                var byes = ["Goodbye", "goodbye", "GOODBYE"];
+                for (var i = 0,j = byes.length; i < j; i++) {
+                        out += byes[i] + " " + options.fn(this) + "! ";
+                }
     return out;
   }};
   shouldCompileTo(string, [hash, helpers], "Goodbye Alan! goodbye Alan! GOODBYE Alan! ");
@@ -386,7 +373,7 @@ test("block helper should have context in this", function() {
 });
 
 test("block helper for undefined value", function() {
-	shouldCompileTo("{{#empty}}shouldn't render{{/empty}}", {}, "");
+        shouldCompileTo("{{#empty}}shouldn't render{{/empty}}", {}, "");
 });
 
 test("block helper passing a new context", function() {
@@ -464,7 +451,6 @@ test("block helper inverted sections", function() {
 });
 
 suite("helpers hash");
-
 test("providing a helpers hash", function() {
   shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: function() { return "world"; }}], "Goodbye cruel world!",
                   "helpers hash is available");
@@ -544,19 +530,18 @@ test("GH-14: a partial preceding a selector", function() {
 });
 
 test("Partials with slash paths", function() {
-	var string = "Dudes: {{> shared/dude}}";
-	var dude = "{{name}}";
-	var hash = {name:"Jeepers", another_dude:"Creepers"};
+        var string = "Dudes: {{> shared/dude}}";
+        var dude = "{{name}}";
+        var hash = {name:"Jeepers", another_dude:"Creepers"};
   shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
 test("Partials with integer path", function() {
-	var string = "Dudes: {{> 404}}";
-	var dude = "{{name}}";
-	var hash = {name:"Jeepers", another_dude:"Creepers"};
+        var string = "Dudes: {{> 404}}";
+        var dude = "{{name}}";
+        var hash = {name:"Jeepers", another_dude:"Creepers"};
   shouldCompileToWithPartials(string, [hash, {}, {404:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
-
 
 suite("String literal parameters");
 
@@ -674,30 +659,35 @@ test("Unknown helper in knownHelpers only mode should be passed as undefined", f
   var result = template({}, {helpers: {'typeof': function(arg) { return typeof arg; }, hello: function() { return "foo"; }}});
   equal(result, "undefined", "'undefined' should === '" + result);
 });
+
 test("Builtin helpers available in knownHelpers only mode", function() {
   var template = CompilerContext.compile("{{#unless foo}}bar{{/unless}}", {knownHelpersOnly: true});
 
   var result = template({});
   equal(result, "bar", "'bar' should === '" + result);
 });
+
 test("Field lookup works in knownHelpers only mode", function() {
   var template = CompilerContext.compile("{{foo}}", {knownHelpersOnly: true});
 
   var result = template({foo: 'bar'});
   equal(result, "bar", "'bar' should === '" + result);
 });
+
 test("Conditional blocks work in knownHelpers only mode", function() {
   var template = CompilerContext.compile("{{#foo}}bar{{/foo}}", {knownHelpersOnly: true});
 
   var result = template({foo: 'baz'});
   equal(result, "bar", "'bar' should === '" + result);
 });
+
 test("Invert blocks work in knownHelpers only mode", function() {
   var template = CompilerContext.compile("{{^foo}}bar{{/foo}}", {knownHelpersOnly: true});
 
   var result = template({foo: false});
   equal(result, "bar", "'bar' should === '" + result);
 });
+
 test("Functions are bound to the context in knownHelpers only mode", function() {
   var template = CompilerContext.compile("{{foo}}", {knownHelpersOnly: true});
   var result = template({foo: function() { return this.bar; }, bar: 'bar'});
@@ -717,11 +707,12 @@ test("lambdas resolved by blockHelperMissing are bound to the context", function
   shouldCompileTo(string, boundData, "");
 });
 
+
+suite("built-in helpers");
+
 var teardown;
-suite("built-in helpers", {
-  setup: function(){ teardown = null; },
-  teardown: function(){ if (teardown) { teardown(); } }
-});
+beforeEach(function() { teardown = null; });
+afterEach(function() { if (teardown) { teardown(); }});
 
 test("with", function() {
   var string = "{{#with person}}{{first}} {{last}}{{/with}}";
@@ -1313,9 +1304,9 @@ test("when inside a block in String mode, .. passes the appropriate context in t
 suite("Regressions");
 
 test("GH-94: Cannot read property of undefined", function() {
-	var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
-	var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
-	shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
+        var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
+        var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
+        shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
                   "Renders without an undefined property error");
 });
 
