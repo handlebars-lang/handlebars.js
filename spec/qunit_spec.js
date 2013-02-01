@@ -11,9 +11,17 @@ var CompilerContext = Handlebars.createFrame({
 });
 
 var assert = require("assert"),
-    equal = assert.equal,
-    equals = assert.equal,
-    ok = assert.ok;
+equal = assert.equal,
+equals = assert.equal,
+ok = assert.ok;
+
+function cloneHelpers(helpers) {
+  var copy = Handlebars.createFrame(Handlebars.helpers);
+  for (var helper in helpers) {
+    copy[helper] = helpers[helper]
+  }
+  return copy;
+}
 
 function shouldCompileTo(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
@@ -47,7 +55,7 @@ function compileWithPartials(string, hashOrArray, partials) {
 
 function shouldThrow(fn, exception, message) {
   var caught = false,
-      exType, exMessage;
+  exType, exMessage;
 
   if (exception instanceof Array) {
     exType = exception[0];
@@ -80,35 +88,28 @@ test("most basic", function() {
 });
 
 test("compiling with a basic context", function() {
-  shouldCompileTo("Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
-                  "It works if all the required keys are provided");
+  shouldCompileTo("Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!", "It works if all the required keys are provided");
 });
 
 test("comments", function() {
-  shouldCompileTo("{{! Goodbye}}Goodbye\n{{cruel}}\n{{world}}!",
-    {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
-    "comments are ignored");
+  shouldCompileTo("{{! Goodbye}}Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!", "comments are ignored");
 });
 
 test("boolean", function() {
   var string   = "{{#goodbye}}GOODBYE {{/goodbye}}cruel {{world}}!";
-  shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!",
-                  "booleans show the contents when true");
-
-  shouldCompileTo(string, {goodbye: false, world: "world"}, "cruel world!",
-                  "booleans do not show the contents when false");
+  shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!", "booleans show the contents when true");
+  shouldCompileTo(string, {goodbye: false, world: "world"}, "cruel world!", "booleans do not show the contents when false");
 });
 
 test("zeros", function() {
-  shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0},
-      "num1: 42, num2: 0");
-        shouldCompileTo("num: {{.}}", 0, "num: 0");
-        shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
+  shouldCompileTo("num1: {{num1}}, num2: {{num2}}", {num1: 42, num2: 0}, "num1: 42, num2: 0");
+  shouldCompileTo("num: {{.}}", 0, "num: 0");
+  shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
 });
 
 test("newlines", function() {
-    shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");
-    shouldCompileTo("Alan's\rTest", {}, "Alan's\rTest");
+  shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");
+  shouldCompileTo("Alan's\rTest", {}, "Alan's\rTest");
 });
 
 test("escaping text", function() {
@@ -120,30 +121,21 @@ test("escaping text", function() {
 });
 
 test("escaping expressions", function() {
- shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>',
-        "expressions with 3 handlebars aren't escaped");
-
- shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>',
-        "expressions with {{& handlebars aren't escaped");
-
- shouldCompileTo("{{awesome}}", {awesome: "&\"'`\\<>"}, '&amp;&quot;&#x27;&#x60;\\&lt;&gt;',
-        "by default expressions should be escaped");
-
- shouldCompileTo("{{awesome}}", {awesome: "Escaped, <b> looks like: &lt;b&gt;"}, 'Escaped, &lt;b&gt; looks like: &amp;lt;b&amp;gt;',
-        "escaping should properly handle amperstands");
+  shouldCompileTo("{{{awesome}}}", {awesome: "&\"\\<>"}, '&\"\\<>', "expressions with 3 handlebars aren't escaped");
+  shouldCompileTo("{{&awesome}}", {awesome: "&\"\\<>"}, '&\"\\<>', "expressions with {{& handlebars aren't escaped");
+  shouldCompileTo("{{awesome}}", {awesome: "&\"'`\\<>"}, '&amp;&quot;&#x27;&#x60;\\&lt;&gt;', "by default expressions should be escaped");
+  shouldCompileTo("{{awesome}}", {awesome: "Escaped, <b> looks like: &lt;b&gt;"}, 'Escaped, &lt;b&gt; looks like: &amp;lt;b&amp;gt;', "escaping should properly handle amperstands");
 });
 
 test("functions returning safestrings shouldn't be escaped", function() {
   var hash = {awesome: function() { return new Handlebars.SafeString("&\"\\<>"); }};
   shouldCompileTo("{{awesome}}", hash, '&\"\\<>',
-      "functions returning safestrings aren't escaped");
+                  "functions returning safestrings aren't escaped");
 });
 
 test("functions", function() {
-  shouldCompileTo("{{awesome}}", {awesome: function() { return "Awesome"; }}, "Awesome",
-                  "functions are called and render their output");
-  shouldCompileTo("{{awesome}}", {awesome: function() { return this.more; }, more:  "More awesome"}, "More awesome",
-                  "functions are bound to the context");
+  shouldCompileTo("{{awesome}}", {awesome: function() { return "Awesome"; }}, "Awesome", "functions are called and render their output");
+  shouldCompileTo("{{awesome}}", {awesome: function() { return this.more; }, more:  "More awesome"}, "More awesome", "functions are bound to the context");
 });
 
 test("paths with hyphens", function() {
@@ -153,29 +145,24 @@ test("paths with hyphens", function() {
 });
 
 test("nested paths", function() {
-  shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}},
-                  "Goodbye beautiful world!", "Nested paths access nested objects");
+  shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: "beautiful"}}, "Goodbye beautiful world!", "Nested paths access nested objects");
 });
 
 test("nested paths with empty string value", function() {
-  shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: ""}},
-                  "Goodbye  world!", "Nested paths access nested objects with empty string");
+  shouldCompileTo("Goodbye {{alan/expression}} world!", {alan: {expression: ""}}, "Goodbye  world!", "Nested paths access nested objects with empty string");
 });
 
 test("literal paths", function() {
-  shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
-      "Goodbye beautiful world!", "Literal paths can be used");
-  shouldCompileTo("Goodbye {{[foo bar]/expression}} world!", {"foo bar": {expression: "beautiful"}},
-      "Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}}, "Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[foo bar]/expression}} world!", {"foo bar": {expression: "beautiful"}}, "Goodbye beautiful world!", "Literal paths can be used");
 });
 
 test('literal references', function() {
-  shouldCompileTo("Goodbye {{[foo bar]}} world!", {"foo bar": "beautiful"},
-      "Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[foo bar]}} world!", {"foo bar": "beautiful"}, "Goodbye beautiful world!", "Literal paths can be used");
 });
 
 test("that current context path ({{.}}) doesn't hit helpers", function() {
-        shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
+  shouldCompileTo("test: {{.}}", [null, {helper: "awesome"}], "test: ");
 });
 
 test("complex but empty paths", function() {
@@ -186,8 +173,7 @@ test("complex but empty paths", function() {
 test("this keyword in paths", function() {
   var string = "{{#goodbyes}}{{this}}{{/goodbyes}}";
   var hash = {goodbyes: ["goodbye", "Goodbye", "GOODBYE"]};
-  shouldCompileTo(string, hash, "goodbyeGoodbyeGOODBYE",
-    "This keyword in paths evaluates to current context");
+  shouldCompileTo(string, hash, "goodbyeGoodbyeGOODBYE", "This keyword in paths evaluates to current context");
 
   string = "{{#hellos}}{{this/text}}{{/hellos}}";
   hash = {hellos: [{text: "hello"}, {text: "Hello"}, {text: "HELLO"}]};
@@ -197,18 +183,17 @@ test("this keyword in paths", function() {
 test("this keyword nested inside path", function() {
   var string = "{{#hellos}}{{text/this/foo}}{{/hellos}}";
   shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error, "Should throw exception");
+    CompilerContext.compile(string);
+  }, Error, "Should throw exception");
 });
 
 test("this keyword in helpers", function() {
   var helpers = {foo: function(value) {
-      return 'bar ' + value;
+    return 'bar ' + value;
   }};
   var string = "{{#goodbyes}}{{foo this}}{{/goodbyes}}";
   var hash = {goodbyes: ["goodbye", "Goodbye", "GOODBYE"]};
-  shouldCompileTo(string, [hash, helpers], "bar goodbyebar Goodbyebar GOODBYE",
-    "This keyword in paths evaluates to current context");
+  shouldCompileTo(string, [hash, helpers], "bar goodbyebar Goodbyebar GOODBYE", "This keyword in paths evaluates to current context");
 
   string = "{{#hellos}}{{foo this/text}}{{/hellos}}";
   hash = {hellos: [{text: "hello"}, {text: "Hello"}, {text: "HELLO"}]};
@@ -218,8 +203,8 @@ test("this keyword in helpers", function() {
 test("this keyword nested inside helpers param", function() {
   var string = "{{#hellos}}{{foo text/this/foo}}{{/hellos}}";
   shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error, "Should throw exception");
+    CompilerContext.compile(string);
+  }, Error, "Should throw exception");
 });
 
 suite("inverted sections");
@@ -247,11 +232,9 @@ suite("blocks");
 test("array", function() {
   var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
-  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
-                  "Arrays iterate over the contents when not empty");
+  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!", "Arrays iterate over the contents when not empty");
 
-  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
-                  "Arrays ignore the contents when empty");
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!", "Arrays ignore the contents when empty");
 
 });
 
@@ -268,31 +251,26 @@ test("array with @index", function() {
 test("empty block", function() {
   var string   = "{{#goodbyes}}{{/goodbyes}}cruel {{world}}!";
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
-  shouldCompileTo(string, hash, "cruel world!",
-                  "Arrays iterate over the contents when not empty");
+  shouldCompileTo(string, hash, "cruel world!", "Arrays iterate over the contents when not empty");
 
-  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
-                  "Arrays ignore the contents when empty");
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!", "Arrays ignore the contents when empty");
 });
 
-test("nested iteration", function() {
-
-});
+test("nested iteration");
 
 test("block with complex lookup", function() {
   var string = "{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}";
   var hash     = {name: "Alan", goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}]};
 
-  shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ",
-                  "Templates can access variables in contexts up the stack with relative path syntax");
+  shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ", "Templates can access variables in contexts up the stack with relative path syntax");
 });
 
 test("block with complex lookup using nested context", function() {
   var string = "{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}";
 
   shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error, "Should throw exception");
+    CompilerContext.compile(string);
+  }, Error, "Should throw exception");
 });
 
 test("helper with complex lookup$", function() {
@@ -308,11 +286,11 @@ test("helper block with complex lookup expression", function() {
   var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}";
   var hash = {name: "Alan"};
   var helpers = {goodbyes: function(options) {
-                var out = "";
-                var byes = ["Goodbye", "goodbye", "GOODBYE"];
-                for (var i = 0,j = byes.length; i < j; i++) {
-                        out += byes[i] + " " + options.fn(this) + "! ";
-                }
+    var out = "";
+    var byes = ["Goodbye", "goodbye", "GOODBYE"];
+    for (var i = 0,j = byes.length; i < j; i++) {
+      out += byes[i] + " " + options.fn(this) + "! ";
+    }
     return out;
   }};
   shouldCompileTo(string, [hash, helpers], "Goodbye Alan! goodbye Alan! GOODBYE Alan! ");
@@ -322,7 +300,7 @@ test("helper with complex lookup and nested template", function() {
   var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
   var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
   var helpers = {link: function (prefix, options) {
-      return "<a href='" + prefix + "/" + this.url + "'>" + options.fn(this) + "</a>";
+    return "<a href='" + prefix + "/" + this.url + "'>" + options.fn(this) + "</a>";
   }};
   shouldCompileToWithPartials(string, [hash, helpers], false, "<a href='/root/goodbye'>Goodbye</a>");
 });
@@ -331,7 +309,7 @@ test("helper with complex lookup and nested template in VM+Compiler", function()
   var string = "{{#goodbyes}}{{#link ../prefix}}{{text}}{{/link}}{{/goodbyes}}";
   var hash = {prefix: '/root', goodbyes: [{text: "Goodbye", url: "goodbye"}]};
   var helpers = {link: function (prefix, options) {
-      return "<a href='" + prefix + "/" + this.url + "'>" + options.fn(this) + "</a>";
+    return "<a href='" + prefix + "/" + this.url + "'>" + options.fn(this) + "</a>";
   }};
   shouldCompileToWithPartials(string, [hash, helpers], true, "<a href='/root/goodbye'>Goodbye</a>");
 });
@@ -373,7 +351,7 @@ test("block helper should have context in this", function() {
 });
 
 test("block helper for undefined value", function() {
-        shouldCompileTo("{{#empty}}shouldn't render{{/empty}}", {}, "");
+  shouldCompileTo("{{#empty}}shouldn't render{{/empty}}", {}, "");
 });
 
 test("block helper passing a new context", function() {
@@ -409,12 +387,12 @@ test("nested block helpers", function() {
 
 test("block inverted sections", function() {
   shouldCompileTo("{{#people}}{{name}}{{^}}{{none}}{{/people}}", {none: "No people"},
-    "No people");
+                  "No people");
 });
 
 test("block inverted sections with empty arrays", function() {
   shouldCompileTo("{{#people}}{{name}}{{^}}{{none}}{{/people}}", {none: "No people", people: []},
-    "No people");
+                  "No people");
 });
 
 test("block helper inverted sections", function() {
@@ -451,25 +429,20 @@ test("block helper inverted sections", function() {
 });
 
 suite("helpers hash");
-test("providing a helpers hash", function() {
-  shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: function() { return "world"; }}], "Goodbye cruel world!",
-                  "helpers hash is available");
 
-  shouldCompileTo("Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!", [{iter: [{cruel: "cruel"}]}, {world: function() { return "world"; }}],
-                  "Goodbye cruel world!", "helpers hash is available inside other blocks");
+test("providing a helpers hash", function() {
+  shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: function() { return "world"; }}], "Goodbye cruel world!", "helpers hash is available");
+
+  shouldCompileTo("Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!", [{iter: [{cruel: "cruel"}]}, {world: function() { return "world"; }}], "Goodbye cruel world!", "helpers hash is available inside other blocks");
 });
 
 test("in cases of conflict, helpers win", function() {
-  shouldCompileTo("{{{lookup}}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
-                  "helpers hash has precedence escaped expansion");
-  shouldCompileTo("{{lookup}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
-                  "helpers hash has precedence simple expansion");
+  shouldCompileTo("{{{lookup}}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers", "helpers hash has precedence escaped expansion");
+  shouldCompileTo("{{lookup}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers", "helpers hash has precedence simple expansion");
 });
 
 test("the helpers hash is available is nested contexts", function() {
-  shouldCompileTo("{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}",
-                [{'outer': {'inner': {'unused':[]}}},  {'helper': function() { return 'helper'; }}], "helper",
-                "helpers hash is available in nested contexts.");
+  shouldCompileTo("{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}", [{'outer': {'inner': {'unused':[]}}},  {'helper': function() { return 'helper'; }}], "helper", "helpers hash is available in nested contexts.");
 });
 
 suite("partials");
@@ -478,16 +451,14 @@ test("basic partials", function() {
   var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
   var partial = "{{name}} ({{url}}) ";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
-                  "Basic partials output based on current context.");
+  shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ", "Basic partials output based on current context.");
 });
 
 test("partials with context", function() {
   var string = "Dudes: {{>dude dudes}}";
   var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";
   var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-  shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
-                  "Partials can be passed a context");
+  shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ", "Partials can be passed a context");
 });
 
 test("partial in a partial", function() {
@@ -500,16 +471,16 @@ test("partial in a partial", function() {
 
 test("rendering undefined partial throws an exception", function() {
   shouldThrow(function() {
-      var template = CompilerContext.compile("{{> whatever}}");
-      template();
-    }, [Handlebars.Exception, 'The partial whatever could not be found'], "Should throw exception");
+    var template = CompilerContext.compile("{{> whatever}}");
+    template();
+  }, [Handlebars.Exception, 'The partial whatever could not be found'], "Should throw exception");
 });
 
 test("rendering template partial in vm mode throws an exception", function() {
   shouldThrow(function() {
-      var template = CompilerContext.compile("{{> whatever}}");
-      template();
-    }, [Handlebars.Exception, 'The partial whatever could not be found'], "Should throw exception");
+    var template = CompilerContext.compile("{{> whatever}}");
+    template();
+  }, [Handlebars.Exception, 'The partial whatever could not be found'], "Should throw exception");
 });
 
 test("rendering function partial in vm mode", function() {
@@ -523,23 +494,23 @@ test("rendering function partial in vm mode", function() {
 });
 
 test("GH-14: a partial preceding a selector", function() {
-   var string = "Dudes: {{>dude}} {{another_dude}}";
-   var dude = "{{name}}";
-   var hash = {name:"Jeepers", another_dude:"Creepers"};
-   shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+  var string = "Dudes: {{>dude}} {{another_dude}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
 test("Partials with slash paths", function() {
-        var string = "Dudes: {{> shared/dude}}";
-        var dude = "{{name}}";
-        var hash = {name:"Jeepers", another_dude:"Creepers"};
+  var string = "Dudes: {{> shared/dude}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
   shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
 test("Partials with integer path", function() {
-        var string = "Dudes: {{> 404}}";
-        var dude = "{{name}}";
-        var hash = {name:"Jeepers", another_dude:"Creepers"};
+  var string = "Dudes: {{> 404}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
   shouldCompileToWithPartials(string, [hash, {}, {404:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
@@ -556,6 +527,7 @@ test("simple literals work", function() {
   }};
   shouldCompileTo(string, [hash, helpers], "Message: Hello world 12 times: true false", "template with a simple String literal");
 });
+
 test("negative number literals work", function() {
   var string   = 'Message: {{hello -12}}';
   var hash     = {};
@@ -624,9 +596,9 @@ suite("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
   shouldThrow(function() {
-      var template = CompilerContext.compile("{{hello}} {{link_to world}}");
-      template({});
-    }, [Error, "Could not find property 'link_to'"], "Should throw exception");
+    var template = CompilerContext.compile("{{hello}} {{link_to world}}");
+    template({});
+  }, [Error, "Could not find property 'link_to'"], "Should throw exception");
 });
 
 test("if a context is not found, custom helperMissing is used", function() {
@@ -721,39 +693,27 @@ test("with", function() {
 
 test("if", function() {
   var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
-  shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!",
-                  "if with boolean argument shows the contents when true");
-  shouldCompileTo(string, {goodbye: "dummy", world: "world"}, "GOODBYE cruel world!",
-                  "if with string argument shows the contents");
-  shouldCompileTo(string, {goodbye: false, world: "world"}, "cruel world!",
-                  "if with boolean argument does not show the contents when false");
-  shouldCompileTo(string, {world: "world"}, "cruel world!",
-                  "if with undefined does not show the contents");
-  shouldCompileTo(string, {goodbye: ['foo'], world: "world"}, "GOODBYE cruel world!",
-                  "if with non-empty array shows the contents");
-  shouldCompileTo(string, {goodbye: [], world: "world"}, "cruel world!",
-                  "if with empty array does not show the contents");
+  shouldCompileTo(string, {goodbye: true, world: "world"}, "GOODBYE cruel world!", "if with boolean argument shows the contents when true");
+  shouldCompileTo(string, {goodbye: "dummy", world: "world"}, "GOODBYE cruel world!", "if with string argument shows the contents");
+  shouldCompileTo(string, {goodbye: false, world: "world"}, "cruel world!", "if with boolean argument does not show the contents when false");
+  shouldCompileTo(string, {world: "world"}, "cruel world!", "if with undefined does not show the contents");
+  shouldCompileTo(string, {goodbye: ['foo'], world: "world"}, "GOODBYE cruel world!", "if with non-empty array shows the contents");
+  shouldCompileTo(string, {goodbye: [], world: "world"}, "cruel world!", "if with empty array does not show the contents");
 });
 
 test("if with function argument", function() {
   var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
-  shouldCompileTo(string, {goodbye: function() {return true;}, world: "world"}, "GOODBYE cruel world!",
-                  "if with function shows the contents when function returns true");
-  shouldCompileTo(string, {goodbye: function() {return this.world;}, world: "world"}, "GOODBYE cruel world!",
-                  "if with function shows the contents when function returns string");
-  shouldCompileTo(string, {goodbye: function() {return false;}, world: "world"}, "cruel world!",
-                  "if with function does not show the contents when returns false");
-  shouldCompileTo(string, {goodbye: function() {return this.foo;}, world: "world"}, "cruel world!",
-                  "if with function does not show the contents when returns undefined");
+  shouldCompileTo(string, {goodbye: function() {return true;}, world: "world"}, "GOODBYE cruel world!", "if with function shows the contents when function returns true");
+  shouldCompileTo(string, {goodbye: function() {return this.world;}, world: "world"}, "GOODBYE cruel world!", "if with function shows the contents when function returns string");
+  shouldCompileTo(string, {goodbye: function() {return false;}, world: "world"}, "cruel world!", "if with function does not show the contents when returns false");
+  shouldCompileTo(string, {goodbye: function() {return this.foo;}, world: "world"}, "cruel world!", "if with function does not show the contents when returns undefined");
 });
 
 test("each", function() {
   var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!";
   var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
-  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!",
-                  "each with array argument iterates over the contents when not empty");
-  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
-                  "each with array argument ignores the contents when empty");
+  shouldCompileTo(string, hash, "goodbye! Goodbye! GOODBYE! cruel world!", "each with array argument iterates over the contents when not empty");
+  shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!", "each with array argument ignores the contents when empty");
 });
 
 test("each with an object and @key", function() {
@@ -787,16 +747,17 @@ test("data passed to helpers", function() {
   var hash = {letters: ['a', 'b', 'c']};
 
   var template = CompilerContext.compile(string);
+  var helpers = cloneHelpers({
+    detectDataInsideEach: function(options) { return options.data && options.data.exclaim; }
+  });
+
   var result = template(hash, {
+    helpers: helpers,
     data: {
       exclaim: '!'
     }
   });
   equal(result, 'a!b!c!', 'should output data');
-});
-
-Handlebars.registerHelper('detectDataInsideEach', function(options) {
-  return options.data && options.data.exclaim;
 });
 
 test("log", function() {
@@ -813,10 +774,7 @@ test("log", function() {
   equals("whee", logArg, "should call log with 'whee'");
 });
 
-test("overriding property lookup", function() {
-
-});
-
+test("overriding property lookup");
 
 test("passing in data to a compiled function that expects data - works with helpers", function() {
   var template = CompilerContext.compile("{{hello}}", {data: true});
@@ -837,21 +795,19 @@ test("data can be looked up via @foo", function() {
   equals("hello", result, "@foo retrieves template data");
 });
 
-var objectCreate = Handlebars.createFrame;
-
 test("deep @foo triggers automatic top-level data", function() {
   var template = CompilerContext.compile('{{#let world="world"}}{{#if foo}}{{#if foo}}Hello {{@world}}{{/if}}{{/if}}{{/let}}');
 
-  var helpers = objectCreate(Handlebars.helpers);
+  var helpers = cloneHelpers({
+    let: function(options) {
+      var frame = Handlebars.createFrame(options.data);
 
-  helpers.let = function(options) {
-    var frame = Handlebars.createFrame(options.data);
-
-    for (var prop in options.hash) {
-      frame[prop] = options.hash[prop];
+      for (var prop in options.hash) {
+        frame[prop] = options.hash[prop];
+      }
+      return options.fn(this, { data: frame });
     }
-    return options.fn(this, { data: frame });
-  };
+  });
 
   var result = template({ foo: true }, { helpers: helpers });
   equals("Hello world", result, "Automatic data was triggered");
@@ -1203,7 +1159,7 @@ test("when using block form, arguments to helpers can be retrieved from options 
   var helpers = {
     wycats: function(passiveVoice, noun, options) {
       return "HELP ME MY BOSS " + passiveVoice + ' ' +
-              noun + ': ' + options.fn(this);
+        noun + ': ' + options.fn(this);
     }
   };
 
@@ -1218,7 +1174,7 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   var helpers = {
     tomdale: function(desire, noun, options) {
       return "STOP ME FROM READING HACKER NEWS I " +
-              options.contexts[0][desire] + " " + noun;
+        options.contexts[0][desire] + " " + noun;
     },
 
     "with": function(context, options) {
@@ -1283,8 +1239,8 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   var helpers = {
     tomdale: function(desire, noun, options) {
       return "STOP ME FROM READING HACKER NEWS I " +
-              options.contexts[0][desire] + " " + noun + " " +
-              options.fn(this);
+        options.contexts[0][desire] + " " + noun + " " +
+        options.fn(this);
     },
 
     "with": function(context, options) {
@@ -1304,10 +1260,9 @@ test("when inside a block in String mode, .. passes the appropriate context in t
 suite("Regressions");
 
 test("GH-94: Cannot read property of undefined", function() {
-        var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
-        var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
-        shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
-                  "Renders without an undefined property error");
+  var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
+  var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
+  shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes", "Renders without an undefined property error");
 });
 
 test("GH-150: Inverted sections print when they shouldn't", function() {
