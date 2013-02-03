@@ -26,8 +26,8 @@ end
 
 task :compile => "lib/handlebars/compiler/parser.js"
 
-desc "run the spec suite"
-task :spec => [:release] do
+desc "run the rspec suite"
+task :rspec => [:release] do
   rc = system "rspec -cfs spec"
   fail "rspec spec failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
@@ -38,7 +38,10 @@ task :npm_test => [:release] do
   fail "npm test failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
 
-task :default => [:compile, :spec, :npm_test]
+desc "run both rspec and npm test suites"
+task :spec => [:rspec, :npm_test]
+
+task :default => [:compile, :spec]
 
 def remove_exports(string)
   match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
