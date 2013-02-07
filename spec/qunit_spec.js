@@ -1354,7 +1354,7 @@ test("bug reported by @fat where lambdas weren't being properly resolved", funct
 test("Passing falsy values to Handlebars.compile throws an error", function() {
   shouldThrow(function() {
     CompilerContext.compile(null);
-  }, "You must pass a string to Handlebars.compile. You passed null");
+  }, "You must pass a string or Handlebars AST to Handlebars.compile. You passed null");
 });
 
 test('GH-408: Multiple loops fail', function() {
