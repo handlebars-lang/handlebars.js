@@ -554,7 +554,7 @@ pushState:function begin(condition) {
 lexer.options = {};
 lexer.performAction = function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 
-var YYSTATE=YY_START
+var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0:
                                    if(yy_.yytext.slice(-1) !== "\\") this.begin("mu");
@@ -634,7 +634,7 @@ break;
 };
 lexer.rules = [/^(?:[^\x00]*?(?=(\{\{)))/,/^(?:[^\x00]+)/,/^(?:[^\x00]{2,}?(?=(\{\{|$)))/,/^(?:[\s\S]*?--\}\})/,/^(?:\{\{>)/,/^(?:\{\{#)/,/^(?:\{\{\/)/,/^(?:\{\{\^)/,/^(?:\{\{\s*else\b)/,/^(?:\{\{\{)/,/^(?:\{\{&)/,/^(?:\{\{!--)/,/^(?:\{\{![\s\S]*?\}\})/,/^(?:\{\{)/,/^(?:=)/,/^(?:\.(?=[} ]))/,/^(?:\.\.)/,/^(?:[\/.])/,/^(?:\s+)/,/^(?:\}\}\})/,/^(?:\}\})/,/^(?:"(\\["]|[^"])*")/,/^(?:'(\\[']|[^'])*')/,/^(?:@[a-zA-Z]+)/,/^(?:true(?=[}\s]))/,/^(?:false(?=[}\s]))/,/^(?:[0-9]+(?=[}\s]))/,/^(?:[a-zA-Z0-9_$-]+(?=[=}\s\/.]))/,/^(?:\[[^\]]*\])/,/^(?:.)/,/^(?:\s+)/,/^(?:[a-zA-Z0-9_$-/]+)/,/^(?:$)/];
 lexer.conditions = {"mu":{"rules":[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,32],"inclusive":false},"emu":{"rules":[2],"inclusive":false},"com":{"rules":[3],"inclusive":false},"par":{"rules":[30,31],"inclusive":false},"INITIAL":{"rules":[0,1,32],"inclusive":true}};
-return lexer;})()
+return lexer;})();
 parser.lexer = lexer;
 function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
@@ -642,9 +642,13 @@ return new Parser;
 // lib/handlebars/compiler/base.js
 Handlebars.Parser = handlebars;
 
-Handlebars.parse = function(string) {
+Handlebars.parse = function(input) {
+
+  // Just return if an already-compile AST was passed in.
+  if(input.constructor === Handlebars.AST.ProgramNode) { return input; }
+
   Handlebars.Parser.yy = Handlebars.AST;
-  return Handlebars.Parser.parse(string);
+  return Handlebars.Parser.parse(input);
 };
 
 Handlebars.print = function(ast) {
@@ -2063,23 +2067,23 @@ Handlebars.JavaScriptCompiler = function() {};
 
 })(Handlebars.Compiler, Handlebars.JavaScriptCompiler);
 
-Handlebars.precompile = function(string, options) {
-  if (typeof string !== 'string') {
-    throw new Handlebars.Exception("You must pass a string to Handlebars.compile. You passed " + string);
+Handlebars.precompile = function(input, options) {
+  if (!input || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
+    throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.compile. You passed " + input);
   }
 
   options = options || {};
   if (!('data' in options)) {
     options.data = true;
   }
-  var ast = Handlebars.parse(string);
+  var ast = Handlebars.parse(input);
   var environment = new Handlebars.Compiler().compile(ast, options);
   return new Handlebars.JavaScriptCompiler().compile(environment, options);
 };
 
-Handlebars.compile = function(string, options) {
-  if (typeof string !== 'string') {
-    throw new Handlebars.Exception("You must pass a string to Handlebars.compile. You passed " + string);
+Handlebars.compile = function(input, options) {
+  if (!input || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
+    throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.compile. You passed " + input);
   }
 
   options = options || {};
@@ -2088,7 +2092,7 @@ Handlebars.compile = function(string, options) {
   }
   var compiled;
   function compile() {
-    var ast = Handlebars.parse(string);
+    var ast = Handlebars.parse(input);
     var environment = new Handlebars.Compiler().compile(ast, options);
     var templateSpec = new Handlebars.JavaScriptCompiler().compile(environment, options, undefined, true);
     return Handlebars.template(templateSpec);
