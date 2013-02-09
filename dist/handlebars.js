@@ -30,6 +30,7 @@ this.Handlebars = {};
 (function(Handlebars) {
 
 Handlebars.VERSION = "1.0.rc.2";
+Handlebars.COMPILER_REVISION = 2;
 
 Handlebars.helpers  = {};
 Handlebars.partials = {};
@@ -554,7 +555,7 @@ pushState:function begin(condition) {
 lexer.options = {};
 lexer.performAction = function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 
-var YYSTATE=YY_START;
+var YYSTATE=YY_START
 switch($avoiding_name_collisions) {
 case 0:
                                    if(yy_.yytext.slice(-1) !== "\\") this.begin("mu");
@@ -634,7 +635,7 @@ break;
 };
 lexer.rules = [/^(?:[^\x00]*?(?=(\{\{)))/,/^(?:[^\x00]+)/,/^(?:[^\x00]{2,}?(?=(\{\{|$)))/,/^(?:[\s\S]*?--\}\})/,/^(?:\{\{>)/,/^(?:\{\{#)/,/^(?:\{\{\/)/,/^(?:\{\{\^)/,/^(?:\{\{\s*else\b)/,/^(?:\{\{\{)/,/^(?:\{\{&)/,/^(?:\{\{!--)/,/^(?:\{\{![\s\S]*?\}\})/,/^(?:\{\{)/,/^(?:=)/,/^(?:\.(?=[} ]))/,/^(?:\.\.)/,/^(?:[\/.])/,/^(?:\s+)/,/^(?:\}\}\})/,/^(?:\}\})/,/^(?:"(\\["]|[^"])*")/,/^(?:'(\\[']|[^'])*')/,/^(?:@[a-zA-Z]+)/,/^(?:true(?=[}\s]))/,/^(?:false(?=[}\s]))/,/^(?:[0-9]+(?=[}\s]))/,/^(?:[a-zA-Z0-9_$-]+(?=[=}\s\/.]))/,/^(?:\[[^\]]*\])/,/^(?:.)/,/^(?:\s+)/,/^(?:[a-zA-Z0-9_$-/]+)/,/^(?:$)/];
 lexer.conditions = {"mu":{"rules":[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,32],"inclusive":false},"emu":{"rules":[2],"inclusive":false},"com":{"rules":[3],"inclusive":false},"par":{"rules":[30,31],"inclusive":false},"INITIAL":{"rules":[0,1,32],"inclusive":true}};
-return lexer;})();
+return lexer;})()
 parser.lexer = lexer;
 function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
@@ -1385,7 +1386,7 @@ Handlebars.JavaScriptCompiler = function() {};
       var source = this.mergeSource();
 
       if (!this.isChild) {
-        source = "this.compiledVersion = '"+Handlebars.VERSION+"';\n"+source;
+        source = "this.compiledVersion = "+Handlebars.COMPILER_REVISION+";\n"+source;
       }
 
       if (asObject) {
@@ -2134,8 +2135,8 @@ Handlebars.VM = {
     return function(context, options) {
       options = options || {};
       var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
-      if (container.compiledVersion !== Handlebars.VERSION) {
-        throw "Template was compiled with "+(container.compiledVersion || 'unknown version')+", but runtime is "+Handlebars.VERSION;
+      if (container.compiledVersion !== Handlebars.COMPILER_REVISION) {
+        throw "Template was compiled with compiler revision "+(container.compiledVersion || 1)+", but the supported revision is "+Handlebars.COMPILER_REVISION;
       }
       return result;
     };

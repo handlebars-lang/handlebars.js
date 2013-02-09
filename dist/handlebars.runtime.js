@@ -30,6 +30,7 @@ this.Handlebars = {};
 (function(Handlebars) {
 
 Handlebars.VERSION = "1.0.rc.2";
+Handlebars.COMPILER_REVISION = 2;
 
 Handlebars.helpers  = {};
 Handlebars.partials = {};
@@ -256,8 +257,8 @@ Handlebars.VM = {
     return function(context, options) {
       options = options || {};
       var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
-      if (container.compiledVersion !== Handlebars.VERSION) {
-        throw "Template was compiled with "+(container.compiledVersion || 'unknown version')+", but runtime is "+Handlebars.VERSION;
+      if (container.compiledVersion !== Handlebars.COMPILER_REVISION) {
+        throw "Template was compiled with compiler revision "+(container.compiledVersion || 1)+", but the supported revision is "+Handlebars.COMPILER_REVISION;
       }
       return result;
     };
