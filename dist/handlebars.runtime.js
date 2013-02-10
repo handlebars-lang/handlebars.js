@@ -32,6 +32,11 @@ this.Handlebars = {};
 Handlebars.VERSION = "1.0.rc.2";
 Handlebars.COMPILER_REVISION = 2;
 
+Handlebars.REVISION_CHANGES = {
+  1: '<= 1.0.rc.2', // 1.0.rc.2 is actually rev2 but doesn't report it
+  2: '>= 1.0.rc.3'
+};
+
 Handlebars.helpers  = {};
 Handlebars.partials = {};
 
@@ -251,15 +256,30 @@ Handlebars.VM = {
       },
       programWithDepth: Handlebars.VM.programWithDepth,
       noop: Handlebars.VM.noop,
-      compiledVersion: null
+      compilerInfo: null
     };
 
     return function(context, options) {
       options = options || {};
       var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
-      if (container.compiledVersion !== Handlebars.COMPILER_REVISION) {
-        throw "Template was compiled with compiler revision "+(container.compiledVersion || 1)+", but the supported revision is "+Handlebars.COMPILER_REVISION;
+
+      var compilerInfo = container.compilerInfo || [],
+          compilerRevision = compilerInfo[0] || 1,
+          currentRevision = Handlebars.COMPILER_REVISION;
+
+      if (compilerRevision !== currentRevision) {
+        if (compilerRevision < currentRevision) {
+          var runtimeVersions = Handlebars.REVISION_CHANGES[currentRevision],
+              compilerVersions = Handlebars.REVISION_CHANGES[compilerRevision];
+          throw "Template was precompiled with an older version of Handlebars than the current runtime. "+
+                "Please update your precompiler to a newer version ("+runtimeVersions+") or downgrade your runtime to an older version ("+compilerVersions+").";
+        } else {
+          // Use the embedded version info since the runtime doesn't know about this revision yet
+          throw "Template was precompiled with a newer version of Handlebars than the current runtime. "+
+                "Please update your runtime to a newer version ("+compilerInfo[1]+").";
+        }
       }
+
       return result;
     };
   },
