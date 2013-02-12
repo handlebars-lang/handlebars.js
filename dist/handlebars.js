@@ -24,10 +24,7 @@ THE SOFTWARE.
 
 // lib/handlebars/base.js
 
-/*jshint eqnull:true*/
-this.Handlebars = {};
-
-(function(Handlebars) {
+var Handlebars = {};
 
 Handlebars.VERSION = "1.0.rc.2";
 Handlebars.COMPILER_REVISION = 2;
@@ -169,8 +166,6 @@ Handlebars.registerHelper('log', function(context, options) {
   var level = options.data && options.data.level != null ? parseInt(options.data.level, 10) : 1;
   Handlebars.log(level, context);
 });
-
-}(this.Handlebars));
 ;
 // lib/handlebars/compiler/parser.js
 /* Jison generated parser */
@@ -646,6 +641,7 @@ function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Pa
 return new Parser;
 })();;
 // lib/handlebars/compiler/base.js
+
 Handlebars.Parser = handlebars;
 
 Handlebars.parse = function(input) {
@@ -699,13 +695,13 @@ Handlebars.print = function(ast) {
     this.context      = context;
   };
 
-  var verifyMatch = function(open, close) {
-    if(open.original !== close.original) {
-      throw new Handlebars.Exception(open.original + " doesn't match " + close.original);
-    }
-  };
-
   Handlebars.AST.BlockNode = function(mustache, program, inverse, close) {
+    var verifyMatch = function(open, close) {
+      if(open.original !== close.original) {
+        throw new Handlebars.Exception(open.original + " doesn't match " + close.original);
+      }
+    };
+
     verifyMatch(mustache.id, close);
     this.type = "block";
     this.mustache = mustache;
@@ -851,7 +847,8 @@ Handlebars.SafeString.prototype.toString = function() {
       }
     }
   };
-})();;
+})();
+;
 // lib/handlebars/compiler/compiler.js
 
 /*jshint eqnull:true*/
@@ -2114,8 +2111,10 @@ Handlebars.compile = function(input, options) {
     return compiled.call(this, context, options);
   };
 };
+
 ;
 // lib/handlebars/runtime.js
+
 Handlebars.VM = {
   template: function(templateSpec) {
     // Just add water
