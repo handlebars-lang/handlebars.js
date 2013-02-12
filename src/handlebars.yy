@@ -7,8 +7,11 @@ root
   ;
 
 program
-  : statements simpleInverse statements { $$ = new yy.ProgramNode($1, $3); }
+  : simpleInverse statements { $$ = new yy.ProgramNode([], $2); }
+  | statements simpleInverse statements { $$ = new yy.ProgramNode($1, $3); }
+  | statements simpleInverse { $$ = new yy.ProgramNode($1, []); }
   | statements { $$ = new yy.ProgramNode($1); }
+  | simpleInverse { $$ = new yy.ProgramNode([], []); }
   | "" { $$ = new yy.ProgramNode([]); }
   ;
 
@@ -45,8 +48,8 @@ mustache
 
 
 partial
-  : OPEN_PARTIAL path CLOSE { $$ = new yy.PartialNode($2); }
-  | OPEN_PARTIAL path path CLOSE { $$ = new yy.PartialNode($2, $3); }
+  : OPEN_PARTIAL partialName CLOSE { $$ = new yy.PartialNode($2); }
+  | OPEN_PARTIAL partialName path CLOSE { $$ = new yy.PartialNode($2, $3); }
   ;
 
 simpleInverse
@@ -89,6 +92,10 @@ hashSegment
   | ID EQUALS INTEGER { $$ = [$1, new yy.IntegerNode($3)]; }
   | ID EQUALS BOOLEAN { $$ = [$1, new yy.BooleanNode($3)]; }
   | ID EQUALS DATA { $$ = [$1, new yy.DataNode($3)]; }
+  ;
+
+partialName
+  : PARTIAL_NAME { $$ = new yy.PartialNameNode($1); }
   ;
 
 path

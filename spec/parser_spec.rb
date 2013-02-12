@@ -114,6 +114,10 @@ describe "Parser" do
       "@#{id}"
     end
 
+    def partial_name(name)
+      "PARTIAL:#{name}"
+    end
+
     def path(*parts)
       "PATH:#{parts.join("/")}"
     end
@@ -218,11 +222,15 @@ describe "Parser" do
   end
 
   it "parses a partial" do
-    ast_for("{{> foo }}").should == root { partial id("foo") }
+    ast_for("{{> foo }}").should == root { partial partial_name("foo") }
   end
 
   it "parses a partial with context" do
-    ast_for("{{> foo bar}}").should == root { partial id("foo"), id("bar") }
+    ast_for("{{> foo bar}}").should == root { partial partial_name("foo"), id("bar") }
+  end
+
+  it "parses a partial with a complex name" do
+    ast_for("{{> shared/partial}}").should == root { partial partial_name("shared/partial") }
   end
 
   it "parses a comment" do
@@ -253,6 +261,130 @@ describe "Parser" do
     end
   end
 
+  it "parses an inverse ('else'-style) section" do
+    ast_for("{{#foo}} bar {{else}} baz {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          content " baz "
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks" do
+    ast_for("{{#foo}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with empty inverse section" do
+    ast_for("{{#foo}}{{^}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with empty inverse ('else'-style) section" do
+    ast_for("{{#foo}}{{else}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses non-empty blocks with empty inverse section" do
+    ast_for("{{#foo}} bar {{^}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses non-empty blocks with empty inverse ('else'-style) section" do
+    ast_for("{{#foo}} bar {{else}}{{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          content " bar "
+        end
+
+        inverse do
+          #  empty inverse
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with non-empty inverse section" do
+    ast_for("{{#foo}}{{^}} bar {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          content " bar "
+        end
+      end
+    end
+  end
+
+  it "parses empty blocks with non-empty inverse ('else'-style) section" do
+    ast_for("{{#foo}}{{else}} bar {{/foo}}").should == root do
+      block do
+        mustache id("foo")
+
+        program do
+          #  empty program
+        end
+
+        inverse do
+          content " bar "
+        end
+      end
+    end
+  end
+
   it "parses a standalone inverse section" do
     ast_for("{{^foo}}bar{{/foo}}").should == root do
       block do
@@ -278,5 +410,24 @@ describe "Parser" do
 
   it "knows how to report the correct line number in errors when the first character is a newline" do
     lambda { ast_for("\n\nhello\n\nmy\n\n{{foo}") }.should raise_error(V8::JSError, /Parse error on line 7/m)
+  end
+
+  context "externally compiled AST" do
+
+    it "can pass through an already-compiled AST" do
+      ast_for(@context.eval('new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]);')).should == root do
+        content "Hello"
+      end
+    end
+
+    it "can pass through an already-compiled AST via compile/precompile" do
+      @context = Handlebars::Spec::FULL_CONTEXT
+
+      code = 'Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))();'
+      @context.eval(code).should == "Hello"
+
+      code = @context.eval 'Handlebars.precompile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))'
+      @context.eval("(#{code})(this)").should == "Hello"
+    end
   end
 end

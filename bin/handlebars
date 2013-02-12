@@ -39,6 +39,12 @@ var optimist = require('optimist')
         'description': 'Minimize output',
         'alias': 'min'
       },
+      'n': {
+        'type': 'string',
+        'description': 'Template namespace',
+        'alias': 'namespace',
+        'default': 'Handlebars.templates'
+      },
       's': {
         'type': 'boolean',
         'description': 'Output template function only.',
@@ -48,6 +54,16 @@ var optimist = require('optimist')
         'type': 'string',
         'description': 'Template root. Base value that will be stripped from template names.',
         'alias': 'root'
+      },
+      'p' : {
+        'type': 'boolean',
+        'description': 'Compiling a partial template',
+        'alias': 'partial'
+      },
+      'd' : {
+        'type': 'boolean',
+        'description': 'Include data when compiling',
+        'alias': 'data'
       }
     })
 
@@ -102,7 +118,11 @@ if (!argv.simple) {
   } else {
     output.push('(function() {\n');
   }
-  output.push('  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};\n');
+  output.push('  var template = Handlebars.template, templates = ');
+  output.push(argv.namespace);
+  output.push(' = ');
+  output.push(argv.namespace);
+  output.push(' || {};\n');
 }
 function processTemplate(template, root) {
   var path = template,
@@ -123,6 +143,10 @@ function processTemplate(template, root) {
       knownHelpersOnly: argv.o
     };
 
+    if (argv.data) {
+      options.data = true;
+    }
+
     // Clean the template name
     if (!root) {
       template = basename(template);
@@ -133,6 +157,8 @@ function processTemplate(template, root) {
 
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
+    } else if (argv.partial) {
+      output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     } else {
       output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }

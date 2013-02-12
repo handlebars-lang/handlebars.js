@@ -2,10 +2,10 @@ require "rubygems"
 require "bundler/setup"
 
 def compile_parser
-  system "./node_modules/jison/lib/jison/cli-wrapper.js src/handlebars.yy src/handlebars.l"
+  system "./node_modules/.bin/jison -m js src/handlebars.yy src/handlebars.l"
   if $?.success?
     File.open("lib/handlebars/compiler/parser.js", "w") do |file|
-      file.puts File.read("handlebars.js") + ";"
+      file.puts File.read("src/parser-prefix.js") + File.read("handlebars.js") + File.read("src/parser-suffix.js")
     end
 
     sh "rm handlebars.js"
@@ -15,11 +15,11 @@ def compile_parser
 end
 
 file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
-  if File.exists?('./node_modules/jison/lib/jison/cli-wrapper.js')
+  if File.exists?('./node_modules/jison')
     compile_parser
   else
     puts "Jison is not installed. Trying `npm install jison`."
-    sh "npm install jison"
+    sh "npm install"
     compile_parser
   end
 end
@@ -32,7 +32,13 @@ task :spec => [:release] do
   fail "rspec spec failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
 
-task :default => [:compile, :spec]
+desc "run the npm test suite"
+task :npm_test => [:release] do
+  rc = system "npm test"
+  fail "npm test failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
+end
+
+task :default => [:compile, :spec, :npm_test]
 
 def remove_exports(string)
   match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
@@ -55,7 +61,7 @@ def build_for_task(task)
   FileUtils.rm_rf("dist/*") if File.directory?("dist")
   FileUtils.mkdir_p("dist")
 
-  contents = []
+  contents = ["/*\n\n" + File.read('LICENSE') + "\n*/\n"]
   task.prerequisites.each do |filename|
     next if filename == "dist"
 
@@ -86,20 +92,6 @@ directory "vendor"
 desc "benchmark against dust.js and mustache.js"
 task :bench => "vendor" do
   require "open-uri"
-  #File.open("vendor/mustache.js", "w") do |file|
-    #file.puts open("https://github.com/janl/mustache.js/raw/master/mustache.js").read
-    #file.puts "module.exports = Mustache;"
-  #end
-
-  File.open("vendor/benchmark.js", "w") do |file|
-    file.puts open("https://raw.github.com/bestiejs/benchmark.js/master/benchmark.js").read
-  end
-
-  #if File.directory?("vendor/dustjs")
-    #system "cd vendor/dustjs && git pull"
-  #else
-    #system "git clone git://github.com/akdubya/dustjs.git vendor/dustjs"
-  #end
 
   #if File.directory?("vendor/coffee")
     #system "cd vendor/coffee && git pull"

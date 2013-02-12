@@ -20,15 +20,15 @@ if (!Handlebars) {
       return Handlebars.compile(template, options);
     }
   };
+} else {
+  var _equal = equal;
+  equals = equal = function(a, b, msg) {
+    // Allow exec with missing message params
+    _equal(a, b, msg || '');
+  };
 }
 
 suite("basic context");
-
-Handlebars.registerHelper('helperMissing', function(helper, context) {
-  if(helper === "link_to") {
-    return new Handlebars.SafeString("<a>" + context + "</a>");
-  }
-});
 
 function shouldCompileTo(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
@@ -46,7 +46,7 @@ function compileWithPartials(string, hashOrArray, partials) {
 
     if(helpers) {
       for(var prop in Handlebars.helpers) {
-        helpers[prop] = Handlebars.helpers[prop];
+        helpers[prop] = helpers[prop] || Handlebars.helpers[prop];
       }
     }
 
@@ -176,20 +176,15 @@ test("nested paths with empty string value", function() {
 });
 
 test("literal paths", function() {
-	shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
-			"Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[@alan]/expression}} world!", {"@alan": {expression: "beautiful"}},
+      "Goodbye beautiful world!", "Literal paths can be used");
+  shouldCompileTo("Goodbye {{[foo bar]/expression}} world!", {"foo bar": {expression: "beautiful"}},
+      "Goodbye beautiful world!", "Literal paths can be used");
 });
 
-test("--- TODO --- bad idea nested paths", function() {
-  return;
-	var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
-  shouldThrow(function() {
-      CompilerContext.compile("{{#goodbyes}}{{../name/../name}}{{/goodbyes}}")(hash);
-    }, Handlebars.Exception,
-    "Cannot jump (..) into previous context after moving into a context.");
-
-  var string = "{{#goodbyes}}{{.././world}} {{/goodbyes}}";
-  shouldCompileTo(string, hash, "world world world ", "Same context (.) is ignored in paths");
+test('literal references', function() {
+  shouldCompileTo("Goodbye {{[foo bar]}} world!", {"foo bar": "beautiful"},
+      "Goodbye beautiful world!", "Literal paths can be used");
 });
 
 test("that current context path ({{.}}) doesn't hit helpers", function() {
@@ -212,8 +207,15 @@ test("this keyword in paths", function() {
   shouldCompileTo(string, hash, "helloHelloHELLO", "This keyword evaluates in more complex paths");
 });
 
+test("this keyword nested inside path", function() {
+  var string = "{{#hellos}}{{text/this/foo}}{{/hellos}}";
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
+});
+
 test("this keyword in helpers", function() {
-  var helpers = {foo: function(value, options) {
+  var helpers = {foo: function(value) {
       return 'bar ' + value;
   }};
   var string = "{{#goodbyes}}{{foo this}}{{/goodbyes}}";
@@ -224,6 +226,13 @@ test("this keyword in helpers", function() {
   string = "{{#hellos}}{{foo this/text}}{{/hellos}}";
   hash = {hellos: [{text: "hello"}, {text: "Hello"}, {text: "HELLO"}]};
   shouldCompileTo(string, [hash, helpers], "bar hellobar Hellobar HELLO", "This keyword evaluates in more complex paths");
+});
+
+test("this keyword nested inside helpers param", function() {
+  var string = "{{#hellos}}{{foo text/this/foo}}{{/hellos}}";
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
 });
 
 suite("inverted sections");
@@ -289,6 +298,14 @@ test("block with complex lookup", function() {
 
   shouldCompileTo(string, hash, "goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ",
                   "Templates can access variables in contexts up the stack with relative path syntax");
+});
+
+test("block with complex lookup using nested context", function() {
+  var string = "{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}";
+
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
 });
 
 test("helper with complex lookup$", function() {
@@ -456,12 +473,17 @@ test("providing a helpers hash", function() {
                   "Goodbye cruel world!", "helpers hash is available inside other blocks");
 });
 
-test("in cases of conflict, the explicit hash wins", function() {
-
+test("in cases of conflict, helpers win", function() {
+  shouldCompileTo("{{{lookup}}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
+                  "helpers hash has precedence escaped expansion");
+  shouldCompileTo("{{lookup}}", [{lookup: 'Explicit'}, {lookup: function() { return 'helpers'; }}], "helpers",
+                  "helpers hash has precedence simple expansion");
 });
 
 test("the helpers hash is available is nested contexts", function() {
-
+  shouldCompileTo("{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}",
+                [{'outer': {'inner': {'unused':[]}}},  {'helper': function() { return 'helper'; }}], "helper",
+                "helpers hash is available in nested contexts.");
 });
 
 suite("partials");
@@ -521,12 +543,20 @@ test("GH-14: a partial preceding a selector", function() {
    shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
 });
 
-test("Partials with literal paths", function() {
-	var string = "Dudes: {{> [dude]}}";
+test("Partials with slash paths", function() {
+	var string = "Dudes: {{> shared/dude}}";
 	var dude = "{{name}}";
 	var hash = {name:"Jeepers", another_dude:"Creepers"};
-  shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+  shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
+
+test("Partials with integer path", function() {
+	var string = "Dudes: {{> 404}}";
+	var dude = "{{name}}";
+	var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {404:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
 
 suite("String literal parameters");
 
@@ -592,10 +622,25 @@ test("constructing a safestring from a string and checking its type", function()
 suite("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
+  shouldThrow(function() {
+      var template = CompilerContext.compile("{{hello}} {{link_to world}}");
+      template({});
+    }, [Error, "Could not find property 'link_to'"], "Should throw exception");
+});
+
+test("if a context is not found, custom helperMissing is used", function() {
   var string = "{{hello}} {{link_to world}}";
   var context = { hello: "Hello", world: "world" };
 
-  shouldCompileTo(string, context, "Hello <a>world</a>");
+  var helpers = {
+    helperMissing: function(helper, context) {
+      if(helper === "link_to") {
+        return new Handlebars.SafeString("<a>" + context + "</a>");
+      }
+    }
+  };
+
+  shouldCompileTo(string, [context, helpers], "Hello <a>world</a>");
 });
 
 suite("knownHelpers");
@@ -730,16 +775,34 @@ test("each with @index", function() {
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
 });
 
+test("data passed to helpers", function() {
+  var string = "{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}";
+  var hash = {letters: ['a', 'b', 'c']};
+
+  var template = CompilerContext.compile(string);
+  var result = template(hash, {
+    data: {
+      exclaim: '!'
+    }
+  });
+  equal(result, 'a!b!c!', 'should output data');
+});
+
+Handlebars.registerHelper('detectDataInsideEach', function(options) {
+  return options.data && options.data.exclaim;
+});
+
 test("log", function() {
   var string = "{{log blah}}";
   var hash   = { blah: "whee" };
 
-  var logArg;
+  var levelArg, logArg;
   var originalLog = Handlebars.log;
-  Handlebars.log = function(arg){ logArg = arg; };
+  Handlebars.log = function(level, arg){ levelArg = level, logArg = arg; };
   teardown = function(){ Handlebars.log = originalLog; };
 
   shouldCompileTo(string, hash, "", "log should not display");
+  equals(1, levelArg, "should call log with 1");
   equals("whee", logArg, "should call log with 'whee'");
 });
 
@@ -1117,7 +1180,7 @@ test("arguments to helpers can be retrieved from options hash in string form", f
   var template = CompilerContext.compile('{{wycats is.a slave.driver}}', {stringParams: true});
 
   var helpers = {
-    wycats: function(passiveVoice, noun, options) {
+    wycats: function(passiveVoice, noun) {
       return "HELP ME MY BOSS " + passiveVoice + ' ' + noun;
     }
   };
@@ -1163,6 +1226,48 @@ test("when inside a block in String mode, .. passes the appropriate context in t
   }, {helpers: helpers});
 
   equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke", "Proper context variable output");
+});
+
+test("in string mode, information about the types is passed along", function() {
+  var template = CompilerContext.compile('{{tomdale "need" dad.joke true false}}', { stringParams: true });
+
+  var helpers = {
+    tomdale: function(desire, noun, trueBool, falseBool, options) {
+      equal(options.types[0], 'STRING', "the string type is passed");
+      equal(options.types[1], 'ID', "the expression type is passed");
+      equal(options.types[2], 'BOOLEAN', "the expression type is passed");
+      equal(desire, "need", "the string form is passed for strings");
+      equal(noun, "dad.joke", "the string form is passed for expressions");
+      equal(trueBool, true, "raw booleans are passed through");
+      equal(falseBool, false, "raw booleans are passed through");
+      return "Helper called";
+    }
+  };
+
+  var result = template({}, { helpers: helpers });
+  equal(result, "Helper called");
+});
+
+test("in string mode, hash parameters get type information", function() {
+  var template = CompilerContext.compile('{{tomdale he.says desire="need" noun=dad.joke bool=true}}', { stringParams: true });
+
+  var helpers = {
+    tomdale: function(exclamation, options) {
+      equal(exclamation, "he.says");
+      equal(options.types[0], "ID");
+
+      equal(options.hashTypes.desire, "STRING");
+      equal(options.hashTypes.noun, "ID");
+      equal(options.hashTypes.bool, "BOOLEAN");
+      equal(options.hash.desire, "need");
+      equal(options.hash.noun, "dad.joke");
+      equal(options.hash.bool, true);
+      return "Helper called";
+    }
+  };
+
+  var result = template({}, { helpers: helpers });
+  equal(result, "Helper called");
 });
 
 test("when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper", function() {
@@ -1244,4 +1349,22 @@ test("bug reported by @fat where lambdas weren't being properly resolved", funct
 
   var output = "<strong>This is a slightly more complicated blah.</strong>.\n\nCheck this out:\n\n<ul>\n\n<li class=one>@fat</li>\n\n<li class=two>@dhg</li>\n\n<li class=three>@sayrer</li>\n</ul>.\n\n";
   shouldCompileTo(string, data, output);
+});
+
+test("Passing falsy values to Handlebars.compile throws an error", function() {
+  shouldThrow(function() {
+    CompilerContext.compile(null);
+  }, "You must pass a string or Handlebars AST to Handlebars.compile. You passed null");
+});
+
+test('GH-408: Multiple loops fail', function() {
+  var context = [
+    { name: "John Doe", location: { city: "Chicago" } },
+    { name: "Jane Doe", location: { city: "New York"} }
+  ];
+
+  var template = CompilerContext.compile('{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}');
+
+  var result = template(context);
+  equals(result, "John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe", 'It should output multiple times');
 });
