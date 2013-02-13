@@ -4,8 +4,19 @@
 %%
 
 [^\x00]*?/("{{")                 {
-                                   if(yytext.slice(-1) !== "\\") this.begin("mu");
-                                   if(yytext.slice(-1) === "\\") yytext = yytext.substr(0,yyleng-1), this.begin("emu");
+																	 var lastIndex = yyleng-1,
+																	     index = lastIndex, 
+																	 		 slashCount = 0;
+																	 while(yytext.charAt(index) == "\\") {
+																	   index --; 
+																	 } 		 	
+																	 slashCount = lastIndex - index;
+                                   if(slashCount%2) {
+                                   		yytext = yytext.substr(0,yyleng-1);
+                                   		this.begin("emu");
+                                   } else {
+                                   		this.begin("mu");
+                                   }
                                    if(yytext) return 'CONTENT';
                                  }
 
