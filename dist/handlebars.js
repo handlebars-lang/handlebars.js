@@ -897,6 +897,17 @@ Compiler.prototype = {
         }
       }
     }
+
+    len = this.children.length;
+    if (other.children.length !== len) {
+      return false;
+    }
+    for (i = 0; i < len; i++) {
+      if (!this.children[i].equals(other.children[i])) {
+        return false;
+      }
+    }
+
     return true;
   },
 

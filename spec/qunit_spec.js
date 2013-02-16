@@ -1384,3 +1384,16 @@ test('GH-408: Multiple loops fail', function() {
   var result = template(context);
   equals(result, "John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe", 'It should output multiple times');
 });
+
+test('GS-428: Nested if else rendering', function() {
+  var succeedingTemplate = '{{#inverse}} {{#blk}} Unexpected {{/blk}} {{else}}  {{#blk}} Expected {{/blk}} {{/inverse}}';
+  var failingTemplate = '{{#inverse}} {{#blk}} Unexpected {{/blk}} {{else}} {{#blk}} Expected {{/blk}} {{/inverse}}';
+
+  var helpers = {
+    blk: function(block) { return block.fn(''); },
+    inverse: function(block) { return block.inverse(''); }
+  };
+
+  shouldCompileTo(succeedingTemplate, [{}, helpers], '   Expected  ');
+  shouldCompileTo(failingTemplate, [{}, helpers], '  Expected  ');
+});
