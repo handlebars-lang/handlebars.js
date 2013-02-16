@@ -152,11 +152,7 @@ Handlebars.registerHelper('if', function(context, options) {
 });
 
 Handlebars.registerHelper('unless', function(context, options) {
-  var fn = options.fn, inverse = options.inverse;
-  options.fn = inverse;
-  options.inverse = fn;
-
-  return Handlebars.helpers['if'].call(this, context, options);
+  return Handlebars.helpers['if'].call(this, context, {fn: options.inverse, inverse: options.fn});
 });
 
 Handlebars.registerHelper('with', function(context, options) {
