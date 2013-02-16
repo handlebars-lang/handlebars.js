@@ -26,6 +26,8 @@ THE SOFTWARE.
 
 var Handlebars = {};
 
+(function(Handlebars) {
+
 Handlebars.VERSION = "1.0.0-rc.3";
 Handlebars.COMPILER_REVISION = 2;
 
@@ -59,8 +61,6 @@ var toString = Object.prototype.toString, functionType = "[object Function]";
 Handlebars.registerHelper('blockHelperMissing', function(context, options) {
   var inverse = options.inverse || function() {}, fn = options.fn;
 
-
-  var ret = "";
   var type = toString.call(context);
 
   if(type === functionType) { context = context.call(this); }
@@ -166,6 +166,8 @@ Handlebars.registerHelper('log', function(context, options) {
   var level = options.data && options.data.level != null ? parseInt(options.data.level, 10) : 1;
   Handlebars.log(level, context);
 });
+
+}(Handlebars));
 ;
 // lib/handlebars/compiler/parser.js
 /* Jison generated parser */

@@ -24,8 +24,7 @@ THE SOFTWARE.
 
 // lib/handlebars/base.js
 
-/*jshint eqnull:true*/
-this.Handlebars = {};
+var Handlebars = {};
 
 (function(Handlebars) {
 
@@ -62,8 +61,6 @@ var toString = Object.prototype.toString, functionType = "[object Function]";
 Handlebars.registerHelper('blockHelperMissing', function(context, options) {
   var inverse = options.inverse || function() {}, fn = options.fn;
 
-
-  var ret = "";
   var type = toString.call(context);
 
   if(type === functionType) { context = context.call(this); }
@@ -170,7 +167,7 @@ Handlebars.registerHelper('log', function(context, options) {
   Handlebars.log(level, context);
 });
 
-}(this.Handlebars));
+}(Handlebars));
 ;
 // lib/handlebars/utils.js
 
@@ -234,8 +231,10 @@ Handlebars.SafeString.prototype.toString = function() {
       }
     }
   };
-})();;
+})();
+;
 // lib/handlebars/runtime.js
+
 Handlebars.VM = {
   template: function(templateSpec) {
     // Just add water
