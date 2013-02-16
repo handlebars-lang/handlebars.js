@@ -1,7 +1,7 @@
 {
   "name": "handlebars",
   "description": "Extension of the Mustache logicless template language",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "homepage": "http://www.handlebarsjs.com/",
   "keywords": [
     "handlebars mustache template html"
