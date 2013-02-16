@@ -629,6 +629,12 @@ test("constructing a safestring from a string and checking its type", function()
   equal(safe, "testing 1, 2, 3", "SafeString is equivalent to its underlying string");
 });
 
+test("it should not escape SafeString properties", function() {
+  var name = new Handlebars.SafeString("<em>Sean O&#x27;Malley</em>");
+
+  shouldCompileTo('{{name}}', [{ name: name }], "<em>Sean O&#x27;Malley</em>");
+});
+
 suite("helperMissing");
 
 test("if a context is not found, helperMissing is used", function() {
