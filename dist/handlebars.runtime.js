@@ -22,11 +22,12 @@ THE SOFTWARE.
 
 */
 
-// lib/handlebars/base.js
-
+// lib/handlebars/browser-prefix.js
 var Handlebars = {};
 
-(function(Handlebars) {
+(function(Handlebars, undefined) {
+;
+// lib/handlebars/base.js
 
 Handlebars.VERSION = "1.0.0-rc.3";
 Handlebars.COMPILER_REVISION = 2;
@@ -166,8 +167,6 @@ Handlebars.registerHelper('log', function(context, options) {
   var level = options.data && options.data.level != null ? parseInt(options.data.level, 10) : 1;
   Handlebars.log(level, context);
 });
-
-}(Handlebars));
 ;
 // lib/handlebars/utils.js
 
@@ -191,47 +190,45 @@ Handlebars.SafeString.prototype.toString = function() {
   return this.string.toString();
 };
 
-(function() {
-  var escape = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "`": "&#x60;"
-  };
+var escape = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#x27;",
+  "`": "&#x60;"
+};
 
-  var badChars = /[&<>"'`]/g;
-  var possible = /[&<>"'`]/;
+var badChars = /[&<>"'`]/g;
+var possible = /[&<>"'`]/;
 
-  var escapeChar = function(chr) {
-    return escape[chr] || "&amp;";
-  };
+var escapeChar = function(chr) {
+  return escape[chr] || "&amp;";
+};
 
-  Handlebars.Utils = {
-    escapeExpression: function(string) {
-      // don't escape SafeStrings, since they're already safe
-      if (string instanceof Handlebars.SafeString) {
-        return string.toString();
-      } else if (string == null || string === false) {
-        return "";
-      }
-
-      if(!possible.test(string)) { return string; }
-      return string.replace(badChars, escapeChar);
-    },
-
-    isEmpty: function(value) {
-      if (!value && value !== 0) {
-        return true;
-      } else if(Object.prototype.toString.call(value) === "[object Array]" && value.length === 0) {
-        return true;
-      } else {
-        return false;
-      }
+Handlebars.Utils = {
+  escapeExpression: function(string) {
+    // don't escape SafeStrings, since they're already safe
+    if (string instanceof Handlebars.SafeString) {
+      return string.toString();
+    } else if (string == null || string === false) {
+      return "";
     }
-  };
-})();
+
+    if(!possible.test(string)) { return string; }
+    return string.replace(badChars, escapeChar);
+  },
+
+  isEmpty: function(value) {
+    if (!value && value !== 0) {
+      return true;
+    } else if(toString.call(value) === "[object Array]" && value.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
 ;
 // lib/handlebars/runtime.js
 
@@ -317,4 +314,7 @@ Handlebars.VM = {
 };
 
 Handlebars.template = Handlebars.VM.template;
+;
+// lib/handlebars/browser-suffix.js
+})(Handlebars);
 ;
