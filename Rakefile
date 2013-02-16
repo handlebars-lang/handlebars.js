@@ -45,11 +45,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler/compiler runtime).map do |file|
+minimal_deps = %w(browser-prefix base compiler/parser compiler/base compiler/ast utils compiler/compiler runtime browser-suffix).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-runtime_deps = %w(base utils runtime).map do |file|
+runtime_deps = %w(browser-prefix base utils runtime browser-suffix).map do |file|
   "lib/handlebars/#{file}.js"
 end
 

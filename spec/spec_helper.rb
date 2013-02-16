@@ -76,9 +76,7 @@ module Handlebars
     CONTEXT.instance_eval do |context|
       Handlebars::Spec.load_helpers(context);
 
-      Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/runtime.js');
+      Handlebars::Spec.js_load(context, 'dist/handlebars.js');
 
       context["CompilerContext"] = {}
       CompilerContext = context["CompilerContext"]
@@ -93,18 +91,20 @@ module Handlebars
       end
     end
 
+    PARSER_CONTEXT = V8::Context.new
+    PARSER_CONTEXT.instance_eval do |context|
+      Handlebars::Spec.load_helpers(context);
+
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/parser.js');
+    end
+
     COMPILE_CONTEXT = V8::Context.new
     COMPILE_CONTEXT.instance_eval do |context|
       Handlebars::Spec.load_helpers(context);
 
-      Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/parser.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/base.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/ast.js');
+      Handlebars::Spec.js_load(context, 'dist/handlebars.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/visitor.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/printer.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/compiler.js');
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
@@ -121,15 +121,7 @@ module Handlebars
     FULL_CONTEXT.instance_eval do |context|
       Handlebars::Spec.load_helpers(context);
 
-      Handlebars::Spec.js_load(context, 'lib/handlebars/base.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/utils.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/parser.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/base.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/ast.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/visitor.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/printer.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/compiler.js');
-      Handlebars::Spec.js_load(context, 'lib/handlebars/runtime.js');
+      Handlebars::Spec.js_load(context, 'dist/handlebars.js');
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 
