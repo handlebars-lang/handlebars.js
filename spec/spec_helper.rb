@@ -93,6 +93,13 @@ module Handlebars
       end
     end
 
+    PARSER_CONTEXT = V8::Context.new
+    PARSER_CONTEXT.instance_eval do |context|
+      Handlebars::Spec.load_helpers(context);
+
+      Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/parser.js');
+    end
+
     COMPILE_CONTEXT = V8::Context.new
     COMPILE_CONTEXT.instance_eval do |context|
       Handlebars::Spec.load_helpers(context);
