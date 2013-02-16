@@ -571,6 +571,16 @@ test("simple literals work", function() {
   }};
   shouldCompileTo(string, [hash, helpers], "Message: Hello world 12 times: true false", "template with a simple String literal");
 });
+test("negative number literals work", function() {
+  var string   = 'Message: {{hello -12}}';
+  var hash     = {};
+  var helpers  = {hello: function(times) {
+    if(typeof times !== 'number') { times = "NaN"; }
+    return "Hello " + times + " times";
+  }};
+  shouldCompileTo(string, [hash, helpers], "Message: Hello -12 times", "template with a negative integer literal");
+});
+
 
 test("using a quote in the middle of a parameter raises an error", function() {
   shouldThrow(function() {

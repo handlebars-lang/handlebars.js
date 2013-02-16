@@ -42,7 +42,7 @@
 <mu>"@"[a-zA-Z]+                 { yytext = yytext.substr(1); return 'DATA'; }
 <mu>"true"/[}\s]                 { return 'BOOLEAN'; }
 <mu>"false"/[}\s]                { return 'BOOLEAN'; }
-<mu>[0-9]+/[}\s]                 { return 'INTEGER'; }
+<mu>\-?[0-9]+/[}\s]              { return 'INTEGER'; }
 <mu>[a-zA-Z0-9_$-]+/[=}\s\/.]    { return 'ID'; }
 <mu>'['[^\]]*']'                 { yytext = yytext.substr(1, yyleng-2); return 'ID'; }
 <mu>.                            { return 'INVALID'; }

@@ -235,6 +235,10 @@ describe "Tokenizer" do
     result = tokenize(%|{{ foo 1 }}|)
     result.should match_tokens(%w(OPEN ID INTEGER CLOSE))
     result[2].should be_token("INTEGER", "1")
+
+    result = tokenize(%|{{ foo -1 }}|)
+    result.should match_tokens(%w(OPEN ID INTEGER CLOSE))
+    result[2].should be_token("INTEGER", "-1")
   end
 
   it "tokenizes booleans" do
