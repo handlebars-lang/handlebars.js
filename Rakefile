@@ -81,8 +81,14 @@ file "dist/handlebars.runtime.js" => runtime_deps do |task|
   build_for_task(task)
 end
 
-task :build => [:compile, "dist/handlebars.js"]
-task :runtime => [:compile, "dist/handlebars.runtime.js"]
+task :build => [:compile] do |task|
+  # Since the tests are dependent on this always rebuild.
+  Rake::Task["dist/handlebars.js"].execute
+end
+task :runtime => [:compile] do |task|
+  # Since the tests are dependent on this always rebuild.
+  Rake::Task["dist/handlebars.runtime.js"].execute
+end
 
 desc "build the build and runtime version of handlebars"
 task :release => [:build, :runtime]
