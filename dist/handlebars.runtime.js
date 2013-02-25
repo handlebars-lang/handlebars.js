@@ -125,7 +125,10 @@ Handlebars.registerHelper('each', function(context, options) {
     } else {
       for(var key in context) {
         if(context.hasOwnProperty(key)) {
-          if(data) { data.key = key; }
+          if(data) {
+            data.key = key;
+            data.index = i;
+          }
           ret = ret + fn(context[key], {data: data});
           i++;
         }

@@ -791,6 +791,16 @@ test("each with @index", function() {
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
 });
 
+test("each object with @index", function() {
+  var string = "{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!";
+  var hash   = {goodbyes: {one: {text: "goodbye"}, two: {text: "Goodbye"}, three: {text: "GOODBYE"}}, world: "world"};
+
+  var template = CompilerContext.compile(string);
+  var result = template(hash);
+
+  equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
+});
+
 test("data passed to helpers", function() {
   var string = "{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}";
   var hash = {letters: ['a', 'b', 'c']};
