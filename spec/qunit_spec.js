@@ -1286,6 +1286,32 @@ test("in string mode, hash parameters get type information", function() {
   equal(result, "Helper called");
 });
 
+test("in string mode, hash parameters get context information", function() {
+  var template = CompilerContext.compile('{{#with dale}}{{tomdale he.says desire="need" noun=../dad/joke bool=true}}{{/with}}', { stringParams: true });
+
+  var context = {dale: {}};
+
+  var helpers = {
+    tomdale: function(exclamation, options) {
+      equal(exclamation, "he.says");
+      equal(options.types[0], "ID");
+
+      equal(options.contexts.length, 1);
+      equal(options.hashContexts.noun, context);
+      equal(options.hash.desire, "need");
+      equal(options.hash.noun, "dad.joke");
+      equal(options.hash.bool, true);
+      return "Helper called";
+    },
+    "with": function(context, options) {
+      return options.fn(options.contexts[0][context]);
+    }
+  };
+
+  var result = template(context, { helpers: helpers });
+  equal(result, "Helper called");
+});
+
 test("when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper", function() {
   var template = CompilerContext.compile('{{#with dale}}{{#tomdale ../need dad.joke}}wot{{/tomdale}}{{/with}}', {stringParams: true});
 
