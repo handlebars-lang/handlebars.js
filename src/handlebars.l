@@ -31,7 +31,7 @@
 <mu>"{{"                         { return 'OPEN'; }
 
 <mu>"="                          { return 'EQUALS'; }
-<mu>"."/[} ]                     { return 'ID'; }
+<mu>"."/[}/ ]                    { return 'ID'; }
 <mu>".."                         { return 'ID'; }
 <mu>[\/.]                        { return 'SEP'; }
 <mu>\s+                          { /*ignore whitespace*/ }
