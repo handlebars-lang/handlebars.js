@@ -47,7 +47,7 @@
 <mu>'['[^\]]*']'                 { yytext = yytext.substr(1, yyleng-2); return 'ID'; }
 <mu>.                            { return 'INVALID'; }
 <par>\s+                         { /*ignore whitespace*/ }
-<par>[a-zA-Z0-9_$-/]+            { this.popState(); return 'PARTIAL_NAME'; }
+<par>[a-zA-Z0-9_$-\/]+           { this.popState(); return 'PARTIAL_NAME'; }
 
 <INITIAL,mu><<EOF>>              { return 'EOF'; }
 
