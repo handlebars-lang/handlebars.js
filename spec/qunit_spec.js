@@ -92,6 +92,12 @@ test("most basic", function() {
   shouldCompileTo("{{foo}}", { foo: "foo" }, "foo");
 });
 
+test("escaping", function() {
+  shouldCompileTo("\\{{foo}}", { foo: "food" }, "{{foo}}");
+  shouldCompileTo("\\\\{{foo}}", { foo: "food" }, "\\food");
+  shouldCompileTo("\\\\ {{foo}}", { foo: "food" }, "\\\\ food");
+});
+
 test("compiling with a basic context", function() {
   shouldCompileTo("Goodbye\n{{cruel}}\n{{world}}!", {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",
                   "It works if all the required keys are provided");

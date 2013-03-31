@@ -3,6 +3,7 @@
 
 %%
 
+"\\\\"/("{{")                    { yytext = "\\"; return 'CONTENT'; }
 [^\x00]*?/("{{")                 {
                                    if(yytext.slice(-1) !== "\\") this.begin("mu");
                                    if(yytext.slice(-1) === "\\") yytext = yytext.substr(0,yyleng-1), this.begin("emu");
