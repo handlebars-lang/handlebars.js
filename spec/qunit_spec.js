@@ -1404,6 +1404,10 @@ test('GS-428: Nested if else rendering', function() {
   shouldCompileTo(failingTemplate, [{}, helpers], '  Expected  ');
 });
 
+test('GH-458: Scoped this identifier', function() {
+  shouldCompileTo('{{./foo}}', {foo: 'bar'}, 'bar');
+});
+
 suite('Utils');
 
 test('escapeExpression', function() {
