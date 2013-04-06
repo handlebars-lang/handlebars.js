@@ -1406,6 +1406,19 @@ test('GS-428: Nested if else rendering', function() {
 
 suite('Utils');
 
+test('escapeExpression', function() {
+  equal(Handlebars.Utils.escapeExpression('foo<&"\'>'), 'foo&lt;&amp;&quot;&#x27;&gt;');
+  equal(Handlebars.Utils.escapeExpression(new Handlebars.SafeString('foo<&"\'>')), 'foo<&"\'>');
+  equal(Handlebars.Utils.escapeExpression(''), '');
+  equal(Handlebars.Utils.escapeExpression(undefined), '');
+  equal(Handlebars.Utils.escapeExpression(null), '');
+  equal(Handlebars.Utils.escapeExpression(false), '');
+
+  equal(Handlebars.Utils.escapeExpression(0), '0');
+  equal(Handlebars.Utils.escapeExpression({}), {}.toString());
+  equal(Handlebars.Utils.escapeExpression([]), [].toString());
+});
+
 test('isEmpty', function() {
   equal(Handlebars.Utils.isEmpty(undefined), true);
   equal(Handlebars.Utils.isEmpty(null), true);
