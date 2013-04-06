@@ -1408,6 +1408,10 @@ test('GH-458: Scoped this identifier', function() {
   shouldCompileTo('{{./foo}}', {foo: 'bar'}, 'bar');
 });
 
+test('GH-375: Unicode line terminators', function() {
+  shouldCompileTo('\u2028', {}, '\u2028');
+});
+
 suite('Utils');
 
 test('escapeExpression', function() {
