@@ -160,6 +160,7 @@ function processTemplate(template, root) {
     } else if (argv.partial) {
       output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     } else {
+      if(argv._.length === 1){ output.push('return '); }
       output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }
   }
