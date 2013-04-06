@@ -1263,30 +1263,33 @@ JavaScriptCompiler.prototype = {
     }
   },
 
-  appendToBuffer: function(string) {
-    if (this.environment.isSimple) {
+  appendToBuffer: function(string, single) {
+  	if (this.environment.isSimple) {
       return "return " + string + ";";
     } else {
       return {
         appendToBuffer: true,
+        singleToBuffer: single,
         content: string,
-        toString: function() { return "buffer += " + string + ";"; }
+        toString: this.async ? function() { return "buffer.push(" + string + ");" } : function () { return "buffer += " + string + ";"; }
       };
     }
   },
 
   initializeBuffer: function() {
-    return this.quotedString("");
+    return this.async ? "[]" : '""';
   },
 
   namespace: "Handlebars",
   // END PUBLIC API
 
-  compile: function(environment, options, context, asObject) {
+  compile: function(environment, options, context, asObject, async) {
     this.environment = environment;
     this.options = options || {};
 
     Handlebars.log(Handlebars.logger.DEBUG, this.environment.disassemble() + "\n\n");
+
+    this.async = !!async;
 
     this.name = this.environment.name;
     this.isChild = !!context;
@@ -1322,6 +1325,12 @@ JavaScriptCompiler.prototype = {
 
     return this.createFunctionContext(asObject);
   },
+  
+  async: false,
+  
+  asyncParam: function () {
+	  return this.async ? ", createCallback" : "";
+  },
 
   nextOpcode: function() {
     var opcodes = this.environment.opcodes;
@@ -1346,7 +1355,7 @@ JavaScriptCompiler.prototype = {
     }
 
     if (!this.environment.isSimple) {
-      out.push(", buffer = " + this.initializeBuffer());
+      out.push(", buffer = " + this.initializeBuffer() + (this.async ? ", async = this.async(buffer), createCallback = async.createCallback" : ""));
     } else {
       out.push("");
     }
@@ -1381,10 +1390,10 @@ JavaScriptCompiler.prototype = {
     }
 
     if (!this.environment.isSimple) {
-      this.source.push("return buffer;");
+      this.source.push(this.async ? "return callback ? async.done(callback) : buffer.join('');" : "return buffer;");
     }
 
-    var params = this.isChild ? ["depth0", "data"] : ["Handlebars", "depth0", "helpers", "partials", "data"];
+    var params = this.isChild ? ["depth0", "data"] : ["Handlebars", "depth0", "helpers", "partials", "data"].concat(this.async ? ["callback"] : []);
 
     for(var i=0, l=this.environment.depths.list.length; i<l; i++) {
       params.push("depth" + this.environment.depths.list[i]);
@@ -1416,7 +1425,7 @@ JavaScriptCompiler.prototype = {
         buffer;
     for (var i = 0, len = this.source.length; i < len; i++) {
       var line = this.source[i];
-      if (line.appendToBuffer) {
+      if (line.appendToBuffer && line.singleToBuffer) {
         if (buffer) {
           buffer = buffer + '\n    + ' + line.content;
         } else {
@@ -1424,8 +1433,11 @@ JavaScriptCompiler.prototype = {
         }
       } else {
         if (buffer) {
-          source += 'buffer += ' + buffer + ';\n  ';
+          source += this.async ? 'buffer.push(' + buffer + ');\n  ' : 'buffer += ' + buffer + ';\n  ';
           buffer = undefined;
+        }
+        if (line.singleToBuffer) {
+          source += this.async ? 'buffer.push(' + line.content + ');\n  ' : 'buffer += ' + buffer + ';\n  ';
         }
         source += line + '\n  ';
       }
@@ -1482,7 +1494,7 @@ JavaScriptCompiler.prototype = {
   //
   // Appends the string value of `content` to the current buffer
   appendContent: function(content) {
-    this.source.push(this.appendToBuffer(this.quotedString(content)));
+    this.source.push(this.appendToBuffer(this.quotedString(content), this.async));
   },
 
   // [append]
@@ -1562,7 +1574,7 @@ JavaScriptCompiler.prototype = {
     this.context.aliases.functionType = '"function"';
 
     this.replaceStack(function(current) {
-      return "typeof " + current + " === functionType ? " + current + ".apply(depth0) : " + current;
+      return "typeof " + current + " === functionType ? " + current + ".call(depth0" + this.asyncParam() + ") : " + current;
     });
   },
 
@@ -1695,7 +1707,7 @@ JavaScriptCompiler.prototype = {
     this.push(helper.name);
     this.replaceStack(function(name) {
       return name + ' ? ' + name + '.call(' +
-          helper.callParams + ") " + ": helperMissing.call(" +
+          helper.callParams + this.asyncParam() + ") " + ": helperMissing.call(" +
           helper.helperMissingParams + ")";
     });
   },
@@ -1709,7 +1721,7 @@ JavaScriptCompiler.prototype = {
   // so a `helperMissing` fallback is not required.
   invokeKnownHelper: function(paramSize, name) {
     var helper = this.setupHelper(paramSize, name);
-    this.push(helper.name + ".call(" + helper.callParams + ")");
+    this.push(helper.name + ".call(" + helper.callParams + this.asyncParam() + ")");
   },
 
   // [invokeAmbiguous]
@@ -1735,8 +1747,8 @@ JavaScriptCompiler.prototype = {
     var nonHelper = this.nameLookup('depth' + this.lastContext, name, 'context');
     var nextStack = this.nextStack();
 
-    this.source.push('if (' + nextStack + ' = ' + helperName + ') { ' + nextStack + ' = ' + nextStack + '.call(' + helper.callParams + '); }');
-    this.source.push('else { ' + nextStack + ' = ' + nonHelper + '; ' + nextStack + ' = typeof ' + nextStack + ' === functionType ? ' + nextStack + '.apply(depth0) : ' + nextStack + '; }');
+    this.source.push('if (' + nextStack + ' = ' + helperName + ') { ' + nextStack + ' = ' + nextStack + '.call(' + helper.callParams + this.asyncParam() + '); }');
+    this.source.push('else { ' + nextStack + ' = ' + nonHelper + '; ' + nextStack + ' = typeof ' + nextStack + ' === functionType ? ' + nextStack + '.call(depth0' + this.asyncParam() + ') : ' + nextStack + '; }');
   },
 
   // [invokePartial]
@@ -2076,7 +2088,7 @@ JavaScriptCompiler.isValidJavaScriptVariableName = function(name) {
   return false;
 };
 
-Handlebars.precompile = function(input, options) {
+Handlebars.precompile = function(input, options, async) {
   if (!input || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
     throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.precompile. You passed " + input);
   }
@@ -2087,10 +2099,14 @@ Handlebars.precompile = function(input, options) {
   }
   var ast = Handlebars.parse(input);
   var environment = new Compiler().compile(ast, options);
-  return new JavaScriptCompiler().compile(environment, options);
+  return new JavaScriptCompiler().compile(environment, options, undefined, undefined, async);
 };
 
-Handlebars.compile = function(input, options) {
+Handlebars.precompileAsync = function (input, options) {
+	return Handlebars.precompile(input, options, true);
+};
+
+Handlebars.compile = function(input, options, async) {
   if (!input || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
     throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.compile. You passed " + input);
   }
@@ -2103,17 +2119,21 @@ Handlebars.compile = function(input, options) {
   function compile() {
     var ast = Handlebars.parse(input);
     var environment = new Compiler().compile(ast, options);
-    var templateSpec = new JavaScriptCompiler().compile(environment, options, undefined, true);
+    var templateSpec = new JavaScriptCompiler().compile(environment, options, undefined, true, async);
     return Handlebars.template(templateSpec);
   }
 
   // Template is only compiled on first use and cached after that point.
-  return function(context, options) {
+  return function(context, options, callback) {
     if (!compiled) {
       compiled = compile();
     }
-    return compiled.call(this, context, options);
+    return compiled.call(this, context, options, callback);
   };
+};
+
+Handlebars.compileAsync = function (input, options) {
+	return Handlebars.compile(input, options, true);
 };
 
 ;
@@ -2124,6 +2144,7 @@ Handlebars.VM = {
     // Just add water
     var container = {
       escapeExpression: Handlebars.Utils.escapeExpression,
+      async: Handlebars.VM.async,
       invokePartial: Handlebars.VM.invokePartial,
       programs: [],
       program: function(i, fn, data) {
@@ -2142,9 +2163,9 @@ Handlebars.VM = {
       compilerInfo: null
     };
 
-    return function(context, options) {
+    return function(context, options, callback) {
       options = options || {};
-      var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
+      var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data, callback);
 
       var compilerInfo = container.compilerInfo || [],
           compilerRevision = compilerInfo[0] || 1,
@@ -2165,6 +2186,37 @@ Handlebars.VM = {
 
       return result;
     };
+  },
+
+  async: function (buffer) {
+    var async = {
+        createCallback: function () {
+          var index = buffer.length;
+
+          async.total++;
+
+          return function (value) {
+            buffer[index] = Handlebars.Utils.escapeExpression(value);
+            async.resolved++;
+            check();
+          };
+        },
+        done: function (cb) {
+          callback = cb;
+          delete async.done;
+          check();
+        },
+        total: 0,
+        resolved: 0
+      },
+      check = function () {
+        if (callback && async.resolved === async.total) {
+          callback(buffer.join(""));
+        }
+      },
+      callback;
+
+    return async;
   },
 
   programWithDepth: function(fn, data, $depth) {
