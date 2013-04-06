@@ -1403,3 +1403,18 @@ test('GS-428: Nested if else rendering', function() {
   shouldCompileTo(succeedingTemplate, [{}, helpers], '   Expected  ');
   shouldCompileTo(failingTemplate, [{}, helpers], '  Expected  ');
 });
+
+suite('Utils');
+
+test('isEmpty', function() {
+  equal(Handlebars.Utils.isEmpty(undefined), true);
+  equal(Handlebars.Utils.isEmpty(null), true);
+  equal(Handlebars.Utils.isEmpty(false), true);
+  equal(Handlebars.Utils.isEmpty(''), true);
+  equal(Handlebars.Utils.isEmpty([]), true);
+
+  equal(Handlebars.Utils.isEmpty(0), false);
+  equal(Handlebars.Utils.isEmpty([1]), false);
+  equal(Handlebars.Utils.isEmpty('foo'), false);
+  equal(Handlebars.Utils.isEmpty({bar: 1}), false);
+});
