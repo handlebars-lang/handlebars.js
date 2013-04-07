@@ -116,7 +116,8 @@ if (argv.known) {
 }
 
 // Build file extension pattern
-var extension = new RegExp('\\.' + argv.extension + '$');
+var extension = argv.extension.replace(/[\\^$*+?.():=!|{}\-\[\]]/g, function(arg) { return '\\' + arg; });
+extension = new RegExp('\\.' + extension + '$');
 
 var output = [];
 if (!argv.simple) {
