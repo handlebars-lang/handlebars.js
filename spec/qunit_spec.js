@@ -492,6 +492,27 @@ test("the helpers hash is available is nested contexts", function() {
                 "helpers hash is available in nested contexts.");
 });
 
+test("Multiple global helper registration", function() {
+  var helpers = Handlebars.helpers;
+  try {
+    Handlebars.helpers = {};
+    Handlebars.registerHelper({
+      'if': helpers['if'],
+      world: function() { return "world!"; },
+      test_helper: function() { return 'found it!'; }
+    });
+
+    shouldCompileTo(
+      "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}",
+      [{cruel: "cruel"}],
+      "found it! Goodbye cruel world!!");
+  } finally {
+    if (helpers) {
+      Handlebars.helpers = helpers;
+    }
+  }
+});
+
 suite("partials");
 
 test("basic partials", function() {
@@ -554,6 +575,17 @@ test("Partials with slash paths", function() {
 	var dude = "{{name}}";
 	var hash = {name:"Jeepers", another_dude:"Creepers"};
   shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
+test("Multiple partial registration", function() {
+  Handlebars.registerPartial({
+    'shared/dude': '{{name}}',
+    global_test: '{{another_dude}}'
+  });
+
+  var string = "Dudes: {{> shared/dude}} {{> global_test}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash], true, "Dudes: Jeepers Creepers", "Partials can use globals or passed");
 });
 
 test("Partials with integer path", function() {
