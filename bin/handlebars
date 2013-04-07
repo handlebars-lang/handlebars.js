@@ -64,6 +64,12 @@ var optimist = require('optimist')
         'type': 'boolean',
         'description': 'Include data when compiling',
         'alias': 'data'
+      },
+      'e': {
+        'type': 'string',
+        'description': 'Template extension.',
+        'alias': 'extension',
+        'default': 'handlebars'
       }
     })
 
@@ -109,6 +115,9 @@ if (argv.known) {
   }
 }
 
+// Build file extension pattern
+var extension = new RegExp('\\.' + argv.extension + '$');
+
 var output = [];
 if (!argv.simple) {
   if (argv.amd) {
@@ -131,7 +140,7 @@ function processTemplate(template, root) {
     fs.readdirSync(template).map(function(file) {
       var path = template + '/' + file;
 
-      if (/\.handlebars$/.test(path) || fs.statSync(path).isDirectory()) {
+      if (extension.test(path) || fs.statSync(path).isDirectory()) {
         processTemplate(path, root || template);
       }
     });
@@ -153,7 +162,7 @@ function processTemplate(template, root) {
     } else if (template.indexOf(root) === 0) {
       template = template.substring(root.length+1);
     }
-    template = template.replace(/\.handlebars$/, '');
+    template = template.replace(extension, '');
 
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
