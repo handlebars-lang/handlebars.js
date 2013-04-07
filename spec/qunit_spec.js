@@ -709,6 +709,11 @@ test("Functions are bound to the context in knownHelpers only mode", function() 
   var result = template({foo: function() { return this.bar; }, bar: 'bar'});
   equal(result, "bar", "'bar' should === '" + result);
 });
+test("Unknown helper call in knownHelpers only mode should throw", function() {
+  shouldThrow(function() {
+    CompilerContext.compile("{{typeof hello}}", {knownHelpersOnly: true});
+  }, Error, 'specified knownHelpersOnly');
+});
 
 suite("blockHelperMissing");
 
