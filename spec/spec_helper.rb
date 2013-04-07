@@ -87,7 +87,7 @@ module Handlebars
       end
       CompilerContext["compileWithPartial"] = proc do |this, *args|
         template, options = args[0], args[1] || nil
-        FULL_CONTEXT["Handlebars"]["compile"].call(template, options);
+        context["Handlebars"]["compile"].call(template, options);
       end
     end
 
@@ -105,23 +105,6 @@ module Handlebars
       Handlebars::Spec.js_load(context, 'dist/handlebars.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/visitor.js');
       Handlebars::Spec.js_load(context, 'lib/handlebars/compiler/printer.js');
-
-      context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
-
-      context["Handlebars"]["logger"]["log"] = proc do |this, level, str|
-        logger_level = context["Handlebars"]["logger"]["level"].to_i
-
-        if logger_level <= level
-          puts str
-        end
-      end
-    end
-
-    FULL_CONTEXT = V8::Context.new
-    FULL_CONTEXT.instance_eval do |context|
-      Handlebars::Spec.load_helpers(context);
-
-      Handlebars::Spec.js_load(context, 'dist/handlebars.js');
 
       context["Handlebars"]["logger"]["level"] = ENV["DEBUG_JS"] ? context["Handlebars"]["logger"][ENV["DEBUG_JS"]] : 4
 

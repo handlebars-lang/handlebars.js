@@ -421,7 +421,7 @@ describe "Parser" do
     end
 
     it "can pass through an already-compiled AST via compile/precompile" do
-      @context = Handlebars::Spec::FULL_CONTEXT
+      @context = Handlebars::Spec::CONTEXT
 
       code = 'Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))();'
       @context.eval(code).should == "Hello"
