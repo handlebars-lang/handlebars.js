@@ -30,11 +30,12 @@ var Handlebars = {};
 // lib/handlebars/base.js
 
 Handlebars.VERSION = "1.0.0-rc.3";
-Handlebars.COMPILER_REVISION = 2;
+Handlebars.COMPILER_REVISION = 3;
 
 Handlebars.REVISION_CHANGES = {
   1: '<= 1.0.rc.2', // 1.0.rc.2 is actually rev2 but doesn't report it
-  2: '>= 1.0.0-rc.3'
+  2: '== 1.0.0-rc.3',
+  3: '>= 1.0.0-rc.4'
 };
 
 Handlebars.helpers  = {};
@@ -1113,7 +1114,7 @@ Compiler.prototype = {
 
     if (this.options.knownHelpers[name]) {
       this.opcode('invokeKnownHelper', params.length, name);
-    } else if (this.knownHelpersOnly) {
+    } else if (this.options.knownHelpersOnly) {
       throw new Error("You specified knownHelpersOnly, but used the unknown helper " + name);
     } else {
       this.opcode('invokeHelper', params.length, name);
@@ -1834,12 +1835,7 @@ JavaScriptCompiler.prototype = {
       else { programParams.push("depth" + (depth - 1)); }
     }
 
-    if(depths.length === 0) {
-      return "self.program(" + programParams.join(", ") + ")";
-    } else {
-      programParams.shift();
-      return "self.programWithDepth(" + programParams.join(", ") + ")";
-    }
+    return (depths.length === 0 ? "self.program(" : "self.programWithDepth(") + programParams.join(", ") + ")";
   },
 
   register: function(name, val) {
@@ -2131,13 +2127,11 @@ Handlebars.VM = {
       program: function(i, fn, data) {
         var programWrapper = this.programs[i];
         if(data) {
-          return Handlebars.VM.program(fn, data);
-        } else if(programWrapper) {
-          return programWrapper;
-        } else {
-          programWrapper = this.programs[i] = Handlebars.VM.program(fn);
-          return programWrapper;
+          programWrapper = Handlebars.VM.program(i, fn, data);
+        } else if (!programWrapper) {
+          programWrapper = this.programs[i] = Handlebars.VM.program(i, fn);
         }
+        return programWrapper;
       },
       programWithDepth: Handlebars.VM.programWithDepth,
       noop: Handlebars.VM.noop,
@@ -2169,21 +2163,27 @@ Handlebars.VM = {
     };
   },
 
-  programWithDepth: function(fn, data, $depth) {
-    var args = Array.prototype.slice.call(arguments, 2);
+  programWithDepth: function(i, fn, data /*, $depth */) {
+    var args = Array.prototype.slice.call(arguments, 3);
 
-    return function(context, options) {
+    var program = function(context, options) {
       options = options || {};
 
       return fn.apply(this, [context, options.data || data].concat(args));
     };
+    program.program = i;
+    program.depth = args.length;
+    return program;
   },
-  program: function(fn, data) {
-    return function(context, options) {
+  program: function(i, fn, data) {
+    var program = function(context, options) {
       options = options || {};
 
       return fn(context, options.data || data);
     };
+    program.program = i;
+    program.depth = 0;
+    return program;
   },
   noop: function() { return ""; },
   invokePartial: function(partial, name, context, helpers, partials, data) {
