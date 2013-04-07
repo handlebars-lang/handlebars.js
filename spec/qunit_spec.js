@@ -42,14 +42,6 @@ function shouldCompileToWithPartials(string, hashOrArray, partials, expected, me
 function compileWithPartials(string, hashOrArray, partials) {
   var template = CompilerContext[partials ? 'compileWithPartial' : 'compile'](string), ary;
   if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
-    var helpers = hashOrArray[1];
-
-    if(helpers) {
-      for(var prop in Handlebars.helpers) {
-        helpers[prop] = helpers[prop] || Handlebars.helpers[prop];
-      }
-    }
-
     ary = [];
     ary.push(hashOrArray[0]);
     ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
@@ -492,6 +484,17 @@ test("the helpers hash is available is nested contexts", function() {
                 "helpers hash is available in nested contexts.");
 });
 
+test("the helper hash should augment the global hash", function() {
+  Handlebars.registerHelper('test_helper', function() { return 'found it!'; });
+
+  shouldCompileTo(
+    "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}", [
+      {cruel: "cruel"},
+      {world: function() { return "world!"; }}
+    ],
+    "found it! Goodbye cruel world!!");
+});
+
 test("Multiple global helper registration", function() {
   var helpers = Handlebars.helpers;
   try {
@@ -575,6 +578,15 @@ test("Partials with slash paths", function() {
 	var dude = "{{name}}";
 	var hash = {name:"Jeepers", another_dude:"Creepers"};
   shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
+test("Global Partials", function() {
+  Handlebars.registerPartial('global_test', '{{another_dude}}');
+
+  var string = "Dudes: {{> shared/dude}} {{> global_test}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers Creepers", "Partials can use globals or passed");
 });
 
 test("Multiple partial registration", function() {
