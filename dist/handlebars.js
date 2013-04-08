@@ -1050,6 +1050,10 @@ Compiler.prototype = {
       val  = pair[1];
 
       if (this.options.stringParams) {
+        if(val.depth) {
+          this.addDepth(val.depth);
+        }
+        this.opcode('getContext', val.depth || 0);
         this.opcode('pushStringParam', val.stringModeValue, val.type);
       } else {
         this.accept(val);
@@ -1634,16 +1638,18 @@ JavaScriptCompiler.prototype = {
 
     if (this.options.stringParams) {
       this.register('hashTypes', '{}');
+      this.register('hashContexts', '{}');
     }
   },
   pushHash: function() {
-    this.hash = {values: [], types: []};
+    this.hash = {values: [], types: [], contexts: []};
   },
   popHash: function() {
     var hash = this.hash;
     this.hash = undefined;
 
     if (this.options.stringParams) {
+      this.register('hashContexts', '{' + hash.contexts.join(',') + '}');
       this.register('hashTypes', '{' + hash.types.join(',') + '}');
     }
     this.push('{\n    ' + hash.values.join(',\n    ') + '\n  }');
@@ -1786,14 +1792,18 @@ JavaScriptCompiler.prototype = {
   // and pushes the hash back onto the stack.
   assignToHash: function(key) {
     var value = this.popStack(),
+        context,
         type;
 
     if (this.options.stringParams) {
       type = this.popStack();
-      this.popStack();
+      context = this.popStack();
     }
 
     var hash = this.hash;
+    if (context) {
+      hash.contexts.push("'" + key + "': " + context);
+    }
     if (type) {
       hash.types.push("'" + key + "': " + type);
     }
@@ -2044,6 +2054,7 @@ JavaScriptCompiler.prototype = {
     if (this.options.stringParams) {
       options.push("contexts:[" + contexts.join(",") + "]");
       options.push("types:[" + types.join(",") + "]");
+      options.push("hashContexts:hashContexts");
       options.push("hashTypes:hashTypes");
     }
 
