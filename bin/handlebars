@@ -184,6 +184,13 @@ argv._.forEach(function(template) {
 // Output the content
 if (!argv.simple) {
   if (argv.amd) {
+    if(argv._.length > 1){
+      if(argv.partial){
+        output.push('return Handlebars.partials;\n');
+      } else {
+        output.push('return templates;\n');
+      }
+    }
     output.push('});');
   } else if (!argv.commonjs) {
     output.push('})();');
