@@ -168,8 +168,10 @@ function processTemplate(template, root) {
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
     } else if (argv.partial) {
+      if(argv.amd && argv._.length == 1){ output.push('return '); }
       output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     } else {
+      if(argv.amd && argv._.length == 1){ output.push('return '); }
       output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }
   }
@@ -182,6 +184,13 @@ argv._.forEach(function(template) {
 // Output the content
 if (!argv.simple) {
   if (argv.amd) {
+    if(argv._.length > 1){
+      if(argv.partial){
+        output.push('return Handlebars.partials;\n');
+      } else {
+        output.push('return templates;\n');
+      }
+    }
     output.push('});');
   } else if (!argv.commonjs) {
     output.push('})();');
