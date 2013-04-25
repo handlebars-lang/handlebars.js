@@ -10,7 +10,7 @@ Checkout the official Handlebars docs site at [http://www.handlebarsjs.com](http
 
 Installing
 ----------
-Installing Handlebars is easy. Simply [download the package from GitHub](https://github.com/wycats/handlebars.js/archives/master) and add it to your web pages (you should usually use the most recent version).
+Installing Handlebars is easy. Simply download the package [from the official site](http://handlebarsjs.com/) and add it to your web pages (you should usually use the most recent version).
 
 Usage
 -----
