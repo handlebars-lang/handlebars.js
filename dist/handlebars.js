@@ -23,7 +23,7 @@ THE SOFTWARE.
 */
 
 // lib/handlebars/browser-prefix.js
-(function(module, undefined) {
+(function(undefined) {
 
 var Handlebars = {};
 
@@ -2247,5 +2247,5 @@ if (typeof window === 'object') { window.Handlebars = Handlebars; } else
 // node.js
 if (typeof global === 'object') { global.Handlebars = Handlebars; }
 
-})(module)
+})()
 ;
