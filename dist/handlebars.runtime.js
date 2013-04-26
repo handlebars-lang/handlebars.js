@@ -25,6 +25,10 @@ THE SOFTWARE.
 // lib/handlebars/browser-prefix.js
 var Handlebars = {};
 
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = Handlebars;
+}
+
 (function(Handlebars, undefined) {
 ;
 // lib/handlebars/base.js
