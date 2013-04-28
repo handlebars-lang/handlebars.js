@@ -23,10 +23,10 @@ THE SOFTWARE.
 */
 
 // lib/handlebars/browser-prefix.js
+(function(undefined) {
+
 var Handlebars = {};
 
-(function(Handlebars, undefined) {
-;
 // lib/handlebars/base.js
 
 Handlebars.VERSION = "1.0.0-rc.3";
@@ -2235,5 +2235,17 @@ Handlebars.VM = {
 Handlebars.template = Handlebars.VM.template;
 ;
 // lib/handlebars/browser-suffix.js
-})(Handlebars);
+// common.js
+if (typeof module === 'object' && module.exports) { module.exports = Handlebars; } else
+
+// AMD modules
+if (typeof define === "function" && define.amd) { define(function() { return Handlebars; }); } else
+  
+// browser
+if (typeof window === 'object') { window.Handlebars = Handlebars; } else
+
+// node.js
+if (typeof global === 'object') { global.Handlebars = Handlebars; }
+
+})()
 ;
