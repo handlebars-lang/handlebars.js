@@ -11,4 +11,7 @@
 		<releaseNotes></releaseNotes>
 		<tags>handlebars mustache template html</tags>
 	</metadata>
+	<files>
+		<file src="dist\handlebars.js" target="Content\Scripts" />
+	</files>
 </package>
