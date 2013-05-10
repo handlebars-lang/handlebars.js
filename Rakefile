@@ -90,8 +90,24 @@ task :runtime => [:compile] do |task|
   Rake::Task["dist/handlebars.runtime.js"].execute
 end
 
+# Updates the various version numbers.
+task :version => [] do |task|
+  # TODO : Pull from package.json when the version numbers are synced
+  version = File.read("lib/handlebars/base.js").match(/Handlebars.VERSION = "(.*)";/)[1]
+
+  content = File.read("bower.json")
+  File.open("bower.json", "w") do |file|
+    file.puts content.gsub(/"version":.*/, "\"version\": \"#{version}\",")
+  end
+
+  content = File.read("handlebars.js.nuspec")
+  File.open("handlebars.js.nuspec", "w") do |file|
+    file.puts content.gsub(/<version>.*<\/version>/, "<version>#{version}</version>")
+  end
+end
+
 desc "build the build and runtime version of handlebars"
-task :release => [:build, :runtime]
+task :release => [:version, :build, :runtime]
 
 directory "vendor"
 
