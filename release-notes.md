@@ -12,6 +12,7 @@
 - [#302](https://github.com/wycats/handlebars.js/issues/302) - Fix sanity check in knownHelpersOnly mode
 - [#369](https://github.com/wycats/handlebars.js/issues/369) - Allow registration of multiple helpers and partial by passing definition object
 - Add bower package declaration ([@DevinClark](https://github.com/DevinClark))
+- Add NuSpec package declaration ([@MikeMayer](https://github.com/MikeMayer))
 - Handle empty context in `with` ([@thejohnfreeman](https://github.com/thejohnfreeman))
 - Support custom template extensions in CLI ([@matteoagosti](https://github.com/matteoagosti))
 - Fix Rhino support ([@broady](https://github.com/broady))
