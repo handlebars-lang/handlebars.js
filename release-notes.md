@@ -2,6 +2,10 @@
 
 ## Development
 
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)
+
+## v1.0.11 / 1.0.0-rc4 - May 13 2013
+
 - [#458](https://github.com/wycats/handlebars.js/issues/458) - Fix `./foo` syntax ([@jpfiset](https://github.com/jpfiset))
 - [#460](https://github.com/wycats/handlebars.js/issues/460) - Allow `:` in unescaped identifers ([@jpfiset](https://github.com/jpfiset))
 - [#471](https://github.com/wycats/handlebars.js/issues/471) - Create release notes (These!)
