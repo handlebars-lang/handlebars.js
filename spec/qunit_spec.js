@@ -1475,6 +1475,26 @@ test('GH-375: Unicode line terminators', function() {
   shouldCompileTo('\u2028', {}, '\u2028');
 });
 
+test('Load .handlebars files with require()', function() {
+  var template = require("./example_1");
+  assert.deepEqual(template, require("./example_1.handlebars"));
+
+  var expected = 'foo\n';
+  var result = template({foo: "foo"});
+
+  equal(result, expected);
+});
+
+test('Load .hbs files with require()', function() {
+  var template = require("./example_2");
+  assert.deepEqual(template, require("./example_2.hbs"));
+
+  var expected = 'Hello, World!\n';
+  var result = template({name: "World"});
+
+  equal(result, expected);
+});
+
 suite('Utils');
 
 test('escapeExpression', function() {
