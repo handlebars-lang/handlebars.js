@@ -67,7 +67,7 @@ Handlebars.registerHelper('helperMissing', function(arg) {
   if(arguments.length === 2) {
     return undefined;
   } else {
-    throw new Error("Could not find property '" + arg + "'");
+    throw new Error("Missing helper: '" + arg + "'");
   }
 });
 
