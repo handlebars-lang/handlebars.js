@@ -24,7 +24,7 @@ In general, the syntax of Handlebars.js templates is a superset
 of Mustache templates. For basic syntax, check out the [Mustache
 manpage](http://mustache.github.com/mustache.5.html).
 
-Once you have a template, use the Handlebars.compile method to compile
+Once you have a template, use the `Handlebars.compile` method to compile
 the template into a function. The generated function takes a context
 argument, which will be used to render the template.
 
@@ -93,17 +93,17 @@ templates easier and also changes a tiny detail of how partials work.
 Handlebars.js supports an extended expression syntax that we call paths.
 Paths are made up of typical expressions and . characters. Expressions
 allow you to not only display data from the current context, but to
-display data from contexts that are descendents and ancestors of the
+display data from contexts that are descendants and ancestors of the
 current context.
 
-To display data from descendent contexts, use the `.` character. So, for
+To display data from descendant contexts, use the `.` character. So, for
 example, if your data were structured like:
 
 ```js
 var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
 ```
 
-you could display the person's name from the top-level context with the
+You could display the person's name from the top-level context with the
 following expression:
 
 ```
