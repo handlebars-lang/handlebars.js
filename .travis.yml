@@ -1,0 +1,15 @@
+---
+after_success: bundle exec rake publish
+env:
+  global:
+  - S3_BUCKET_NAME=builds.handlebarsjs.com
+  - secure: ! 'PJaukuvkBBsSDOqbIcNSSMgb96VVEaIt/eq9GPjXPeFbSd3hXgwhwVE62Lrq
+
+      tJO8BaUfX+PzpiQjEl4D5/KBmvlFZ057Hqmy0zmPOT5mDZfJe8Ja5zyvTMb+
+
+      KkCWN/tjAp8kawHojE04pn6jIpPdwXFnAYwPhaHbATFrmdt9fdg='
+  - secure: ! 'mBcGL2tnmiRujJdV/4fxrVd8E8wn6AW9IQKVcMv8tvOc7i5dOzZ39rpBKLuT
+
+      MRXDtMV1LyLiuKYb1pHj1IyeadEahcLYFfGygF4LG7Yzp4NWHtRzQ7Q8LXaJ
+
+      V7dXDboYCFkn2a8/Rtx1YSVh/sCONf5UoRC+MUIqrj4UiHN9r3s='
