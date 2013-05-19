@@ -1502,3 +1502,27 @@ test('isEmpty', function() {
   equal(Handlebars.Utils.isEmpty('foo'), false);
   equal(Handlebars.Utils.isEmpty({bar: 1}), false);
 });
+
+if (typeof(require) !== 'undefined') {
+  suite('Require');
+
+  test('Load .handlebars files with require()', function() {
+    var template = require("./example_1");
+    assert.deepEqual(template, require("./example_1.handlebars"));
+
+    var expected = 'foo\n';
+    var result = template({foo: "foo"});
+
+    equal(result, expected);
+  });
+
+  test('Load .hbs files with require()', function() {
+    var template = require("./example_2");
+    assert.deepEqual(template, require("./example_2.hbs"));
+
+    var expected = 'Hello, World!\n';
+    var result = template({name: "World"});
+
+    equal(result, expected);
+  });
+}
