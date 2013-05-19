@@ -55,12 +55,12 @@ template. Here's an example, which assumes that your objects have a URL
 embedded in them, as well as the text for a link:
 
 ```js
-Handlebars.registerHelper('link_to', function(context) {
-  return "<a href='" + context.url + "'>" + context.body + "</a>";
+Handlebars.registerHelper('link_to', function() {
+  return "<a href='" + this.url + "'>" + this.body + "</a>";
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = "<ul>{{#posts}}<li>{{{link_to this}}}</li>{{/posts}}</ul>"
+var source = "<ul>{{#posts}}<li>{{{link_to}}}</li>{{/posts}}</ul>"
 
 var template = Handlebars.compile(source);
 template(context);
@@ -130,12 +130,12 @@ When calling a helper, you can pass paths or Strings as parameters. For
 instance:
 
 ```js
-Handlebars.registerHelper('link_to', function(title, context) {
-  return "<a href='/posts" + context.url + "'>" + title + "!</a>"
+Handlebars.registerHelper('link_to', function(title) {
+  return "<a href='/posts" + this.url + "'>" + title + "!</a>"
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li>{{/posts}}</ul>'
+var source = '<ul>{{#posts}}<li>{{{link_to "Post"}}}</li>{{/posts}}</ul>'
 
 var template = Handlebars.compile(source);
 template(context);
