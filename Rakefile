@@ -129,3 +129,25 @@ task :bench => "vendor" do
 
   system "node bench/handlebars.js"
 end
+
+task :publish do
+  access_key_id = ENV['S3_ACCESS_KEY_ID']
+  secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
+  bucket_name = ENV['S3_BUCKET_NAME']
+  rev = `git rev-list HEAD -n 1`.to_s.strip
+  master_rev = `git rev-list origin/master -n 1`.to_s.strip
+  return unless rev == master_rev
+  return unless access_key_id && secret_access_key && bucket_name
+  require 'aws-sdk'
+  root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
+  s3 = AWS::S3.new(access_key_id: access_key_id,secret_access_key: secret_access_key)
+  bucket = s3.buckets[bucket_name]
+  files = ['handlebars.js', 'handlebars.runtime.js'].map { |file| root + file }
+  files.each do |file|
+    basename = Pathname.new(file).basename.sub_ext('')
+    s3_objs = ["#{basename}-latest.js", "#{basename}-#{rev}.js"].map do |file|
+      bucket.objects[file]
+    end
+    s3_objs.each { |obj| obj.write(Pathname.new(file)) }
+  end
+end

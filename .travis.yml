@@ -1,0 +1,4 @@
+after_success: 'bundle exec rake publish'
+env:
+  global:
+  - S3_BUCKET_NAME=builds.handlebarsjs.com
