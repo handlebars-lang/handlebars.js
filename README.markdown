@@ -72,6 +72,14 @@ template(context);
 // </ul>
 ```
 
+Helpers take precedence over fields defined on the context. To access a field
+that is masked by a helper, a path reference may be used. In the example above
+a field named `link_to` on the `context` object would be referenced using:
+
+```
+{{./link_to}}
+```
+
 Escaping
 --------
 
@@ -130,7 +138,7 @@ When calling a helper, you can pass paths or Strings as parameters. For
 instance:
 
 ```js
-Handlebars.registerHelper('link_to', function(title) {
+Handlebars.registerHelper('link_to', function(title, options) {
   return "<a href='/posts" + this.url + "'>" + title + "!</a>"
 });
 
@@ -177,12 +185,18 @@ template(data);
 // </ul>
 ```
 
-Whenever the block helper is called it is given two parameters, the
-argument that is passed to the helper, or the current context if no
-argument is passed and the compiled contents of the block. Inside of
-the block helper the value of `this` is the current context, wrapped to
-include a method named `__get__` that helps translate paths into values
-within the helpers.
+Whenever the block helper is called it is given one or more parameters,
+any arguments that are passed in the helper in the call and an `options`
+object containing the `fn` function which executes the block's child.
+The block's current context may be accessed through `this`.
+
+Block helpers have the same syntax as mustache sections but should not be
+confused with one another. Sections are akin to an implicit `each` or
+`with` statement depending on the input data and helpers are explicit
+pieces of code that are free to implement whatever behavior they like.
+The [mustache spec](http://mustache.github.io/mustache.5.html)
+defines the exact behavior of sections. In the case of name conflicts,
+helpers are given priority.
 
 ### Partials
 
