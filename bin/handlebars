@@ -119,6 +119,24 @@ if (argv.known) {
 var extension = argv.extension.replace(/[\\^$*+?.():=!|{}\-\[\]]/g, function(arg) { return '\\' + arg; });
 extension = new RegExp('\\.' + extension + '$');
 
+var files = [];
+getFiles(template, root,files);
+argv.fileCount = files.length;
+
+function getFiles(template,root,result){
+  var stat = fs.statSync(template);
+  if(stat.isDirectory()){
+    fs.readdirSync(template).map(function(file){
+      var path = template + '/'+file;
+      if(extension.test(path) || fs.statSync(path).isDirectory()){
+         getFiles(path, root || template,result);
+      }
+    })
+  }else{
+    result.push(template);
+  }
+}
+
 var output = [];
 if (!argv.simple) {
   if (argv.amd) {
@@ -168,10 +186,10 @@ function processTemplate(template, root) {
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
     } else if (argv.partial) {
-      if(argv.amd && argv._.length == 1){ output.push('return '); }
+      if(argv.amd && argv.fileCount.length == 1){ output.push('return '); }
       output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     } else {
-      if(argv.amd && argv._.length == 1){ output.push('return '); }
+      if(argv.amd && argv.fileCount.length == 1){ output.push('return '); }
       output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }
   }
