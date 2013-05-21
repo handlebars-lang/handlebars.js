@@ -357,7 +357,6 @@ Helping Out
 To build Handlebars.js you'll need a few things installed.
 
 * Node.js
-* Jison, for building the compiler - `npm install jison`
 * Ruby
 * therubyracer, for running tests - `gem install therubyracer`
 * rspec, for running tests - `gem install rspec`
@@ -367,11 +366,16 @@ and therubyracer if you've got bundler installed.
 
 To build Handlebars.js from scratch, you'll want to run `rake compile`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `rake spec`. You can also
-run our set of benchmarks with `rake bench`.
+results to the dist/ folder. To run tests, run `rake test`. You can also
+run our set of benchmarks with `rake bench`. Node tests can be run with
+`npm test` or `rake npm_test`. The default rake target will compile and
+run both test suites.
 
-If you notice any problems, please report
-them to the GitHub issue tracker at
+Some environments, notably Windows, have issues running therubyracer. Under these
+envrionments the `rake compile` and `npm test` should be sufficient to test
+most handlebars functionality.
+
+If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
 Feel free to contact commondream or wycats through GitHub with any other
 questions or feature requests. To submit changes fork the project and
