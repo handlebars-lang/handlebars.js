@@ -349,7 +349,7 @@ Handlebars in the Wild
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
   structure your views, also with automatic data binding support.
 * Les Hill (@leshill) wrote a Rails Asset Pipeline gem named
-  handlebars_assets](http://github.com/leshill/handlebars_assets).
+  [handlebars_assets](http://github.com/leshill/handlebars_assets).
 * [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
 
 Helping Out
