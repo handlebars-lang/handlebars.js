@@ -577,6 +577,13 @@ test("Partials with slash paths", function() {
   shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
+test("Partials with slash and point paths", function() {
+  var string = "Dudes: {{> shared/dude.thing}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {'shared/dude.thing':dude}], true, "Dudes: Jeepers", "Partials can use literal with points in paths");
+});
+
 test("Multiple partial registration", function() {
   Handlebars.registerPartial({
     'shared/dude': '{{name}}',

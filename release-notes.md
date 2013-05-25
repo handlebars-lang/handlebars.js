@@ -1,6 +1,10 @@
 # Release Notes
 
 ## Development
+- [#515](https://github.com/wycats/handlebars.js/issues/515) - Add node require extensions support ([@jjclark1982](https://github.com/jjclark1982))
+- [#517](https://github.com/wycats/handlebars.js/issues/517) - Fix amd precompiler output with directories ([@blessenm](https://github.com/blessenm))
+- [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
+- Docs updates
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)
 
@@ -26,7 +30,7 @@
 - Fix `toString` handling under IE and browserify ([@tommydudebreaux](https://github.com/tommydudebreaux))
 - Add program metadata
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.10...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.10...v1.0.11)
 
 ## v1.0.10 - Node - Feb 27 2013
 
