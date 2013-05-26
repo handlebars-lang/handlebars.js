@@ -249,7 +249,7 @@ test("with stores root context in data.root", function() {
   };
   var string = "{{#each bananas}}{{#with brand}}{{.}}{{useRoot}}{{/with}}{{/each}}";
   var hash = {bananas: [{colour: "green", brand: "Monkey"}, { colour: "yellow", brand: "Baboon"}], foo: "Foo"};
-  shouldCompileTo(string, [hash, helpers], "MonkeyFooBaboonFoo", "each stores root context in data.root");
+  shouldCompileTo(string, [hash, helpers], "MonkeyFooBaboonFoo", "with stores root context in data.root");
 });
 
 suite("inverted sections");
