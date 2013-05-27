@@ -32,7 +32,7 @@
 <mu>"{{"                         { return 'OPEN'; }
 
 <mu>"="                          { return 'EQUALS'; }
-<mu>"."/[}/ ]                    { return 'ID'; }
+<mu>"."/[}\/ ]                   { return 'ID'; }
 <mu>".."                         { return 'ID'; }
 <mu>[\/.]                        { return 'SEP'; }
 <mu>\s+                          { /*ignore whitespace*/ }
@@ -44,7 +44,18 @@
 <mu>"true"/[}\s]                 { return 'BOOLEAN'; }
 <mu>"false"/[}\s]                { return 'BOOLEAN'; }
 <mu>\-?[0-9]+/[}\s]              { return 'INTEGER'; }
-<mu>[a-zA-Z0-9_$:\-]+/[=}\s\/.]  { return 'ID'; }
+
+/*
+ID is the inverse of control characters.
+Control characters ranges:
+  [\s]          Whitespace
+  [!"#%-,\./]   !, ", #, %, &, ', (, ), *, +, ,, ., /,  Exceptions in range: $, -
+  [;->@]        ;, <, =, >, @,                          Exceptions in range: :, ?
+  [\[-\^`]      [, \, ], ^, `,                          Exceptions in range: _
+  [\{-~]        {, |, }, ~
+*/
+<mu>[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]   { return 'ID'; }
+
 <mu>'['[^\]]*']'                 { yytext = yytext.substr(1, yyleng-2); return 'ID'; }
 <mu>.                            { return 'INVALID'; }
 <par>\s+                         { /*ignore whitespace*/ }

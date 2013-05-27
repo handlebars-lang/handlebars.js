@@ -4,6 +4,8 @@
 - [#515](https://github.com/wycats/handlebars.js/issues/515) - Add node require extensions support ([@jjclark1982](https://github.com/jjclark1982))
 - [#517](https://github.com/wycats/handlebars.js/issues/517) - Fix amd precompiler output with directories ([@blessenm](https://github.com/blessenm))
 - [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
+- [#433](https://github.com/wycats/handlebars.js/issues/433) - Add support for unicode ids
+- [#469](https://github.com/wycats/handlebars.js/issues/469) - Add support for `?` in ids
 - Docs updates
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)

@@ -125,6 +125,10 @@ describe "Parser" do
 
   it "parses simple mustaches" do
     ast_for("{{foo}}").should == root { mustache id("foo") }
+    ast_for("{{foo?}}").should == root { mustache id("foo?") }
+    ast_for("{{foo_}}").should == root { mustache id("foo_") }
+    ast_for("{{foo-}}").should == root { mustache id("foo-") }
+    ast_for("{{foo:}}").should == root { mustache id("foo:") }
   end
 
   it "parses simple mustaches with data" do
