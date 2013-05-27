@@ -10,7 +10,7 @@ def compile_parser
 
     sh "rm handlebars.js"
   else
-    puts "Failed to run Jison."
+    fail "Failed to run Jison."
   end
 end
 
