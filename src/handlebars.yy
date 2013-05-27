@@ -61,7 +61,7 @@ inMustache
   | path params { $$ = [[$1].concat($2), null]; }
   | path hash { $$ = [[$1], $2]; }
   | path { $$ = [[$1], null]; }
-  | DATA { $$ = [[new yy.DataNode($1)], null]; }
+  | dataName { $$ = [[$1], null]; }
   ;
 
 params
@@ -74,7 +74,7 @@ param
   | STRING { $$ = new yy.StringNode($1); }
   | INTEGER { $$ = new yy.IntegerNode($1); }
   | BOOLEAN { $$ = new yy.BooleanNode($1); }
-  | DATA { $$ = new yy.DataNode($1); }
+  | dataName { $$ = $1; }
   ;
 
 hash
@@ -91,11 +91,15 @@ hashSegment
   | ID EQUALS STRING { $$ = [$1, new yy.StringNode($3)]; }
   | ID EQUALS INTEGER { $$ = [$1, new yy.IntegerNode($3)]; }
   | ID EQUALS BOOLEAN { $$ = [$1, new yy.BooleanNode($3)]; }
-  | ID EQUALS DATA { $$ = [$1, new yy.DataNode($3)]; }
+  | ID EQUALS dataName { $$ = [$1, $3]; }
   ;
 
 partialName
   : PARTIAL_NAME { $$ = new yy.PartialNameNode($1); }
+  ;
+
+dataName
+  : DATA path { $$ = new yy.DataNode($2); }
   ;
 
 path

@@ -940,6 +940,54 @@ test("hash values can be looked up via @foo", function() {
   equals("Hello world", result, "@foo as a parameter retrieves template data");
 });
 
+test("nested parameter data can be looked up via @foo.bar", function() {
+  var template = CompilerContext.compile("{{hello @world.bar}}");
+  var helpers = {
+    hello: function(noun) {
+      return "Hello " + noun;
+    }
+  };
+
+  var result = template({}, { helpers: helpers, data: { world: {bar: "world" } } });
+  equals("Hello world", result, "@foo as a parameter retrieves template data");
+});
+
+test("nested parameter data does not fail with @world.bar", function() {
+  var template = CompilerContext.compile("{{hello @world.bar}}");
+  var helpers = {
+    hello: function(noun) {
+      return "Hello " + noun;
+    }
+  };
+
+  var result = template({}, { helpers: helpers, data: { foo: {bar: "world" } } });
+  equals("Hello undefined", result, "@foo as a parameter retrieves template data");
+});
+
+test("parameter data throws when using this scope references", function() {
+  var string = "{{#goodbyes}}{{text}} cruel {{@./name}}! {{/goodbyes}}";
+
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
+});
+
+test("parameter data throws when using parent scope references", function() {
+  var string = "{{#goodbyes}}{{text}} cruel {{@../name}}! {{/goodbyes}}";
+
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
+});
+
+test("parameter data throws when using complex scope references", function() {
+  var string = "{{#goodbyes}}{{text}} cruel {{@foo/../name}}! {{/goodbyes}}";
+
+  shouldThrow(function() {
+      CompilerContext.compile(string);
+    }, Error, "Should throw exception");
+});
+
 test("data is inherited downstream", function() {
   var template = CompilerContext.compile("{{#let foo=bar.baz}}{{@foo}}{{/let}}", { data: true });
   var helpers = {

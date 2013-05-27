@@ -111,7 +111,7 @@ describe "Parser" do
     end
 
     def data(id)
-      "@#{id}"
+      "@ID:#{id}"
     end
 
     def partial_name(name)

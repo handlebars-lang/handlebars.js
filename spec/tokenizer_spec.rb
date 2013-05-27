@@ -280,16 +280,16 @@ describe "Tokenizer" do
 
   it "tokenizes special @ identifiers" do
     result = tokenize("{{ @foo }}")
-    result.should match_tokens %w( OPEN DATA CLOSE )
-    result[1].should be_token("DATA", "foo")
+    result.should match_tokens %w( OPEN DATA ID CLOSE )
+    result[2].should be_token("ID", "foo")
 
     result = tokenize("{{ foo @bar }}")
-    result.should match_tokens %w( OPEN ID DATA CLOSE )
-    result[2].should be_token("DATA", "bar")
+    result.should match_tokens %w( OPEN ID DATA ID CLOSE )
+    result[3].should be_token("ID", "bar")
 
     result = tokenize("{{ foo bar=@baz }}")
-    result.should match_tokens %w( OPEN ID ID EQUALS DATA CLOSE )
-    result[4].should be_token("DATA", "baz")
+    result.should match_tokens %w( OPEN ID ID EQUALS DATA ID CLOSE )
+    result[5].should be_token("ID", "baz")
   end
 
   it "does not time out in a mustache with a single } followed by EOF" do
