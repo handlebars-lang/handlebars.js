@@ -290,6 +290,20 @@ normal.
 - When all helpers are known in advance the `--knownOnly` argument may be used
   to optimize all block helper references.
 
+Supported Environments
+----------------------
+
+Handlebars has been designed to work in any ECMAScript 3 environment. This includes
+
+- Node.js
+- Chrome
+- Firefox
+- Safari 5+
+- Opera 11+
+- IE 6+
+
+Older versions and other runtimes are likely to work but have not been formally
+tested.
 
 Performance
 -----------
