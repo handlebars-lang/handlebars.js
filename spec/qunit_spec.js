@@ -241,6 +241,17 @@ test("this keyword nested inside helpers param", function() {
     }, Error, "Should throw exception");
 });
 
+test("with stores root context in data.root", function() {
+  var helpers = {
+      useRoot: function(options) {
+          return options.data.root.foo;
+      }
+  };
+  var string = "{{#each bananas}}{{#with brand}}{{.}}{{useRoot}}{{/with}}{{/each}}";
+  var hash = {bananas: [{colour: "green", brand: "Monkey"}, { colour: "yellow", brand: "Baboon"}], foo: "Foo"};
+  shouldCompileTo(string, [hash, helpers], "MonkeyFooBaboonFoo", "with stores root context in data.root");
+});
+
 suite("inverted sections");
 
 test("inverted sections with unset value", function() {
@@ -839,6 +850,17 @@ test("each with @index", function() {
   var result = template(hash);
 
   equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
+});
+
+test("each stores root context in data.root", function() {
+  var helpers = {
+      useRoot: function(options) {
+          return options.data.root.foo;
+      }
+  };
+  var string = "{{#each bananas}}{{useRoot}}{{/each}}";
+  var hash = {bananas: ["green", "yellow", "brown"], foo: "Foo"};
+  shouldCompileTo(string, [hash, helpers], "FooFooFoo", "each stores root context in data.root");
 });
 
 test("data passed to helpers", function() {
