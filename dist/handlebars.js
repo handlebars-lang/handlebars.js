@@ -280,9 +280,9 @@ case 45: this.$ = new yy.DataNode($$[$0]);
 break;
 case 46: this.$ = new yy.IdNode($$[$0]); 
 break;
-case 47: $$[$0-2].push($$[$0]); this.$ = $$[$0-2]; 
+case 47: $$[$0-2].push({part: $$[$0], separator: $$[$0-1]}); this.$ = $$[$0-2]; 
 break;
-case 48: this.$ = [$$[$0]]; 
+case 48: this.$ = [{part: $$[$0]}]; 
 break;
 }
 },
@@ -733,21 +733,24 @@ Handlebars.AST.HashNode = function(pairs) {
 
 Handlebars.AST.IdNode = function(parts) {
   this.type = "ID";
-  this.original = parts.join(".");
 
-  var dig = [], depth = 0;
+  var original = "",
+      dig = [],
+      depth = 0;
 
   for(var i=0,l=parts.length; i<l; i++) {
-    var part = parts[i];
+    var part = parts[i].part;
+    original += (parts[i].separator || '') + part;
 
     if (part === ".." || part === "." || part === "this") {
-      if (dig.length > 0) { throw new Handlebars.Exception("Invalid path: " + this.original); }
+      if (dig.length > 0) { throw new Handlebars.Exception("Invalid path: " + original); }
       else if (part === "..") { depth++; }
       else { this.isScoped = true; }
     }
     else { dig.push(part); }
   }
 
+  this.original = original;
   this.parts    = dig;
   this.string   = dig.join('.');
   this.depth    = depth;
@@ -771,13 +774,15 @@ Handlebars.AST.DataNode = function(id) {
 
 Handlebars.AST.StringNode = function(string) {
   this.type = "STRING";
-  this.string = string;
-  this.stringModeValue = string;
+  this.original =
+    this.string =
+    this.stringModeValue = string;
 };
 
 Handlebars.AST.IntegerNode = function(integer) {
   this.type = "INTEGER";
-  this.integer = integer;
+  this.original =
+    this.integer = integer;
   this.stringModeValue = Number(integer);
 };
 

@@ -107,7 +107,7 @@ path
   ;
 
 pathSegments
-  : pathSegments SEP ID { $1.push($3); $$ = $1; }
-  | ID { $$ = [$1]; }
+  : pathSegments SEP ID { $1.push({part: $3, separator: $2}); $$ = $1; }
+  | ID { $$ = [{part: $1}]; }
   ;
 
