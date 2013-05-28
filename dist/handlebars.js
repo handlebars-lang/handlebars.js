@@ -1406,7 +1406,9 @@ JavaScriptCompiler.prototype = {
     // Generate minimizer alias mappings
     if (!this.isChild) {
       for (var alias in this.context.aliases) {
-        this.source[1] = this.source[1] + ', ' + alias + '=' + this.context.aliases[alias];
+        if (this.context.aliases.hasOwnProperty(alias)) {
+          this.source[1] = this.source[1] + ', ' + alias + '=' + this.context.aliases[alias];
+        }
       }
     }
 

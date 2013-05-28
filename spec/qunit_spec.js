@@ -1530,6 +1530,14 @@ test('GH-375: Unicode line terminators', function() {
   shouldCompileTo('\u2028', {}, '\u2028');
 });
 
+test('GH-534: Object prototype aliases', function() {
+  Object.prototype[0xD834] = true;
+
+  shouldCompileTo('{{foo}}', { foo: 'bar' }, 'bar');
+
+  delete Object.prototype[0xD834];
+});
+
 suite('Utils');
 
 test('escapeExpression', function() {

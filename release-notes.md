@@ -6,6 +6,7 @@
 - [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
 - [#433](https://github.com/wycats/handlebars.js/issues/433) - Add support for unicode ids
 - [#469](https://github.com/wycats/handlebars.js/issues/469) - Add support for `?` in ids
+- [#534](https://github.com/wycats/handlebars.js/issues/534) - Protect from object prototype modifications
 - Add support for complex ids in @data references
 - Docs updates
 
