@@ -706,7 +706,7 @@ test("if a context is not found, helperMissing is used", function() {
   shouldThrow(function() {
       var template = CompilerContext.compile("{{hello}} {{link_to world}}");
       template({});
-    }, [Error, "Could not find property 'link_to'"], "Should throw exception");
+    }, [Error, "Missing helper: 'link_to'"], "Should throw exception");
 });
 
 test("if a context is not found, custom helperMissing is used", function() {
