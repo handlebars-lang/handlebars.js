@@ -602,6 +602,26 @@ test("Partials with integer path", function() {
   shouldCompileToWithPartials(string, [hash, {}, {404:dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
 });
 
+test("Partials with complex path", function() {
+  var string = "Dudes: {{> 404/asdf?.bar}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {'404/asdf?.bar':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
+test("Partials with escaped", function() {
+  var string = "Dudes: {{> [+404/asdf?.bar]}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {'+404/asdf?.bar':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
+
+test("Partials with string", function() {
+  var string = "Dudes: {{> \"+404/asdf?.bar\"}}";
+  var dude = "{{name}}";
+  var hash = {name:"Jeepers", another_dude:"Creepers"};
+  shouldCompileToWithPartials(string, [hash, {}, {'+404/asdf?.bar':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
+});
 
 suite("String literal parameters");
 

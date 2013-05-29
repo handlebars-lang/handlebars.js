@@ -143,24 +143,29 @@ describe "Tokenizer" do
     result[4].should be_token("CONTENT", " baz")
   end
 
-  it "tokenizes a partial as 'OPEN_PARTIAL PARTIAL_NAME CLOSE'" do
+  it "tokenizes a partial as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{> foo}}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
   end
 
-  it "tokenizes a partial with context as 'OPEN_PARTIAL PARTIAL_NAME ID CLOSE'" do
+  it "tokenizes a partial with context as 'OPEN_PARTIAL ID ID CLOSE'" do
     result = tokenize("{{> foo bar }}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME ID CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID ID CLOSE))
   end
 
-  it "tokenizes a partial without spaces as 'OPEN_PARTIAL PARTIAL_NAME CLOSE'" do
+  it "tokenizes a partial without spaces as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{>foo}}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
   end
 
-  it "tokenizes a partial space at the end as 'OPEN_PARTIAL PARTIAL_NAME CLOSE'" do
+  it "tokenizes a partial space at the end as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{>foo  }}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
+  end
+
+  it "tokenizes a partial space at the end as 'OPEN_PARTIAL ID CLOSE'" do
+    result = tokenize("{{>foo/bar.baz  }}")
+    result.should match_tokens(%w(OPEN_PARTIAL ID SEP ID SEP ID CLOSE))
   end
 
   it "tokenizes a comment as 'COMMENT'" do

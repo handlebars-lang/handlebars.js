@@ -95,7 +95,9 @@ hashSegment
   ;
 
 partialName
-  : PARTIAL_NAME { $$ = new yy.PartialNameNode($1); }
+  : path { $$ = new yy.PartialNameNode($1); }
+  | STRING { $$ = new yy.PartialNameNode(new yy.StringNode($1)); }
+  | INTEGER { $$ = new yy.PartialNameNode(new yy.IntegerNode($1)); }
   ;
 
 dataName

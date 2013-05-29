@@ -3,10 +3,11 @@
 ## Development
 - [#515](https://github.com/wycats/handlebars.js/issues/515) - Add node require extensions support ([@jjclark1982](https://github.com/jjclark1982))
 - [#517](https://github.com/wycats/handlebars.js/issues/517) - Fix amd precompiler output with directories ([@blessenm](https://github.com/blessenm))
-- [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
 - [#433](https://github.com/wycats/handlebars.js/issues/433) - Add support for unicode ids
 - [#469](https://github.com/wycats/handlebars.js/issues/469) - Add support for `?` in ids
 - [#534](https://github.com/wycats/handlebars.js/issues/534) - Protect from object prototype modifications
+- [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
+- [#519](https://github.com/wycats/handlebars.js/issues/519) - Allow ID or strings in partial names
 - Add support for complex ids in @data references
 - Docs updates
 

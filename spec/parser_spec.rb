@@ -234,7 +234,7 @@ describe "Parser" do
   end
 
   it "parses a partial with a complex name" do
-    ast_for("{{> shared/partial}}").should == root { partial partial_name("shared/partial") }
+    ast_for("{{> shared/partial?.bar}}").should == root { partial partial_name("shared/partial?.bar") }
   end
 
   it "parses a comment" do

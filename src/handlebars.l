@@ -1,5 +1,5 @@
 
-%x mu emu com par
+%x mu emu com
 
 %%
 
@@ -20,7 +20,7 @@
 
 <com>[\s\S]*?"--}}"              { yytext = yytext.substr(0, yyleng-4); this.popState(); return 'COMMENT'; }
 
-<mu>"{{>"                        { this.begin("par"); return 'OPEN_PARTIAL'; }
+<mu>"{{>"                        { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                        { return 'OPEN_BLOCK'; }
 <mu>"{{/"                        { return 'OPEN_ENDBLOCK'; }
 <mu>"{{^"                        { return 'OPEN_INVERSE'; }
@@ -58,8 +58,6 @@ Control characters ranges:
 
 <mu>'['[^\]]*']'                 { yytext = yytext.substr(1, yyleng-2); return 'ID'; }
 <mu>.                            { return 'INVALID'; }
-<par>\s+                         { /*ignore whitespace*/ }
-<par>[a-zA-Z0-9_$\-\/\.]+        { this.popState(); return 'PARTIAL_NAME'; }
 
 <INITIAL,mu><<EOF>>              { return 'EOF'; }
 
