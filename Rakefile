@@ -106,8 +106,13 @@ task :version => [] do |task|
   end
 end
 
+task :minify => [] do |task|
+  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.min.js dist/handlebars.js"
+  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.runtime.min.js dist/handlebars.runtime.js"
+end
+
 desc "build the build and runtime version of handlebars"
-task :release => [:version, :build, :runtime]
+task :release => [:version, :build, :runtime, :minify]
 
 directory "vendor"
 
