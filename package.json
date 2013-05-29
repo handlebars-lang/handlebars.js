@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "optimist": "~0.3",
-    "uglify-js": "~1.2"
+    "uglify-js": "~2.3"
   },
   "devDependencies": {
     "benchmark": "~1.0",
