@@ -43,14 +43,15 @@ describe "Tokenizer" do
 
   it "supports unescaping with &" do
     result = tokenize("{{&bar}}")
-    result.should match_tokens(%w(OPEN_UNESCAPED ID CLOSE))
+    result.should match_tokens(%w(OPEN ID CLOSE))
 
+    result[0].should be_token("OPEN", "{{&")
     result[1].should be_token("ID", "bar")
   end
 
   it "supports unescaping with {{{" do
     result = tokenize("{{{bar}}}")
-    result.should match_tokens(%w(OPEN_UNESCAPED ID CLOSE))
+    result.should match_tokens(%w(OPEN_UNESCAPED ID CLOSE_UNESCAPED))
 
     result[1].should be_token("ID", "bar")
   end

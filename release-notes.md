@@ -8,8 +8,13 @@
 - [#534](https://github.com/wycats/handlebars.js/issues/534) - Protect from object prototype modifications
 - [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
 - [#519](https://github.com/wycats/handlebars.js/issues/519) - Allow ID or strings in partial names
+- [#437](https://github.com/wycats/handlebars.js/issues/437) - Require matching brace counts in escaped expressions
 - Add support for complex ids in @data references
 - Docs updates
+
+Compatibility notes:
+- The parser is now stricter on `{{{`, requiring that the end token be `}}}`. Templates that do not
+  follow this convention should add the additional brace value.
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)
 

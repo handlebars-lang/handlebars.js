@@ -26,7 +26,7 @@
 <mu>"{{^"                        { return 'OPEN_INVERSE'; }
 <mu>"{{"\s*"else"                { return 'OPEN_INVERSE'; }
 <mu>"{{{"                        { return 'OPEN_UNESCAPED'; }
-<mu>"{{&"                        { return 'OPEN_UNESCAPED'; }
+<mu>"{{&"                        { return 'OPEN'; }
 <mu>"{{!--"                      { this.popState(); this.begin('com'); }
 <mu>"{{!"[\s\S]*?"}}"            { yytext = yytext.substr(3,yyleng-5); this.popState(); return 'COMMENT'; }
 <mu>"{{"                         { return 'OPEN'; }
@@ -36,7 +36,7 @@
 <mu>".."                         { return 'ID'; }
 <mu>[\/.]                        { return 'SEP'; }
 <mu>\s+                          { /*ignore whitespace*/ }
-<mu>"}}}"                        { this.popState(); return 'CLOSE'; }
+<mu>"}}}"                        { this.popState(); return 'CLOSE_UNESCAPED'; }
 <mu>"}}"                         { this.popState(); return 'CLOSE'; }
 <mu>'"'("\\"["]|[^"])*'"'        { yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING'; }
 <mu>"'"("\\"[']|[^'])*"'"        { yytext = yytext.substr(1,yyleng-2).replace(/\\'/g,"'"); return 'STRING'; }

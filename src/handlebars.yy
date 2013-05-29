@@ -42,8 +42,11 @@ closeBlock
   ;
 
 mustache
-  : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]); }
-  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1], true); }
+  : OPEN inMustache CLOSE {
+    // Parsing out the '&' escape token at this level saves ~500 bytes after min due to the removal of one parser node.
+    $$ = new yy.MustacheNode($2[0], $2[1], $1[2] === '&');
+  }
+  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED { $$ = new yy.MustacheNode($2[0], $2[1], true); }
   ;
 
 

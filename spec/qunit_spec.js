@@ -1571,6 +1571,15 @@ test('GH-534: Object prototype aliases', function() {
   delete Object.prototype[0xD834];
 });
 
+test('GH-437: Matching escaping', function() {
+  shouldThrow(function() {
+    CompilerContext.compile('{{{a}}');
+  }, Error);
+  shouldThrow(function() {
+    CompilerContext.compile('{{a}}}');
+  }, Error);
+});
+
 suite('Utils');
 
 test('escapeExpression', function() {
