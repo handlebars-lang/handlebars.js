@@ -124,6 +124,9 @@ Handlebars.registerHelper('each', function(context, options) {
   var fn = options.fn, inverse = options.inverse;
   var i = 0, ret = "", data;
 
+  var type = toString.call(context);
+  if(type === functionType) { context = context.call(this); }
+
   if (options.data) {
     data = Handlebars.createFrame(options.data);
   }
@@ -168,6 +171,9 @@ Handlebars.registerHelper('unless', function(conditional, options) {
 });
 
 Handlebars.registerHelper('with', function(context, options) {
+  var type = toString.call(context);
+  if(type === functionType) { context = context.call(this); }
+
   if (!Handlebars.Utils.isEmpty(context)) return options.fn(context);
 });
 
