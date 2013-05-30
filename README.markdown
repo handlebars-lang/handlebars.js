@@ -329,21 +329,7 @@ in the `dist` directory.
 Upgrading
 ---------
 
-When upgrading from the Handlebars 0.9 series, be aware that the
-signature for passing custom helpers or partials to templates has
-changed.
-
-Instead of:
-
-```js
-template(context, helpers, partials, [data])
-```
-
-Use:
-
-```js
-template(context, {helpers: helpers, partials: partials, data: data})
-```
+See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
 Known Issues
 ------------

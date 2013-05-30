@@ -67,3 +67,21 @@ Compatibility notes:
 - Package browser dist in npm package
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.8...1.0.0-rc.3)
+
+## Prior Versions
+
+When upgrading from the Handlebars 0.9 series, be aware that the
+signature for passing custom helpers or partials to templates has
+changed.
+
+Instead of:
+
+```js
+template(context, helpers, partials, [data])
+```
+
+Use:
+
+```js
+template(context, {helpers: helpers, partials: partials, data: data})
+```
