@@ -1743,8 +1743,9 @@ JavaScriptCompiler.prototype = {
     this.context.aliases.helperMissing = 'helpers.helperMissing';
 
     var helper = this.lastHelper = this.setupHelper(paramSize, name, true);
+    var nonHelper = this.nameLookup('depth' + this.lastContext, name, 'context');
 
-    this.push(helper.name);
+    this.push(helper.name + ' || ' + nonHelper);
     this.replaceStack(function(name) {
       return name + ' ? ' + name + '.call(' +
           helper.callParams + ") " + ": helperMissing.call(" +

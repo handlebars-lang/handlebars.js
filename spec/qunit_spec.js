@@ -165,6 +165,14 @@ test("functions", function() {
                   "functions are bound to the context");
 });
 
+test("functions with context argument", function() {
+  shouldCompileTo("{{awesome frank}}",
+      {awesome: function(context) { return context; },
+        frank: "Frank"},
+      "Frank", "functions are called with context arguments");
+});
+
+
 test("paths with hyphens", function() {
   shouldCompileTo("{{foo-bar}}", {"foo-bar": "baz"}, "baz", "Paths can contain hyphens (-)");
   shouldCompileTo("{{foo.foo-bar}}", {foo: {"foo-bar": "baz"}}, "baz", "Paths can contain hyphens (-)");
