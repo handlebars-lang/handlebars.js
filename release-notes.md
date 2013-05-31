@@ -21,6 +21,7 @@ Compatibility notes:
 - The parser is now stricter on `{{{`, requiring that the end token be `}}}`. Templates that do not
   follow this convention should add the additional brace value.
 - Code that relies on global the namespace being muted when custom helpers or partials are passed will need to explicitly pass an `undefined` value for any helpers that should not be available.
+- The compiler version has changed. Precompiled templates with 1.0.12 or higher must use the 1.0.0 or higher runtime.
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...v1.0.12)
 
