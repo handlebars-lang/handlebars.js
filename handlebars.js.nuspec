@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>handlebars.js</id>
-		<version>1.0.0-rc.4</version>
+		<version>1.0.0</version>
 		<authors>handlebars.js Authors</authors>
 		<licenseUrl>https://github.com/wycats/handlebars.js/blob/master/LICENSE</licenseUrl>
 		<projectUrl>https://github.com/wycats/handlebars.js/</projectUrl>

@@ -29,7 +29,7 @@ var Handlebars = {};
 ;
 // lib/handlebars/base.js
 
-Handlebars.VERSION = "1.0.0-rc.4";
+Handlebars.VERSION = "1.0.0";
 Handlebars.COMPILER_REVISION = 4;
 
 Handlebars.REVISION_CHANGES = {

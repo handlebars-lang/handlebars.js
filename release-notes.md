@@ -1,6 +1,10 @@
 # Release Notes
 
 ## Development
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.12...master)
+
+## v1.0.12 / 1.0.0 - May 31 2013
+
 - [#515](https://github.com/wycats/handlebars.js/issues/515) - Add node require extensions support ([@jjclark1982](https://github.com/jjclark1982))
 - [#517](https://github.com/wycats/handlebars.js/issues/517) - Fix amd precompiler output with directories ([@blessenm](https://github.com/blessenm))
 - [#433](https://github.com/wycats/handlebars.js/issues/433) - Add support for unicode ids
@@ -18,7 +22,7 @@ Compatibility notes:
   follow this convention should add the additional brace value.
 - Code that relies on global the namespace being muted when custom helpers or partials are passed will need to explicitly pass an `undefined` value for any helpers that should not be available.
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...v1.0.12)
 
 ## v1.0.11 / 1.0.0-rc4 - May 13 2013
 
