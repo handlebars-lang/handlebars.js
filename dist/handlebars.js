@@ -1326,8 +1326,6 @@ JavaScriptCompiler.prototype = {
   initializeBuffer: function() {
     return this.quotedString("");
   },
-
-  namespace: "Handlebars",
   // END PUBLIC API
 
   compile: function(environment, options, context, asObject) {
@@ -1383,17 +1381,8 @@ JavaScriptCompiler.prototype = {
   preamble: function() {
     var out = [];
 
-    if (!this.isChild) {
-      var namespace = this.namespace;
-      var copies = "helpers = helpers || " + namespace + ".helpers;";
-      if (this.environment.usePartial) { copies = copies + " partials = partials || " + namespace + ".partials;"; }
-      if (this.options.data) { copies = copies + " data = data || {};"; }
-      out.push(copies);
-    } else {
-      out.push('');
-    }
-
     if (!this.environment.isSimple) {
+      // Leading comma will be striped. Output for consistency in the datasets
       out.push(", buffer = " + this.initializeBuffer());
     } else {
       out.push("");
@@ -1409,25 +1398,25 @@ JavaScriptCompiler.prototype = {
     var locals = this.stackVars.concat(this.registers.list);
 
     if(locals.length > 0) {
-      this.source[1] = this.source[1] + ", " + locals.join(", ");
+      this.source[0] = this.source[0] + ", " + locals.join(", ");
     }
 
     // Generate minimizer alias mappings
     if (!this.isChild) {
       for (var alias in this.context.aliases) {
         if (this.context.aliases.hasOwnProperty(alias)) {
-          this.source[1] = this.source[1] + ', ' + alias + '=' + this.context.aliases[alias];
+          this.source[0] = this.source[0] + ', ' + alias + '=' + this.context.aliases[alias];
         }
       }
     }
 
-    if (this.source[1]) {
-      this.source[1] = "var " + this.source[1].substring(2) + ";";
+    if (this.source[0]) {
+      this.source[0] = "var " + this.source[0].substring(2) + ";";
     }
 
     // Merge children
     if (!this.isChild) {
-      this.source[1] += '\n' + this.context.programs.join('\n') + '\n';
+      this.source[0] += '\n' + this.context.programs.join('\n') + '\n';
     }
 
     if (!this.environment.isSimple) {
@@ -2197,7 +2186,11 @@ Handlebars.VM = {
 
     return function(context, options) {
       options = options || {};
-      var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
+
+      var helpers = mergeGlobal(options, 'helpers'),
+          partials = mergeGlobal(options, 'partials'),
+
+          result = templateSpec.call(container, Handlebars, context, helpers, partials, options.data || {});
 
       var compilerInfo = container.compilerInfo || [],
           compilerRevision = compilerInfo[0] || 1,
@@ -2258,6 +2251,17 @@ Handlebars.VM = {
     }
   }
 };
+
+function mergeGlobal(options, key) {
+  var namespace = (options.namespace || Handlebars)[key] || {},
+      ret = options[key] ? {} : namespace;
+
+  if (options[key]) {
+    Handlebars.Utils.extend(ret, namespace);
+    Handlebars.Utils.extend(ret, options[key]);
+  }
+  return ret;
+}
 
 Handlebars.template = Handlebars.VM.template;
 ;
