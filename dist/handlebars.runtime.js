@@ -23,9 +23,16 @@ THE SOFTWARE.
 */
 
 // lib/handlebars/browser-prefix.js
-var Handlebars = {};
-
-(function(Handlebars, undefined) {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(factory);
+  } else {
+    // Browser globals
+    root.Handlebars = factory();
+  }
+}(this, function (undefined) {
+	var Handlebars = {};
 ;
 // lib/handlebars/base.js
 
@@ -347,5 +354,6 @@ Handlebars.VM = {
 Handlebars.template = Handlebars.VM.template;
 ;
 // lib/handlebars/browser-suffix.js
-})(Handlebars);
+  return Handlebars;
+}));
 ;
