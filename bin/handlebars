@@ -168,10 +168,14 @@ function processTemplate(template, root) {
     if (argv.simple) {
       output.push(handlebars.precompile(data, options) + '\n');
     } else if (argv.partial) {
-      if(argv.amd && argv._.length == 1){ output.push('return '); }
+      if(argv.amd && (argv._.length == 1 && !fs.statSync(argv._[0]).isDirectory())) {
+        output.push('return ');
+      }
       output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     } else {
-      if(argv.amd && argv._.length == 1){ output.push('return '); }
+      if(argv.amd && (argv._.length == 1 && !fs.statSync(argv._[0]).isDirectory())) {
+        output.push('return ');
+      }
       output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
     }
   }
@@ -184,7 +188,7 @@ argv._.forEach(function(template) {
 // Output the content
 if (!argv.simple) {
   if (argv.amd) {
-    if(argv._.length > 1){
+    if(argv._.length > 1 || (argv._.length == 1 && fs.statSync(argv._[0]).isDirectory())) {
       if(argv.partial){
         output.push('return Handlebars.partials;\n');
       } else {
@@ -199,10 +203,7 @@ if (!argv.simple) {
 output = output.join('');
 
 if (argv.min) {
-  var ast = uglify.parser.parse(output);
-  ast = uglify.uglify.ast_mangle(ast);
-  ast = uglify.uglify.ast_squeeze(ast);
-  output = uglify.uglify.gen_code(ast);
+  output = uglify.minify(output, {fromString: true}).code;
 }
 
 if (argv.output) {

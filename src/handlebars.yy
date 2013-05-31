@@ -42,8 +42,11 @@ closeBlock
   ;
 
 mustache
-  : OPEN inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1]); }
-  | OPEN_UNESCAPED inMustache CLOSE { $$ = new yy.MustacheNode($2[0], $2[1], true); }
+  : OPEN inMustache CLOSE {
+    // Parsing out the '&' escape token at this level saves ~500 bytes after min due to the removal of one parser node.
+    $$ = new yy.MustacheNode($2[0], $2[1], $1[2] === '&');
+  }
+  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED { $$ = new yy.MustacheNode($2[0], $2[1], true); }
   ;
 
 
@@ -61,7 +64,7 @@ inMustache
   | path params { $$ = [[$1].concat($2), null]; }
   | path hash { $$ = [[$1], $2]; }
   | path { $$ = [[$1], null]; }
-  | DATA { $$ = [[new yy.DataNode($1)], null]; }
+  | dataName { $$ = [[$1], null]; }
   ;
 
 params
@@ -74,7 +77,7 @@ param
   | STRING { $$ = new yy.StringNode($1); }
   | INTEGER { $$ = new yy.IntegerNode($1); }
   | BOOLEAN { $$ = new yy.BooleanNode($1); }
-  | DATA { $$ = new yy.DataNode($1); }
+  | dataName { $$ = $1; }
   ;
 
 hash
@@ -91,11 +94,17 @@ hashSegment
   | ID EQUALS STRING { $$ = [$1, new yy.StringNode($3)]; }
   | ID EQUALS INTEGER { $$ = [$1, new yy.IntegerNode($3)]; }
   | ID EQUALS BOOLEAN { $$ = [$1, new yy.BooleanNode($3)]; }
-  | ID EQUALS DATA { $$ = [$1, new yy.DataNode($3)]; }
+  | ID EQUALS dataName { $$ = [$1, $3]; }
   ;
 
 partialName
-  : PARTIAL_NAME { $$ = new yy.PartialNameNode($1); }
+  : path { $$ = new yy.PartialNameNode($1); }
+  | STRING { $$ = new yy.PartialNameNode(new yy.StringNode($1)); }
+  | INTEGER { $$ = new yy.PartialNameNode(new yy.IntegerNode($1)); }
+  ;
+
+dataName
+  : DATA path { $$ = new yy.DataNode($2); }
   ;
 
 path
@@ -103,7 +112,7 @@ path
   ;
 
 pathSegments
-  : pathSegments SEP ID { $1.push($3); $$ = $1; }
-  | ID { $$ = [$1]; }
+  : pathSegments SEP ID { $1.push({part: $3, separator: $2}); $$ = $1; }
+  | ID { $$ = [{part: $1}]; }
   ;
 

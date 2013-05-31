@@ -1,6 +1,24 @@
 # Release Notes
 
 ## Development
+- [#515](https://github.com/wycats/handlebars.js/issues/515) - Add node require extensions support ([@jjclark1982](https://github.com/jjclark1982))
+- [#517](https://github.com/wycats/handlebars.js/issues/517) - Fix amd precompiler output with directories ([@blessenm](https://github.com/blessenm))
+- [#433](https://github.com/wycats/handlebars.js/issues/433) - Add support for unicode ids
+- [#469](https://github.com/wycats/handlebars.js/issues/469) - Add support for `?` in ids
+- [#534](https://github.com/wycats/handlebars.js/issues/534) - Protect from object prototype modifications
+- [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
+- [#519](https://github.com/wycats/handlebars.js/issues/519) - Allow ID or strings in partial names
+- [#437](https://github.com/wycats/handlebars.js/issues/437) - Require matching brace counts in escaped expressions
+- Add support for complex ids in @data references
+- Docs updates
+
+Compatibility notes:
+- The parser is now stricter on `{{{`, requiring that the end token be `}}}`. Templates that do not
+  follow this convention should add the additional brace value.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)
+
+## v1.0.11 / 1.0.0-rc4 - May 13 2013
 
 - [#458](https://github.com/wycats/handlebars.js/issues/458) - Fix `./foo` syntax ([@jpfiset](https://github.com/jpfiset))
 - [#460](https://github.com/wycats/handlebars.js/issues/460) - Allow `:` in unescaped identifers ([@jpfiset](https://github.com/jpfiset))
@@ -12,6 +30,7 @@
 - [#302](https://github.com/wycats/handlebars.js/issues/302) - Fix sanity check in knownHelpersOnly mode
 - [#369](https://github.com/wycats/handlebars.js/issues/369) - Allow registration of multiple helpers and partial by passing definition object
 - Add bower package declaration ([@DevinClark](https://github.com/DevinClark))
+- Add NuSpec package declaration ([@MikeMayer](https://github.com/MikeMayer))
 - Handle empty context in `with` ([@thejohnfreeman](https://github.com/thejohnfreeman))
 - Support custom template extensions in CLI ([@matteoagosti](https://github.com/matteoagosti))
 - Fix Rhino support ([@broady](https://github.com/broady))
@@ -21,7 +40,7 @@
 - Fix `toString` handling under IE and browserify ([@tommydudebreaux](https://github.com/tommydudebreaux))
 - Add program metadata
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.10...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.10...v1.0.11)
 
 ## v1.0.10 - Node - Feb 27 2013
 
@@ -48,3 +67,21 @@
 - Package browser dist in npm package
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.8...1.0.0-rc.3)
+
+## Prior Versions
+
+When upgrading from the Handlebars 0.9 series, be aware that the
+signature for passing custom helpers or partials to templates has
+changed.
+
+Instead of:
+
+```js
+template(context, helpers, partials, [data])
+```
+
+Use:
+
+```js
+template(context, {helpers: helpers, partials: partials, data: data})
+```

@@ -41,6 +41,21 @@ describe "Tokenizer" do
     result[1].should be_token("ID", "foo")
   end
 
+  it "supports unescaping with &" do
+    result = tokenize("{{&bar}}")
+    result.should match_tokens(%w(OPEN ID CLOSE))
+
+    result[0].should be_token("OPEN", "{{&")
+    result[1].should be_token("ID", "bar")
+  end
+
+  it "supports unescaping with {{{" do
+    result = tokenize("{{{bar}}}")
+    result.should match_tokens(%w(OPEN_UNESCAPED ID CLOSE_UNESCAPED))
+
+    result[1].should be_token("ID", "bar")
+  end
+
   it "supports escaping delimiters" do
     result = tokenize("{{foo}} \\{{bar}} {{baz}}")
     result.should match_tokens(%w(OPEN ID CLOSE CONTENT CONTENT OPEN ID CLOSE))
@@ -129,24 +144,29 @@ describe "Tokenizer" do
     result[4].should be_token("CONTENT", " baz")
   end
 
-  it "tokenizes a partial as 'OPEN_PARTIAL PARTIAL_NAME CLOSE'" do
+  it "tokenizes a partial as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{> foo}}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
   end
 
-  it "tokenizes a partial with context as 'OPEN_PARTIAL PARTIAL_NAME ID CLOSE'" do
+  it "tokenizes a partial with context as 'OPEN_PARTIAL ID ID CLOSE'" do
     result = tokenize("{{> foo bar }}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME ID CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID ID CLOSE))
   end
 
-  it "tokenizes a partial without spaces as 'OPEN_PARTIAL PARTIAL_NAME CLOSE'" do
+  it "tokenizes a partial without spaces as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{>foo}}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
   end
 
-  it "tokenizes a partial space at the end as 'OPEN_PARTIAL PARTIAL_NAME CLOSE'" do
+  it "tokenizes a partial space at the end as 'OPEN_PARTIAL ID CLOSE'" do
     result = tokenize("{{>foo  }}")
-    result.should match_tokens(%w(OPEN_PARTIAL PARTIAL_NAME CLOSE))
+    result.should match_tokens(%w(OPEN_PARTIAL ID CLOSE))
+  end
+
+  it "tokenizes a partial space at the end as 'OPEN_PARTIAL ID CLOSE'" do
+    result = tokenize("{{>foo/bar.baz  }}")
+    result.should match_tokens(%w(OPEN_PARTIAL ID SEP ID SEP ID CLOSE))
   end
 
   it "tokenizes a comment as 'COMMENT'" do
@@ -280,16 +300,16 @@ describe "Tokenizer" do
 
   it "tokenizes special @ identifiers" do
     result = tokenize("{{ @foo }}")
-    result.should match_tokens %w( OPEN DATA CLOSE )
-    result[1].should be_token("DATA", "foo")
+    result.should match_tokens %w( OPEN DATA ID CLOSE )
+    result[2].should be_token("ID", "foo")
 
     result = tokenize("{{ foo @bar }}")
-    result.should match_tokens %w( OPEN ID DATA CLOSE )
-    result[2].should be_token("DATA", "bar")
+    result.should match_tokens %w( OPEN ID DATA ID CLOSE )
+    result[3].should be_token("ID", "bar")
 
     result = tokenize("{{ foo bar=@baz }}")
-    result.should match_tokens %w( OPEN ID ID EQUALS DATA CLOSE )
-    result[4].should be_token("DATA", "baz")
+    result.should match_tokens %w( OPEN ID ID EQUALS DATA ID CLOSE )
+    result[5].should be_token("ID", "baz")
   end
 
   it "does not time out in a mustache with a single } followed by EOF" do

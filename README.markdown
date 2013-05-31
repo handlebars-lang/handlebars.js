@@ -24,7 +24,7 @@ In general, the syntax of Handlebars.js templates is a superset
 of Mustache templates. For basic syntax, check out the [Mustache
 manpage](http://mustache.github.com/mustache.5.html).
 
-Once you have a template, use the Handlebars.compile method to compile
+Once you have a template, use the `Handlebars.compile` method to compile
 the template into a function. The generated function takes a context
 argument, which will be used to render the template.
 
@@ -55,12 +55,12 @@ template. Here's an example, which assumes that your objects have a URL
 embedded in them, as well as the text for a link:
 
 ```js
-Handlebars.registerHelper('link_to', function(context) {
-  return "<a href='" + context.url + "'>" + context.body + "</a>";
+Handlebars.registerHelper('link_to', function() {
+  return "<a href='" + this.url + "'>" + this.body + "</a>";
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = "<ul>{{#posts}}<li>{{{link_to this}}}</li>{{/posts}}</ul>"
+var source = "<ul>{{#posts}}<li>{{{link_to}}}</li>{{/posts}}</ul>"
 
 var template = Handlebars.compile(source);
 template(context);
@@ -70,6 +70,14 @@ template(context);
 // <ul>
 //   <li><a href='/hello-world'>Hello World!</a></li>
 // </ul>
+```
+
+Helpers take precedence over fields defined on the context. To access a field
+that is masked by a helper, a path reference may be used. In the example above
+a field named `link_to` on the `context` object would be referenced using:
+
+```
+{{./link_to}}
 ```
 
 Escaping
@@ -93,17 +101,17 @@ templates easier and also changes a tiny detail of how partials work.
 Handlebars.js supports an extended expression syntax that we call paths.
 Paths are made up of typical expressions and . characters. Expressions
 allow you to not only display data from the current context, but to
-display data from contexts that are descendents and ancestors of the
+display data from contexts that are descendants and ancestors of the
 current context.
 
-To display data from descendent contexts, use the `.` character. So, for
+To display data from descendant contexts, use the `.` character. So, for
 example, if your data were structured like:
 
 ```js
 var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
 ```
 
-you could display the person's name from the top-level context with the
+You could display the person's name from the top-level context with the
 following expression:
 
 ```
@@ -130,12 +138,12 @@ When calling a helper, you can pass paths or Strings as parameters. For
 instance:
 
 ```js
-Handlebars.registerHelper('link_to', function(title, context) {
-  return "<a href='/posts" + context.url + "'>" + title + "!</a>"
+Handlebars.registerHelper('link_to', function(title, options) {
+  return "<a href='/posts" + this.url + "'>" + title + "!</a>"
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = '<ul>{{#posts}}<li>{{{link_to "Post" this}}}</li>{{/posts}}</ul>'
+var source = '<ul>{{#posts}}<li>{{{link_to "Post"}}}</li>{{/posts}}</ul>'
 
 var template = Handlebars.compile(source);
 template(context);
@@ -177,12 +185,18 @@ template(data);
 // </ul>
 ```
 
-Whenever the block helper is called it is given two parameters, the
-argument that is passed to the helper, or the current context if no
-argument is passed and the compiled contents of the block. Inside of
-the block helper the value of `this` is the current context, wrapped to
-include a method named `__get__` that helps translate paths into values
-within the helpers.
+Whenever the block helper is called it is given one or more parameters,
+any arguments that are passed in the helper in the call and an `options`
+object containing the `fn` function which executes the block's child.
+The block's current context may be accessed through `this`.
+
+Block helpers have the same syntax as mustache sections but should not be
+confused with one another. Sections are akin to an implicit `each` or
+`with` statement depending on the input data and helpers are explicit
+pieces of code that are free to implement whatever behavior they like.
+The [mustache spec](http://mustache.github.io/mustache.5.html)
+defines the exact behavior of sections. In the case of name conflicts,
+helpers are given priority.
 
 ### Partials
 
@@ -276,6 +290,20 @@ normal.
 - When all helpers are known in advance the `--knownOnly` argument may be used
   to optimize all block helper references.
 
+Supported Environments
+----------------------
+
+Handlebars has been designed to work in any ECMAScript 3 environment. This includes
+
+- Node.js
+- Chrome
+- Firefox
+- Safari 5+
+- Opera 11+
+- IE 6+
+
+Older versions and other runtimes are likely to work but have not been formally
+tested.
 
 Performance
 -----------
@@ -301,21 +329,7 @@ in the `dist` directory.
 Upgrading
 ---------
 
-When upgrading from the Handlebars 0.9 series, be aware that the
-signature for passing custom helpers or partials to templates has
-changed.
-
-Instead of:
-
-```js
-template(context, helpers, partials, [data])
-```
-
-Use:
-
-```js
-template(context, {helpers: helpers, partials: partials, data: data})
-```
+See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
 Known Issues
 ------------
@@ -335,15 +349,18 @@ Handlebars in the Wild
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
   structure your views, also with automatic data binding support.
 * Les Hill (@leshill) wrote a Rails Asset Pipeline gem named
-  handlebars_assets](http://github.com/leshill/handlebars_assets).
+  [handlebars_assets](http://github.com/leshill/handlebars_assets).
 * [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
+* [Lumbar](walmartlabs.github.io/lumbar) provides easy module-based template management for handlebars projects.
+* [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
+
+Have a project using Handlebars? Send us a [pull request](https://github.com/wycats/handlebars.js/pull/new/master)!
 
 Helping Out
 -----------
 To build Handlebars.js you'll need a few things installed.
 
 * Node.js
-* Jison, for building the compiler - `npm install jison`
 * Ruby
 * therubyracer, for running tests - `gem install therubyracer`
 * rspec, for running tests - `gem install rspec`
@@ -353,11 +370,16 @@ and therubyracer if you've got bundler installed.
 
 To build Handlebars.js from scratch, you'll want to run `rake compile`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `rake spec`. You can also
-run our set of benchmarks with `rake bench`.
+results to the dist/ folder. To run tests, run `rake test`. You can also
+run our set of benchmarks with `rake bench`. Node tests can be run with
+`npm test` or `rake npm_test`. The default rake target will compile and
+run both test suites.
 
-If you notice any problems, please report
-them to the GitHub issue tracker at
+Some environments, notably Windows, have issues running therubyracer. Under these
+envrionments the `rake compile` and `npm test` should be sufficient to test
+most handlebars functionality.
+
+If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
 Feel free to contact commondream or wycats through GitHub with any other
 questions or feature requests. To submit changes fork the project and

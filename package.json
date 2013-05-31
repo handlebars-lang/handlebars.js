@@ -1,7 +1,7 @@
 {
   "name": "handlebars",
   "description": "Extension of the Mustache logicless template language",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "homepage": "http://www.handlebarsjs.com/",
   "keywords": [
     "handlebars mustache template html"
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "optimist": "~0.3",
-    "uglify-js": "~1.2"
+    "uglify-js": "~2.3"
   },
   "devDependencies": {
     "benchmark": "~1.0",
