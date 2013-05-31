@@ -1538,6 +1538,10 @@ test("Passing falsy values to Handlebars.compile throws an error", function() {
   }, "You must pass a string or Handlebars AST to Handlebars.precompile. You passed null");
 });
 
+test("can pass through an already-compiled AST via compile/precompile", function() {
+  equal(Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello')
+});
+
 test('GH-408: Multiple loops fail', function() {
   var context = [
     { name: "John Doe", location: { city: "Chicago" } },

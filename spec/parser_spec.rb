@@ -417,21 +417,10 @@ describe "Parser" do
   end
 
   context "externally compiled AST" do
-
     it "can pass through an already-compiled AST" do
       ast_for(@context.eval('new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]);')).should == root do
         content "Hello"
       end
-    end
-
-    it "can pass through an already-compiled AST via compile/precompile" do
-      @context = Handlebars::Spec::CONTEXT
-
-      code = 'Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))();'
-      @context.eval(code).should == "Hello"
-
-      code = @context.eval 'Handlebars.precompile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))'
-      @context.eval("(#{code})(this)").should == "Hello"
     end
   end
 end
