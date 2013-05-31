@@ -30,12 +30,13 @@ var Handlebars = {};
 // lib/handlebars/base.js
 
 Handlebars.VERSION = "1.0.0-rc.4";
-Handlebars.COMPILER_REVISION = 3;
+Handlebars.COMPILER_REVISION = 4;
 
 Handlebars.REVISION_CHANGES = {
   1: '<= 1.0.rc.2', // 1.0.rc.2 is actually rev2 but doesn't report it
   2: '== 1.0.0-rc.3',
-  3: '>= 1.0.0-rc.4'
+  3: '== 1.0.0-rc.4',
+  4: '>= 1.0.0'
 };
 
 Handlebars.helpers  = {};
@@ -1385,8 +1386,9 @@ JavaScriptCompiler.prototype = {
 
     if (!this.isChild) {
       var namespace = this.namespace;
-      var copies = "helpers = helpers || " + namespace + ".helpers;";
-      if (this.environment.usePartial) { copies = copies + " partials = partials || " + namespace + ".partials;"; }
+
+      var copies = "helpers = this.merge(helpers, " + namespace + ".helpers);";
+      if (this.environment.usePartial) { copies = copies + " partials = this.merge(partials, " + namespace + ".partials);"; }
       if (this.options.data) { copies = copies + " data = data || {};"; }
       out.push(copies);
     } else {
@@ -2189,6 +2191,16 @@ Handlebars.VM = {
           programWrapper = this.programs[i] = Handlebars.VM.program(i, fn);
         }
         return programWrapper;
+      },
+      merge: function(param, common) {
+        var ret = param || common;
+
+        if (param && common) {
+          ret = {};
+          Handlebars.Utils.extend(ret, common);
+          Handlebars.Utils.extend(ret, param);
+        }
+        return ret;
       },
       programWithDepth: Handlebars.VM.programWithDepth,
       noop: Handlebars.VM.noop,

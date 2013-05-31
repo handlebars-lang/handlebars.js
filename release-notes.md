@@ -9,12 +9,14 @@
 - [#519](https://github.com/wycats/handlebars.js/issues/519) - Fix partials with . name ([@jamesgorrie](https://github.com/jamesgorrie))
 - [#519](https://github.com/wycats/handlebars.js/issues/519) - Allow ID or strings in partial names
 - [#437](https://github.com/wycats/handlebars.js/issues/437) - Require matching brace counts in escaped expressions
+- Merge passed partials and helpers with global namespace values
 - Add support for complex ids in @data references
 - Docs updates
 
 Compatibility notes:
 - The parser is now stricter on `{{{`, requiring that the end token be `}}}`. Templates that do not
   follow this convention should add the additional brace value.
+- Code that relies on global the namespace being muted when custom helpers or partials are passed will need to explicitly pass an `undefined` value for any helpers that should not be available.
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.11...master)
 
