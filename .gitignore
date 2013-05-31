@@ -2,7 +2,7 @@ vendor
 .rvmrc
 .DS_Store
 lib/handlebars/compiler/parser.js
-dist/*.min.js
+dist
 node_modules
 *.sublime-project
 *.sublime-workspace
