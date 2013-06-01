@@ -21,7 +21,10 @@
         "stop",
         "ok",
         "strictEqual",
-        "module"
+        "module",
+
+        "describe",
+        "it"
     ],
 
     "node" : true,
