@@ -43,7 +43,7 @@ end
 task :compile => "lib/handlebars/compiler/parser.js"
 
 desc "run the spec suite"
-task :spec => [:release] do
+task :spec => [:dist] do
   rc = system "npm test"
   fail "npm test failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
@@ -126,7 +126,7 @@ task :version, [:version] => [] do |task, args|
   end
 
   Rake::Task[:dist].invoke
-  Rake::Task[:test].invoke
+  Rake::Task[:spec].invoke
 
   # TODO : Make sure that all of these files are updated properly in git then run npm version
 end
