@@ -43,7 +43,7 @@ end
 task :compile => "lib/handlebars/compiler/parser.js"
 
 desc "run the spec suite"
-task :spec => [:dist] do
+task :spec => [:build] do
   rc = system "npm test"
   fail "npm test failed with exit code #{$?.exitstatus}" if (rc.nil? || ! rc || $?.exitstatus != 0)
 end
@@ -91,7 +91,7 @@ file "dist/handlebars.runtime.js" => runtime_deps do |task|
   build_for_task(task)
 end
 
-task :dist => [:compile] do |task|
+task :build => [:compile] do |task|
   Rake::Task["dist/handlebars.js"].execute
   Rake::Task["dist/handlebars.runtime.js"].execute
 
@@ -125,7 +125,7 @@ task :version, [:version] => [] do |task, args|
     file.puts content.gsub(/<version>.*<\/version>/, "<version>#{version}</version>")
   end
 
-  Rake::Task[:dist].invoke
+  Rake::Task[:build].invoke
   Rake::Task[:spec].invoke
 
   # TODO : Make sure that all of these files are updated properly in git then run npm version
