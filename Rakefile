@@ -155,14 +155,10 @@ def dist_files(&block)
   end
 end
 
-task :publish do
+def publish_s3(files)
   access_key_id = ENV['S3_ACCESS_KEY_ID']
   secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
   bucket_name = ENV['S3_BUCKET_NAME']
-
-  files = dist_files do |basename, rev|
-    ["#{basename}-latest.js", "#{basename}-#{rev}.js"]
-  end
 
   if files && access_key_id && secret_access_key && bucket_name
     require 'aws-sdk'
@@ -178,3 +174,12 @@ task :publish do
     puts "Not uploading any files to S3!"
   end
 end
+
+task :publish do
+  files = dist_files do |basename, rev|
+    ["#{basename}-latest.js", "#{basename}-#{rev}.js"]
+  end
+
+  publish_s3 files
+end
+
