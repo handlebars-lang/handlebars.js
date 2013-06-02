@@ -106,7 +106,7 @@ task :version, [:version] => [] do |task, args|
   fail "Must provide a version number" unless version
 
   changed = %x{git diff-index --name-only HEAD --}
-  fail "The repository must be clean" unless $?.success? && !changed
+  fail "The repository must be clean" unless $?.success? && changed.empty?
 
   puts "Updating to version #{version}"
 
