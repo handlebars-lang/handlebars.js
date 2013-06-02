@@ -142,7 +142,7 @@ task :publish do
     root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
     s3 = AWS::S3.new(access_key_id: access_key_id,secret_access_key: secret_access_key)
     bucket = s3.buckets[bucket_name]
-    files = ['handlebars.js', 'handlebars.runtime.js'].map { |file| root + file }
+    files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
     files.each do |file|
       basename = Pathname.new(file).basename.sub_ext('')
       s3_objs = ["#{basename}-latest.js", "#{basename}-#{rev}.js"].map do |file|
