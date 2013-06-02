@@ -133,7 +133,7 @@ task :publish do
   access_key_id = ENV['S3_ACCESS_KEY_ID']
   secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
   bucket_name = ENV['S3_BUCKET_NAME']
-  rev = `git rev-list --short HEAD -n 1`.to_s.strip
+  rev = `git rev-parse --short HEAD -n 1`.to_s.strip
   master_rev = `git rev-list origin/master -n 1`.to_s.strip
   upload = true if rev == master_rev
   upload = upload && access_key_id && secret_access_key && bucket_name
