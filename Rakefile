@@ -15,6 +15,8 @@ def compile_parser
 end
 
 def dist_files(&block)
+  map = {}
+
   rev = `git rev-parse --short HEAD`.to_s.strip
   master_rev = `git rev-parse --short origin/master`.to_s.strip
 
@@ -24,9 +26,9 @@ def dist_files(&block)
     files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
     files = files.map do |file|
       basename = Pathname.new(file).basename.sub_ext('')
-      yield basename, rev
+      map[file] = yield basename, rev
     end
-    files = files.flatten
+    map
   end
 end
 
@@ -166,10 +168,13 @@ task :publish do
     require 'aws-sdk'
     s3 = AWS::S3.new(access_key_id: access_key_id,secret_access_key: secret_access_key)
     bucket = s3.buckets[bucket_name]
-    s3_objs = files.map do |file|
-      bucket.objects[file]
+    files.each do |source, outputs|
+      s3_objs = outputs.map do |file|
+        file
+        bucket.objects[file]
+      end
+      s3_objs.each { |obj| obj.write(Pathname.new(source)) }
     end
-    s3_objs.each { |obj| obj.write(Pathname.new(file)) }
   else
     puts "Not uploading any files to S3!"
   end
