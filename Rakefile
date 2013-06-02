@@ -100,9 +100,20 @@ task :dist => [:compile] do |task|
 end
 
 # Updates the various version numbers.
-task :version => [] do |task|
-  # TODO : Pull from package.json when the version numbers are synced
-  version = File.read("lib/handlebars/base.js").match(/Handlebars.VERSION = "(.*)";/)[1]
+desc "Updates the current release version"
+task :version, [:version] => [] do |task, args|
+  version = args.version
+  fail "Must provide a version number" unless version
+
+  changed = %x{git diff-index --name-only HEAD --}
+  fail "The repository must be clean" unless $?.success? && !changed
+
+  puts "Updating to version #{version}"
+
+  content = File.read("lib/handlebars/base.js")
+  File.open("lib/handlebars/base.js", "w") do | file|
+    file.puts content.gsub(/Handlebars.VERSION = "(.*)";/, "Handlebars.VERSION = \"#{version}\";")
+  end
 
   content = File.read("bower.json")
   File.open("bower.json", "w") do |file|
@@ -114,10 +125,12 @@ task :version => [] do |task|
     file.puts content.gsub(/<version>.*<\/version>/, "<version>#{version}</version>")
   end
 
+  Rake::Task[:dist].invoke
+  Rake::Task[:test].invoke
+
+  # TODO : Make sure that all of these files are updated properly in git then run npm version
 end
 
-desc "build the build and runtime version of handlebars"
-task :release => [:version, :dist]
 
 directory "vendor"
 
