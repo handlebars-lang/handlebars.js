@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/wycats/handlebars.js.png?branch=master)](https://travis-ci.org/wycats/handlebars.js)
 
+
 Handlebars.js
 =============
 
@@ -11,12 +12,22 @@ keep the view and the code separated like we all know they should be.
 Checkout the official Handlebars docs site at
 [http://www.handlebarsjs.com](http://www.handlebarsjs.com).
 
-
 Installing
 ----------
 Installing Handlebars is easy. Simply download the package [from the
 official site](http://handlebarsjs.com/) and add it to your web pages
 (you should usually use the most recent version).
+
+Alternatively, if you prefer having the latest version of handlebars from
+the 'master' branch, passing builds of the 'master' branch are automatically
+published to S3. You may download the latest passing master build by grabbing
+a `handlebars-latest.js` file from the [builds page][builds-page]. When the
+build is published, it is also available as a `handlebars-gitSHA.js` file on
+the builds page if you need a version to refer to others.
+`handlebars-runtime.js` builds are also available.
+
+**Note**: The S3 builds page is provided as a convenience for the community,
+but you should not use it for hosting Handlebars in production.
 
 Usage
 -----
@@ -382,3 +393,4 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
+[builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/index.html
