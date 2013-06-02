@@ -14,6 +14,22 @@ def compile_parser
   end
 end
 
+def dist_files(&block)
+  rev = `git rev-parse --short HEAD`.to_s.strip
+  master_rev = `git rev-parse --short origin/master`.to_s.strip
+
+  if rev == master_rev
+    root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
+
+    files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
+    files = files.map do |file|
+      basename = Pathname.new(file).basename.sub_ext('')
+      yield basename, rev
+    end
+    files = files.flatten
+  end
+end
+
 file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   if File.exists?('./node_modules/jison')
     compile_parser
@@ -133,23 +149,19 @@ task :publish do
   access_key_id = ENV['S3_ACCESS_KEY_ID']
   secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
   bucket_name = ENV['S3_BUCKET_NAME']
-  rev = `git rev-parse --short HEAD -n 1`.to_s.strip
-  master_rev = `git rev-list origin/master -n 1`.to_s.strip
-  upload = true if rev == master_rev
-  upload = upload && access_key_id && secret_access_key && bucket_name
-  if upload
+
+  files = dist_files do |basename, rev|
+    ["#{basename}-latest.js", "#{basename}-#{rev}.js"]
+  end
+
+  if files && access_key_id && secret_access_key && bucket_name
     require 'aws-sdk'
-    root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
     s3 = AWS::S3.new(access_key_id: access_key_id,secret_access_key: secret_access_key)
     bucket = s3.buckets[bucket_name]
-    files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
-    files.each do |file|
-      basename = Pathname.new(file).basename.sub_ext('')
-      s3_objs = ["#{basename}-latest.js", "#{basename}-#{rev}.js"].map do |file|
-        bucket.objects[file]
-      end
-      s3_objs.each { |obj| obj.write(Pathname.new(file)) }
+    s3_objs = files.map do |file|
+      bucket.objects[file]
     end
+    s3_objs.each { |obj| obj.write(Pathname.new(file)) }
   else
     puts "Not uploading any files to S3!"
   end
