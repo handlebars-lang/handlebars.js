@@ -14,24 +14,6 @@ def compile_parser
   end
 end
 
-def dist_files(&block)
-  map = {}
-
-  rev = `git rev-parse --short HEAD`.to_s.strip
-  master_rev = `git rev-parse --short origin/master`.to_s.strip
-
-  if rev == master_rev
-    root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
-
-    files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
-    files = files.map do |file|
-      basename = Pathname.new(file).basename.sub_ext('')
-      map[file] = yield basename, rev
-    end
-    map
-  end
-end
-
 file "lib/handlebars/compiler/parser.js" => ["src/handlebars.yy","src/handlebars.l"] do
   if File.exists?('./node_modules/jison')
     compile_parser
@@ -155,6 +137,24 @@ task :bench => "vendor" do
   system "node bench/handlebars.js"
 end
 
+def dist_files(&block)
+  map = {}
+
+  rev = `git rev-parse --short HEAD`.to_s.strip
+  master_rev = `git rev-parse --short origin/master`.to_s.strip
+
+  if rev == master_rev
+    root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
+
+    files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
+    files = files.map do |file|
+      basename = Pathname.new(file).basename.sub_ext('')
+      map[file] = yield basename, rev
+    end
+    map
+  end
+end
+
 task :publish do
   access_key_id = ENV['S3_ACCESS_KEY_ID']
   secret_access_key = ENV['S3_SECRET_ACCESS_KEY']
@@ -170,7 +170,6 @@ task :publish do
     bucket = s3.buckets[bucket_name]
     files.each do |source, outputs|
       s3_objs = outputs.map do |file|
-        file
         bucket.objects[file]
       end
       s3_objs.each { |obj| obj.write(Pathname.new(source)) }
