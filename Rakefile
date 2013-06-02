@@ -140,19 +140,14 @@ end
 def dist_files(&block)
   map = {}
 
-  rev = `git rev-parse --short HEAD`.to_s.strip
-  master_rev = `git rev-parse --short origin/master`.to_s.strip
+  root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
 
-  if rev == master_rev
-    root = File.expand_path(File.dirname(__FILE__)) + '/dist/'
-
-    files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
-    files = files.map do |file|
-      basename = Pathname.new(file).basename.sub_ext('')
-      map[file] = yield basename, rev
-    end
-    map
+  files = ['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'].map { |file| root + file }
+  files = files.map do |file|
+    basename = Pathname.new(file).basename.sub_ext('')
+    map[file] = yield basename
   end
+  map
 end
 
 def publish_s3(files)
@@ -176,10 +171,26 @@ def publish_s3(files)
 end
 
 task :publish do
-  files = dist_files do |basename, rev|
-    ["#{basename}-latest.js", "#{basename}-#{rev}.js"]
+  rev = `git rev-parse --short HEAD`.to_s.strip
+  master_rev = `git rev-parse --short origin/master`.to_s.strip
+
+  if rev == master_rev
+    files = dist_files do |basename|
+      ["#{basename}-latest.js", "#{basename}-#{rev}.js"]
+    end
   end
 
   publish_s3 files
 end
 
+task :publish_version do
+  tag = `git tag -l --points-at HEAD`.to_s.strip.split(/\n/)
+  fail "The current commit must be tagged." if tag.empty?
+  fail "Multiple tags, aborting: #{tag}" if tag.length > 1
+  tag = tag.first
+
+  files = dist_files do |basename|
+    ["#{basename}-#{tag}.js"]
+  end
+  publish_s3 files
+end
