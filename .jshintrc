@@ -24,7 +24,8 @@
         "module",
 
         "describe",
-        "it"
+        "it",
+        "afterEach"
     ],
 
     "node" : true,
@@ -35,7 +36,7 @@
     "curly": false,
     "debug": false,
     "devel": false,
-    "eqeqeq": true,
+    "eqeqeq": false,
     "evil": true,
     "forin": false,
     "immed": false,

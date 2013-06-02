@@ -1,8 +1,8 @@
-var Handlebars = require('../lib/handlebars');
-
-require('should');
-
 describe('parser', function() {
+  if (!Handlebars.print) {
+    return;
+  }
+
   function ast_for(template) {
     var ast = Handlebars.parse(template);
     return Handlebars.print(ast);

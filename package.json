@@ -29,7 +29,7 @@
     "handlebars": "bin/handlebars"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha spec/tokenizer.js spec/parser.js && node_modules/.bin/mocha -u qunit spec/qunit_spec.js"
+    "test": "node ./spec/env/runner"
   },
   "optionalDependencies": {}
 }

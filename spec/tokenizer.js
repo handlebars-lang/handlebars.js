@@ -1,5 +1,4 @@
-var Handlebars = require('../lib/handlebars'),
-    should = require('should');
+var should = require('should');
 
 should.Assertion.prototype.match_tokens = function(tokens) {
   this.obj.forEach(function(value, index) {
@@ -11,6 +10,10 @@ should.Assertion.prototype.be_token = function(name, text) {
 };
 
 describe('Tokenizer', function() {
+  if (!Handlebars.Parser) {
+    return;
+  }
+
   function tokenize(template) {
     var parser = Handlebars.Parser,
         lexer = parser.lexer;
