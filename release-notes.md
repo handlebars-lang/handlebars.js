@@ -1,6 +1,14 @@
 # Release Notes
 
 ## Development
+
+- [#537](https://github.com/wycats/handlebars.js/issues/537) - Add CommonJS and AMD loader support ([@spikebrehm](https://github.com/spikebrehm))
+- [#544](https://github.com/wycats/handlebars.js/issues/544) - Push travis builds to build server ([@fivetanley](https://github.com/fivetanley))
+
+Compatibility notes:
+- The client-code has been wrapped in a hybrid AMD/CommonJS loader.
+  This may cause unexpected issues with different build/loading mechanisms so this change is being made early in the 1.1 lifecycle.
+
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.12...master)
 
 ## v1.0.12 / 1.0.0 - May 31 2013
