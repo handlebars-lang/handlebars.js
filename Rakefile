@@ -91,13 +91,12 @@ file "dist/handlebars.runtime.js" => runtime_deps do |task|
   build_for_task(task)
 end
 
-task :build => [:compile] do |task|
-  # Since the tests are dependent on this always rebuild.
+task :dist => [:compile] do |task|
   Rake::Task["dist/handlebars.js"].execute
-end
-task :runtime => [:compile] do |task|
-  # Since the tests are dependent on this always rebuild.
   Rake::Task["dist/handlebars.runtime.js"].execute
+
+  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.min.js dist/handlebars.js"
+  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.runtime.min.js dist/handlebars.runtime.js"
 end
 
 # Updates the various version numbers.
@@ -114,15 +113,11 @@ task :version => [] do |task|
   File.open("handlebars.js.nuspec", "w") do |file|
     file.puts content.gsub(/<version>.*<\/version>/, "<version>#{version}</version>")
   end
-end
 
-task :minify => [] do |task|
-  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.min.js dist/handlebars.js"
-  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.runtime.min.js dist/handlebars.runtime.js"
 end
 
 desc "build the build and runtime version of handlebars"
-task :release => [:version, :build, :runtime, :minify]
+task :release => [:version, :dist]
 
 directory "vendor"
 
