@@ -70,6 +70,11 @@ var optimist = require('optimist')
         'description': 'Template extension.',
         'alias': 'extension',
         'default': 'handlebars'
+      },
+      'b': {
+        'type': 'boolean',
+        'description': 'Removes the BOM (Byte Order Mark) from the beginning of the templates.',
+        'alias': 'bom'
       }
     })
 
@@ -147,6 +152,10 @@ function processTemplate(template, root) {
     });
   } else {
     var data = fs.readFileSync(path, 'utf8');
+    
+    if (argv.bom && data.indexOf('\uFEFF') === 0) {
+      data = data.substring(1);
+    }
 
     var options = {
       knownHelpers: known,
