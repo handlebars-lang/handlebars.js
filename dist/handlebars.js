@@ -714,13 +714,10 @@ Handlebars.AST.PartialNode = function(partialName, context) {
 };
 
 Handlebars.AST.BlockNode = function(mustache, program, inverse, close) {
-  var verifyMatch = function(open, close) {
-    if(open.original !== close.original) {
-      throw new Handlebars.Exception(open.original + " doesn't match " + close.original);
-    }
-  };
+  if(mustache.id.original !== close.original) {
+    throw new Handlebars.Exception(mustache.id.original + " doesn't match " + close.original);
+  }
 
-  verifyMatch(mustache.id, close);
   this.type = "block";
   this.mustache = mustache;
   this.program  = program;
@@ -886,7 +883,6 @@ Handlebars.Utils = {
 
 /*jshint eqnull:true*/
 var Compiler = Handlebars.Compiler = function() {};
-var JavaScriptCompiler = Handlebars.JavaScriptCompiler = function() {};
 
 // the foundHelper register will disambiguate helper lookup from finding a
 // function in a context. This is necessary for mustache compatibility, which
@@ -1294,9 +1290,56 @@ Compiler.prototype = {
   }
 };
 
+Handlebars.precompile = function(input, options) {
+  if (input == null || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
+    throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.precompile. You passed " + input);
+  }
+
+  options = options || {};
+  if (!('data' in options)) {
+    options.data = true;
+  }
+  var ast = Handlebars.parse(input);
+  var environment = new Compiler().compile(ast, options);
+  return new Handlebars.JavaScriptCompiler().compile(environment, options);
+};
+
+Handlebars.compile = function(input, options) {
+  if (input == null || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
+    throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.compile. You passed " + input);
+  }
+
+  options = options || {};
+  if (!('data' in options)) {
+    options.data = true;
+  }
+  var compiled;
+  function compile() {
+    var ast = Handlebars.parse(input);
+    var environment = new Compiler().compile(ast, options);
+    var templateSpec = new Handlebars.JavaScriptCompiler().compile(environment, options, undefined, true);
+    return Handlebars.template(templateSpec);
+  }
+
+  // Template is only compiled on first use and cached after that point.
+  return function(context, options) {
+    if (!compiled) {
+      compiled = compile();
+    }
+    return compiled.call(this, context, options);
+  };
+};
+
+;
+// lib/handlebars/compiler/javascript-compiler.js
+/*jshint eqnull:true*/
+
 var Literal = function(value) {
   this.value = value;
 };
+
+
+var JavaScriptCompiler = Handlebars.JavaScriptCompiler = function() {};
 
 JavaScriptCompiler.prototype = {
   // PUBLIC API: You can override these methods in a subclass to provide
@@ -1359,7 +1402,7 @@ JavaScriptCompiler.prototype = {
 
     this.i = 0;
 
-    for(l=opcodes.length; this.i<l; this.i++) {
+    for(var l=opcodes.length; this.i<l; this.i++) {
       opcode = opcodes[this.i];
 
       if(opcode.opcode === 'DECLARE') {
@@ -2132,47 +2175,6 @@ JavaScriptCompiler.isValidJavaScriptVariableName = function(name) {
   }
   return false;
 };
-
-Handlebars.precompile = function(input, options) {
-  if (input == null || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
-    throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.precompile. You passed " + input);
-  }
-
-  options = options || {};
-  if (!('data' in options)) {
-    options.data = true;
-  }
-  var ast = Handlebars.parse(input);
-  var environment = new Compiler().compile(ast, options);
-  return new JavaScriptCompiler().compile(environment, options);
-};
-
-Handlebars.compile = function(input, options) {
-  if (input == null || (typeof input !== 'string' && input.constructor !== Handlebars.AST.ProgramNode)) {
-    throw new Handlebars.Exception("You must pass a string or Handlebars AST to Handlebars.compile. You passed " + input);
-  }
-
-  options = options || {};
-  if (!('data' in options)) {
-    options.data = true;
-  }
-  var compiled;
-  function compile() {
-    var ast = Handlebars.parse(input);
-    var environment = new Compiler().compile(ast, options);
-    var templateSpec = new JavaScriptCompiler().compile(environment, options, undefined, true);
-    return Handlebars.template(templateSpec);
-  }
-
-  // Template is only compiled on first use and cached after that point.
-  return function(context, options) {
-    if (!compiled) {
-      compiled = compile();
-    }
-    return compiled.call(this, context, options);
-  };
-};
-
 ;
 // lib/handlebars/runtime.js
 
