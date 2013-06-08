@@ -4,7 +4,10 @@
   "version": "1.0.12",
   "homepage": "http://www.handlebarsjs.com/",
   "keywords": [
-    "handlebars mustache template html"
+    "handlebars",
+    "mustache",
+    "template",
+    "html"
   ],
   "repository": {
     "type": "git",
