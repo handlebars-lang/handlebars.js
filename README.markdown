@@ -271,13 +271,20 @@ Precompile handlebar templates.
 Usage: handlebars template...
 
 Options:
-  -a, --amd        Create an AMD format function (allows loading with RequireJS)         [boolean]
-  -f, --output     Output File                                                           [string]
-  -k, --known      Known helpers                                                         [string]
-  -o, --knownOnly  Known helpers only                                                    [boolean]
-  -m, --min        Minimize output                                                       [boolean]
-  -s, --simple     Output template function only.                                        [boolean]
-  -r, --root       Template root. Base value that will be stripped from template names.  [string]
+  -a, --amd            Create an AMD format function (allows loading with RequireJS)          [boolean]
+  -f, --output         Output File                                                            [string]
+  -k, --known          Known helpers                                                          [string]
+  -o, --knownOnly      Known helpers only                                                     [boolean]
+  -m, --min            Minimize output                                                        [boolean]
+  -s, --simple         Output template function only.                                         [boolean]
+  -r, --root           Template root. Base value that will be stripped from template names.   [string]
+  -c, --commonjs       Exports CommonJS style, path to Handlebars module                      [string]
+  -h, --handlebarPath  Path to handlebar.js (only valid for amd-style)                        [string]
+  -n, --namespace      Template namespace                                                     [string]
+  -p, --partial        Compiling a partial template                                           [boolean]
+  -d, --data           Include data when compiling                                            [boolean]
+  -e, --extension      Template extension.                                                    [string]
+  -b, --bom            Removes the BOM (Byte Order Mark) from the beginning of the templates. [boolean]
 </pre>
 
 If using the precompiler's normal mode, the resulting templates will be
