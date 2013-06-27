@@ -364,6 +364,7 @@ Handlebars in the Wild
 * [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
 * [Lumbar](walmartlabs.github.io/lumbar) provides easy module-based template management for handlebars projects.
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
+* This [jQuery plugin](http://71104.github.io/jquery-handlebars/) allows you to use Handlebars.js with [jQuery](http://jquery.com/).
 
 Have a project using Handlebars? Send us a [pull request](https://github.com/wycats/handlebars.js/pull/new/master)!
 
