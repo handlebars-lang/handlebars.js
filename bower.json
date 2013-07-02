@@ -1,6 +1,6 @@
 {
   "name": "handlebars.js",
-  "version": "1.0.0",
+  "version": "1.0.12",
   "main": "dist/handlebars.js",
   "ignore": [
     "node_modules",
