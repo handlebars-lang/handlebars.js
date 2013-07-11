@@ -20,14 +20,6 @@ describe('blocks', function() {
 
     equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
   });
-
-
-  it("raw block", function() {
-    var string   = "{{{{ {{test}} }}}}";
-    var hash = { test: "hello" };
-    shouldCompileTo(string, hash, " {{test}} ",
-                    "raw block ignores blocks");
-  });
   
   it("empty block", function() {
     var string   = "{{#goodbyes}}{{/goodbyes}}cruel {{world}}!";
