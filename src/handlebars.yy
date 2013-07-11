@@ -21,7 +21,8 @@ statements
   ;
 
 statement
-  : openInverse program closeBlock { $$ = new yy.BlockNode($1, $2.inverse, $2, $3); }
+  : RAW_BLOCK { $$ = new yy.ContentNode($1); }
+  | openInverse program closeBlock { $$ = new yy.BlockNode($1, $2.inverse, $2, $3); }
   | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2, $2.inverse, $3); }
   | mustache { $$ = $1; }
   | partial { $$ = $1; }

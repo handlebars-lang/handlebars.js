@@ -20,6 +20,7 @@
 
 <com>[\s\S]*?"--}}"              { yytext = yytext.substr(0, yyleng-4); this.popState(); return 'COMMENT'; }
 
+<mu>"{{{{"[^\x00]*"}}}}"         { yytext = yytext.substr(4, yyleng-8); this.popState(); return 'RAW_BLOCK'; }
 <mu>"{{>"                        { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                        { return 'OPEN_BLOCK'; }
 <mu>"{{/"                        { return 'OPEN_ENDBLOCK'; }
