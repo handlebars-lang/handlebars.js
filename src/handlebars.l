@@ -54,6 +54,11 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"("                          return 'OPEN_SEXPR';
 <mu>")"                          return 'CLOSE_SEXPR';
 
+<mu>"{{{{"[^\x00]*"}}}}"         {
+                                  yytext = yytext.substr(4, yyleng-8);
+                                  this.popState();
+                                  return 'RAW_BLOCK';
+                                 }
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
 <mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';
