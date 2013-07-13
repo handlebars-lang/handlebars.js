@@ -119,7 +119,7 @@ To display data from descendant contexts, use the `.` character. So, for
 example, if your data were structured like:
 
 ```js
-var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
+var data = {"person": { "name": "Alan" }, "company": {"name": "Rad, Inc." } };
 ```
 
 You could display the person's name from the top-level context with the
