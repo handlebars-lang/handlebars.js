@@ -1,8 +1,12 @@
 module.exports = {
   amd: {
-    type: 'amd',
-    src: ["lib/<%= pkg.barename %>.js", "lib/*/**/*.js"],
-    dest: "tmp/<%= pkg.barename %>.amd.js"
+    type: "amd",
+    files: [{
+      expand: true,
+      cwd: 'lib/',
+      src: '**/*.js',
+      dest: 'tmp'
+    }]
   },
 
   cjs: {

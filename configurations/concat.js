@@ -1,6 +1,6 @@
 module.exports = {
   library: {
-    src: ['tmp/<%= pkg.barename %>.amd.js'],
+    src: ['tmp/<%= pkg.barename %>.amd.js', 'tmp/<%= pkg.barename %>/*.js'],
     dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.amd.js'
   },
 

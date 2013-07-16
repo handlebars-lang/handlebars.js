@@ -10,7 +10,6 @@ module.exports = function(grunt) {
     clean: ["dist"],
     watch: config('watch') ,
     concat: config('concat'),
-    browser: config('browser'),
     connect: config('connect'),
     transpile: config('transpile')
   });
@@ -23,10 +22,7 @@ module.exports = function(grunt) {
   this.registerTask('build', "Builds a distributable version of the current project", [
                     'clean',
                     'transpile:amd',
-                    'concat:library',
-                    'concat:browser',
-                    'browser:dist',
-                    'bytes']);
+                    'concat:library']);
 
   this.registerTask('tests', "Builds the test package", [
                     'build',
