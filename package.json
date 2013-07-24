@@ -22,6 +22,10 @@
     "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-watch": "~0.4.4",
     "grunt-hang": "~0.1.2",
-    "grunt-es6-module-transpiler": "~0.4.1"
+    "grunt-es6-module-transpiler": "~0.4.1",
+    "es6-module-transpiler": "*",
+    "jison": "~0.3.0",
+    "mocha": "*",
+    "should": "~1.2.2"
   }
 }

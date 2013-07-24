@@ -5,7 +5,7 @@ def compile_parser
   system "./node_modules/.bin/jison -m js src/handlebars.yy src/handlebars.l"
   if $?.success?
     File.open("lib/handlebars/compiler/parser.js", "w") do |file|
-      file.puts File.read("src/parser-prefix.js") + File.read("handlebars.js") + File.read("src/parser-suffix.js")
+      file.puts File.read("handlebars.js")
     end
 
     sh "rm handlebars.js"
@@ -39,11 +39,11 @@ def remove_exports(string)
   match ? match[1] : string
 end
 
-minimal_deps = %w(browser-prefix base compiler/parser compiler/base compiler/ast utils compiler/compiler compiler/javascript-compiler runtime browser-suffix).map do |file|
+minimal_deps = %w(base compiler/parser compiler/base compiler/ast utils compiler/compiler compiler/javascript-compiler runtime).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
-runtime_deps = %w(browser-prefix base utils runtime browser-suffix).map do |file|
+runtime_deps = %w(base utils runtime).map do |file|
   "lib/handlebars/#{file}.js"
 end
 
