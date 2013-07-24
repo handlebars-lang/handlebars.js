@@ -21,12 +21,17 @@ statements
   ;
 
 statement
-  : openInverse program closeBlock { $$ = new yy.BlockNode($1, $2.inverse, $2, $3); }
+  : openRawBlock CONTENT END_RAW_BLOCK { $$ = new yy.RawBlockNode($1, $2); }
+  | openInverse program closeBlock { $$ = new yy.BlockNode($1, $2.inverse, $2, $3); }
   | openBlock program closeBlock { $$ = new yy.BlockNode($1, $2, $2.inverse, $3); }
   | mustache { $$ = $1; }
   | partial { $$ = $1; }
   | CONTENT { $$ = new yy.ContentNode($1); }
   | COMMENT { $$ = new yy.CommentNode($1); }
+  ;
+
+openRawBlock
+  : OPEN_RAW_BLOCK inMustache CLOSE_RAW_BLOCK { $$ = new yy.MustacheNode($2[0], $2[1]); }
   ;
 
 openBlock

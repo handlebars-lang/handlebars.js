@@ -20,7 +20,7 @@ describe('blocks', function() {
 
     equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
   });
-
+  
   it("empty block", function() {
     var string   = "{{#goodbyes}}{{/goodbyes}}cruel {{world}}!";
     var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};

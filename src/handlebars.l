@@ -1,5 +1,5 @@
 
-%x mu emu com
+%x mu emu com raw
 
 %%
 
@@ -18,8 +18,14 @@
                                    return 'CONTENT';
                                  }
 
+<raw>"{{{{/"[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]"}}}}" { yytext = yytext.substr(5, yyleng-9); this.popState(); return 'END_RAW_BLOCK'; }
+<raw>[^\x00]*?/("{{{{/")         { return 'CONTENT'; }
+
 <com>[\s\S]*?"--}}"              { yytext = yytext.substr(0, yyleng-4); this.popState(); return 'COMMENT'; }
 
+<mu>"{{{{"                       { return 'OPEN_RAW_BLOCK'; }
+<mu>"}}}}"                       { this.popState(); this.begin('raw'); return 'CLOSE_RAW_BLOCK'; }
+<mu>"{{{{"[^\x00]*"}}}}"         { yytext = yytext.substr(4, yyleng-8); this.popState(); return 'RAW_BLOCK'; }
 <mu>"{{>"                        { return 'OPEN_PARTIAL'; }
 <mu>"{{#"                        { return 'OPEN_BLOCK'; }
 <mu>"{{/"                        { return 'OPEN_ENDBLOCK'; }

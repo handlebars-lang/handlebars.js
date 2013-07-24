@@ -9,6 +9,26 @@ describe('helpers', function() {
     shouldCompileTo(string, [hash, helpers], "<a href='/root/goodbye'>Goodbye</a>");
   });
 
+  it("helper for raw block gets raw content", function() {
+    var string   = "{{{{raw}}}} {{test}} {{{{/raw}}}}";
+    var hash = { test: "hello" };
+    var helpers = { raw: function(content) { 
+        return content;
+    } };
+    shouldCompileTo(string, [hash, helpers], " {{test}} ",
+                    "raw block helper gets raw content");
+  });
+  
+  it("helper for raw block gets parameters", function() {
+    var string   = "{{{{raw 1 2 3}}}} {{test}} {{{{/raw}}}}";
+    var hash = { test: "hello" };
+    var helpers = { raw: function(content, a, b, c) { 
+        return content + a + b + c;
+    } };
+    shouldCompileTo(string, [hash, helpers], " {{test}} 123",
+                    "raw block helper gets raw content");
+  });
+  
   it("helper block with complex lookup expression", function() {
     var string = "{{#goodbyes}}{{../name}}{{/goodbyes}}";
     var hash = {name: "Alan"};
