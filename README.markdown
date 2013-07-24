@@ -340,7 +340,7 @@ and we will have some benchmarks in the near future.
 Building
 --------
 
-To build handlebars, just run `rake release`, and you will get two files
+To build handlebars, just run `rake build`, and you will get two files
 in the `dist` directory.
 
 
@@ -386,9 +386,9 @@ To build Handlebars.js you'll need a few things installed.
 There's a Gemfile in the repo, so you can run `bundle` to install rake
 if you've got bundler installed.
 
-To build Handlebars.js from scratch, you'll want to run `rake compile`
+To build Handlebars.js from scratch, you'll want to run `rake build`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `rake test` or `npm test.
+results to the dist/ folder. To run tests, run `rake spec` or `npm test`.
 You can also run our set of benchmarks with `rake bench`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
