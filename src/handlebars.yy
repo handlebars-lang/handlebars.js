@@ -53,8 +53,7 @@ mustache
 
 
 partial
-  : OPEN_PARTIAL partialName CLOSE -> new yy.PartialNode($2)
-  | OPEN_PARTIAL partialName path CLOSE -> new yy.PartialNode($2, $3)
+  : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3)
   ;
 
 simpleInverse
