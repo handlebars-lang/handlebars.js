@@ -5,7 +5,7 @@
 %%
 
 root
-  : program EOF { return $1; }
+  : statements EOF { return new yy.ProgramNode($1); }
   ;
 
 program
