@@ -61,16 +61,8 @@ simpleInverse
   ;
 
 inMustache
-  : path params hash -> [[$1].concat($2), $3]
-  | path params -> [[$1].concat($2), null]
-  | path hash -> [[$1], $2]
-  | path -> [[$1], null]
+  : path param* hash? -> [[$1].concat($2), $3]
   | dataName -> [[$1], null]
-  ;
-
-params
-  : params param { $1.push($2); $$ = $1; }
-  | param -> [$1]
   ;
 
 param
