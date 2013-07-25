@@ -92,11 +92,7 @@ hashSegments
   ;
 
 hashSegment
-  : ID EQUALS path -> [$1, $3]
-  | ID EQUALS STRING -> [$1, new yy.StringNode($3)]
-  | ID EQUALS INTEGER -> [$1, new yy.IntegerNode($3)]
-  | ID EQUALS BOOLEAN -> [$1, new yy.BooleanNode($3)]
-  | ID EQUALS dataName -> [$1, $3]
+  : ID EQUALS param -> [$1, $3]
   ;
 
 partialName
