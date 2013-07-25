@@ -83,12 +83,7 @@ param
   ;
 
 hash
-  : hashSegments -> new yy.HashNode($1)
-  ;
-
-hashSegments
-  : hashSegments hashSegment { $1.push($2); $$ = $1; }
-  | hashSegment -> [$1]
+  : hashSegment+ -> new yy.HashNode($1)
   ;
 
 hashSegment
