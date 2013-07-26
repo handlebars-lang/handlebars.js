@@ -3,12 +3,14 @@ require('./common');
 global.Handlebars = require('../../zomg/lib/handlebars');
 
 global.CompilerContext = {
-  compile: function(template, options) {
+  compile: function(template, options, env) {
+    env = env || handlebarsEnv;
     var templateSpec = Handlebars.precompile(template, options);
-    console.log(templateSpec);
-    return Handlebars.template(eval('(' + templateSpec + ')'));
+    return Handlebars.template(eval('(' + templateSpec + ')'), env);
   },
   compileWithPartial: function(template, options) {
+    options = options || {};
+    options.env = handlebarsEnv;
     return Handlebars.compile(template, options);
   }
 };

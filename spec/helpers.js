@@ -176,15 +176,12 @@ describe('helpers', function() {
     var helpers = Handlebars.helpers;
     try {
       Handlebars.helpers = {};
-      Handlebars.registerHelper('if', helpers['if']);
-      Handlebars.registerHelper('world', function() { return "world!"; });
-      Handlebars.registerHelper('test_helper', function() { return 'found it!'; });
 
-      //Handlebars.registerHelper({
-        //'if': helpers['if'],
-        //world: function() { return "world!"; },
-        //test_helper: function() { return 'found it!'; }
-      //});
+      Handlebars.registerHelper({
+        'if': helpers['if'],
+        world: function() { return "world!"; },
+        test_helper: function() { return 'found it!'; }
+      });
 
       shouldCompileTo(
         "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}",

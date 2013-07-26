@@ -1,3 +1,9 @@
+global.handlebarsEnv = null;
+
+beforeEach(function() {
+  global.handlebarsEnv = new Handlebars.HandlebarsEnvironment();
+});
+
 describe("basic context", function() {
   it("most basic", function() {
     shouldCompileTo("{{foo}}", { foo: "foo" }, "foo");
