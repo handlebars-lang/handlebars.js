@@ -19,12 +19,10 @@ describe('data', function() {
     equals("hello", result, "@foo retrieves template data");
   });
 
-  var objectCreate = Handlebars.createFrame;
-
   it("deep @foo triggers automatic top-level data", function() {
     var template = CompilerContext.compile('{{#let world="world"}}{{#if foo}}{{#if foo}}Hello {{@world}}{{/if}}{{/if}}{{/let}}');
 
-    var helpers = objectCreate(Handlebars.helpers);
+    var helpers = Handlebars.createFrame(handlebarsEnv.helpers);
 
     helpers.let = function(options) {
       var frame = Handlebars.createFrame(options.data);

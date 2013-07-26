@@ -47,6 +47,12 @@ describe('builtin helpers', function() {
   });
 
   describe('#each', function() {
+    beforeEach(function() {
+      handlebarsEnv.registerHelper('detectDataInsideEach', function(options) {
+        return options.data && options.data.exclaim;
+      });
+    });
+
     it("each", function() {
       var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!";
       var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -104,9 +110,6 @@ describe('builtin helpers', function() {
       equal(result, 'a!b!c!', 'should output data');
     });
 
-    Handlebars.registerHelper('detectDataInsideEach', function(options) {
-      return options.data && options.data.exclaim;
-    });
   });
 
   it("#log", function() {
