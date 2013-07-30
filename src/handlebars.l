@@ -9,9 +9,11 @@ function strip(start, end) {
 
 %}
 
+LEFT_STRIP    "("
+RIGHT_STRIP   ")"
 
-LOOKAHEAD           [=}\s\/.]
-LITERAL_LOOKAHEAD   [}\s]
+LOOKAHEAD           [=)}\s\/.]
+LITERAL_LOOKAHEAD   [)}\s]
 
 /*
 ID is the inverse of control characters.
@@ -49,24 +51,24 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 
 <com>[\s\S]*?"--}}"              strip(0,4); this.popState(); return 'COMMENT';
 
-<mu>"{{>"                        return 'OPEN_PARTIAL';
-<mu>"{{#"                        return 'OPEN_BLOCK';
-<mu>"{{/"                        return 'OPEN_ENDBLOCK';
-<mu>"{{^"                        return 'OPEN_INVERSE';
-<mu>"{{"\s*"else"                return 'OPEN_INVERSE';
-<mu>"{{{"                        return 'OPEN_UNESCAPED';
-<mu>"{{&"                        return 'OPEN';
+<mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
+<mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
+<mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';
+<mu>"{{"{LEFT_STRIP}?"^"         return 'OPEN_INVERSE';
+<mu>"{{"{LEFT_STRIP}?\s*"else"   return 'OPEN_INVERSE';
+<mu>"{{"{LEFT_STRIP}?"{"         return 'OPEN_UNESCAPED';
+<mu>"{{"{LEFT_STRIP}?"&"         return 'OPEN';
 <mu>"{{!--"                      this.popState(); this.begin('com');
 <mu>"{{!"[\s\S]*?"}}"            strip(3,5); this.popState(); return 'COMMENT';
-<mu>"{{"                         return 'OPEN';
+<mu>"{{"{LEFT_STRIP}?            return 'OPEN';
 
 <mu>"="                          return 'EQUALS';
 <mu>".."                         return 'ID';
 <mu>"."/{LOOKAHEAD}              return 'ID';
 <mu>[\/.]                        return 'SEP';
 <mu>\s+                          /*ignore whitespace*/
-<mu>"}}}"                        this.popState(); return 'CLOSE_UNESCAPED';
-<mu>"}}"                         this.popState(); return 'CLOSE';
+<mu>"}"{RIGHT_STRIP}?"}}"        this.popState(); return 'CLOSE_UNESCAPED';
+<mu>{RIGHT_STRIP}?"}}"           this.popState(); return 'CLOSE';
 <mu>'"'("\\"["]|[^"])*'"'        yytext = strip(1,2).replace(/\\"/g,'"'); return 'STRING';
 <mu>"'"("\\"[']|[^'])*"'"        yytext = strip(1,2).replace(/\\'/g,"'"); return 'STRING';
 <mu>"@"                          return 'DATA';
