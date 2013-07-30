@@ -32,11 +32,11 @@ statement
   ;
 
 openBlock
-  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1])
+  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1)
   ;
 
 openInverse
-  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1])
+  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1)
   ;
 
 closeBlock
@@ -44,11 +44,10 @@ closeBlock
   ;
 
 mustache
-  : OPEN inMustache CLOSE {
-    // Parsing out the '&' escape token at this level saves ~500 bytes after min due to the removal of one parser node.
-    $$ = new yy.MustacheNode($2[0], $2[1], $1[2] === '&');
-  }
-  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], true)
+  // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
+  // This also allows for handler unification as all mustache node instances can utilize the same handler
+  : OPEN inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1)
+  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], $1)
   ;
 
 
