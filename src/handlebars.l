@@ -1,6 +1,15 @@
 
 %x mu emu com
 
+%{
+
+function strip(start, end) {
+  return yytext = yytext.substr(start, yyleng-end);
+}
+
+%}
+
+
 /*
 ID is the inverse of control characters.
 Control characters ranges:
@@ -17,7 +26,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 "\\\\"/("{{")                    yytext = "\\"; return 'CONTENT';
 [^\x00]*?/("{{")                 {
                                    if(yytext.slice(-1) !== "\\") this.begin("mu");
-                                   if(yytext.slice(-1) === "\\") yytext = yytext.substr(0,yyleng-1), this.begin("emu");
+                                   if(yytext.slice(-1) === "\\") strip(0,1), this.begin("emu");
                                    if(yytext) return 'CONTENT';
                                  }
 
@@ -25,11 +34,11 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 
 <emu>[^\x00]{2,}?/("{{"|<<EOF>>) {
                                    if(yytext.slice(-1) !== "\\") this.popState();
-                                   if(yytext.slice(-1) === "\\") yytext = yytext.substr(0,yyleng-1);
+                                   if(yytext.slice(-1) === "\\") strip(0,1);
                                    return 'CONTENT';
                                  }
 
-<com>[\s\S]*?"--}}"              yytext = yytext.substr(0, yyleng-4); this.popState(); return 'COMMENT';
+<com>[\s\S]*?"--}}"              strip(0,4); this.popState(); return 'COMMENT';
 
 <mu>"{{>"                        return 'OPEN_PARTIAL';
 <mu>"{{#"                        return 'OPEN_BLOCK';
@@ -39,7 +48,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 <mu>"{{{"                        return 'OPEN_UNESCAPED';
 <mu>"{{&"                        return 'OPEN';
 <mu>"{{!--"                      this.popState(); this.begin('com');
-<mu>"{{!"[\s\S]*?"}}"            yytext = yytext.substr(3,yyleng-5); this.popState(); return 'COMMENT';
+<mu>"{{!"[\s\S]*?"}}"            strip(3,5); this.popState(); return 'COMMENT';
 <mu>"{{"                         return 'OPEN';
 
 <mu>"="                          return 'EQUALS';
@@ -49,8 +58,8 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 <mu>\s+                          /*ignore whitespace*/
 <mu>"}}}"                        this.popState(); return 'CLOSE_UNESCAPED';
 <mu>"}}"                         this.popState(); return 'CLOSE';
-<mu>'"'("\\"["]|[^"])*'"'        yytext = yytext.substr(1,yyleng-2).replace(/\\"/g,'"'); return 'STRING';
-<mu>"'"("\\"[']|[^'])*"'"        yytext = yytext.substr(1,yyleng-2).replace(/\\'/g,"'"); return 'STRING';
+<mu>'"'("\\"["]|[^"])*'"'        yytext = strip(1,2).replace(/\\"/g,'"'); return 'STRING';
+<mu>"'"("\\"[']|[^'])*"'"        yytext = strip(1,2).replace(/\\'/g,"'"); return 'STRING';
 <mu>"@"                          return 'DATA';
 <mu>"true"/[}\s]                 return 'BOOLEAN';
 <mu>"false"/[}\s]                return 'BOOLEAN';
@@ -58,8 +67,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 
 <mu>{ID}                         return 'ID';
 
-<mu>'['[^\]]*']'                 yytext = yytext.substr(1, yyleng-2); return 'ID';
+<mu>'['[^\]]*']'                 yytext = strip(1,2); return 'ID';
 <mu>.                            return 'INVALID';
 
 <INITIAL,mu><<EOF>>              return 'EOF';
-
