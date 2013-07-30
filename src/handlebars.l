@@ -10,6 +10,9 @@ function strip(start, end) {
 %}
 
 
+LOOKAHEAD           [=}\s\/.]
+LITERAL_LOOKAHEAD   [}\s]
+
 /*
 ID is the inverse of control characters.
 Control characters ranges:
@@ -19,7 +22,7 @@ Control characters ranges:
   [\[-\^`]      [, \, ], ^, `,                          Exceptions in range: _
   [\{-~]        {, |, }, ~
 */
-ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
+ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 
 %%
 
@@ -58,8 +61,8 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 <mu>"{{"                         return 'OPEN';
 
 <mu>"="                          return 'EQUALS';
-<mu>"."/[}\/ ]                   return 'ID';
 <mu>".."                         return 'ID';
+<mu>"."/{LOOKAHEAD}             return 'ID';
 <mu>[\/.]                        return 'SEP';
 <mu>\s+                          /*ignore whitespace*/
 <mu>"}}}"                        this.popState(); return 'CLOSE_UNESCAPED';
@@ -67,9 +70,9 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 <mu>'"'("\\"["]|[^"])*'"'        yytext = strip(1,2).replace(/\\"/g,'"'); return 'STRING';
 <mu>"'"("\\"[']|[^'])*"'"        yytext = strip(1,2).replace(/\\'/g,"'"); return 'STRING';
 <mu>"@"                          return 'DATA';
-<mu>"true"/[}\s]                 return 'BOOLEAN';
-<mu>"false"/[}\s]                return 'BOOLEAN';
-<mu>\-?[0-9]+/[}\s]              return 'INTEGER';
+<mu>"true"/{LITERAL_LOOKAHEAD}   return 'BOOLEAN';
+<mu>"false"/{LITERAL_LOOKAHEAD}  return 'BOOLEAN';
+<mu>\-?[0-9]+/{LITERAL_LOOKAHEAD} return 'INTEGER';
 
 <mu>{ID}                         return 'ID';
 
