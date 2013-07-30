@@ -1,6 +1,17 @@
 
 %x mu emu com
 
+/*
+ID is the inverse of control characters.
+Control characters ranges:
+  [\s]          Whitespace
+  [!"#%-,\./]   !, ", #, %, &, ', (, ), *, +, ,, ., /,  Exceptions in range: $, -
+  [;->@]        ;, <, =, >, @,                          Exceptions in range: :, ?
+  [\[-\^`]      [, \, ], ^, `,                          Exceptions in range: _
+  [\{-~]        {, |, }, ~
+*/
+ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
+
 %%
 
 "\\\\"/("{{")                    yytext = "\\"; return 'CONTENT';
@@ -45,16 +56,7 @@
 <mu>"false"/[}\s]                return 'BOOLEAN';
 <mu>\-?[0-9]+/[}\s]              return 'INTEGER';
 
-/*
-ID is the inverse of control characters.
-Control characters ranges:
-  [\s]          Whitespace
-  [!"#%-,\./]   !, ", #, %, &, ', (, ), *, +, ,, ., /,  Exceptions in range: $, -
-  [;->@]        ;, <, =, >, @,                          Exceptions in range: :, ?
-  [\[-\^`]      [, \, ], ^, `,                          Exceptions in range: _
-  [\{-~]        {, |, }, ~
-*/
-<mu>[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]   return 'ID';
+<mu>{ID}                         return 'ID';
 
 <mu>'['[^\]]*']'                 yytext = yytext.substr(1, yyleng-2); return 'ID';
 <mu>.                            return 'INVALID';
