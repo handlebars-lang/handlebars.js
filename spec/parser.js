@@ -108,11 +108,11 @@ describe('parser', function() {
   });
 
   it('parses empty blocks with empty inverse section', function() {
-    ast_for("{{#foo}}{{^}}{{/foo}}").should.equal("BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
+    ast_for("{{#foo}}{{^}}{{/foo}}").should.equal("BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
   });
 
   it('parses empty blocks with empty inverse (else-style) section', function() {
-    ast_for("{{#foo}}{{else}}{{/foo}}").should.equal("BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
+    ast_for("{{#foo}}{{else}}{{/foo}}").should.equal("BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
   });
 
   it('parses non-empty blocks with empty inverse section', function() {
