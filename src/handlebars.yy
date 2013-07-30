@@ -2,6 +2,17 @@
 
 %ebnf
 
+%{
+
+function stripFlags(open, close) {
+  return {
+    left: open[2] === '(',
+    right: close[0] === ')' || close[1] === ')'
+  };
+}
+
+%}
+
 %%
 
 root
@@ -9,9 +20,9 @@ root
   ;
 
 program
-  : simpleInverse statements -> new yy.ProgramNode([], $2)
-  | statements simpleInverse statements -> new yy.ProgramNode($1, $3)
-  | statements simpleInverse -> new yy.ProgramNode($1, [])
+  : simpleInverse statements -> new yy.ProgramNode([], $1, $2)
+  | statements simpleInverse statements -> new yy.ProgramNode($1, $2, $3)
+  | statements simpleInverse -> new yy.ProgramNode($1, $2, [])
   | statements -> new yy.ProgramNode($1)
   | simpleInverse -> new yy.ProgramNode([])
   | "" -> new yy.ProgramNode([])
@@ -32,31 +43,31 @@ statement
   ;
 
 openBlock
-  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1)
+  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
   ;
 
 openInverse
-  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1)
+  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK path CLOSE -> $2
+  : OPEN_ENDBLOCK path CLOSE -> {path: $2, strip: stripFlags($1, $3)}
   ;
 
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1)
-  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], $1)
+  : OPEN inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
+  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
   ;
 
 
 partial
-  : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3)
+  : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3, stripFlags($1, $4))
   ;
 
 simpleInverse
-  : OPEN_INVERSE CLOSE { }
+  : OPEN_INVERSE CLOSE -> stripFlags($1, $2)
   ;
 
 inMustache
