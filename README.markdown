@@ -372,7 +372,7 @@ Handlebars in the Wild
   for anyone who would like to try out Handlebars.js in their browser.
 * [jQuery plugin](http://71104.github.io/jquery-handlebars/): allows you to use
   Handlebars.js with [jQuery](http://jquery.com/).
-* [Lumbar](walmartlabs.github.io/lumbar) provides easy module-based template management for
+* [Lumbar](http://walmartlabs.github.io/lumbar) provides easy module-based template management for
   handlebars projects.
 * [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey,
   supports Handlebars.js as one of its template plugins.
