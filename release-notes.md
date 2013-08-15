@@ -2,6 +2,8 @@
 
 ## Development
 
+- [#602](https://github.com/wycats/handlebars.js/pull/602) - Handle zero uniformly between mustache conditionals and the if helper ([@artiee](https://github.com/artiee))
+- [#535](https://github.com/wycats/handlebars.js/pull/535) - Fix for probably JIT error under Safari. ([@sorentwo](https://github.com/sorentwo))
 - [#537](https://github.com/wycats/handlebars.js/issues/537) - Add CommonJS and AMD loader support ([@spikebrehm](https://github.com/spikebrehm))
 - [#544](https://github.com/wycats/handlebars.js/issues/544) - Push travis builds to build server ([@fivetanley](https://github.com/fivetanley))
 
