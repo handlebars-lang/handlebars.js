@@ -1,3 +1,5 @@
+var childProcess = require('child_process');
+
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -68,11 +70,22 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
+
   grunt.registerTask('dist-dir', function() {
     grunt.file.delete('dist');
     grunt.file.mkdir('dist');
   });
+  grunt.registerTask('test', function() {
+    var done = this.async();
 
+    var runner = childProcess.fork('./spec/env/runner', [], {stdio: 'inherit'});
+    runner.on('close', function(code) {
+      if (code != 0) {
+        grunt.fatal(code + ' tests failed');
+      }
+      done();
+    });
+  });
 
-  grunt.registerTask('default', ['dist-dir', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'dist-dir', 'concat', 'uglify', 'test']);
 };

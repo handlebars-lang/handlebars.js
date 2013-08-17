@@ -402,7 +402,7 @@ if you've got bundler installed.
 
 To build Handlebars.js from scratch, you'll want to run `rake build`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `rake spec` or `npm test`.
+results to the dist/ folder. To run tests, run `grunt test` or `npm test`.
 You can also run our set of benchmarks with `rake bench`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
