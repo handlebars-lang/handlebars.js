@@ -34,53 +34,8 @@ end
 
 task :default => [:compile, :spec]
 
-def remove_exports(string)
-  match = string.match(%r{^// BEGIN\(BROWSER\)\n(.*)\n^// END\(BROWSER\)}m)
-  match ? match[1] : string
-end
-
-minimal_deps = %w(browser-prefix base compiler/parser compiler/base compiler/ast utils compiler/compiler compiler/javascript-compiler runtime browser-suffix).map do |file|
-  "lib/handlebars/#{file}.js"
-end
-
-runtime_deps = %w(browser-prefix base utils runtime browser-suffix).map do |file|
-  "lib/handlebars/#{file}.js"
-end
-
-directory "dist"
-
-minimal_deps.unshift "dist"
-
-def build_for_task(task)
-  FileUtils.rm_rf("dist/*") if File.directory?("dist")
-  FileUtils.mkdir_p("dist")
-
-  contents = ["/*\n\n" + File.read('LICENSE') + "\n@license\n*/\n"]
-  task.prerequisites.each do |filename|
-    next if filename == "dist"
-
-    contents << "// #{filename}\n" + remove_exports(File.read(filename)) + ";"
-  end
-
-  File.open(task.name, "w") do |file|
-    file.puts contents.join("\n")
-  end
-end
-
-file "dist/handlebars.js" => minimal_deps do |task|
-  build_for_task(task)
-end
-
-file "dist/handlebars.runtime.js" => runtime_deps do |task|
-  build_for_task(task)
-end
-
 task :build => [:compile] do |task|
-  Rake::Task["dist/handlebars.js"].execute
-  Rake::Task["dist/handlebars.runtime.js"].execute
-
-  system "./node_modules/.bin/uglifyjs -m -c --comments -o dist/handlebars.min.js dist/handlebars.js"
-  system "./node_modules/.bin/uglifyjs -m -c --comments -o dist/handlebars.runtime.min.js dist/handlebars.runtime.js"
+  system "grunt"
 end
 
 # Updates the various version numbers.

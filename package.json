@@ -23,6 +23,9 @@
   "devDependencies": {
     "benchmark": "~1.0",
     "dust": "~0.3",
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.2",
     "jison": "~0.3",
     "mocha": "*",
     "mustache": "~0.7.2",

@@ -1,4 +1,6 @@
-/*
+/*!
+
+ handlebars v1.0.12
 
 Copyright (C) 2011 by Yehuda Katz
 
@@ -2279,4 +2281,3 @@ Handlebars.template = Handlebars.VM.template;
     this.Handlebars = Handlebars;
   }
 }).call(this);
-;

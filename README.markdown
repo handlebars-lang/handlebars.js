@@ -393,6 +393,7 @@ Helping Out
 To build Handlebars.js you'll need a few things installed.
 
 * Node.js
+* [Grunt](http://gruntjs.com/getting-started)
 * Ruby
 * Rake
 
