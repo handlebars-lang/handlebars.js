@@ -844,6 +844,8 @@ Handlebars.Utils = {
   },
 
   escapeExpression: function(string) {
+    /*jshint eqnull: true */
+
     // don't escape SafeStrings, since they're already safe
     if (string instanceof Handlebars.SafeString) {
       return string.toString();

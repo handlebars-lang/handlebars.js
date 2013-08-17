@@ -2,6 +2,16 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc',
+        force: true
+      },
+      files: [
+        'lib/**/!(parser|browser-prefix|browser-suffix).js'
+      ]
+    },
+
     concat: {
       options: {
         banner: '/*!\n\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n@license\n*/\n',
@@ -55,6 +65,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask('dist-dir', function() {
