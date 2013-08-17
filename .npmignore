@@ -1,9 +1,14 @@
 .DS_Store
 .gitignore
 .rvmrc
+.jshintrc
+.travis.yml
+.rspec
 Gemfile
 Gemfile.lock
 Rakefile
+*.gemspec
+*.nuspec
 bench/*
 spec/*
 src/*
