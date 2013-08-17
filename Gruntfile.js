@@ -70,6 +70,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
+  grunt.loadTasks('tasks');
 
   grunt.registerTask('dist-dir', function() {
     grunt.file.delete('dist');
@@ -87,5 +88,5 @@ module.exports = function(grunt) {
     });
   });
 
-  grunt.registerTask('default', ['jshint', 'dist-dir', 'concat', 'uglify', 'test']);
+  grunt.registerTask('default', ['jshint', 'parser', 'dist-dir', 'concat', 'uglify', 'test']);
 };

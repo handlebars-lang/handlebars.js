@@ -400,7 +400,7 @@ To build Handlebars.js you'll need a few things installed.
 There's a Gemfile in the repo, so you can run `bundle` to install rake
 if you've got bundler installed.
 
-To build Handlebars.js from scratch, you'll want to run `rake build`
+To build Handlebars.js from scratch, you'll want to run `grunt`
 in the root of the project. That will build Handlebars and output the
 results to the dist/ folder. To run tests, run `grunt test` or `npm test`.
 You can also run our set of benchmarks with `rake bench`.
