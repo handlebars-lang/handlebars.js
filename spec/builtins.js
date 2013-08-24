@@ -84,6 +84,16 @@ describe('builtin helpers', function() {
       equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
     });
 
+    it("each with nested @index", function() {
+      var string = "{{#each goodbyes}}{{@index}}. {{text}}! {{#each ../goodbyes}}{{@index}} {{/each}}After {{@index}} {{/each}}{{@index}}cruel {{world}}!";
+      var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!", "The @index variable is used");
+    });
+
     it("each with function argument", function() {
       var string = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!";
       var hash   = {goodbyes: function () { return [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}];}, world: "world"};
