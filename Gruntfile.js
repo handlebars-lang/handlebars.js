@@ -87,6 +87,17 @@ module.exports = function(grunt) {
       done();
     });
   });
+  grunt.registerTask('bench', function() {
+    var done = this.async();
+
+    var runner = childProcess.fork('./bench/handlebars', [], {stdio: 'inherit'});
+    runner.on('close', function(code) {
+      if (code != 0) {
+        grunt.fatal(code + ' tests failed');
+      }
+      done();
+    });
+  });
 
   grunt.registerTask('build', ['jshint', 'parser', 'dist-dir', 'concat', 'uglify', 'test']);
   grunt.registerTask('default', 'build');

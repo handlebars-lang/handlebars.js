@@ -7,27 +7,6 @@ task :build do |task|
   system "grunt"
 end
 
-directory "vendor"
-
-desc "benchmark against dust.js and mustache.js"
-task :bench => "vendor" do
-  require "open-uri"
-
-  #if File.directory?("vendor/coffee")
-    #system "cd vendor/coffee && git pull"
-  #else
-    #system "git clone git://github.com/jashkenas/coffee-script.git vendor/coffee"
-  #end
-
-  #if File.directory?("vendor/eco")
-    #system "cd vendor/eco && git pull && npm update"
-  #else
-    #system "git clone git://github.com/sstephenson/eco.git vendor/eco && cd vendor/eco && npm update"
-  #end
-
-  system "node bench/handlebars.js"
-end
-
 def dist_files(&block)
   map = {}
 
