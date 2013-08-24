@@ -98,10 +98,9 @@ Handlebars.registerHelper('blockHelperMissing', function(context, options) {
 
 Handlebars.K = function() {};
 
-Handlebars.createFrame = Object.create || function(object) {
-  Handlebars.K.prototype = object;
-  var obj = new Handlebars.K();
-  Handlebars.K.prototype = null;
+Handlebars.createFrame = function(object) {
+  var obj = {};
+  Handlebars.Utils.extend(obj, object);
   return obj;
 };
 

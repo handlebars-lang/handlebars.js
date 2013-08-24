@@ -112,18 +112,19 @@ describe('data', function() {
   });
 
   it("data is inherited downstream", function() {
-    var template = CompilerContext.compile("{{#let foo=bar.baz}}{{@foo}}{{/let}}", { data: true });
+    var template = CompilerContext.compile("{{#let foo=1 bar=2}}{{#let foo=bar.baz}}{{@bar}}{{@foo}}{{/let}}{{@foo}}{{/let}}", { data: true });
     var helpers = {
       let: function(options) {
+        var frame = Handlebars.createFrame(options.data);
         for (var prop in options.hash) {
-          options.data[prop] = options.hash[prop];
+          frame[prop] = options.hash[prop];
         }
-        return options.fn(this);
+        return options.fn(this, {data: frame});
       }
     };
 
     var result = template({ bar: { baz: "hello world" } }, { helpers: helpers, data: {} });
-    equals("hello world", result, "data variables are inherited downstream");
+    equals("2hello world1", result, "data variables are inherited downstream");
   });
 
   it("passing in data to a compiled function that expects data - works with helpers in partials", function() {
