@@ -12,25 +12,7 @@ var print = require("sys").print;
 
 BenchWarmer.prototype = {
   winners: function(benches) {
-    var result = Benchmark.filter(benches, function(bench) { return bench.cycles; });
-
-    if (result.length > 1) {
-      result.sort(function(a, b) { return b.compare(a); });
-      first = result[0];
-      last  = result[result.length - 1];
-
-      var winners = [];
-
-      Benchmark.each(result, function(bench) {
-        if (bench.compare(first) === 0) {
-          winners.push(bench);
-        }
-      });
-
-      return winners;
-    } else {
-      return result;
-    }
+    return Benchmark.filter(benches, 'fastest');
   },
   suite: function(suite, fn) {
     this.suiteName = suite;
