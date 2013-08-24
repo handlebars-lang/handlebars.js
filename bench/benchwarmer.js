@@ -32,9 +32,7 @@ BenchWarmer.prototype = {
     var first = this.first, suiteName = this.suiteName, self = this;
     this.first = false;
 
-    var bench = new Benchmark(function() {
-      fn();
-    }, {
+    var bench = new Benchmark(fn, {
       name: this.suiteName + ": " + name,
       onComplete: function() {
         if(first) { self.startLine(suiteName); }
@@ -78,12 +76,19 @@ BenchWarmer.prototype = {
         self.startLine('');
 
         var errors = false, prop, bench;
-        for(prop in self.errors) { if(self.errors.hasOwnProperty(prop)) { errors = true; break; } }
+        for(prop in self.errors) {
+          if (self.errors.hasOwnProperty(prop)
+              && self.errors[prop].error.message !== 'EWOT') {
+            errors = true;
+            break;
+          }
+        }
 
         if(errors) {
           print("\n\nErrors:\n");
           for(prop in self.errors) {
-            if(self.errors.hasOwnProperty(prop)) {
+            if (self.errors.hasOwnProperty(prop)
+                && self.errors[prop].error.message !== 'EWOT') {
               bench = self.errors[prop];
               print("\n" + bench.name + ":\n");
               print(bench.error.message);
@@ -121,7 +126,11 @@ BenchWarmer.prototype = {
 
       out = Math.round(count / 1000) + " ±" + Math.round(moe / 1000) + " (" + bench.cycles + ")";
     } else {
-      out = "E";
+      if (bench.error.message === 'EWOT') {
+        out = 'NA';
+      } else {
+        out = 'E';
+      }
     }
 
     var padding = this.benchSize - out.length + 1;
