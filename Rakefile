@@ -7,38 +7,6 @@ task :build do |task|
   system "grunt"
 end
 
-# Updates the various version numbers.
-desc "Updates the current release version"
-task :version, [:version] => [] do |task, args|
-  version = args.version
-  fail "Must provide a version number" unless version
-
-  changed = %x{git diff-index --name-only HEAD --}
-  fail "The repository must be clean" unless $?.success? && changed.empty?
-
-  puts "Updating to version #{version}"
-
-  content = File.read("lib/handlebars/base.js")
-  File.open("lib/handlebars/base.js", "w") do | file|
-    file.puts content.gsub(/Handlebars.VERSION = "(.*)";/, "Handlebars.VERSION = \"#{version}\";")
-  end
-
-  content = File.read("bower.json")
-  File.open("bower.json", "w") do |file|
-    file.puts content.gsub(/"version":.*/, "\"version\": \"#{version}\",")
-  end
-
-  content = File.read("handlebars.js.nuspec")
-  File.open("handlebars.js.nuspec", "w") do |file|
-    file.puts content.gsub(/<version>.*<\/version>/, "<version>#{version}</version>")
-  end
-
-  Rake::Task[:build].invoke
-
-  # TODO : Make sure that all of these files are updated properly in git then run npm version
-end
-
-
 directory "vendor"
 
 desc "benchmark against dust.js and mustache.js"

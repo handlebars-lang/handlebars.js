@@ -88,5 +88,6 @@ module.exports = function(grunt) {
     });
   });
 
-  grunt.registerTask('default', ['jshint', 'parser', 'dist-dir', 'concat', 'uglify', 'test']);
+  grunt.registerTask('build', ['jshint', 'parser', 'dist-dir', 'concat', 'uglify', 'test']);
+  grunt.registerTask('default', 'build');
 };
