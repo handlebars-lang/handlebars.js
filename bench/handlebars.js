@@ -100,12 +100,12 @@ var benchDetails = {
 
 };
 
-handlebarsTemplates = {};
-ecoTemplates = {};
+var handlebarsTemplates = {},
+    ecoTemplates = {};
 
 var warmer = new BenchWarmer();
 
-var makeSuite = function(name) {
+function makeSuite(name) {
   warmer.suite(name, function(bench) {
     var templateName = name;
     var details = benchDetails[templateName];
