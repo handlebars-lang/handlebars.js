@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "benchmark": "~1.0",
-    "dust": "~0.3",
+    "dustjs-linkedin": "~2.0.2",
+    "eco": "~1.1.0-rc-3",
     "jison": "~0.3",
     "mocha": "*",
     "mustache": "~0.7.2",

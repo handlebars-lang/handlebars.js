@@ -4,7 +4,7 @@ Handlebars = require("../lib/handlebars");
 var dust, Mustache, eco;
 
 try {
-  dust = require("dust");
+  dust = require("dustjs-linkedin");
 } catch (err) { /* NOP */ }
 
 try {
@@ -15,7 +15,7 @@ try {
   var ecoExports = require("eco");
   eco = function(str) {
     return ecoExports(str);
-  }
+  };
 } catch (err) { /* NOP */ }
 
 var benchDetails = {
