@@ -112,11 +112,12 @@ function makeSuite(name) {
     var mustachePartials = details.partials && details.partials.mustache;
     var mustacheSource = details.mustache;
     var context = details.context;
+    var options = {helpers: details.helpers};
 
     var error = function() { throw new Error("EWOT"); };
 
     bench("handlebars", function() {
-      handlebarsTemplates[templateName](context);
+      handlebarsTemplates[templateName](context, options);
     });
 
     if (dust) {
