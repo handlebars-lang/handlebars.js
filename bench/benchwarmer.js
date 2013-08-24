@@ -61,7 +61,7 @@ BenchWarmer.prototype = {
     var horSize = 0;
 
     this.startLine("ops/msec");
-    horSize = horSize + "ops/msec    ".length;
+    horSize = horSize + this.benchSize;
     for(i=0, l=names.length; i<l; i++) {
       print(names[i] + new Array(this.benchSize - names[i].length + 1).join(" "));
       horSize = horSize + this.benchSize;
@@ -75,6 +75,8 @@ BenchWarmer.prototype = {
     Benchmark.invoke(this.benchmarks, {
       name: "run",
       onComplete: function() {
+        self.startLine('');
+
         var errors = false, prop, bench;
         for(prop in self.errors) { if(self.errors.hasOwnProperty(prop)) { errors = true; break; } }
 
@@ -106,7 +108,7 @@ BenchWarmer.prototype = {
 
     print(winners.join(", "));
     print("\n");
-    var padding = this.nameSize - name.length + 1;
+    var padding = Math.max(this.benchSize - name.length + 1, 0);
     name = name + new Array(padding).join(" ");
     print(name);
   },
