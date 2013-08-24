@@ -11,7 +11,9 @@ describe("basic context", function() {
 
   it("escaping", function() {
     shouldCompileTo("\\{{foo}}", { foo: "food" }, "{{foo}}");
+    shouldCompileTo("content \\{{foo}}", { foo: "food" }, "content {{foo}}");
     shouldCompileTo("\\\\{{foo}}", { foo: "food" }, "\\food");
+    shouldCompileTo("content \\\\{{foo}}", { foo: "food" }, "content \\food");
     shouldCompileTo("\\\\ {{foo}}", { foo: "food" }, "\\\\ food");
   });
 

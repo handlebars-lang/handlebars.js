@@ -58,6 +58,7 @@ describe('Tokenizer', function() {
     var result = tokenize("{{foo}} \\{{bar}} {{baz}}");
     result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
 
+    result[3].should.be_token("CONTENT", " ");
     result[4].should.be_token("CONTENT", "{{bar}} ");
   });
 
@@ -75,6 +76,43 @@ describe('Tokenizer', function() {
     result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
 
     result[4].should.be_token("CONTENT", "{{{bar}}} ");
+  });
+
+  it('supports escaping escape character', function() {
+    var result = tokenize("{{foo}} \\\\{{bar}} {{baz}}");
+    result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+
+    result[3].should.be_token("CONTENT", " \\");
+    result[5].should.be_token("ID", "bar");
+  });
+
+  it('supports escaping multiple escape characters', function() {
+    var result = tokenize("{{foo}} \\\\{{bar}} \\\\{{baz}}");
+      result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+
+      result[3].should.be_token("CONTENT", " \\");
+      result[5].should.be_token("ID", "bar");
+      result[7].should.be_token("CONTENT", " \\");
+      result[9].should.be_token("ID", "baz");
+  });
+
+  it('supports mixed escaped delimiters and escaped escape characters', function() {
+    var result = tokenize("{{foo}} \\\\{{bar}} \\{{baz}}");
+    result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'CONTENT']);
+
+    result[3].should.be_token("CONTENT", " \\");
+    result[4].should.be_token("OPEN", "{{");
+    result[5].should.be_token("ID", "bar");
+    result[7].should.be_token("CONTENT", " ");
+    result[8].should.be_token("CONTENT", "{{baz}}");
+  });
+
+  it('supports escaped escape character on a triple stash', function() {
+    var result = tokenize("{{foo}} \\\\{{{bar}}} {{baz}}");
+    result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN_UNESCAPED', 'ID', 'CLOSE_UNESCAPED', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+
+    result[3].should.be_token("CONTENT", " \\");
+    result[5].should.be_token("ID", "bar");
   });
 
   it('tokenizes a simple path', function() {
