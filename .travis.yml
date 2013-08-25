@@ -7,7 +7,7 @@ before_script:
   - npm install -g grunt-cli
 
 script:
-  - grunt build metrics publish
+  - grunt build metrics publish:latest
 
 email:
   on_failure: change

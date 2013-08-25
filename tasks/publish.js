@@ -4,7 +4,7 @@ var _ = require('underscore'),
     git = require('./util/git');
 
 module.exports = function(grunt) {
-  grunt.registerTask('publish', function() {
+  grunt.registerTask('publish:latest', function() {
     var done = this.async();
     initSDK();
 
