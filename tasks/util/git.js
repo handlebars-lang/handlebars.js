@@ -1,6 +1,21 @@
 var childProcess = require('child_process');
 
 module.exports = {
+  debug: function(callback) {
+    childProcess.exec('git remote -v', {}, function(err, remotes) {
+      if (err) {
+        throw new Error('git.remote: ' + err.message);
+      }
+
+      childProcess.exec('git branch -a', {}, function(err, branches) {
+        if (err) {
+          throw new Error('git.branch: ' + err.message);
+        }
+
+        callback(remotes, branches);
+      });
+    });
+  },
   clean: function(callback) {
     childProcess.exec('git diff-index --name-only HEAD --', {}, function(err, stdout) {
       callback(undefined, !err && !stdout);

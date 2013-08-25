@@ -8,13 +8,18 @@ module.exports = function(grunt) {
     var done = this.async();
     initSDK();
 
-    git.commitInfo(function(err, info) {
-      if (info.isMaster) {
-        publish(fileMap(['-latest', '-' + info.head]), done);
-      } else {
-        // Silently ignore for branches
-        done();
-      }
+    git.debug(function(remotes, branches) {
+      grunt.log.writeln('remotes: ' + remotes);
+      grunt.log.writeln('branches: ' + branches);
+
+      git.commitInfo(function(err, info) {
+        if (info.isMaster) {
+          publish(fileMap(['-latest', '-' + info.head]), done);
+        } else {
+          // Silently ignore for branches
+          done();
+        }
+      });
     });
   });
   grunt.registerTask('publish:version', function() {
