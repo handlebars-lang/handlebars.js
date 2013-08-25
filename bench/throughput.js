@@ -20,7 +20,7 @@ function error() {
   throw new Error("EWOT");
 }
 
-function makeSuite(warmer, name, template) {
+function makeSuite(warmer, name, template, handlebarsOnly) {
   warmer.suite(name, function(bench) {
     // Create aliases to minimize any impact from having to walk up the closure tree.
     var templateName = name,
@@ -37,6 +37,10 @@ function makeSuite(warmer, name, template) {
     bench("handlebars", function() {
       handlebar(context, options);
     });
+
+    if (handlebarsOnly) {
+      return;
+    }
 
     if (dust) {
       if (template.dust) {
@@ -83,12 +87,18 @@ module.exports = function(grunt, callback) {
 
   var warmer = new BenchWarmer();
 
+  var handlebarsOnly = grunt.option('handlebars-only'),
+      grep = grunt.option('grep');
+  if (grep) {
+    grep = new RegExp(grep);
+  }
+
   _.each(templates, function(template, name) {
-    if (!template.handlebars) {
+    if (!template.handlebars || (grep && !grep.test(name))) {
       return;
     }
 
-    makeSuite(warmer, name, template);
+    makeSuite(warmer, name, template, handlebarsOnly);
   });
 
   warmer.bench(function() {
