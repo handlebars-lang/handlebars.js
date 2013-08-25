@@ -1,4 +1,4 @@
-var BenchWarmer = require("./benchwarmer");
+var BenchWarmer = require("./util/benchwarmer");
 Handlebars = require("../lib/handlebars");
 
 var dust, Mustache, eco;
