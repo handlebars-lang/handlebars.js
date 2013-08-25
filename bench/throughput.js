@@ -26,7 +26,12 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
     var templateName = name,
 
         context = template.context,
-        partials = template.partials;
+        partials = template.partials,
+
+        handlebarsOut,
+        dustOut,
+        ecoOut,
+        mustacheOut;
 
     var handlebar = Handlebars.compile(template.handlebars),
         options = {helpers: template.helpers};
@@ -34,6 +39,7 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
       Handlebars.registerPartial(name, partial);
     });
 
+    handlebarsOut = handlebar(context, options);
     bench("handlebars", function() {
       handlebar(context, options);
     });
@@ -44,7 +50,10 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
 
     if (dust) {
       if (template.dust) {
+        dustOut = false;
         dust.loadSource(dust.compile(template.dust, templateName));
+
+        dust.render(templateName, context, function(err, out) { dustOut = out; });
 
         bench("dust", function() {
           dust.render(templateName, context, function(err, out) { });
@@ -56,7 +65,9 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
 
     if (eco) {
       if (template.eco) {
-        var ecoTemplate = eco(template.eco);
+        var ecoTemplate = eco.compile(template.eco);
+
+        ecoOut = ecoTemplate(context);
 
         bench("eco", function() {
           ecoTemplate(context);
@@ -71,6 +82,8 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
           mustachePartials = partials && partials.mustache;
 
       if (mustacheSource) {
+        mustacheOut = Mustache.to_html(mustacheSource, context, mustachePartials);
+
         bench("mustache", function() {
           Mustache.to_html(mustacheSource, context, mustachePartials);
         });
@@ -78,6 +91,26 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
         bench("mustache", error);
       }
     }
+
+    // Hack around whitespace until we have whitespace control
+    handlebarsOut = handlebarsOut.replace(/\s/g, '');
+    function compare(b, lang) {
+      if (b == null) {
+        return;
+      }
+
+      b = b.replace(/\s/g, '');
+
+      if (handlebarsOut !== b) {
+        throw new Error('Template output mismatch: ' + name
+              + '\n\nHandlebars: ' + handlebarsOut
+              + '\n\n' + lang + ': ' + b);
+      }
+    }
+
+    compare(dustOut, 'dust');
+    compare(ecoOut, 'eco');
+    compare(mustacheOut, 'mustache');
   });
 }
 
