@@ -25,7 +25,7 @@ module.exports = {
   head: function(callback) {
     childProcess.exec('git rev-parse --short HEAD', {}, function(err, stdout) {
       if (err) {
-        throw err;
+        throw new Error('git.head: ' + err.message);
       }
 
       callback(undefined, stdout.trim());
@@ -34,7 +34,7 @@ module.exports = {
   master: function(callback) {
     childProcess.exec('git rev-parse --short origin/master', {}, function(err, stdout) {
       if (err) {
-        throw err;
+        throw new Error('git.master: ' + err.message);
       }
 
       callback(undefined, stdout.trim());
@@ -44,7 +44,7 @@ module.exports = {
   add: function(path, callback) {
     childProcess.exec('git add -f ' + path, {}, function(err, stdout) {
       if (err) {
-        throw err;
+        throw new Error('git.add: ' + err.message);
       }
 
       callback();
@@ -53,7 +53,7 @@ module.exports = {
   commit: function(name, callback) {
     childProcess.exec('git commit --message=' + name, {}, function(err, stdout) {
       if (err) {
-        throw err;
+        throw new Error('git.commit: ' + err.message);
       }
 
       callback();
@@ -61,8 +61,8 @@ module.exports = {
   },
   tag: function(name, callback) {
     childProcess.exec('git tag -a --message=' + name + ' ' + name, {}, function(err, stdout, stderr) {
-      console.log(name, stdout, stderr);
       if (err) {
+        throw new Error('git.tag: ' + err.message);
         throw err;
       }
 
@@ -72,7 +72,7 @@ module.exports = {
   tagName: function(callback) {
     childProcess.exec('git tag -l --points-at HEAD', {}, function(err, stdout) {
       if (err) {
-        throw err;
+        throw new Error('git.tagName: ' + err.message);
       }
 
       var tags = stdout.trim().split(/\n/),
