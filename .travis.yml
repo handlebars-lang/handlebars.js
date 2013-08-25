@@ -11,6 +11,7 @@ script:
 
 after_success:
   - grunt publish
+  - grunt metrics
 
 email:
   on_failure: change
