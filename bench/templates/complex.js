@@ -5,6 +5,7 @@ module.exports = {
     header: function() {
       return "Colors";
     },
+    hasItems: true,   // To make things fairer in mustache land due to no `{{if}}` construct on arrays
     items: [
       {name: "red", current: true, url: "#Red"},
       {name: "green", current: false, url: "#Green"},
@@ -13,18 +14,7 @@ module.exports = {
   },
 
   handlebars: fs.readFileSync(__dirname + '/complex.handlebars').toString(),
-  dust:       "<h1>{header}</h1>\n"                             +
-              "{?items}\n"                                      +
-              "  <ul>\n"                                        +
-              "    {#items}\n"                                  +
-              "      {#current}\n"                              +
-              "        <li><strong>{name}</strong></li>\n"      +
-              "      {:else}\n"                                 +
-              "        <li><a href=\"{url}\">{name}</a></li>\n" +
-              "      {/current}\n"                              +
-              "    {/items}\n"                                  +
-              "  </ul>\n"                                       +
-              "{:else}\n"                                       +
-              "  <p>The list is empty.</p>\n"                   +
-              "{/items}"
+  dust: fs.readFileSync(__dirname + '/complex.dust').toString(),
+  eco: fs.readFileSync(__dirname + '/complex.eco').toString(),
+  mustache: fs.readFileSync(__dirname + '/complex.mustache').toString()
 };
