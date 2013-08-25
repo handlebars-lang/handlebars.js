@@ -340,8 +340,7 @@ and we will have some benchmarks in the near future.
 Building
 --------
 
-To build handlebars, just run `rake build`, and you will get two files
-in the `dist` directory.
+To build handlebars, just run `grunt build`, and the build will output to the `dist` directory.
 
 
 Upgrading
@@ -394,16 +393,13 @@ To build Handlebars.js you'll need a few things installed.
 
 * Node.js
 * [Grunt](http://gruntjs.com/getting-started)
-* Ruby
-* Rake
 
-There's a Gemfile in the repo, so you can run `bundle` to install rake
-if you've got bundler installed.
+Project dependencies may be installed via `npm install`.
 
 To build Handlebars.js from scratch, you'll want to run `grunt`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `grunt test` or `npm test`.
-You can also run our set of benchmarks with `rake bench`.
+results to the dist/ folder. To re-run tests, run `grunt test` or `npm test`.
+You can also run our set of benchmarks with `grunt bench`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
