@@ -43,8 +43,23 @@ Handlebars.helpers  = {};
 Handlebars.partials = {};
 
 var toString = Object.prototype.toString,
-    functionType = '[object Function]',
     objectType = '[object Object]';
+
+// Sourced from lodash
+// https://github.com/bestiejs/lodash/blob/master/LICENSE.txt
+function isFunction(value) {
+  return typeof value === 'function';
+}
+// fallback for older versions of Chrome and Safari
+if (isFunction(/x/)) {
+  isFunction = function(value) {
+    return typeof value === 'function' && toString.call(value) === '[object Function]';
+  };
+}
+
+function isArray(value) {
+  return (value && typeof value === 'object') ? toString.call(value) === '[object Array]' : false;
+};
 
 Handlebars.registerHelper = function(name, fn, inverse) {
   if (toString.call(name) === objectType) {
@@ -75,15 +90,13 @@ Handlebars.registerHelper('helperMissing', function(arg) {
 Handlebars.registerHelper('blockHelperMissing', function(context, options) {
   var inverse = options.inverse || function() {}, fn = options.fn;
 
-  var type = toString.call(context);
-
-  if(type === functionType) { context = context.call(this); }
+  if (isFunction(context)) { context = context.call(this); }
 
   if(context === true) {
     return fn(this);
   } else if(context === false || context == null) {
     return inverse(this);
-  } else if(type === "[object Array]") {
+  } else if (isArray(context)) {
     if(context.length > 0) {
       return Handlebars.helpers.each(context, options);
     } else {
@@ -93,8 +106,6 @@ Handlebars.registerHelper('blockHelperMissing', function(context, options) {
     return fn(context);
   }
 });
-
-Handlebars.K = function() {};
 
 Handlebars.createFrame = function(object) {
   var obj = {};
@@ -124,15 +135,14 @@ Handlebars.registerHelper('each', function(context, options) {
   var fn = options.fn, inverse = options.inverse;
   var i = 0, ret = "", data;
 
-  var type = toString.call(context);
-  if(type === functionType) { context = context.call(this); }
+  if (isFunction(context)) { context = context.call(this); }
 
   if (options.data) {
     data = Handlebars.createFrame(options.data);
   }
 
   if(context && typeof context === 'object') {
-    if(context instanceof Array){
+    if (isArray(context)) {
       for(var j = context.length; i<j; i++) {
         if (data) { data.index = i; }
         ret = ret + fn(context[i], { data: data });
@@ -156,8 +166,7 @@ Handlebars.registerHelper('each', function(context, options) {
 });
 
 Handlebars.registerHelper('if', function(conditional, options) {
-  var type = toString.call(conditional);
-  if(type === functionType) { conditional = conditional.call(this); }
+  if (isFunction(conditional)) { conditional = conditional.call(this); }
 
   if(Handlebars.Utils.isEmpty(conditional)) {
     return options.inverse(this);
@@ -171,8 +180,7 @@ Handlebars.registerHelper('unless', function(conditional, options) {
 });
 
 Handlebars.registerHelper('with', function(context, options) {
-  var type = toString.call(context);
-  if(type === functionType) { context = context.call(this); }
+  if (isFunction(context)) { context = context.call(this); }
 
   if (!Handlebars.Utils.isEmpty(context)) return options.fn(context);
 });
@@ -235,7 +243,7 @@ Handlebars.Utils = {
     // don't escape SafeStrings, since they're already safe
     if (string instanceof Handlebars.SafeString) {
       return string.toString();
-    } else if (string == null || string === false) {
+    } else if (!string && string !== 0) {
       return "";
     }
 
@@ -251,7 +259,7 @@ Handlebars.Utils = {
   isEmpty: function(value) {
     if (!value && value !== 0) {
       return true;
-    } else if(toString.call(value) === "[object Array]" && value.length === 0) {
+    } else if (isArray(value) && value.length === 0) {
       return true;
     } else {
       return false;
@@ -260,6 +268,24 @@ Handlebars.Utils = {
 };
 ;
 // lib/handlebars/runtime.js
+
+function checkRevision(compilerInfo) {
+  var compilerRevision = compilerInfo && compilerInfo[0] || 1,
+      currentRevision = Handlebars.COMPILER_REVISION;
+
+  if (compilerRevision !== currentRevision) {
+    if (compilerRevision < currentRevision) {
+      var runtimeVersions = Handlebars.REVISION_CHANGES[currentRevision],
+          compilerVersions = Handlebars.REVISION_CHANGES[compilerRevision];
+      throw "Template was precompiled with an older version of Handlebars than the current runtime. "+
+            "Please update your precompiler to a newer version ("+runtimeVersions+") or downgrade your runtime to an older version ("+compilerVersions+").";
+    } else {
+      // Use the embedded version info since the runtime doesn't know about this revision yet
+      throw "Template was precompiled with a newer version of Handlebars than the current runtime. "+
+            "Please update your runtime to a newer version ("+compilerInfo[1]+").";
+    }
+  }
+}
 
 Handlebars.VM = {
   template: function(templateSpec) {
@@ -280,7 +306,7 @@ Handlebars.VM = {
       merge: function(param, common) {
         var ret = param || common;
 
-        if (param && common) {
+        if (param && common && (param !== common)) {
           ret = {};
           Handlebars.Utils.extend(ret, common);
           Handlebars.Utils.extend(ret, param);
@@ -294,23 +320,23 @@ Handlebars.VM = {
 
     return function(context, options) {
       options = options || {};
-      var result = templateSpec.call(container, Handlebars, context, options.helpers, options.partials, options.data);
+      var namespace = options.partial ? options : Handlebars,
+          helpers,
+          partials;
 
-      var compilerInfo = container.compilerInfo || [],
-          compilerRevision = compilerInfo[0] || 1,
-          currentRevision = Handlebars.COMPILER_REVISION;
+      if (!options.partial) {
+        helpers = options.helpers;
+        partials = options.partials;
+      }
+      var result = templateSpec.call(
+            container,
+            namespace, context,
+            helpers,
+            partials,
+            options.data);
 
-      if (compilerRevision !== currentRevision) {
-        if (compilerRevision < currentRevision) {
-          var runtimeVersions = Handlebars.REVISION_CHANGES[currentRevision],
-              compilerVersions = Handlebars.REVISION_CHANGES[compilerRevision];
-          throw "Template was precompiled with an older version of Handlebars than the current runtime. "+
-                "Please update your precompiler to a newer version ("+runtimeVersions+") or downgrade your runtime to an older version ("+compilerVersions+").";
-        } else {
-          // Use the embedded version info since the runtime doesn't know about this revision yet
-          throw "Template was precompiled with a newer version of Handlebars than the current runtime. "+
-                "Please update your runtime to a newer version ("+compilerInfo[1]+").";
-        }
+      if (!options.partial) {
+        checkRevision(container.compilerInfo);
       }
 
       return result;
@@ -341,7 +367,7 @@ Handlebars.VM = {
   },
   noop: function() { return ""; },
   invokePartial: function(partial, name, context, helpers, partials, data) {
-    var options = { helpers: helpers, partials: partials, data: data };
+    var options = { partial: true, helpers: helpers, partials: partials, data: data };
 
     if(partial === undefined) {
       throw new Handlebars.Exception("The partial " + name + " could not be found");
