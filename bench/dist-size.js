@@ -1,15 +1,29 @@
 var _ = require('underscore'),
-    fs = require('fs');
+    async = require('async'),
+    fs = require('fs'),
+    zlib = require('zlib');
 
 module.exports = function(grunt, callback) {
   var distFiles = fs.readdirSync('dist'),
       distSizes = {};
 
-  _.each(distFiles, function(file) {
-    var stat = fs.statSync('dist/' + file);
-    distSizes[file.replace(/\.js/, '').replace(/\./g, '_')] = stat.size;
-  });
+  async.each(distFiles, function(file, callback) {
+      var content = fs.readFileSync('dist/' + file);
 
-  grunt.log.writeln('Distribution sizes: ' + JSON.stringify(distSizes, undefined, 2));
-  callback([distSizes]);
+      file = file.replace(/\.js/, '').replace(/\./g, '_');
+      distSizes[file] = content.length;
+
+      zlib.gzip(content, function(err, data) {
+        if (err) {
+          throw err;
+        }
+
+        distSizes[file + '_gz'] = data.length;
+        callback();
+      });
+    },
+    function() {
+      grunt.log.writeln('Distribution sizes: ' + JSON.stringify(distSizes, undefined, 2));
+      callback([distSizes]);
+    });
 };
