@@ -5,6 +5,7 @@ var BenchWarmer = function(names) {
   this.benchmarks = [];
   this.currentBenches = [];
   this.names = [];
+  this.times = {};
   this.errors = {};
 };
 
@@ -16,6 +17,7 @@ BenchWarmer.prototype = {
   },
   suite: function(suite, fn) {
     this.suiteName = suite;
+    this.times[suite] = {};
     this.first = true;
 
     var self = this;
@@ -42,10 +44,12 @@ BenchWarmer.prototype = {
         self.errors[this.name] = this;
       }
     });
+    bench.suiteName = this.suiteName;
+    bench.benchName = name;
 
     this.benchmarks.push(bench);
   },
-  bench: function() {
+  bench: function(callback) {
     var benchSize = 0, names = this.names, self = this, i, l;
 
     for(i=0, l=names.length; i<l; i++) {
@@ -99,6 +103,8 @@ BenchWarmer.prototype = {
             }
           }
         }
+
+        callback();
       }
     });
 
@@ -125,6 +131,9 @@ BenchWarmer.prototype = {
           moe   = count * bench.stats.rme / 100;
 
       out = Math.round(count / 1000) + " ±" + Math.round(moe / 1000) + " (" + bench.cycles + ")";
+
+
+      this.times[bench.suiteName][bench.benchName] = Math.round(count / 1000);
     } else {
       if (bench.error.message === 'EWOT') {
         out = 'NA';
