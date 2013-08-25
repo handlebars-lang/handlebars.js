@@ -1,5 +1,17 @@
----
-after_success: bundle exec rake publish
+language: node_js
+node_js:
+  - "0.8"
+  - "0.10"
+
+before_script:
+  - npm install -g grunt-cli
+
+script:
+  - grunt
+
+after_success:
+  - grunt publish
+
 email:
   on_failure: change
   on_success: never
