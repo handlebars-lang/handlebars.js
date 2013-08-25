@@ -33,10 +33,10 @@ function makeSuite(warmer, name, template, handlebarsOnly) {
         ecoOut,
         mustacheOut;
 
-    var handlebar = Handlebars.compile(template.handlebars),
+    var handlebar = Handlebars.compile(template.handlebars, {data: false}),
         options = {helpers: template.helpers};
     _.each(template.partials && template.partials.handlebars, function(partial, name) {
-      Handlebars.registerPartial(name, partial);
+      Handlebars.registerPartial(name, Handlebars.compile(partial, {data: false}));
     });
 
     handlebarsOut = handlebar(context, options);
