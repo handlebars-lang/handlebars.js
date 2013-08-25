@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "async": "~0.2.9",
+    "aws-sdk": "~1.5.0",
     "benchmark": "~1.0",
     "dustjs-linkedin": "~2.0.2",
     "eco": "~1.1.0-rc-3",
