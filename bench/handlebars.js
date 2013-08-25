@@ -4,7 +4,7 @@ Handlebars = require("../lib/handlebars");
 var dust, Mustache, eco;
 
 try {
-  dust = require("dust");
+  dust = require("dustjs-linkedin");
 } catch (err) { /* NOP */ }
 
 try {
@@ -15,7 +15,7 @@ try {
   var ecoExports = require("eco");
   eco = function(str) {
     return ecoExports(str);
-  }
+  };
 } catch (err) { /* NOP */ }
 
 var benchDetails = {
@@ -100,30 +100,35 @@ var benchDetails = {
 
 };
 
-handlebarsTemplates = {};
-ecoTemplates = {};
+var handlebarsTemplates = {},
+    ecoTemplates = {};
 
 var warmer = new BenchWarmer();
 
-var makeSuite = function(name) {
+function makeSuite(name) {
   warmer.suite(name, function(bench) {
     var templateName = name;
     var details = benchDetails[templateName];
     var mustachePartials = details.partials && details.partials.mustache;
     var mustacheSource = details.mustache;
     var context = details.context;
+    var options = {helpers: details.helpers};
 
     var error = function() { throw new Error("EWOT"); };
 
-    if (dust) {
-      bench("dust", function() {
-        dust.render(templateName, context, function(err, out) { });
-      });
-    }
-
     bench("handlebars", function() {
-      handlebarsTemplates[templateName](context);
+      handlebarsTemplates[templateName](context, options);
     });
+
+    if (dust) {
+      if (details.dust) {
+        bench("dust", function() {
+          dust.render(templateName, context, function(err, out) { });
+        });
+      } else {
+        bench('dust', error);
+      }
+    }
 
     if (eco) {
       if(ecoTemplates[templateName]) {
@@ -135,21 +140,28 @@ var makeSuite = function(name) {
       }
     }
 
-    if (Mustache && mustacheSource) {
-      bench("mustache", function() {
-        Mustache.to_html(mustacheSource, context, mustachePartials);
-      });
-    } else {
-      bench("mustache", error);
+    if (Mustache) {
+      if (mustacheSource) {
+        bench("mustache", function() {
+          Mustache.to_html(mustacheSource, context, mustachePartials);
+        });
+      } else {
+        bench("mustache", error);
+      }
     }
   });
 }
 
 for(var name in benchDetails) {
   if(benchDetails.hasOwnProperty(name)) {
-    if (dust) {
+    if (!benchDetails[name].handlebars) {
+      continue;
+    }
+
+    if (dust && benchDetails[name].dust) {
       dust.loadSource(dust.compile(benchDetails[name].dust, name));
     }
+
     handlebarsTemplates[name] = Handlebars.compile(benchDetails[name].handlebars);
 
     if (eco && benchDetails[name].eco) {
