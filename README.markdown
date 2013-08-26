@@ -378,6 +378,7 @@ Handlebars in the Wild
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main
   templating engine, extending it with automatic data binding support.
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
+* [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
 
 External Resources
 ------------------
