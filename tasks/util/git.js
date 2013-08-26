@@ -48,7 +48,9 @@ module.exports = {
   },
   master: function(callback) {
     childProcess.exec('git rev-parse --short origin/master', {}, function(err, stdout) {
-      if (err) {
+      // This will error if master was not checked out but in this case we know we are not master
+      // so we can ignore.
+      if (err && !/Needed a single revision/.test(err.message)) {
         throw new Error('git.master: ' + err.message);
       }
 
