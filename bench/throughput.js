@@ -135,6 +135,18 @@ module.exports = function(grunt, callback) {
   });
 
   warmer.bench(function() {
+    grunt.log.writeln();  // Clear out any trailing contnet
+
+    var scaled = {};
+    _.each(warmer.times, function(times, name) {
+      var output = scaled[name] = {};
+
+      _.each(times, function(time, lang) {
+        output[lang] = ((time - warmer.minimum) / (warmer.maximum - warmer.minimum) * 100).toFixed(2);
+      });
+    });
+    grunt.log.writeln('Scaled throughput: ' + JSON.stringify(scaled, undefined, 2));
+
     callback && callback(warmer.times);
   });
 };
