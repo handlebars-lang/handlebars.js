@@ -6,6 +6,8 @@ var BenchWarmer = function(names) {
   this.currentBenches = [];
   this.names = [];
   this.times = {};
+  this.minimum = Infinity;
+  this.maximum = -Infinity;
   this.errors = {};
 };
 
@@ -128,12 +130,20 @@ BenchWarmer.prototype = {
 
     if(!bench.error) {
       var count = bench.hz,
-          moe   = count * bench.stats.rme / 100;
+          moe   = count * bench.stats.rme / 100,
+          minimum,
+          maximum;
 
-      out = Math.round(count / 1000) + " ±" + Math.round(moe / 1000) + " (" + bench.cycles + ")";
+      count = Math.round(count / 1000);
+      moe = Math.round(moe / 1000);
+      minimum = count - moe;
+      maximum = count + moe;
 
+      out = count + " ±" + moe + " (" + bench.cycles + ")";
 
-      this.times[bench.suiteName][bench.benchName] = Math.round(count / 1000);
+      this.times[bench.suiteName][bench.benchName] = count;
+      this.minimum = Math.min(this.minimum, minimum);
+      this.maximum = Math.max(this.maximum, maximum);
     } else {
       if (bench.error.message === 'EWOT') {
         out = 'NA';
