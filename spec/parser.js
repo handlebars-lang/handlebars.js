@@ -137,6 +137,9 @@ describe('parser', function() {
 
   it("raises if there's a Parse error", function() {
     (function() {
+      ast_for("foo{{^}}bar");
+    }).should.throw(/Parse error on line 1/);
+    (function() {
       ast_for("{{foo}");
     }).should.throw(/Parse error on line 1/);
     (function() {

@@ -119,7 +119,7 @@ To display data from descendant contexts, use the `.` character. So, for
 example, if your data were structured like:
 
 ```js
-var data = {"person": { "name": "Alan" }, company: {"name": "Rad, Inc." } };
+var data = {"person": { "name": "Alan" }, "company": {"name": "Rad, Inc." } };
 ```
 
 You could display the person's name from the top-level context with the
@@ -271,13 +271,20 @@ Precompile handlebar templates.
 Usage: handlebars template...
 
 Options:
-  -a, --amd        Create an AMD format function (allows loading with RequireJS)         [boolean]
-  -f, --output     Output File                                                           [string]
-  -k, --known      Known helpers                                                         [string]
-  -o, --knownOnly  Known helpers only                                                    [boolean]
-  -m, --min        Minimize output                                                       [boolean]
-  -s, --simple     Output template function only.                                        [boolean]
-  -r, --root       Template root. Base value that will be stripped from template names.  [string]
+  -a, --amd            Create an AMD format function (allows loading with RequireJS)          [boolean]
+  -f, --output         Output File                                                            [string]
+  -k, --known          Known helpers                                                          [string]
+  -o, --knownOnly      Known helpers only                                                     [boolean]
+  -m, --min            Minimize output                                                        [boolean]
+  -s, --simple         Output template function only.                                         [boolean]
+  -r, --root           Template root. Base value that will be stripped from template names.   [string]
+  -c, --commonjs       Exports CommonJS style, path to Handlebars module                      [string]
+  -h, --handlebarPath  Path to handlebar.js (only valid for amd-style)                        [string]
+  -n, --namespace      Template namespace                                                     [string]
+  -p, --partial        Compiling a partial template                                           [boolean]
+  -d, --data           Include data when compiling                                            [boolean]
+  -e, --extension      Template extension.                                                    [string]
+  -b, --bom            Removes the BOM (Byte Order Mark) from the beginning of the templates. [boolean]
 </pre>
 
 If using the precompiler's normal mode, the resulting templates will be
@@ -333,7 +340,7 @@ and we will have some benchmarks in the near future.
 Building
 --------
 
-To build handlebars, just run `rake release`, and you will get two files
+To build handlebars, just run `rake build`, and you will get two files
 in the `dist` directory.
 
 
@@ -364,6 +371,7 @@ Handlebars in the Wild
 * [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
 * [Lumbar](walmartlabs.github.io/lumbar) provides easy module-based template management for handlebars projects.
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
+* This [jQuery plugin](http://71104.github.io/jquery-handlebars/) allows you to use Handlebars.js with [jQuery](http://jquery.com/).
 
 Have a project using Handlebars? Send us a [pull request](https://github.com/wycats/handlebars.js/pull/new/master)!
 
@@ -378,9 +386,9 @@ To build Handlebars.js you'll need a few things installed.
 There's a Gemfile in the repo, so you can run `bundle` to install rake
 if you've got bundler installed.
 
-To build Handlebars.js from scratch, you'll want to run `rake compile`
+To build Handlebars.js from scratch, you'll want to run `rake build`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `rake test` or `npm test.
+results to the dist/ folder. To run tests, run `rake spec` or `npm test`.
 You can also run our set of benchmarks with `rake bench`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
