@@ -307,6 +307,8 @@ normal.
   helpers for size and speed.
 - When all helpers are known in advance the `--knownOnly` argument may be used
   to optimize all block helper references.
+- Implementations that do not use `@data` variables can improve performance of
+  iteration centric templates by specifying `{data: false}` in the compiler options.
 
 Supported Environments
 ----------------------
