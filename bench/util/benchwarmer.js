@@ -1,5 +1,5 @@
-
-var Benchmark = require("benchmark");
+var _ = require('underscore'),
+    Benchmark = require("benchmark");
 
 var BenchWarmer = function(names) {
   this.benchmarks = [];
@@ -51,35 +51,28 @@ BenchWarmer.prototype = {
 
     this.benchmarks.push(bench);
   },
+
   bench: function(callback) {
-    var benchSize = 0, names = this.names, self = this, i, l;
+    var self = this;
 
-    for(i=0, l=names.length; i<l; i++) {
-      var name = names[i];
-
-      if(benchSize < name.length) { benchSize = name.length; }
-    }
-
-    this.nameSize = benchSize + 2;
-    this.benchSize = 20;
-    var horSize = 0;
-
-    this.startLine("ops/msec");
-    horSize = horSize + this.benchSize;
-    for(i=0, l=names.length; i<l; i++) {
-      print(names[i] + new Array(this.benchSize - names[i].length + 1).join(" "));
-      horSize = horSize + this.benchSize;
-    }
-
-    print("WINNER(S)");
-    horSize = horSize + "WINNER(S)".length;
-
-    print("\n" + new Array(horSize + 1).join("-"));
+    this.printHeader('ops/msec', true);
 
     Benchmark.invoke(this.benchmarks, {
       name: "run",
       onComplete: function() {
+        self.scaleTimes();
+
         self.startLine('');
+
+        print('\n');
+        self.printHeader('scaled');
+        _.each(self.scaled, function(value, name) {
+          self.startLine(name);
+
+          _.each(self.names, function(lang) {
+            self.writeValue(value[lang] || '');
+          });
+        });
 
         var errors = false, prop, bench;
         for(prop in self.errors) {
@@ -112,6 +105,46 @@ BenchWarmer.prototype = {
 
     print("\n");
   },
+
+  scaleTimes: function() {
+    var scaled = this.scaled = {};
+    _.each(this.times, function(times, name) {
+      var output = scaled[name] = {};
+
+      _.each(times, function(time, lang) {
+        output[lang] = ((time - this.minimum) / (this.maximum - this.minimum) * 100).toFixed(2);
+      }, this);
+    }, this);
+  },
+
+  printHeader: function(title, winners) {
+    var benchSize = 0, names = this.names, i, l;
+
+    for(i=0, l=names.length; i<l; i++) {
+      var name = names[i];
+
+      if(benchSize < name.length) { benchSize = name.length; }
+    }
+
+    this.nameSize = benchSize + 2;
+    this.benchSize = 20;
+    var horSize = 0;
+
+    this.startLine(title);
+    horSize = horSize + this.benchSize;
+    for(i=0, l=names.length; i<l; i++) {
+      this.writeValue(names[i]);
+      horSize = horSize + this.benchSize;
+    }
+
+    if (winners) {
+      print("WINNER(S)");
+      horSize = horSize + "WINNER(S)".length;
+    }
+
+    print("\n" + new Array(horSize + 1).join("-"));
+  },
+
   startLine: function(name) {
     var winners = Benchmark.map(this.winners(this.currentBenches), function(bench) {
       return bench.name.split(": ")[1];
@@ -121,9 +154,10 @@ BenchWarmer.prototype = {
 
     print(winners.join(", "));
     print("\n");
-    var padding = Math.max(this.benchSize - name.length + 1, 0);
-    name = name + new Array(padding).join(" ");
-    print(name);
+
+    if (name) {
+      this.writeValue(name);
+    }
   },
   writeBench: function(bench) {
     var out;
@@ -151,7 +185,10 @@ BenchWarmer.prototype = {
         out = 'E';
       }
     }
+    this.writeValue(out);
+  },
 
+  writeValue: function(out) {
     var padding = this.benchSize - out.length + 1;
     out = out + new Array(padding).join(" ");
     print(out);
