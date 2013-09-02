@@ -1,6 +1,6 @@
 require('./common');
 
-global.Handlebars = require('../../zomg/lib/handlebars');
+global.Handlebars = require('../../dist/cjs/handlebars');
 
 global.CompilerContext = {
   compile: function(template, options, env) {

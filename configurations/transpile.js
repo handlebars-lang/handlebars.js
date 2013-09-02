@@ -11,8 +11,12 @@ module.exports = {
 
   cjs: {
     type: 'cjs',
-    src: ["lib/<%= pkg.barename %>.js", "lib/*/**/*.js"],
-    dest: "tmp/<%= pkg.barename %>.cjs.js"
+    files: [{
+      expand: true,
+      cwd: 'lib/',
+      src: '**/*.js',
+      dest: 'dist/cjs/'
+    }]
   },
 
   globals: {
