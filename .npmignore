@@ -12,4 +12,5 @@ Rakefile
 bench/*
 spec/*
 src/*
+tasks/*
 vendor/*

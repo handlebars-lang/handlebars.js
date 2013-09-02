@@ -1,0 +1,14 @@
+<h1><%= @header() %></h1>
+<% if @items.length: %>
+  <ul>
+    <% for item in @items: %>
+      <% if item.current: %>
+        <li><strong><%= item.name %></strong></li>
+      <% else: %>
+        <li><a href="<%= item.url %>"><%= item.name %></a></li>
+      <% end %>
+    <% end %>
+  </ul>
+<% else: %>
+  <p>The list is empty.</p>
+<% end %>

@@ -1,16 +1,35 @@
 module.exports = {
-  library: {
-    src: ['tmp/<%= pkg.barename %>.amd.js', 'tmp/<%= pkg.barename %>/*.js'],
-    dest: 'dist/<%= pkg.name %>-<%= pkg.version %>.amd.js'
+  options: {
+    banner: '/*!\n\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n@license\n*/\n',
+    process: function(src, name) {
+      var match = /\/\/ BEGIN\(BROWSER\)\n((?:.|\n)*)\n\/\/ END\(BROWSER\)/.exec(src);
+      return '\n// ' + name + '\n' + (match ? match[1] : src);
+    },
+    separator: ';'
   },
-
-  deps: {
-    src: ['vendor/deps/*.js'],
-    dest: 'tmp/deps.amd.js'
+  dist: {
+    src: [
+      'lib/handlebars/browser-prefix.js',
+      'lib/handlebars/base.js',
+      'lib/handlebars/compiler/parser.js',
+      'lib/handlebars/compiler/base.js',
+      'lib/handlebars/compiler/ast.js',
+      'lib/handlebars/utils.js',
+      'lib/handlebars/compiler/compiler.js',
+      'lib/handlebars/compiler/javascript-compiler.js',
+      'lib/handlebars/runtime.js',
+      'lib/handlebars/browser-suffix.js'
+    ],
+    dest: 'dist/handlebars.js'
   },
-
-  browser: {
-    src: ['vendor/loader.js', 'tmp/<%= pkg.barename %>.amd.js'],
-    dest: 'tmp/<%= pkg.barename %>.browser1.js'
+  runtime: {
+    src: [
+      'lib/handlebars/browser-prefix.js',
+      'lib/handlebars/base.js',
+      'lib/handlebars/utils.js',
+      'lib/handlebars/runtime.js',
+      'lib/handlebars/browser-suffix.js'
+    ],
+    dest: 'dist/handlebars.runtime.js'
   }
 };

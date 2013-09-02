@@ -307,6 +307,8 @@ normal.
   helpers for size and speed.
 - When all helpers are known in advance the `--knownOnly` argument may be used
   to optimize all block helper references.
+- Implementations that do not use `@data` variables can improve performance of
+  iteration centric templates by specifying `{data: false}` in the compiler options.
 
 Supported Environments
 ----------------------
@@ -340,8 +342,7 @@ and we will have some benchmarks in the near future.
 Building
 --------
 
-To build handlebars, just run `rake build`, and you will get two files
-in the `dist` directory.
+To build handlebars, just run `grunt build`, and the build will output to the `dist` directory.
 
 
 Upgrading
@@ -379,6 +380,7 @@ Handlebars in the Wild
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main
   templating engine, extending it with automatic data binding support.
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
+* [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
 
 External Resources
 ------------------
@@ -393,16 +395,14 @@ Helping Out
 To build Handlebars.js you'll need a few things installed.
 
 * Node.js
-* Ruby
-* Rake
+* [Grunt](http://gruntjs.com/getting-started)
 
-There's a Gemfile in the repo, so you can run `bundle` to install rake
-if you've got bundler installed.
+Project dependencies may be installed via `npm install`.
 
-To build Handlebars.js from scratch, you'll want to run `rake build`
+To build Handlebars.js from scratch, you'll want to run `grunt`
 in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To run tests, run `rake spec` or `npm test`.
-You can also run our set of benchmarks with `rake bench`.
+results to the dist/ folder. To re-run tests, run `grunt test` or `npm test`.
+You can also run our set of benchmarks with `grunt bench`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
