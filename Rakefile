@@ -79,8 +79,8 @@ task :build => [:compile] do |task|
   Rake::Task["dist/handlebars.js"].execute
   Rake::Task["dist/handlebars.runtime.js"].execute
 
-  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.min.js dist/handlebars.js"
-  system "./node_modules/.bin/uglifyjs --comments -o dist/handlebars.runtime.min.js dist/handlebars.runtime.js"
+  system "./node_modules/.bin/uglifyjs -m -c --comments -o dist/handlebars.min.js dist/handlebars.js"
+  system "./node_modules/.bin/uglifyjs -m -c --comments -o dist/handlebars.runtime.min.js dist/handlebars.runtime.js"
 end
 
 # Updates the various version numbers.

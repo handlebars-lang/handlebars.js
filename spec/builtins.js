@@ -20,6 +20,8 @@ describe('builtin helpers', function() {
                       "if with non-empty array shows the contents");
       shouldCompileTo(string, {goodbye: [], world: "world"}, "cruel world!",
                       "if with empty array does not show the contents");
+      shouldCompileTo(string, {goodbye: 0, world: "world"}, "GOODBYE cruel world!",
+                      "if with zero does show the contents");
     });
 
     it("if with function argument", function() {

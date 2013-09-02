@@ -355,28 +355,41 @@ Known Issues
 * Using a variable, helper, or partial named `class` causes errors in IE browsers. (Instead, use `className`)
 
 Handlebars in the Wild
------------------
+----------------------
+
+* [Assemble](http://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert)
+  and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
+  as its template engine.
+* [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
+  structure your views, also with automatic data binding support.
+* [handlebars_assets](http://github.com/leshill/handlebars_assets): A Rails Asset Pipeline gem
+  from Les Hill (@leshill).
+* [handlebars-helpers](https://github.com/assemble/handlebars-helpers) is an extensive library
+  with 100+ handlebars helpers.
+* [hbs](http://github.com/donpark/hbs): An Express.js view engine adapter for Handlebars.js,
+  from Don Park.
 * [jblotus](http://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com)
   for anyone who would like to try out Handlebars.js in their browser.
-* Don Park wrote an Express.js view engine adapter for Handlebars.js called
-  [hbs](http://github.com/donpark/hbs).
+* [jQuery plugin](http://71104.github.io/jquery-handlebars/): allows you to use
+  Handlebars.js with [jQuery](http://jquery.com/).
+* [Lumbar](http://walmartlabs.github.io/lumbar) provides easy module-based template management for
+  handlebars projects.
 * [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey,
   supports Handlebars.js as one of its template plugins.
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main
   templating engine, extending it with automatic data binding support.
-* [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
-  structure your views, also with automatic data binding support.
-* Les Hill (@leshill) wrote a Rails Asset Pipeline gem named
-  [handlebars_assets](http://github.com/leshill/handlebars_assets).
-* [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
-* [Lumbar](walmartlabs.github.io/lumbar) provides easy module-based template management for handlebars projects.
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
-* This [jQuery plugin](http://71104.github.io/jquery-handlebars/) allows you to use Handlebars.js with [jQuery](http://jquery.com/).
+
+External Resources
+------------------
+
+* [Gist about Synchronous and asynchronous loading of external handlebars templates](https://gist.github.com/2287070)
 
 Have a project using Handlebars? Send us a [pull request](https://github.com/wycats/handlebars.js/pull/new/master)!
 
 Helping Out
 -----------
+
 To build Handlebars.js you'll need a few things installed.
 
 * Node.js
