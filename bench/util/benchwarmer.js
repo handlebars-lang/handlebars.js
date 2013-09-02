@@ -73,6 +73,7 @@ BenchWarmer.prototype = {
             self.writeValue(value[lang] || '');
           });
         });
+        print('\n');
 
         var errors = false, prop, bench;
         for(prop in self.errors) {

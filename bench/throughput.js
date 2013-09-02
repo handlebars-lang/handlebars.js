@@ -116,7 +116,8 @@ module.exports = function(grunt, callback) {
   // Deferring load incase we are being run inline with the grunt build
   Handlebars = require('../lib/handlebars');
 
+  console.log('Execution Throughput');
   runner(grunt, makeSuite, function(times, scaled) {
-    callback(times);
+    callback(scaled);
   });
 };
