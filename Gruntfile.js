@@ -42,10 +42,6 @@ module.exports = function(grunt) {
     }
   });
 
-  // By default, (i.e., if you invoke `grunt` without arguments), do
-  // a new build.
-  this.registerTask('default', ['build']);
-
   // Build a new version of the library
   this.registerTask('build', "Builds a distributable version of the current project", [
                     'clean',
