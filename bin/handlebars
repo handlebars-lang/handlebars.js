@@ -205,9 +205,12 @@ if (!argv.simple) {
       }
     }
     output.push('});');
-  } else if (!argv.commonjs) {
+  } else if (argv.commonjs) {
+    output.push('module.exports = Handlebars.templates');
+  } else {
     output.push('})();');
   }
+
 }
 output = output.join('');
 
