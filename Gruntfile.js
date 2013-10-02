@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         force: true
       },
       files: [
-        'lib/**/!(parser|browser-prefix|browser-suffix).js'
+        'lib/**/!(parser).js'
       ]
     },
 
@@ -44,6 +44,7 @@ module.exports = function(grunt) {
 
   // Build a new version of the library
   this.registerTask('build', "Builds a distributable version of the current project", [
+                    'jshint',
                     'clean',
                     'transpile:amd',
                     'concat:library']);
