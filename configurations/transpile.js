@@ -5,7 +5,7 @@ module.exports = {
       expand: true,
       cwd: 'lib/',
       src: '**/!(index).js',
-      dest: 'tmp'
+      dest: 'dist/amd/'
     }]
   },
 
