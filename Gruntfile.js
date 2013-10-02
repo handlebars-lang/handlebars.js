@@ -32,12 +32,12 @@ module.exports = function(grunt) {
         preserveComments: 'some'
       },
       dist: {
-        src: 'dist/<%= pkg.name %>.js',
-        dest: 'dist/<%= pkg.name %>.min.js'
+        src: 'dist/handlebars.js',
+        dest: 'dist/handlebars.min.js'
       },
       runtime: {
-        src: 'dist/<%= pkg.name %>.runtime.js',
-        dest: 'dist/<%= pkg.name %>.runtime.min.js'
+        src: 'dist/handlebars.runtime.js',
+        dest: 'dist/handlebars.runtime.min.js'
       }
     }
   });
@@ -46,13 +46,11 @@ module.exports = function(grunt) {
   this.registerTask('build', "Builds a distributable version of the current project", [
                     'jshint',
                     'clean',
+                    'parser',
                     'transpile:amd',
-                    'concat:library']);
-
-  this.registerTask('tests', "Builds the test package", [
-                    'build',
-                    'concat:deps',
-                    'transpile:tests']);
+                    'transpile:cjs',
+                    'concat',
+                    'uglify']);
 
   // Run a server. This is ideal for running the QUnit tests in the browser.
   this.registerTask('server', [
@@ -85,6 +83,5 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('bench', ['metrics']);
 
-  grunt.registerTask('build', ['jshint', 'parser', 'clean', 'concat', 'uglify', 'test']);
-  grunt.registerTask('default', 'build');
+  grunt.registerTask('default', ['build', 'test']);
 };

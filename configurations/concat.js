@@ -4,31 +4,30 @@ module.exports = {
     process: function(src, name) {
       var match = /\/\/ BEGIN\(BROWSER\)\n((?:.|\n)*)\n\/\/ END\(BROWSER\)/.exec(src);
       return '\n// ' + name + '\n' + (match ? match[1] : src);
-    },
-    separator: ';'
+    }
   },
   dist: {
     src: [
-      'lib/handlebars/browser-prefix.js',
-      'lib/handlebars/base.js',
-      'lib/handlebars/compiler/parser.js',
-      'lib/handlebars/compiler/base.js',
-      'lib/handlebars/compiler/ast.js',
-      'lib/handlebars/utils.js',
-      'lib/handlebars/compiler/compiler.js',
-      'lib/handlebars/compiler/javascript-compiler.js',
-      'lib/handlebars/runtime.js',
-      'lib/handlebars/browser-suffix.js'
+      'dist/amd/handlebars/browser-prefix.js',
+      'dist/amd/handlebars/base.js',
+      'dist/amd/handlebars/compiler/parser.js',
+      'dist/amd/handlebars/compiler/base.js',
+      'dist/amd/handlebars/compiler/ast.js',
+      'dist/amd/handlebars/utils.js',
+      'dist/amd/handlebars/compiler/compiler.js',
+      'dist/amd/handlebars/compiler/javascript-compiler.js',
+      'dist/amd/handlebars/runtime.js',
+      'dist/amd/handlebars/browser-suffix.js'
     ],
     dest: 'dist/handlebars.js'
   },
   runtime: {
     src: [
-      'lib/handlebars/browser-prefix.js',
-      'lib/handlebars/base.js',
-      'lib/handlebars/utils.js',
-      'lib/handlebars/runtime.js',
-      'lib/handlebars/browser-suffix.js'
+      'dist/amd/handlebars/browser-prefix.js',
+      'dist/amd/handlebars/base.js',
+      'dist/amd/handlebars/utils.js',
+      'dist/amd/handlebars/runtime.js',
+      'dist/amd/handlebars/browser-suffix.js'
     ],
     dest: 'dist/handlebars.runtime.js'
   }
