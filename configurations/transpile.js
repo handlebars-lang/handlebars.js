@@ -4,7 +4,7 @@ module.exports = {
     files: [{
       expand: true,
       cwd: 'lib/',
-      src: '**/*.js',
+      src: '**/!(index).js',
       dest: 'tmp'
     }]
   },
@@ -14,7 +14,7 @@ module.exports = {
     files: [{
       expand: true,
       cwd: 'lib/',
-      src: '**/*.js',
+      src: '**/!(index).js',
       dest: 'dist/cjs/'
     }]
   },

@@ -1,6 +1,6 @@
 require('./common');
 
-global.Handlebars = require('../../dist/cjs/handlebars');
+global.Handlebars = require('../../lib');
 
 global.CompilerContext = {
   compile: function(template, options, env) {
