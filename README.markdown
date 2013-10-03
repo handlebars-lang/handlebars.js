@@ -361,6 +361,7 @@ Handlebars in the Wild
 * [Assemble](http://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert)
   and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
   as its template engine.
+* [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
   structure your views, also with automatic data binding support.
 * [handlebars_assets](http://github.com/leshill/handlebars_assets): A Rails Asset Pipeline gem
