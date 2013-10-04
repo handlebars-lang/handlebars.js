@@ -22,7 +22,7 @@
         "ok",
         "strictEqual",
         "module",
-
+        "throw",
         "describe",
         "it",
         "afterEach"
