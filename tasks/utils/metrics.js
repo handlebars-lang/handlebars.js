@@ -1,6 +1,6 @@
-var _ = require('underscore'),
+var _ = require('grunt').util._,
     async = require('async'),
-    git = require('./util/git'),
+    git = require('options/git'),
     Keen = require('keen.io'),
     metrics = require('../bench');
 

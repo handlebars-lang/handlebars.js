@@ -22,9 +22,15 @@
         "ok",
         "strictEqual",
         "module",
-
+        "shouldCompileTo",
+        "shouldCompileToWithPartials",
+        "CompilerContext",
+        "compileWithPartials",
         "describe",
         "it",
+        "before",
+        "beforeEach",
+        "should",
         "afterEach"
     ],
 

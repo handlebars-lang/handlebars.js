@@ -1,0 +1,20 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Handlebars Tests</title>
+  <link rel="stylesheet" href="/vendor/mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+  <script src="/tmp/handlebars.browser.js"></script>
+  <script src="/vendor/mocha.js"></script>
+  <script src="/vendor/should.js"></script>
+  <script src="/tmp/tests/all-tests.js"></script>
+  <script>mocha.setup({ ui: 'bdd', timeout: 200 });</script>
+  <script>
+    requireModule('spec/tests');
+    if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+    else { mocha.run(); };
+  </script>
+</body>
+</html>

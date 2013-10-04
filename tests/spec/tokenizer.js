@@ -1,21 +1,24 @@
-var should = require('should');
+import Parser from "handlebars/compiler/parser";
 
-should.Assertion.prototype.match_tokens = function(tokens) {
-  this.obj.forEach(function(value, index) {
-    value.name.should.equal(tokens[index]);
-  });
-};
-should.Assertion.prototype.be_token = function(name, text) {
-  this.obj.should.eql({name: name, text: text});
-};
+before(function() {
+  should.__proto__.match_tokens = function(tokens) {
+    this.obj.forEach(function(value, index) {
+      value.name.should.equal(tokens[index]);
+    });
+  };
+
+  should.__proto__.be_token = function(name, text) {
+    this.obj.should.eql({name: name, text: text});
+  };
+});
 
 describe('Tokenizer', function() {
-  if (!Handlebars.Parser) {
+  if (!Parser) {
     return;
   }
 
   function tokenize(template) {
-    var parser = Handlebars.Parser,
+    var parser = Parser,
         lexer = parser.lexer;
 
     lexer.setInput(template);

@@ -1,8 +1,6 @@
-global.handlebarsEnv = null;
+import SafeString from "handlebars/safe-string";
 
-beforeEach(function() {
-  global.handlebarsEnv = new Handlebars.HandlebarsEnvironment();
-});
+var local = window || global;
 
 describe("basic context", function() {
   it("most basic", function() {
@@ -70,7 +68,7 @@ describe("basic context", function() {
   });
 
   it("functions returning safestrings shouldn't be escaped", function() {
-    var hash = {awesome: function() { return new Handlebars.SafeString("&\"\\<>"); }};
+    var hash = {awesome: function() { return new SafeString("&\"\\<>"); }};
     shouldCompileTo("{{awesome}}", hash, '&\"\\<>',
         "functions returning safestrings aren't escaped");
   });
@@ -166,3 +164,4 @@ describe("basic context", function() {
     }).should.throw(Error);
   });
 });
+

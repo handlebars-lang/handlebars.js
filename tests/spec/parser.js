@@ -1,11 +1,15 @@
+import { print } from "handlebars/compiler/printer";
+import { parse } from "handlebars/compiler/base";
+import AST from "handlebars/compiler/ast";
+
 describe('parser', function() {
-  if (!Handlebars.print) {
+  if (!print) {
     return;
   }
 
   function ast_for(template) {
-    var ast = Handlebars.parse(template);
-    return Handlebars.print(ast);
+    var ast = parse(template);
+    return print(ast);
   }
 
   it('parses simple mustaches', function() {
@@ -167,7 +171,7 @@ describe('parser', function() {
 
   describe('externally compiled AST', function() {
     it('can pass through an already-compiled AST', function() {
-      ast_for(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")])).should.equal("CONTENT[ \'Hello\' ]\n");
+      ast_for(new AST.ProgramNode([ new AST.ContentNode("Hello")])).should.equal("CONTENT[ \'Hello\' ]\n");
     });
   });
 });

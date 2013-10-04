@@ -1,3 +1,6 @@
+import compile from "handlebars/compiler/compiler";
+import AST from "handlebars/compiler/ast";
+
 /*global CompilerContext, shouldCompileTo */
 describe('Regressions', function() {
   it("GH-94: Cannot read property of undefined", function() {
@@ -111,9 +114,9 @@ describe('Regressions', function() {
     }).should.throw("You must pass a string or Handlebars AST to Handlebars.precompile. You passed null");
   });
 
-  if (Handlebars.AST) {
+  if (AST) {
     it("can pass through an already-compiled AST via compile/precompile", function() {
-      equal(Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
+      equal(compile(new AST.ProgramNode([ new AST.ContentNode("Hello")]))(), 'Hello');
     });
   }
 });

@@ -1,8 +1,11 @@
-/*global CompilerContext, shouldCompileTo, compileWithPartials */
+import { HandlebarsEnvironment } from "handlebars/base";
+import { log } from "handlebars/logger";
+
 describe('builtin helpers', function() {
-  var originalLog = Handlebars.log;
+  var originalLog = log;
+
   afterEach(function() {
-    Handlebars.log = originalLog;
+    log = originalLog;
   });
 
   describe('#if', function() {
@@ -49,8 +52,10 @@ describe('builtin helpers', function() {
   });
 
   describe('#each', function() {
+    var hbs = new HandlebarsEnvironment();
+
     beforeEach(function() {
-      handlebarsEnv.registerHelper('detectDataInsideEach', function(options) {
+      hbs.registerHelper('detectDataInsideEach', function(options) {
         return options.data && options.data.exclaim;
       });
     });
@@ -130,7 +135,10 @@ describe('builtin helpers', function() {
     var hash   = { blah: "whee" };
 
     var levelArg, logArg;
-    Handlebars.log = function(level, arg){ levelArg = level, logArg = arg; };
+
+    log = function(level, arg){
+      levelArg = level, logArg = arg;
+    };
 
     shouldCompileTo(string, hash, "", "log should not display");
     equals(1, levelArg, "should call log with 1");
