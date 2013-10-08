@@ -1,5 +1,8 @@
-/*global CompilerContext, shouldCompileTo, shouldCompileToWithPartials */
+import { HandlebarsEnvironment } from "handlebars/base";
+
 describe('partials', function() {
+  var hbs = new HandlebarsEnvironment();
+
   it("basic partials", function() {
     var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
     var partial = "{{name}} ({{url}}) ";
@@ -70,7 +73,7 @@ describe('partials', function() {
   });
 
   it("Global Partials", function() {
-    handlebarsEnv.registerPartial('global_test', '{{another_dude}}');
+    hbs.registerPartial('global_test', '{{another_dude}}');
 
     var string = "Dudes: {{> shared/dude}} {{> global_test}}";
     var dude = "{{name}}";
@@ -79,7 +82,7 @@ describe('partials', function() {
   });
 
   it("Multiple partial registration", function() {
-    handlebarsEnv.registerPartial({
+    hbs.registerPartial({
       'shared/dude': '{{name}}',
       global_test: '{{another_dude}}'
     });

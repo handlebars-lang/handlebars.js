@@ -1,4 +1,5 @@
-/*global CompilerContext */
+import { HandlebarsEnvironment, createFrame } from "handlebars/base";
+
 describe('data', function() {
   it("passing in data to a compiled function that expects data - works with helpers", function() {
     var template = CompilerContext.compile("{{hello}}", {data: true});
@@ -21,11 +22,12 @@ describe('data', function() {
 
   it("deep @foo triggers automatic top-level data", function() {
     var template = CompilerContext.compile('{{#let world="world"}}{{#if foo}}{{#if foo}}Hello {{@world}}{{/if}}{{/if}}{{/let}}');
+    var hbs = new HandlebarsEnvironment();
 
-    var helpers = Handlebars.createFrame(handlebarsEnv.helpers);
+    var helpers = createFrame(hbs.helpers);
 
     helpers.let = function(options) {
-      var frame = Handlebars.createFrame(options.data);
+      var frame = createFrame(options.data);
 
       for (var prop in options.hash) {
         frame[prop] = options.hash[prop];
@@ -113,7 +115,7 @@ describe('data', function() {
     var template = CompilerContext.compile("{{#let foo=1 bar=2}}{{#let foo=bar.baz}}{{@bar}}{{@foo}}{{/let}}{{@foo}}{{/let}}", { data: true });
     var helpers = {
       let: function(options) {
-        var frame = Handlebars.createFrame(options.data);
+        var frame = createFrame(options.data);
         for (var prop in options.hash) {
           frame[prop] = options.hash[prop];
         }

@@ -1,5 +1,9 @@
-/*global CompilerContext, shouldCompileTo, shouldCompileToWithPartials */
+import SafeString from "handlebars/safe-string";
+import { HandlebarsEnvironment } from "handlebars/base";
+
 describe('helpers', function() {
+  var hbs = new HandlebarsEnvironment();
+
   it("helper with complex lookup$", function() {
     var string = "{{#goodbyes}}{{{link ../prefix}}}{{/goodbyes}}";
     var hash = {prefix: "/root", goodbyes: [{text: "Goodbye", url: "goodbye"}]};
@@ -161,7 +165,7 @@ describe('helpers', function() {
     });
 
     it("the helper hash should augment the global hash", function() {
-      handlebarsEnv.registerHelper('test_helper', function() { return 'found it!'; });
+      hbs.registerHelper('test_helper', function() { return 'found it!'; });
 
       shouldCompileTo(
         "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}", [
@@ -173,10 +177,10 @@ describe('helpers', function() {
   });
 
   it("Multiple global helper registration", function() {
-    var helpers = handlebarsEnv.helpers;
-    handlebarsEnv.helpers = {};
+    var helpers = hbs.helpers;
+    hbs.helpers = {};
 
-    handlebarsEnv.registerHelper({
+    hbs.registerHelper({
       'if': helpers['if'],
       world: function() { return "world!"; },
       test_helper: function() { return 'found it!'; }
@@ -364,7 +368,7 @@ describe('helpers', function() {
       var helpers = {
         helperMissing: function(helper, context) {
           if(helper === "link_to") {
-            return new Handlebars.SafeString("<a>" + context + "</a>");
+            return new SafeString("<a>" + context + "</a>");
           }
         }
       };
