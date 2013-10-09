@@ -25,6 +25,21 @@ module.exports = function(grunt) {
     connect: config('connect'),
     transpile: config('transpile'),
 
+    packager: {
+      options: {
+        export: 'Handlebars'
+      },
+
+      global: {
+        files: [{
+          cwd: 'lib/',
+          expand: true,
+          src: ['handlebars*.js'],
+          dest: 'dist/'
+        }]
+      }
+    },
+
     uglify: {
       options: {
         mangle: true,
@@ -49,7 +64,7 @@ module.exports = function(grunt) {
                     'parser',
                     'transpile:amd',
                     'transpile:cjs',
-                    'concat',
+                    'packager',
                     'uglify']);
 
   // Run a server. This is ideal for running the QUnit tests in the browser.
