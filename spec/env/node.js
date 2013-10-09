@@ -3,14 +3,11 @@ require('./common');
 global.Handlebars = require('../../lib');
 
 global.CompilerContext = {
-  compile: function(template, options, env) {
-    env = env || handlebarsEnv;
-    var templateSpec = Handlebars.precompile(template, options);
-    return Handlebars.template(eval('(' + templateSpec + ')'), env);
+  compile: function(template, options) {
+    var templateSpec = handlebarsEnv.precompile(template, options);
+    return handlebarsEnv.template(eval('(' + templateSpec + ')'));
   },
   compileWithPartial: function(template, options) {
-    options = options || {};
-    options.env = handlebarsEnv;
-    return Handlebars.compile(template, options);
+    return handlebarsEnv.compile(template, options);
   }
 };

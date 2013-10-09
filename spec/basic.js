@@ -1,7 +1,7 @@
 global.handlebarsEnv = null;
 
 beforeEach(function() {
-  global.handlebarsEnv = new Handlebars.HandlebarsEnvironment();
+  global.handlebarsEnv = Handlebars.create();
 });
 
 describe("basic context", function() {
