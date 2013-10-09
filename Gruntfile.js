@@ -64,8 +64,14 @@ module.exports = function(grunt) {
                     'parser',
                     'transpile:amd',
                     'transpile:cjs',
-                    'packager',
+                    'packager-fork',
                     'uglify']);
+
+  grunt.registerTask('packager-fork', function() {
+    // Allows us to run the packager task out of process to work around the multiple
+    // traceur exec issues
+    grunt.util.spawn({grunt: true,  args: ['packager']}, this.async());
+  });
 
   // Run a server. This is ideal for running the QUnit tests in the browser.
   this.registerTask('server', [
