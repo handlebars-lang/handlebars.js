@@ -1,10 +1,5 @@
 /*global CompilerContext, shouldCompileTo, compileWithPartials */
 describe('builtin helpers', function() {
-  var originalLog = Handlebars.log;
-  afterEach(function() {
-    Handlebars.log = originalLog;
-  });
-
   describe('#if', function() {
     it("if", function() {
       var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
@@ -130,7 +125,7 @@ describe('builtin helpers', function() {
     var hash   = { blah: "whee" };
 
     var levelArg, logArg;
-    Handlebars.log = function(level, arg){ levelArg = level, logArg = arg; };
+    handlebarsEnv.log = function(level, arg){ levelArg = level, logArg = arg; };
 
     shouldCompileTo(string, hash, "", "log should not display");
     equals(1, levelArg, "should call log with 1");
