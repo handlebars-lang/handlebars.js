@@ -8,6 +8,7 @@ module.exports = function(grunt, callback) {
       distSizes = {};
 
   async.each(distFiles, function(file, callback) {
+      grunt.log.writeln('Dist size: "dist/' + file + '"');
       var content = fs.readFileSync('dist/' + file);
 
       file = file.replace(/\.js/, '').replace(/\./g, '_');
