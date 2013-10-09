@@ -39,6 +39,24 @@ module.exports = function(grunt) {
         }]
       }
     },
+    requirejs: {
+      options: {
+        optimize: "none",
+        baseUrl: "dist/amd/"
+      },
+      dist: {
+        options: {
+          name: "handlebars",
+          out: "dist/handlebars.amd.js"
+        }
+      },
+      runtime: {
+        options: {
+          name: "handlebars.runtime",
+          out: "dist/handlebars.runtime.amd.js"
+        }
+      }
+    },
 
     uglify: {
       options: {
@@ -47,12 +65,15 @@ module.exports = function(grunt) {
         preserveComments: 'some'
       },
       dist: {
-        src: 'dist/handlebars.js',
-        dest: 'dist/handlebars.min.js'
-      },
-      runtime: {
-        src: 'dist/handlebars.runtime.js',
-        dest: 'dist/handlebars.runtime.min.js'
+        files: [{
+          cwd: 'dist/',
+          expand: true,
+          src: ['handlebars*.js'],
+          dest: 'dist/',
+          rename: function(dest, src) {
+            return dest + src.replace(/\.js$/, '.min.js');
+          }
+        }]
       }
     }
   });
@@ -65,6 +86,7 @@ module.exports = function(grunt) {
                     'transpile:amd',
                     'transpile:cjs',
                     'packager-fork',
+                    'requirejs',
                     'uglify']);
 
   grunt.registerTask('packager-fork', function() {
@@ -83,6 +105,7 @@ module.exports = function(grunt) {
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');

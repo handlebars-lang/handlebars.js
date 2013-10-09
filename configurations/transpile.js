@@ -1,6 +1,7 @@
 module.exports = {
   amd: {
     type: "amd",
+    anonymous: true,
     files: [{
       expand: true,
       cwd: 'lib/',
