@@ -6,7 +6,6 @@ var _ = require('underscore'),
 module.exports = function(grunt) {
   grunt.registerTask('publish:latest', function() {
     var done = this.async();
-    initSDK();
 
     git.debug(function(remotes, branches) {
       grunt.log.writeln('remotes: ' + remotes);
@@ -14,6 +13,7 @@ module.exports = function(grunt) {
 
       git.commitInfo(function(err, info) {
         if (info.isMaster) {
+          initSDK();
           publish(fileMap(['-latest', '-' + info.head]), done);
         } else {
           // Silently ignore for branches
