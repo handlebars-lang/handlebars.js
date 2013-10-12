@@ -1,8 +1,15 @@
 {
-  "name": "handlebars.js",
+  "name": "handlebars",
   "barename": "handlebars",
   "version": "1.0.12",
   "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
+  "homepage": "http://www.handlebarsjs.com/",
+  "keywords": [
+    "handlebars",
+    "mustache",
+    "template",
+    "html"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/wycats/handlebars.js.git"
@@ -10,6 +17,16 @@
   "author": "Yehuda Katz",
   "license": "BSD",
   "readmeFilename": "README.md",
+
+  "engines": {
+    "node": ">=0.4.7"
+  },
+  "dependencies": {
+    "optimist": "~0.3"
+  },
+  "optionalDependencies": {
+    "uglify-js": "~2.3"
+  },
   "devDependencies": {
     "async": "~0.2.9",
     "aws-sdk": "~1.5.0",
@@ -36,12 +53,12 @@
     "should": "~1.2.2",
     "underscore": "~1.5.1"
   },
-  "main": "lib/handlebars.js",
+
+  "main": "lib/index.js",
   "bin": {
     "handlebars": "bin/handlebars"
   },
   "scripts": {
     "test": "node ./spec/env/runner"
-  },
-  "optionalDependencies": {}
+  }
 }
