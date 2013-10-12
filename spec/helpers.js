@@ -161,7 +161,7 @@ describe('helpers', function() {
     });
 
     it("the helper hash should augment the global hash", function() {
-      Handlebars.registerHelper('test_helper', function() { return 'found it!'; });
+      handlebarsEnv.registerHelper('test_helper', function() { return 'found it!'; });
 
       shouldCompileTo(
         "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}", [
@@ -173,25 +173,21 @@ describe('helpers', function() {
   });
 
   it("Multiple global helper registration", function() {
-    var helpers = Handlebars.helpers;
-    try {
-      Handlebars.helpers = {};
-      Handlebars.registerHelper({
-        'if': helpers['if'],
-        world: function() { return "world!"; },
-        test_helper: function() { return 'found it!'; }
-      });
+    var helpers = handlebarsEnv.helpers;
+    handlebarsEnv.helpers = {};
 
-      shouldCompileTo(
-        "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}",
-        [{cruel: "cruel"}],
-        "found it! Goodbye cruel world!!");
-    } finally {
-      if (helpers) {
-        Handlebars.helpers = helpers;
-      }
-    }
+    handlebarsEnv.registerHelper({
+      'if': helpers['if'],
+      world: function() { return "world!"; },
+      test_helper: function() { return 'found it!'; }
+    });
+
+    shouldCompileTo(
+      "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}",
+      [{cruel: "cruel"}],
+      "found it! Goodbye cruel world!!");
   });
+
   it("negative number literals work", function() {
     var string   = 'Message: {{hello -12}}';
     var hash     = {};

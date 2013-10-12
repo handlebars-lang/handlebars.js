@@ -10,6 +10,7 @@ Rakefile
 *.gemspec
 *.nuspec
 bench/*
+configurations/*
 spec/*
 src/*
 tasks/*

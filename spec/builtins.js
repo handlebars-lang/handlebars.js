@@ -1,10 +1,5 @@
 /*global CompilerContext, shouldCompileTo, compileWithPartials */
 describe('builtin helpers', function() {
-  var originalLog = Handlebars.log;
-  afterEach(function() {
-    Handlebars.log = originalLog;
-  });
-
   describe('#if', function() {
     it("if", function() {
       var string   = "{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!";
@@ -49,6 +44,12 @@ describe('builtin helpers', function() {
   });
 
   describe('#each', function() {
+    beforeEach(function() {
+      handlebarsEnv.registerHelper('detectDataInsideEach', function(options) {
+        return options.data && options.data.exclaim;
+      });
+    });
+
     it("each", function() {
       var string   = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!";
       var hash     = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -116,9 +117,6 @@ describe('builtin helpers', function() {
       equal(result, 'a!b!c!', 'should output data');
     });
 
-    Handlebars.registerHelper('detectDataInsideEach', function(options) {
-      return options.data && options.data.exclaim;
-    });
   });
 
   it("#log", function() {
@@ -127,7 +125,7 @@ describe('builtin helpers', function() {
     var hash   = { blah: "whee" };
 
     var levelArg, logArg;
-    Handlebars.log = function(level, arg){ levelArg = level, logArg = arg; };
+    handlebarsEnv.log = function(level, arg){ levelArg = level, logArg = arg; };
 
     shouldCompileTo(string, hash, "", "log should not display");
     equals(1, levelArg, "should call log with 1");

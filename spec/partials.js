@@ -70,7 +70,7 @@ describe('partials', function() {
   });
 
   it("Global Partials", function() {
-    Handlebars.registerPartial('global_test', '{{another_dude}}');
+    handlebarsEnv.registerPartial('global_test', '{{another_dude}}');
 
     var string = "Dudes: {{> shared/dude}} {{> global_test}}";
     var dude = "{{name}}";
@@ -79,7 +79,7 @@ describe('partials', function() {
   });
 
   it("Multiple partial registration", function() {
-    Handlebars.registerPartial({
+    handlebarsEnv.registerPartial({
       'shared/dude': '{{name}}',
       global_test: '{{another_dude}}'
     });

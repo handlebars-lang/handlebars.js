@@ -30,12 +30,14 @@
 
     "node" : true,
     "browser" : true,
+    "esnext": true,
 
     "boss" : true,
     "curly": false,
     "debug": false,
     "devel": false,
     "eqeqeq": false,
+    "eqnull": true,
     "evil": true,
     "forin": false,
     "immed": false,

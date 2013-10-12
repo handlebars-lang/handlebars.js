@@ -6,6 +6,8 @@ var errors = 0,
     testDir = path.dirname(__dirname),
     grep = process.argv[2];
 
+var files = [ testDir + "/basic.js" ];
+
 var files = fs.readdirSync(testDir)
       .filter(function(name) { return (/.*\.js$/).test(name); })
       .map(function(name) { return testDir + '/' + name; });
