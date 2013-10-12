@@ -94,6 +94,46 @@ describe('builtin helpers', function() {
       equal(result, "0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!", "The @index variable is used");
     });
 
+    it("each with @first", function() {
+      var string = "{{#each goodbyes}}{{#if @first}}{{text}}! {{/if}}{{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "goodbye! cruel world!", "The @first variable is used");
+    });
+
+    it("each with nested @first", function() {
+      var string = "{{#each goodbyes}}({{#if @first}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @first}}{{text}}!{{/if}}{{/each}}{{#if @first}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "(goodbye! goodbye! goodbye!) (goodbye!) (goodbye!) cruel world!", "The @first variable is used");
+    });
+
+    it("each with @last", function() {
+      var string = "{{#each goodbyes}}{{#if @last}}{{text}}! {{/if}}{{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "GOODBYE! cruel world!", "The @last variable is used");
+    });
+
+    it("each with nested @last", function() {
+      var string = "{{#each goodbyes}}({{#if @last}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @last}}{{text}}!{{/if}}{{/each}}{{#if @last}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "(GOODBYE!) (GOODBYE!) (GOODBYE! GOODBYE! GOODBYE!) cruel world!", "The @last variable is used");
+    });
+
     it("each with function argument", function() {
       var string = "{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!";
       var hash   = {goodbyes: function () { return [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}];}, world: "world"};
