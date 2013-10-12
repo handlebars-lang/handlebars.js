@@ -1,4 +1,5 @@
 /*global shouldCompileTo */
+
 describe('utils', function() {
   describe('#SafeString', function() {
     it("constructing a safestring from a string and checking its type", function() {

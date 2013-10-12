@@ -1,7 +1,8 @@
 {
   "name": "handlebars",
-  "description": "Extension of the Mustache logicless template language",
+  "barename": "handlebars",
   "version": "1.0.12",
+  "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
   "homepage": "http://www.handlebarsjs.com/",
   "keywords": [
     "handlebars",
@@ -11,13 +12,19 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/wycats/handlebars.js.git"
+    "url": "https://github.com/wycats/handlebars.js.git"
   },
+  "author": "Yehuda Katz",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+
   "engines": {
     "node": ">=0.4.7"
   },
   "dependencies": {
-    "optimist": "~0.3",
+    "optimist": "~0.3"
+  },
+  "optionalDependencies": {
     "uglify-js": "~2.3"
   },
   "devDependencies": {
@@ -27,10 +34,18 @@
     "dustjs-linkedin": "~2.0.2",
     "eco": "~1.1.0-rc-3",
     "grunt": "~0.4.1",
+    "connect": "~2.7.4",
     "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
-    "jison": "~0.3",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-hang": "~0.1.2",
+    "grunt-es6-module-transpiler": "joefiorini/grunt-es6-module-transpiler",
+    "es6-module-packager": "*",
+    "jison": "~0.3.0",
     "keen.io": "0.0.3",
     "mocha": "*",
     "mustache": "~0.7.2",
@@ -38,12 +53,13 @@
     "should": "~1.2.2",
     "underscore": "~1.5.1"
   },
-  "main": "lib/handlebars.js",
+
+  "main": "lib/index.js",
   "bin": {
     "handlebars": "bin/handlebars"
   },
   "scripts": {
+    "prepublish": "grunt",
     "test": "node ./spec/env/runner"
-  },
-  "optionalDependencies": {}
+  }
 }

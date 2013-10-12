@@ -3,11 +3,11 @@ node_js:
   - "0.8"
   - "0.10"
 
-before_script:
+before_install:
   - npm install -g grunt-cli
 
 script:
-  - grunt build metrics publish:latest
+  - grunt --stack build metrics publish:latest
 
 email:
   on_failure: change

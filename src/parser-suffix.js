@@ -1,4 +1,1 @@
-
-// END(BROWSER)
-
-module.exports = handlebars;
+export default handlebars;
