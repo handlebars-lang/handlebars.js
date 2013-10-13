@@ -23,10 +23,16 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]
 
 %%
 
-"\\\\"/("{{")                    yytext = "\\"; return 'CONTENT';
 [^\x00]*?/("{{")                 {
-                                   if(yytext.slice(-1) !== "\\") this.begin("mu");
-                                   if(yytext.slice(-1) === "\\") strip(0,1), this.begin("emu");
+                                   if(yytext.slice(-2) === "\\\\") {
+                                     strip(0,1);
+                                     this.begin("mu");
+                                   } else if(yytext.slice(-1) === "\\") {
+                                     strip(0,1);
+                                     this.begin("emu");
+                                   } else {
+                                     this.begin("mu");
+                                   }
                                    if(yytext) return 'CONTENT';
                                  }
 
