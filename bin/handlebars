@@ -206,7 +206,7 @@ if (!argv.simple) {
     }
     output.push('});');
   } else if (argv.commonjs) {
-    output.push('module.exports = Handlebars.templates');
+    output.push('module.exports = templates;');
   } else {
     output.push('})();');
   }
