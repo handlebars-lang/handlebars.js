@@ -54,7 +54,6 @@
     "handlebars": "bin/handlebars"
   },
   "scripts": {
-    "prepublish": "grunt",
     "test": "node ./spec/env/runner"
   }
 }
