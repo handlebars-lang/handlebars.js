@@ -118,7 +118,7 @@ module.exports = function(grunt) {
   grunt.registerTask('packager-fork', function() {
     // Allows us to run the packager task out of process to work around the multiple
     // traceur exec issues
-    grunt.util.spawn({grunt: true,  args: ['packager']}, this.async());
+    grunt.util.spawn({grunt: true,  args: ['--stack', 'packager'], opts: {stdio: 'inherit'}}, this.async());
   });
   grunt.registerTask('test', function() {
     var done = this.async();
