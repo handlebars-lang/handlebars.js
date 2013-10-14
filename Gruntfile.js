@@ -85,9 +85,12 @@ module.exports = function(grunt) {
                     'parser',
                     'transpile:amd',
                     'transpile:cjs',
-                    'packager-fork',
+                    'packager-fork']);
+
+  this.registerTask('release', 'Build final packages', [
                     'requirejs',
-                    'uglify']);
+                    'uglify'
+                    ]);
 
   grunt.registerTask('packager-fork', function() {
     // Allows us to run the packager task out of process to work around the multiple
@@ -127,5 +130,5 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('bench', ['metrics']);
 
-  grunt.registerTask('default', ['build', 'test']);
+  grunt.registerTask('default', ['build', 'test', 'release']);
 };
