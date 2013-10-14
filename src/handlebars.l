@@ -9,11 +9,11 @@ function strip(start, end) {
 
 %}
 
-LEFT_STRIP    "("
-RIGHT_STRIP   ")"
+LEFT_STRIP    "~"
+RIGHT_STRIP   "~"
 
-LOOKAHEAD           [=)}\s\/.]
-LITERAL_LOOKAHEAD   [)}\s]
+LOOKAHEAD           [=~}\s\/.]
+LITERAL_LOOKAHEAD   [~}\s]
 
 /*
 ID is the inverse of control characters.

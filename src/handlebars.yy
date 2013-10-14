@@ -6,8 +6,8 @@
 
 function stripFlags(open, close) {
   return {
-    left: open[2] === '(',
-    right: close[0] === ')' || close[1] === ')'
+    left: open[2] === '~',
+    right: close[0] === '~' || close[1] === '~'
   };
 }
 
