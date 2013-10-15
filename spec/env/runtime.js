@@ -1,3 +1,4 @@
+/*global handlebarsEnv */
 require('./common');
 
 var _ = require('underscore'),
@@ -12,7 +13,7 @@ var compiler = require('../../dist/cjs/handlebars/compiler/compiler');
 global.CompilerContext = {
   compile: function(template, options) {
     var templateSpec = compiler.precompile(template, options);
-    return handlebarsEnv.template(eval('(' + templateSpec + ')'));
+    return handlebarsEnv.template(safeEval(templateSpec));
   },
   compileWithPartial: function(template, options) {
     // Hack the compiler on to the environment for these specific tests
@@ -22,3 +23,7 @@ global.CompilerContext = {
     return handlebarsEnv.compile(template, options);
   }
 };
+
+function safeEval(templateSpec) {
+  return eval('(' + templateSpec + ')');
+}
