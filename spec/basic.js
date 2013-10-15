@@ -91,6 +91,18 @@ describe("basic context", function() {
         "Frank", "functions are called with context arguments");
   });
 
+  it("block functions with context argument", function() {
+    shouldCompileTo("{{#awesome 1}}inner {{.}}{{/awesome}}",
+        {awesome: function(context, options) { return options.fn(context); }},
+        "inner 1", "block functions are called with context and options");
+  });
+
+  it("block functions without context argument", function() {
+    shouldCompileTo("{{#awesome}}inner{{/awesome}}",
+        {awesome: function(options) { return options.fn(this); }},
+        "inner", "block functions are called with options");
+  });
+
 
   it("paths with hyphens", function() {
     shouldCompileTo("{{foo-bar}}", {"foo-bar": "baz"}, "baz", "Paths can contain hyphens (-)");
