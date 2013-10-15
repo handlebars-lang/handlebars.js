@@ -129,7 +129,7 @@ if (!argv.simple) {
   if (argv.amd) {
     output.push('define([\'' + argv.handlebarPath + 'handlebars\'], function(Handlebars) {\n  Handlebars = Handlebars["default"];');
   } else if (argv.commonjs) {
-    output.push('var Handlebars = require("' + argv.commonjs + '");');
+    output.push('var Handlebars = require("' + argv.commonjs + '");\n');
   } else {
     output.push('(function() {\n');
   }
@@ -205,9 +205,14 @@ if (!argv.simple) {
       }
     }
     output.push('});');
-  } else if (!argv.commonjs) {
+  } else if (argv.commonjs) {
+    output.push('\nmodule.exports = function (template) {\n');
+    output.push('  return templates[template];\n');
+    output.push('}');
+  } else {
     output.push('})();');
   }
+
 }
 output = output.join('');
 
