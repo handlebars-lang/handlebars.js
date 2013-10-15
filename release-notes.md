@@ -12,6 +12,7 @@ Compatibility notes:
   - AMD: Users may load the bundled `handlebars.amd.js` or `handlebars.runtime.amd.js` files or load individual modules directly. AMD users should also note that the handlebars object is exposed via the `default` field on the imported object. This [gist](https://gist.github.com/wycats/7417be0dc361a69d5916) provides some discussion of possible compatibility shims.
   - CommonJS/Node: Node loading occurs as normal via `require`
   - Globals: The `handlebars.js` and `handlebars.runtime.js` files should behave in the same manner as the v1.0.12 / 1.0.0 release.
+- Context-stored helpers are now always passed the `options` hash. Previously no-argument helpers did not have this argument.
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.0.12...master)
 
