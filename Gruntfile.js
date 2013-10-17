@@ -1,38 +1,5 @@
 var childProcess = require('child_process');
 
-function wildcardResponseIsValid(request) {
-  var urlSegments = request.url.split('.'),
-      extension   = urlSegments[urlSegments.length-1];
-  return (
-    ['GET', 'HEAD'].indexOf(request.method.toUpperCase()) > -1 &&
-    (urlSegments.length === 1 || extension.indexOf('htm') === 0 || extension.length > 5)
-  );
-}
-
-function buildWildcardMiddleware(options) {
-  return function(request, response, next) {
-    if (!wildcardResponseIsValid(request)) { return next(); }
-
-    var wildcard     = (options.wildcard || 'index.html'),
-        wildcardPath = options.base + "/" + wildcard;
-
-    fs.readFile(wildcardPath, function(err, data){
-      if (err) { return next('ENOENT' === err.code ? null : err); }
-
-      response.writeHead(200, { 'Content-Type': 'text/html' });
-      response.end(data);
-    });
-  };
-}
-
-function middleware(connect, options) {
-  return [
-    connect['static'](options.base),
-    connect.directory(options.base),
-    buildWildcardMiddleware(options)
-  ];
-}
-
 module.exports = function(grunt) {
 
   grunt.initConfig({
@@ -57,6 +24,23 @@ module.exports = function(grunt) {
         base: 'spec/',
         keepalive: true
       }
+    },
+
+    concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['spec/tests/*.js'],
+        dest: 'tmp/tests.js'
+      }
+    },
+
+    mocha_phantomjs: {
+      options: {
+        'reporter': 'dot'
+      },
+      all: ['spec/*.html']
     },
 
     transpile: {
@@ -137,7 +121,7 @@ module.exports = function(grunt) {
 
     watch: {
       main: {
-        files: ['lib/**/*'],
+        files: ['lib/**/*', 'spec/**/*'],
         tasks: ['build']
       },
       options: {
@@ -157,11 +141,13 @@ module.exports = function(grunt) {
   this.registerTask('server', "Starts the server", [
                     'build',
                     'connect',
+                    'concat',
                     'watch:main']);
 
   this.registerTask('amd', ['transpile:amd', 'requirejs']);
   this.registerTask('node', ['transpile:cjs']);
   this.registerTask('globals', ['packager-fork']);
+  this.registerTask('mocha-test', ['mocha_phantomjs']);
 
   this.registerTask('release', 'Build final packages', ['amd', 'uglify']);
 
@@ -173,6 +159,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-es6-module-transpiler');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.task.loadTasks('tasks');
 
@@ -194,5 +182,5 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('bench', ['metrics']);
 
-  grunt.registerTask('default', ['build', 'test', 'release']);
+  grunt.registerTask('default', ['build', 'test', 'mocha-test', 'release']);
 };

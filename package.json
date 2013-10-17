@@ -17,7 +17,6 @@
   "author": "Yehuda Katz",
   "license": "BSD",
   "readmeFilename": "README.md",
-
   "engines": {
     "node": ">=0.4.7"
   },
@@ -35,6 +34,7 @@
     "eco": "~1.1.0-rc-3",
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-jshint": "~0.6.3",
@@ -48,9 +48,9 @@
     "mustache": "~0.7.2",
     "semver": "~2.1.0",
     "should": "~1.2.2",
-    "underscore": "~1.5.1"
+    "underscore": "~1.5.1",
+    "grunt-mocha-phantomjs": "~0.3.0"
   },
-
   "main": "lib/index.js",
   "bin": {
     "handlebars": "bin/handlebars"

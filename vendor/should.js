@@ -325,6 +325,16 @@ Assertion.prototype = {
    * @api public
    */
 
+  get of() {
+    return this;
+  },
+
+  /**
+   * Dummy getter.
+   *
+   * @api public
+   */
+
   get a() {
     return this;
   },
@@ -923,7 +933,7 @@ Assertion.prototype = {
    */
 
   include: function(obj, description){
-    if (obj.constructor == Object){
+    if (!Array.isArray(this.obj) && !util.isString(this.obj)){
       var cmp = {};
       for (var key in obj) cmp[key] = this.obj[key];
       this.assert(

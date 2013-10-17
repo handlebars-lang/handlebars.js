@@ -1,15 +1,19 @@
-global.should = require('should');
+var local = global || window;
 
-global.shouldCompileTo = function(string, hashOrArray, expected, message) {
+if (typeof require !== 'undefined') {
+  local.should = require('should');
+}
+
+local.shouldCompileTo = function(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };
 
-global.shouldCompileToWithPartials = function(string, hashOrArray, partials, expected, message) {
+local.shouldCompileToWithPartials = function(string, hashOrArray, partials, expected, message) {
   var result = compileWithPartials(string, hashOrArray, partials);
   result.should.equal(expected, "'" + expected + "' should === '" + result + "': " + message);
 };
 
-global.compileWithPartials = function(string, hashOrArray, partials) {
+local.compileWithPartials = function(string, hashOrArray, partials) {
   var template = CompilerContext[partials ? 'compileWithPartial' : 'compile'](string), ary;
   if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
     ary = [];
@@ -22,7 +26,6 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
   return template.apply(this, ary);
 };
 
-
-global.equals = global.equal = function(a, b, msg) {
+local.equals = global.equal = function(a, b, msg) {
   a.should.equal(b, msg || '');
 };
