@@ -1,5 +1,38 @@
 var childProcess = require('child_process');
 
+function wildcardResponseIsValid(request) {
+  var urlSegments = request.url.split('.'),
+      extension   = urlSegments[urlSegments.length-1];
+  return (
+    ['GET', 'HEAD'].indexOf(request.method.toUpperCase()) > -1 &&
+    (urlSegments.length === 1 || extension.indexOf('htm') === 0 || extension.length > 5)
+  );
+}
+
+function buildWildcardMiddleware(options) {
+  return function(request, response, next) {
+    if (!wildcardResponseIsValid(request)) { return next(); }
+
+    var wildcard     = (options.wildcard || 'index.html'),
+        wildcardPath = options.base + "/" + wildcard;
+
+    fs.readFile(wildcardPath, function(err, data){
+      if (err) { return next('ENOENT' === err.code ? null : err); }
+
+      response.writeHead(200, { 'Content-Type': 'text/html' });
+      response.end(data);
+    });
+  };
+}
+
+function middleware(connect, options) {
+  return [
+    connect['static'](options.base),
+    connect.directory(options.base),
+    buildWildcardMiddleware(options)
+  ];
+}
+
 module.exports = function(grunt) {
 
   grunt.initConfig({
@@ -16,6 +49,16 @@ module.exports = function(grunt) {
     },
 
     clean: ["dist"],
+
+    connect: {
+      server: {
+        port: 8000,
+        hostname: '0.0.0.0',
+        base: 'spec/',
+        keepalive: true
+      }
+    },
+
     transpile: {
       amd: {
         type: "amd",
@@ -53,6 +96,7 @@ module.exports = function(grunt) {
         }]
       }
     },
+
     requirejs: {
       options: {
         optimize: "none",
@@ -89,6 +133,16 @@ module.exports = function(grunt) {
           }
         }]
       }
+    },
+
+    watch: {
+      main: {
+        files: ['lib/**/*'],
+        tasks: ['build']
+      },
+      options: {
+        debounceDelay: 200
+      }
     }
   });
 
@@ -99,6 +153,11 @@ module.exports = function(grunt) {
                     'parser',
                     'node',
                     'globals']);
+
+  this.registerTask('server', "Starts the server", [
+                    'build',
+                    'connect',
+                    'watch:main']);
 
   this.registerTask('amd', ['transpile:amd', 'requirejs']);
   this.registerTask('node', ['transpile:cjs']);
@@ -112,6 +171,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-es6-module-transpiler');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.task.loadTasks('tasks');
 

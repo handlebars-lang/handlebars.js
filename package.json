@@ -35,6 +35,8 @@
     "eco": "~1.1.0-rc-3",
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-jshint": "~0.6.3",
     "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
