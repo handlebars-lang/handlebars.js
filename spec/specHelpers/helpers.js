@@ -14,6 +14,3 @@ function safeEval(templateSpec) {
   return eval('(' + templateSpec + ')');
 }
 
-local.equals = local.equal = function(a, b, msg) {
-  a.should.equal(b, msg || '');
-};

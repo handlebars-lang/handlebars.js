@@ -16,6 +16,33 @@ module.exports = function(grunt) {
     },
 
     clean: ["dist"],
+
+    connect: {
+      server: {
+        port: 8000,
+        hostname: '0.0.0.0',
+        base: 'spec/',
+        keepalive: true
+      }
+    },
+
+    concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['spec/tests/*.js'],
+        dest: 'tmp/tests.js'
+      }
+    },
+
+    mocha_phantomjs: {
+      options: {
+        'reporter': 'dot'
+      },
+      all: ['spec/*.html']
+    },
+
     transpile: {
       amd: {
         type: "amd",
@@ -53,6 +80,7 @@ module.exports = function(grunt) {
         }]
       }
     },
+
     requirejs: {
       options: {
         optimize: "none",
@@ -89,6 +117,16 @@ module.exports = function(grunt) {
           }
         }]
       }
+    },
+
+    watch: {
+      main: {
+        files: ['lib/**/*', 'spec/**/*'],
+        tasks: ['build']
+      },
+      options: {
+        debounceDelay: 200
+      }
     }
   });
 
@@ -100,9 +138,16 @@ module.exports = function(grunt) {
                     'node',
                     'globals']);
 
+  this.registerTask('server', "Starts the server", [
+                    'build',
+                    'connect',
+                    'concat',
+                    'watch:main']);
+
   this.registerTask('amd', ['transpile:amd', 'requirejs']);
   this.registerTask('node', ['transpile:cjs']);
   this.registerTask('globals', ['packager-fork']);
+  this.registerTask('mocha-test', ['mocha_phantomjs']);
 
   this.registerTask('release', 'Build final packages', ['amd', 'uglify']);
 
@@ -112,6 +157,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-es6-module-transpiler');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.task.loadTasks('tasks');
 
@@ -133,5 +182,5 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('bench', ['metrics']);
 
-  grunt.registerTask('default', ['build', 'test', 'release']);
+  grunt.registerTask('default', ['build', 'test', 'mocha-test', 'release']);
 };
