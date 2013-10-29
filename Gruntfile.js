@@ -15,7 +15,7 @@ module.exports = function(grunt) {
       ]
     },
 
-    clean: ["dist"],
+    clean: ["dist", "lib/handlebars/compiler/parser.js"],
     transpile: {
       amd: {
         type: "amd",
