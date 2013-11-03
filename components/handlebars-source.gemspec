@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 require 'json'
 
-package = JSON.parse(File.read('package.json'))
+package = JSON.parse(File.read('bower.json'))
 
 Gem::Specification.new do |gem|
   gem.name          = "handlebars-source"
@@ -14,8 +14,8 @@ Gem::Specification.new do |gem|
   gem.version       = package["version"]
 
   gem.files = [
-    'dist/handlebars.js',
-    'dist/handlebars.runtime.js',
-    'lib/handlebars/source.rb'
+    'handlebars.js',
+    'handlebars.runtime.js',
+    'source.rb'
   ]
 end

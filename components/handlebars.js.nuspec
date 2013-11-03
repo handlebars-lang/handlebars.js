@@ -12,6 +12,6 @@
 		<tags>handlebars mustache template html</tags>
 	</metadata>
 	<files>
-		<file src="dist\handlebars.js" target="Content\Scripts" />
+		<file src="handlebars.js" target="Content\Scripts" />
 	</files>
 </package>

@@ -28,10 +28,9 @@ module.exports = function(grunt) {
       grunt.task.run(['build', 'tag']);
 
       async.each([
-          ['lib/handlebars/base.js', /Handlebars.VERSION = "(.*)";/, 'Handlebars.VERSION = "' + version + '";'],
-          ['package.json', /"version":.*/, '"version": "' + version + '",'],
-          ['bower.json', /"version":.*/, '"version": "' + version + '",'],
-          ['handlebars.js.nuspec', /<version>.*<\/version>/, '<version>' + version + '</version>']
+          ['lib/handlebars/base.js', /var VERSION = "(.*)";/, 'var VERSION = "' + version + '";'],
+          ['components/bower.json', /"version":.*/, '"version": "' + version + '",'],
+          ['components/handlebars.js.nuspec', /<version>.*<\/version>/, '<version>' + version + '</version>']
         ],
         function(args, callback) {
           replace.apply(undefined, args);
