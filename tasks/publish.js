@@ -19,7 +19,7 @@ module.exports = function(grunt) {
           initSDK();
 
           var files = ['-latest', '-' + info.head];
-          if (info.tagName && semver.valid(info.tagName) {
+          if (info.tagName && semver.valid(info.tagName)) {
             files.push('-' + info.tagName);
           }
 
