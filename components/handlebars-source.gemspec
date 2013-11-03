@@ -16,6 +16,6 @@ Gem::Specification.new do |gem|
   gem.files = [
     'handlebars.js',
     'handlebars.runtime.js',
-    'source.rb'
+    'lib/handlebars/source.rb'
   ]
 end
