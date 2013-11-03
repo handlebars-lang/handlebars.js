@@ -54,6 +54,6 @@
     "handlebars": "bin/handlebars"
   },
   "scripts": {
-    "test": "node ./spec/env/runner"
+    "test": "grunt"
   }
 }
