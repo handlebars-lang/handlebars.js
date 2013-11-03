@@ -22,6 +22,12 @@ describe("basic context", function() {
                     "It works if all the required keys are provided");
   });
 
+  it("compiling with an undefined context", function() {
+    shouldCompileTo("Goodbye\n{{cruel}}\n{{world.bar}}!", undefined, "Goodbye\n\n!");
+
+    shouldCompileTo("{{#unless foo}}Goodbye{{../test}}{{test2}}{{/unless}}", undefined, "Goodbye");
+  });
+
   it("comments", function() {
     shouldCompileTo("{{! Goodbye}}Goodbye\n{{cruel}}\n{{world}}!",
       {cruel: "cruel", world: "world"}, "Goodbye\ncruel\nworld!",

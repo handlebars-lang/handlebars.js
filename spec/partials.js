@@ -16,6 +16,13 @@ describe('partials', function() {
                     "Partials can be passed a context");
   });
 
+  it("partials with undefined context", function() {
+    var string = "Dudes: {{>dude dudes}}";
+    var partial = "{{foo}} Empty";
+    var hash = {};
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes:  Empty");
+  });
+
   it("partial in a partial", function() {
     var string = "Dudes: {{#dudes}}{{>dude}}{{/dudes}}";
     var dude = "{{name}} {{> url}} ";
