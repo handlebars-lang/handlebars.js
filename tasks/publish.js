@@ -1,7 +1,8 @@
 var _ = require('underscore'),
     async = require('async'),
     AWS = require('aws-sdk'),
-    git = require('./util/git');
+    git = require('./util/git'),
+    semver = require('semver');
 
 module.exports = function(grunt) {
   grunt.registerTask('publish:latest', function() {
@@ -16,7 +17,13 @@ module.exports = function(grunt) {
 
         if (info.isMaster) {
           initSDK();
-          publish(fileMap(['-latest', '-' + info.head]), done);
+
+          var files = ['-latest', '-' + info.head];
+          if (info.tagName && semver.valid(info.tagName) {
+            files.push('-' + info.tagName);
+          }
+
+          publish(fileMap(files), done);
         } else {
           // Silently ignore for branches
           done();
