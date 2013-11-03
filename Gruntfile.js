@@ -16,6 +16,15 @@ module.exports = function(grunt) {
     },
 
     clean: ["dist", "lib/handlebars/compiler/parser.js"],
+
+    copy: {
+      components: {
+        files: [
+          {expand: true, cwd: 'components/', src: ['**'], dest: 'dist/'}
+        ]
+      }
+    },
+
     transpile: {
       amd: {
         type: "amd",
@@ -104,10 +113,11 @@ module.exports = function(grunt) {
   this.registerTask('node', ['transpile:cjs']);
   this.registerTask('globals', ['packager-fork']);
 
-  this.registerTask('release', 'Build final packages', ['amd', 'uglify']);
+  this.registerTask('release', 'Build final packages', ['copy:components', 'amd', 'uglify']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
