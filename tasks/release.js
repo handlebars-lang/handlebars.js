@@ -40,19 +40,6 @@ module.exports = function(grunt) {
     });
   });
 
-  grunt.registerTask('tag', 'Tags the current release version', function() {
-    var done = this.async(),
-        name = 'v' + grunt.config('pkg').version;
-
-    async.series([
-        function(callback) { git.add('dist/handlebars.js', callback); },
-        function(callback) { git.add('dist/handlebars.runtime.js', callback); },
-        function(callback) { git.commit(name, callback); },
-        function(callback) { git.tag(name, callback); }
-      ],
-      done);
-  });
-
   function replace(path, regex, replace) {
     var content = grunt.file.read(path);
     content = content.replace(regex, replace);
