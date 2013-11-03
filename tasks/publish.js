@@ -12,6 +12,8 @@ module.exports = function(grunt) {
       grunt.log.writeln('branches: ' + branches);
 
       git.commitInfo(function(err, info) {
+        grunt.log(writeln('tag: ' + info.tagName);
+
         if (info.isMaster) {
           initSDK();
           publish(fileMap(['-latest', '-' + info.head]), done);
