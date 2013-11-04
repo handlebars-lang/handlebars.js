@@ -2,19 +2,36 @@
 
 ## Development
 
-- [#602](https://github.com/wycats/handlebars.js/pull/602) - Handle zero uniformly between mustache conditionals and the if helper ([@artiee](https://github.com/artiee))
-- [#535](https://github.com/wycats/handlebars.js/pull/535) - Fix for probably JIT error under Safari. ([@sorentwo](https://github.com/sorentwo))
-- [#537](https://github.com/wycats/handlebars.js/issues/537) - Add CommonJS and AMD loader support ([@spikebrehm](https://github.com/spikebrehm))
-- [#544](https://github.com/wycats/handlebars.js/issues/544) - Push travis builds to build server ([@fivetanley](https://github.com/fivetanley))
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.0...master)
+
+## v1.1.0 - November 3rd, 2013
+
+- [#628](https://github.com/wycats/handlebars.js/pull/628) - Convert code to ES6 modules ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#336](https://github.com/wycats/handlebars.js/pull/336) - Add whitespace control syntax ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#535](https://github.com/wycats/handlebars.js/pull/535) - Fix for probable JIT error under Safari ([@sorentwo](https://api.github.com/users/sorentwo))
+- [#483](https://github.com/wycats/handlebars.js/issues/483) - Add first and last @ vars to each helper ([@denniskuczynski](https://api.github.com/users/denniskuczynski))
+- [#557](https://github.com/wycats/handlebars.js/pull/557) - `\\{{foo}}` escaping only works in some situations ([@dmarcotte](https://api.github.com/users/dmarcotte))
+- [#552](https://github.com/wycats/handlebars.js/pull/552) - Added BOM removal flag. ([@blessenm](https://api.github.com/users/blessenm))
+- [#543](https://github.com/wycats/handlebars.js/pull/543) - publish passing master builds to s3 ([@fivetanley](https://api.github.com/users/fivetanley))
+
+- [#608](https://github.com/wycats/handlebars.js/issues/608) - Add `includeZero` flag to `if` conditional
+- [#498](https://github.com/wycats/handlebars.js/issues/498) - `Handlebars.compile` fails on empty string although a single blank works fine
+- [#599](https://github.com/wycats/handlebars.js/issues/599) - lambda helpers only receive options if used with arguments
+- [#592](https://github.com/wycats/handlebars.js/issues/592) - Optimize array and subprogram performance
+- [#571](https://github.com/wycats/handlebars.js/issues/571) - uglify upgrade breaks compatibility with older versions of node
+- [#587](https://github.com/wycats/handlebars.js/issues/587) - Partial inside partial breaks?
+
 
 Compatibility notes:
 - The project now includes separate artifacts for AMD, CommonJS, and global objects. 
   - AMD: Users may load the bundled `handlebars.amd.js` or `handlebars.runtime.amd.js` files or load individual modules directly. AMD users should also note that the handlebars object is exposed via the `default` field on the imported object. This [gist](https://gist.github.com/wycats/7417be0dc361a69d5916) provides some discussion of possible compatibility shims.
   - CommonJS/Node: Node loading occurs as normal via `require`
   - Globals: The `handlebars.js` and `handlebars.runtime.js` files should behave in the same manner as the v1.0.12 / 1.0.0 release.
+- Build artifacts have been removed from the repository. [npm][npm], [components/handlebars.js][components], [cdnjs][cdnjs-lib], or the [builds page][builds-page] should now be used as the source of built artifacts. 
 - Context-stored helpers are now always passed the `options` hash. Previously no-argument helpers did not have this argument.
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.12...master)
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.0.12...v1.1.0)
 
 ## v1.0.12 / 1.0.0 - May 31 2013
 
@@ -105,3 +122,8 @@ Use:
 ```js
 template(context, {helpers: helpers, partials: partials, data: data})
 ```
+
+[builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/index.html
+[cdn-js]: http://cdnjs.com/libraries/handlebars.js/
+[components]: https://github.com/components/handlebars.js
+[npm]: https://npmjs.org/package/handlebars
