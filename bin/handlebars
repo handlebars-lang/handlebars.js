@@ -102,7 +102,7 @@ var optimist = require('optimist')
     });
 
 var fs = require('fs'),
-    handlebars = require('../lib/handlebars'),
+    handlebars = require('../lib'),
     basename = require('path').basename,
     uglify = require('uglify-js');
 
