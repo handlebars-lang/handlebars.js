@@ -11,7 +11,11 @@ Rakefile
 *.nuspec
 bench/*
 configurations/*
+components/*
+dist/cdnjs/*
+dist/components/*
 spec/*
 src/*
 tasks/*
+publish/*
 vendor/*
