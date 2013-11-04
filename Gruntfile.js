@@ -18,6 +18,17 @@ module.exports = function(grunt) {
     clean: ["dist", "lib/handlebars/compiler/parser.js"],
 
     copy: {
+      dist: {
+        options: {
+          processContent: function(content, path) {
+            return grunt.template.process('/*!\n\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n@license\n*/\n')
+                + content;
+          }
+        },
+        files: [
+          {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/'}
+        ]
+      },
       cdnjs: {
         files: [
           {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/cdnjs'}
@@ -119,7 +130,7 @@ module.exports = function(grunt) {
   this.registerTask('node', ['transpile:cjs']);
   this.registerTask('globals', ['packager-fork']);
 
-  this.registerTask('release', 'Build final packages', ['amd', 'uglify', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['amd', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
