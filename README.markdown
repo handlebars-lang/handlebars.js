@@ -411,8 +411,25 @@ Feel free to contact commondream or wycats through GitHub with any other
 questions or feature requests. To submit changes fork the project and
 send a pull request.
 
+### Releasing
+
+Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
+
+A full release may be completed with the following:
+
+```
+yo release:notes patch
+yo release:release patch
+npm publish
+yo release:publish cdnjs handlebars.js dist/cdnjs/
+yo release:publish components handlebars.js dist/components/
+```
+
+After this point the handlebars site needs to be updated to point to the new version numbers.
+
 License
 -------
 Handlebars.js is released under the MIT license.
 
 [builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/index.html
+[generator-release]: https://github.com/walmartlabs/generator-release
