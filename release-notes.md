@@ -27,7 +27,7 @@ Compatibility notes:
   - AMD: Users may load the bundled `handlebars.amd.js` or `handlebars.runtime.amd.js` files or load individual modules directly. AMD users should also note that the handlebars object is exposed via the `default` field on the imported object. This [gist](https://gist.github.com/wycats/7417be0dc361a69d5916) provides some discussion of possible compatibility shims.
   - CommonJS/Node: Node loading occurs as normal via `require`
   - Globals: The `handlebars.js` and `handlebars.runtime.js` files should behave in the same manner as the v1.0.12 / 1.0.0 release.
-- Build artifacts have been removed from the repository. [npm][npm], [components/handlebars.js][components], [cdnjs][cdnjs-lib], or the [builds page][builds-page] should now be used as the source of built artifacts. 
+- Build artifacts have been removed from the repository. [npm][npm], [components/handlebars.js][components], [cdnjs][cdnjs], or the [builds page][builds-page] should now be used as the source of built artifacts. 
 - Context-stored helpers are now always passed the `options` hash. Previously no-argument helpers did not have this argument.
 
 
@@ -124,6 +124,6 @@ template(context, {helpers: helpers, partials: partials, data: data})
 ```
 
 [builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/index.html
-[cdn-js]: http://cdnjs.com/libraries/handlebars.js/
+[cdnjs]: http://cdnjs.com/libraries/handlebars.js/
 [components]: https://github.com/components/handlebars.js
 [npm]: https://npmjs.org/package/handlebars
