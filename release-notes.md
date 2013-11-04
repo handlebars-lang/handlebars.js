@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.1...master)
+
+## v1.1.1 - November 4th, 2013
+
+- [#642](https://github.com/wycats/handlebars.js/issues/642) - handlebars 1.1.0 are broken with nodejs
+
+- Fix release notes link - 17ba258
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.0...v1.1.1)
 
 ## v1.1.0 - November 3rd, 2013
 
