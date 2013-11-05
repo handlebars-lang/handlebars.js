@@ -17,6 +17,7 @@ function stripFlags(open, close) {
 
 root
   : statements EOF { return new yy.ProgramNode($1); }
+  | EOF { return new yy.ProgramNode([]); }
   ;
 
 program
