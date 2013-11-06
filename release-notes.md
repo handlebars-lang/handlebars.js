@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.2...master)
+
+## v1.1.2 - November 5th, 2013
+
+- [#645](https://github.com/wycats/handlebars.js/issues/645) - 1.1.1 fails under IE8 ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#644](https://github.com/wycats/handlebars.js/issues/644) - Using precompiled templates (AMD mode) with handlebars.runtime 1.1.1 ([@fddima](https://api.github.com/users/fddima))
+
+- Add simple binary utility tests - 96a45a4
+- Fix empty string compilation - eea708a
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.1...v1.1.2)
 
 ## v1.1.1 - November 4th, 2013
 
