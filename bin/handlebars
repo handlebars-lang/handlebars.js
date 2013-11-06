@@ -127,7 +127,7 @@ extension = new RegExp('\\.' + extension + '$');
 var output = [];
 if (!argv.simple) {
   if (argv.amd) {
-    output.push('define([\'' + argv.handlebarPath + 'handlebars\'], function(Handlebars) {\n  Handlebars = Handlebars["default"];');
+    output.push('define([\'' + argv.handlebarPath + 'handlebars.runtime\'], function(Handlebars) {\n  Handlebars = Handlebars["default"];');
   } else if (argv.commonjs) {
     output.push('var Handlebars = require("' + argv.commonjs + '");');
   } else {
