@@ -147,17 +147,6 @@ module.exports = function(grunt) {
     // traceur exec issues
     grunt.util.spawn({grunt: true,  args: ['--stack', 'packager'], opts: {stdio: 'inherit'}}, this.async());
   });
-  grunt.registerTask('test', function() {
-    var done = this.async();
-
-    var runner = childProcess.fork('./spec/env/runner', [], {stdio: 'inherit'});
-    runner.on('close', function(code) {
-      if (code != 0) {
-        grunt.fatal(code + ' tests failed');
-      }
-      done();
-    });
-  });
   grunt.registerTask('bench', ['metrics']);
 
   grunt.registerTask('default', ['build', 'test', 'release']);
