@@ -88,15 +88,15 @@ describe('Tokenizer', function() {
 
   it('supports escaping multiple escape characters', function() {
     var result = tokenize("{{foo}} \\\\{{bar}} \\\\{{baz}}");
-      result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+    result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
 
-      result[3].should.be_token("CONTENT", " \\");
-      result[5].should.be_token("ID", "bar");
-      result[7].should.be_token("CONTENT", " \\");
-      result[9].should.be_token("ID", "baz");
+    result[3].should.be_token("CONTENT", " \\");
+    result[5].should.be_token("ID", "bar");
+    result[7].should.be_token("CONTENT", " \\");
+    result[9].should.be_token("ID", "baz");
   });
 
-  it('supports mixed escaped delimiters and escaped escape characters', function() {
+  it('supports escaped mustaches after escaped escape characters', function() {
     var result = tokenize("{{foo}} \\\\{{bar}} \\{{baz}}");
     result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'CONTENT']);
 
@@ -105,6 +105,16 @@ describe('Tokenizer', function() {
     result[5].should.be_token("ID", "bar");
     result[7].should.be_token("CONTENT", " ");
     result[8].should.be_token("CONTENT", "{{baz}}");
+  });
+
+  it('supports escaped escape characters after escaped mustaches', function() {
+    var result = tokenize("{{foo}} \\{{bar}} \\\\{{baz}}");
+    result.should.match_tokens(['OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+
+    result[4].should.be_token("CONTENT", "{{bar}} ");
+    result[5].should.be_token("CONTENT", "\\");
+    result[6].should.be_token("OPEN", "{{");
+    result[7].should.be_token("ID", "baz");
   });
 
   it('supports escaped escape character on a triple stash', function() {

@@ -43,9 +43,9 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 
 [^\x00]+                         return 'CONTENT';
 
-<emu>[^\x00]{2,}?/("{{"|<<EOF>>) {
-                                   if(yytext.slice(-1) !== "\\") this.popState();
-                                   if(yytext.slice(-1) === "\\") strip(0,1);
+// marks CONTENT up to the next mustache or escaped mustache
+<emu>[^\x00]{2,}?/("{{"|"\\{{"|"\\\\{{"|<<EOF>>) {
+                                   this.popState();
                                    return 'CONTENT';
                                  }
 
