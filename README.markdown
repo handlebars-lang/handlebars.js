@@ -364,6 +364,7 @@ Handlebars in the Wild
 * [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
   structure your views, also with automatic data binding support.
+* [Ghost](https://ghost.org/) Just a blogging platform.
 * [handlebars_assets](http://github.com/leshill/handlebars_assets): A Rails Asset Pipeline gem
   from Les Hill (@leshill).
 * [handlebars-helpers](https://github.com/assemble/handlebars-helpers) is an extensive library
