@@ -150,9 +150,9 @@ function processTemplate(template, root) {
         processTemplate(path, root || template);
       }
     });
-  } else {
+  } else if (extension.test(path)) {
     var data = fs.readFileSync(path, 'utf8');
-    
+
     if (argv.bom && data.indexOf('\uFEFF') === 0) {
       data = data.substring(1);
     }
