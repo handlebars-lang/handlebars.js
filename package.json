@@ -15,7 +15,7 @@
     "url": "https://github.com/wycats/handlebars.js.git"
   },
   "author": "Yehuda Katz",
-  "license": "BSD",
+  "license": "MIT",
   "readmeFilename": "README.md",
   "engines": {
     "node": ">=0.4.7"
