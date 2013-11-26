@@ -12,7 +12,7 @@ function strip(start, end) {
 LEFT_STRIP    "~"
 RIGHT_STRIP   "~"
 
-LOOKAHEAD           [=~}\s\/.]
+LOOKAHEAD           [=~}\s\/.(),]
 LITERAL_LOOKAHEAD   [~}\s]
 
 /*
@@ -63,6 +63,9 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"{{"{LEFT_STRIP}?            return 'OPEN';
 
 <mu>"="                          return 'EQUALS';
+<mu>"("                          return 'OPEN_PARENTHESIS';
+<mu>")"                          return 'CLOSE_PARENTHESIS';
+<mu>","                          return 'COMMA';
 <mu>".."                         return 'ID';
 <mu>"."/{LOOKAHEAD}              return 'ID';
 <mu>[\/.]                        return 'SEP';
