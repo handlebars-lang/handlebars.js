@@ -73,6 +73,9 @@ simpleInverse
 
 inMustache
   : path param* hash? -> [[$1].concat($2), $3]
+  | path OPEN_PARENTHESIS commaSeparatedParams CLOSE_PARENTHESIS -> [[$1].concat($3), null]
+  | path OPEN_PARENTHESIS commaSeparatedParams COMMA commaSeparatedHashes CLOSE_PARENTHESIS -> [[$1].concat($3), new yy.HashNode($5)]
+  | path OPEN_PARENTHESIS commaSeparatedHashes CLOSE_PARENTHESIS -> [[$1], new yy.HashNode($3)]
   | dataName -> [[$1], null]
   ;
 
@@ -84,12 +87,22 @@ param
   | dataName -> $1
   ;
 
+commaSeparatedParams
+  : param -> [$1]
+  | commaSeparatedParams COMMA param -> $1.concat([$3])
+  ;
+
 hash
   : hashSegment+ -> new yy.HashNode($1)
   ;
 
 hashSegment
   : ID EQUALS param -> [$1, $3]
+  ;
+
+commaSeparatedHashes
+  : hashSegment -> [$1]
+  | commaSeparatedHashes COMMA hashSegment -> $1.concat([$3])
   ;
 
 partialName
