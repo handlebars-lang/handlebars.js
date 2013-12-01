@@ -33,9 +33,10 @@
     "dustjs-linkedin": "~2.0.2",
     "eco": "~1.1.0-rc-3",
     "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.10",
     "grunt-contrib-clean": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
     "es6-module-packager": "~0.1.1",
@@ -45,8 +46,7 @@
     "mustache": "~0.7.2",
     "semver": "~2.1.0",
     "should": "~1.2.2",
-    "underscore": "~1.5.1",
-    "grunt-cli": "~0.1.10"
+    "underscore": "~1.5.1"
   },
   "main": "lib/index.js",
   "bin": {

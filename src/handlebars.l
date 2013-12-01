@@ -66,7 +66,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>".."                         return 'ID';
 <mu>"."/{LOOKAHEAD}              return 'ID';
 <mu>[\/.]                        return 'SEP';
-<mu>\s+                          /*ignore whitespace*/
+<mu>\s+                          // ignore whitespace
 <mu>"}"{RIGHT_STRIP}?"}}"        this.popState(); return 'CLOSE_UNESCAPED';
 <mu>{RIGHT_STRIP}?"}}"           this.popState(); return 'CLOSE';
 <mu>'"'("\\"["]|[^"])*'"'        yytext = strip(1,2).replace(/\\"/g,'"'); return 'STRING';

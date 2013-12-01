@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         return;
       }
 
-      var src = ['handlebars.js', 'src/parser-suffix.js'].map(grunt.file.read).join('');
+      var src = ['src/parser-prefix.js', 'handlebars.js', 'src/parser-suffix.js'].map(grunt.file.read).join('');
       grunt.file.delete('handlebars.js');
 
       grunt.file.write('lib/handlebars/compiler/parser.js', src);

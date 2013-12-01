@@ -7,11 +7,10 @@ module.exports = function(grunt) {
 
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
-        force: true
+        jshintrc: '.jshintrc'
       },
       files: [
-        'lib/**/!(parser).js'
+        'dist/**/!(*.min|parser).js'
       ]
     },
 
@@ -116,17 +115,17 @@ module.exports = function(grunt) {
 
   // Build a new version of the library
   this.registerTask('build', "Builds a distributable version of the current project", [
-                    'jshint',
                     'clean',
                     'parser',
                     'node',
-                    'globals']);
+                    'globals',
+                    'jshint']);
 
   this.registerTask('amd', ['packager:amd', 'requirejs']);
   this.registerTask('node', ['packager:cjs']);
   this.registerTask('globals', ['packager:global']);
 
-  this.registerTask('release', 'Build final packages', ['amd', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['amd', 'jshint', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');

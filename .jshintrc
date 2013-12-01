@@ -3,7 +3,6 @@
         "console",
         "Ember",
         "DS",
-        "Handlebars",
         "Metamorph",
         "ember_assert",
         "ember_warn",
@@ -22,6 +21,7 @@
         "ok",
         "strictEqual",
         "module",
+        "define",
 
         "describe",
         "it",
