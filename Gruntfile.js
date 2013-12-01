@@ -42,9 +42,20 @@ module.exports = function(grunt) {
       }
     },
 
-    transpile: {
+    packager: {
+      global: {
+        type: 'global',
+        export: 'Handlebars',
+        files: [{
+          cwd: 'lib/',
+          expand: true,
+          src: ['handlebars*.js'],
+          dest: 'dist/'
+        }]
+      },
+
       amd: {
-        type: "amd",
+        type: 'amd',
         anonymous: true,
         files: [{
           expand: true,
@@ -61,21 +72,6 @@ module.exports = function(grunt) {
           cwd: 'lib/',
           src: '**/!(index).js',
           dest: 'dist/cjs/'
-        }]
-      }
-    },
-
-    packager: {
-      options: {
-        export: 'Handlebars'
-      },
-
-      global: {
-        files: [{
-          cwd: 'lib/',
-          expand: true,
-          src: ['handlebars*.js'],
-          dest: 'dist/'
         }]
       }
     },
@@ -126,9 +122,9 @@ module.exports = function(grunt) {
                     'node',
                     'globals']);
 
-  this.registerTask('amd', ['transpile:amd', 'requirejs']);
-  this.registerTask('node', ['transpile:cjs']);
-  this.registerTask('globals', ['packager-fork']);
+  this.registerTask('amd', ['packager:amd', 'requirejs']);
+  this.registerTask('node', ['packager:cjs']);
+  this.registerTask('globals', ['packager:global']);
 
   this.registerTask('release', 'Build final packages', ['amd', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
@@ -138,15 +134,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-es6-module-transpiler');
+  grunt.loadNpmTasks('es6-module-packager');
 
   grunt.task.loadTasks('tasks');
 
-  grunt.registerTask('packager-fork', function() {
-    // Allows us to run the packager task out of process to work around the multiple
-    // traceur exec issues
-    grunt.util.spawn({grunt: true,  args: ['--stack', 'packager'], opts: {stdio: 'inherit'}}, this.async());
-  });
   grunt.registerTask('bench', ['metrics']);
 
   grunt.registerTask('default', ['build', 'test', 'release']);
