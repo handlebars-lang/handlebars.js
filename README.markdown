@@ -14,9 +14,7 @@ Checkout the official Handlebars docs site at
 
 Installing
 ----------
-Installing Handlebars is easy. Simply download the package [from the
-official site](http://handlebarsjs.com/) and add it to your web pages
-(you should usually use the most recent version).
+Installing Handlebars is easy. Simply download the package [from the official site](http://handlebarsjs.com/) or the [bower repository][bower-repo] and add it to your web pages (you should usually use the most recent version).
 
 Alternatively, if you prefer having the latest version of handlebars from
 the 'master' branch, passing builds of the 'master' branch are automatically
@@ -434,5 +432,6 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
+[bower-repo]: https://github.com/components/handlebars.js
 [builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/bucket-listing.html?sort=lastmod&sortdir=desc
 [generator-release]: https://github.com/walmartlabs/generator-release
