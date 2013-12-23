@@ -135,6 +135,7 @@ module.exports = function(grunt) {
           urls: ['http://localhost:9999/spec/?headless=true'],
           detailedError: true,
           concurrency: 2,
+          tunneled: !process.env.TRAVIS_JOB_ID,    // Handled by the travis addon
           browsers: [
             {browserName: 'chrome'},
             {browserName: 'firefox'},
