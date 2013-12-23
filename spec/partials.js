@@ -32,17 +32,17 @@ describe('partials', function() {
   });
 
   it("rendering undefined partial throws an exception", function() {
-    (function() {
+    shouldThrow(function() {
         var template = CompilerContext.compile("{{> whatever}}");
         template();
-    }).should.throw(Handlebars.Exception, 'The partial whatever could not be found');
+    }, Handlebars.Exception, 'The partial whatever could not be found');
   });
 
   it("rendering template partial in vm mode throws an exception", function() {
-    (function() {
+    shouldThrow(function() {
       var template = CompilerContext.compile("{{> whatever}}");
       template();
-    }).should.throw(Handlebars.Exception, 'The partial whatever could not be found');
+    }, Handlebars.Exception, 'The partial whatever could not be found');
   });
 
   it("rendering function partial in vm mode", function() {

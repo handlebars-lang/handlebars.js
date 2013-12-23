@@ -26,3 +26,21 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
 global.equals = global.equal = function(a, b, msg) {
   a.should.equal(b, msg || '');
 };
+
+global.shouldThrow = function(callback, type, msg) {
+  var failed;
+  try {
+    callback();
+    failed = true;
+  } catch (err) {
+    if (type && !(err instanceof type)) {
+      throw new Error('Type failure');
+    }
+    if (msg && !(msg.test ? msg.test(err.message) : msg === err.message)) {
+      throw new Error('Message failure');
+    }
+  }
+  if (failed) {
+    throw new Error('It failed to throw');
+  }
+};
