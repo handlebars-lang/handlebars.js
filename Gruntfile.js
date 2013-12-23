@@ -14,7 +14,7 @@ module.exports = function(grunt) {
       ]
     },
 
-    clean: ["dist", "lib/handlebars/compiler/parser.js"],
+    clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js'],
 
     copy: {
       dist: {
@@ -110,6 +110,13 @@ module.exports = function(grunt) {
           }
         }]
       }
+    },
+
+    concat: {
+      tests: {
+        src: ['spec/!(require).js'],
+        dest: 'tmp/tests.js'
+      }
     }
   });
 
@@ -124,11 +131,13 @@ module.exports = function(grunt) {
   this.registerTask('amd', ['packager:amd', 'requirejs']);
   this.registerTask('node', ['packager:cjs']);
   this.registerTask('globals', ['packager:global']);
+  this.registerTask('tests', ['concat:tests']);
 
   this.registerTask('release', 'Build final packages', ['amd', 'jshint', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
