@@ -154,6 +154,10 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
+        options: {
+          atBegin: true
+        },
+
         files: ['src/*', 'lib/**/*.js', 'spec/**/*.js'],
         tasks: ['build', 'tests', 'test']
       }
@@ -193,6 +197,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'sauce', 'metrics', 'publish:latest'] : ['default']);
 
-  grunt.registerTask('dev', ['clean', 'build', 'tests', 'test', 'connect', 'watch']);
+  grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
 };
