@@ -434,5 +434,5 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
-[builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/index.html
+[builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/bucket-listing.html?sort=lastmod&sortdir=desc
 [generator-release]: https://github.com/walmartlabs/generator-release
