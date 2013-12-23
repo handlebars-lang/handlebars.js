@@ -1,12 +1,12 @@
 function shouldMatchTokens(result, tokens) {
-  result.forEach(function(value, index) {
-    equals(value.name, tokens[index]);
-  });
-};
+  for (var index = 0; index < result.length; index++) {
+    equals(result[index].name, tokens[index]);
+  }
+}
 function shouldBeToken(result, name, text) {
   equals(result.name, name);
   equals(result.text, text);
-};
+}
 
 describe('Tokenizer', function() {
   if (!Handlebars.Parser) {
