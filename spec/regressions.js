@@ -93,6 +93,13 @@ describe('Regressions', function() {
     }, Error);
   });
 
+  it("GH-676: Using array in escaping mustache fails", function() {
+    var string = "{{arr}}";
+    var data = { "arr": [1,2] };
+
+    shouldCompileTo(string, data, data.arr.toString(), "it works as expected");
+  });
+
   it("Mustache man page", function() {
     var string = "Hello {{name}}. You have just won ${{value}}!{{#in_ca}} Well, ${{taxed_value}}, after taxes.{{/in_ca}}";
     var data = {
