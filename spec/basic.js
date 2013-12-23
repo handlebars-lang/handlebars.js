@@ -1,3 +1,4 @@
+/*global CompilerContext, Handlebars, beforeEach, shouldCompileTo */
 global.handlebarsEnv = null;
 
 beforeEach(function() {
@@ -160,9 +161,9 @@ describe("basic context", function() {
 
   it("this keyword nested inside path", function() {
     var string = "{{#hellos}}{{text/this/foo}}{{/hellos}}";
-    (function() {
+    shouldThrow(function() {
       CompilerContext.compile(string);
-    }).should.throw(Error);
+    }, Error);
   });
 
   it("this keyword in helpers", function() {
@@ -181,8 +182,8 @@ describe("basic context", function() {
 
   it("this keyword nested inside helpers param", function() {
     var string = "{{#hellos}}{{foo text/this/foo}}{{/hellos}}";
-    (function() {
+    shouldThrow(function() {
       CompilerContext.compile(string);
-    }).should.throw(Error);
+    }, Error);
   });
 });

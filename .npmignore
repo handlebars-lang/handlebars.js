@@ -18,5 +18,6 @@ dist/components/*
 spec/*
 src/*
 tasks/*
+tmp/*
 publish/*
 vendor/*

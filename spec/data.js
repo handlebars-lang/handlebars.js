@@ -1,4 +1,4 @@
-/*global CompilerContext */
+/*global CompilerContext, Handlebars, handlebarsEnv, shouldThrow */
 describe('data', function() {
   it("passing in data to a compiled function that expects data - works with helpers", function() {
     var template = CompilerContext.compile("{{hello}}", {data: true});
@@ -88,25 +88,25 @@ describe('data', function() {
   it("parameter data throws when using this scope references", function() {
     var string = "{{#goodbyes}}{{text}} cruel {{@./name}}! {{/goodbyes}}";
 
-    (function() {
+    shouldThrow(function() {
       CompilerContext.compile(string);
-    }).should.throw(Error);
+    }, Error);
   });
 
   it("parameter data throws when using parent scope references", function() {
     var string = "{{#goodbyes}}{{text}} cruel {{@../name}}! {{/goodbyes}}";
 
-    (function() {
+    shouldThrow(function() {
       CompilerContext.compile(string);
-    }).should.throw(Error);
+    }, Error);
   });
 
   it("parameter data throws when using complex scope references", function() {
     var string = "{{#goodbyes}}{{text}} cruel {{@foo/../name}}! {{/goodbyes}}";
 
-    (function() {
+    shouldThrow(function() {
       CompilerContext.compile(string);
-    }).should.throw(Error);
+    }, Error);
   });
 
   it("data is inherited downstream", function() {

@@ -42,9 +42,9 @@ describe('blocks', function() {
   it("block with complex lookup using nested context", function() {
     var string = "{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}";
 
-    (function() {
+    shouldThrow(function() {
       CompilerContext.compile(string);
-    }).should.throw(Error);
+    }, Error);
   });
 
   it("block with deep nested complex lookup", function() {

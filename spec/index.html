@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Mocha</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
+    <style>
+      .headless .suite > h1,
+      .headless .test.pass {
+        display: none;
+      }
+    </style>
+
+    <script>
+      // Show only errors in "headless", non-interactive mode.
+      if (/headless=true/.test(location.href)) {
+        document.documentElement.className = 'headless';
+      }
+    </script>
+    <script src="/node_modules/mocha/mocha.js"></script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+    <script src="/dist/handlebars.js"></script>
+
+    <script src="/spec/env/common.js"></script>
+    <script>
+      var CompilerContext = {
+        compile: function(template, options) {
+          var templateSpec = handlebarsEnv.precompile(template, options);
+          return handlebarsEnv.template(safeEval(templateSpec));
+        },
+        compileWithPartial: function(template, options) {
+          return handlebarsEnv.compile(template, options);
+        }
+      };
+
+      function safeEval(templateSpec) {
+        var ret;
+        eval('ret = ' + templateSpec);
+        return ret;
+      }
+    </script>
+    <script src="/tmp/tests.js"></script>
+    <script>
+      onload = function(){
+        // The test harness leaks under FF. We should have decent global leak coverage from other tests
+        if (!navigator.userAgent.match(/Firefox\/([\d.]+)/)) {
+          mocha.checkLeaks();
+        }
+        mocha.run();
+      };
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

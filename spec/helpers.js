@@ -1,4 +1,4 @@
-/*global CompilerContext, shouldCompileTo, shouldCompileToWithPartials */
+/*global CompilerContext, Handlebars, shouldCompileTo, shouldCompileToWithPartials, shouldThrow, handlebarsEnv */
 describe('helpers', function() {
   it("helper with complex lookup$", function() {
     var string = "{{#goodbyes}}{{{link ../prefix}}}{{/goodbyes}}";
@@ -212,10 +212,10 @@ describe('helpers', function() {
     });
 
     it("using a quote in the middle of a parameter raises an error", function() {
-      (function() {
-        var string   = 'Message: {{hello wo"rld"}}';
+      var string   = 'Message: {{hello wo"rld"}}';
+      shouldThrow(function() {
         CompilerContext.compile(string);
-      }).should.throw(Error);
+      }, Error);
     });
 
     it("escaping a String is possible", function(){
@@ -351,10 +351,10 @@ describe('helpers', function() {
 
   describe("helperMissing", function() {
     it("if a context is not found, helperMissing is used", function() {
-      (function() {
+      shouldThrow(function() {
           var template = CompilerContext.compile("{{hello}} {{link_to world}}");
           template({});
-      }).should.throw(/Missing helper: 'link_to'/);
+      }, undefined, /Missing helper: 'link_to'/);
     });
 
     it("if a context is not found, custom helperMissing is used", function() {
@@ -417,9 +417,9 @@ describe('helpers', function() {
       equal(result, "bar", "'bar' should === '" + result);
     });
     it("Unknown helper call in knownHelpers only mode should throw", function() {
-      (function() {
+      shouldThrow(function() {
         CompilerContext.compile("{{typeof hello}}", {knownHelpersOnly: true});
-      }).should.throw(Error);
+      }, Error);
     });
   });
 
@@ -491,7 +491,7 @@ describe('helpers', function() {
 
         cruel: function(world) {
           return "cruel " + world.toUpperCase();
-        },
+        }
       };
 
       var context = {
@@ -513,7 +513,7 @@ describe('helpers', function() {
 
         cruel: function(world) {
           return "cruel " + world.toUpperCase();
-        },
+        }
       };
 
       var context = {

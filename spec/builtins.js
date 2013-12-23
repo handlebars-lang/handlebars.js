@@ -73,7 +73,7 @@ describe('builtin helpers', function() {
       var expected1 = "&lt;b&gt;#1&lt;/b&gt;. goodbye! 2. GOODBYE! cruel world!";
       var expected2 = "2. GOODBYE! &lt;b&gt;#1&lt;/b&gt;. goodbye! cruel world!";
 
-      (actual === expected1 || actual === expected2).should.equal(true, "each with object argument iterates over the contents when not empty");
+      equals(actual === expected1 || actual === expected2, true, "each with object argument iterates over the contents when not empty");
       shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                       "each with object argument ignores the contents when empty");
     });
