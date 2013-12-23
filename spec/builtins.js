@@ -98,6 +98,17 @@ describe('builtin helpers', function() {
       equal(result, "0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!", "The @index variable is used");
     });
 
+    it("each object with @index", function() {
+      var string = "{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: {'a': {text: "goodbye"}, b: {text: "Goodbye"}, c: {text: "GOODBYE"}}, world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!", "The @index variable is used");
+    });
+
+
     it("each with @first", function() {
       var string = "{{#each goodbyes}}{{#if @first}}{{text}}! {{/if}}{{/each}}cruel {{world}}!";
       var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
@@ -116,6 +127,16 @@ describe('builtin helpers', function() {
       var result = template(hash);
 
       equal(result, "(goodbye! goodbye! goodbye!) (goodbye!) (goodbye!) cruel world!", "The @first variable is used");
+    });
+
+    it("each object with @first", function() {
+      var string = "{{#each goodbyes}}{{#if @first}}{{text}}! {{/if}}{{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: {'foo': {text: "goodbye"}, bar: {text: "Goodbye"}}, world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "goodbye! cruel world!", "The @first variable is used");
     });
 
     it("each with @last", function() {
