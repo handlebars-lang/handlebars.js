@@ -3,7 +3,21 @@
     <title>Mocha</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
+    <style>
+      .headless .suite > h1,
+      .headless .test.pass {
+        display: none;
+      }
+    </style>
+
+    <script>
+      // Show only errors in "headless", non-interactive mode.
+      if (/headless=true/.test(location.href)) {
+        document.documentElement.className = 'headless';
+      }
+    </script>
     <script src="/node_modules/mocha/mocha.js"></script>
     <script>
       mocha.setup('bdd');

@@ -132,7 +132,7 @@ module.exports = function(grunt) {
       all: {
         options: {
           build: process.env.TRAVIS_JOB_ID,
-          urls: ['http://localhost:9999/spec/'],
+          urls: ['http://localhost:9999/spec/?headless=true'],
           detailedError: true,
           concurrency: 2,
           browsers: [
