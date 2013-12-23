@@ -123,4 +123,10 @@ describe('partials', function() {
     var hash = {name:"Jeepers", another_dude:"Creepers"};
     shouldCompileToWithPartials(string, [hash, {}, {'+404/asdf?.bar':dude}], true, "Dudes: Jeepers", "Partials can use literal paths");
   });
+
+  it('should handle empty partial', function() {
+    var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
+    var partial = "";
+    var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: ");  });
 });
