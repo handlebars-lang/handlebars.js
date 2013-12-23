@@ -17,5 +17,10 @@ env:
   - S3_BUCKET_NAME=builds.handlebarsjs.com
   - secure: PJaukuvkBBsSDOqbIcNSSMgb96VVEaIt/eq9GPjXPeFbSd3hXgwhwVE62LrqtJO8BaUfX+PzpiQjEl4D5/KBmvlFZ057Hqmy0zmPOT5mDZfJe8Ja5zyvTMb+KkCWN/tjAp8kawHojE04pn6jIpPdwXFnAYwPhaHbATFrmdt9fdg=
   - secure: mBcGL2tnmiRujJdV/4fxrVd8E8wn6AW9IQKVcMv8tvOc7i5dOzZ39rpBKLuTMRXDtMV1LyLiuKYb1pHj1IyeadEahcLYFfGygF4LG7Yzp4NWHtRzQ7Q8LXaJV7dXDboYCFkn2a8/Rtx1YSVh/sCONf5UoRC+MUIqrj4UiHN9r3s=
-  - secure: pLTzghtVll9yGKJI0AaB0uI8GypfWxLTaIB0ZL8//yN3nAEIKMhf/RRilYTsn/rKj2NUa7vt2edYILi3lttOUlCBOwTc9amiRms1W8Lwr/3IdWPeBLvLuH1zNJRm2lBAwU4LBSqaOwhGaxOQr6KHTnWudhNhgOucxpZfvfI/dFw=
-  - secure: yERYCf7AwL11D9uMtacly/THGV8BlzsMmrt+iQVvGA3GaY6QMmfYqf6P6cCH98sH5etd1Y+1e6YrPeMjqI6lyRllT7FptoyOdHulazQe86VQN4sc0EpqMlH088kB7gGjTut9Z+X9ViooT5XEh9WA5jXEI9pXhQJNoIHkWPuwGuY=
+
+matrix:
+  include:
+    - node_js: "0.10"
+      env:
+        - secure: pLTzghtVll9yGKJI0AaB0uI8GypfWxLTaIB0ZL8//yN3nAEIKMhf/RRilYTsn/rKj2NUa7vt2edYILi3lttOUlCBOwTc9amiRms1W8Lwr/3IdWPeBLvLuH1zNJRm2lBAwU4LBSqaOwhGaxOQr6KHTnWudhNhgOucxpZfvfI/dFw=
+        - secure: yERYCf7AwL11D9uMtacly/THGV8BlzsMmrt+iQVvGA3GaY6QMmfYqf6P6cCH98sH5etd1Y+1e6YrPeMjqI6lyRllT7FptoyOdHulazQe86VQN4sc0EpqMlH088kB7gGjTut9Z+X9ViooT5XEh9WA5jXEI9pXhQJNoIHkWPuwGuY=

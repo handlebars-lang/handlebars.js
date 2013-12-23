@@ -182,7 +182,7 @@ module.exports = function(grunt) {
   grunt.task.loadTasks('tasks');
 
   grunt.registerTask('bench', ['metrics']);
-  grunt.registerTask('sauce', ['tests', 'connect', 'saucelabs-mocha']);
+  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
 
   grunt.registerTask('default', ['build', 'test', 'release']);
 };
