@@ -406,6 +406,8 @@ in the root of the project. That will build Handlebars and output the
 results to the dist/ folder. To re-run tests, run `grunt test` or `npm test`.
 You can also run our set of benchmarks with `grunt bench`.
 
+The `grunt dev` implements watching for tests and allows for in browser testing at `http://localhost:9999/spec/`.
+
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
 Feel free to contact commondream or wycats through GitHub with any other

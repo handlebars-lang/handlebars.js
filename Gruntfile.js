@@ -150,12 +150,18 @@ module.exports = function(grunt) {
           ]
         }
       }
+    },
+
+    watch: {
+      scripts: {
+        files: ['src/*', 'lib/**/*.js', 'spec/**/*.js'],
+        tasks: ['build', 'tests', 'test']
+      }
     }
   });
 
   // Build a new version of the library
   this.registerTask('build', "Builds a distributable version of the current project", [
-                    'clean',
                     'parser',
                     'node',
                     'globals',
@@ -176,6 +182,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('es6-module-packager');
 
@@ -186,5 +193,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'sauce', 'metrics', 'publish:latest'] : ['default']);
 
-  grunt.registerTask('default', ['build', 'test', 'release']);
+  grunt.registerTask('dev', ['clean', 'build', 'tests', 'test', 'connect', 'watch']);
+  grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
 };
