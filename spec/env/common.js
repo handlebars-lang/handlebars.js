@@ -1,12 +1,12 @@
-global.should = require('should');
-
 global.shouldCompileTo = function(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };
 
 global.shouldCompileToWithPartials = function(string, hashOrArray, partials, expected, message) {
   var result = compileWithPartials(string, hashOrArray, partials);
-  result.should.equal(expected, "'" + expected + "' should === '" + result + "': " + message);
+  if (result !== expected) {
+    throw new Error("'" + expected + "' should === '" + result + "': " + message);
+  }
 };
 
 global.compileWithPartials = function(string, hashOrArray, partials) {
@@ -24,7 +24,9 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
 
 
 global.equals = global.equal = function(a, b, msg) {
-  a.should.equal(b, msg || '');
+  if (a !== b) {
+    throw new Error("'" + b + "' should === '" + a + "'" + (msg ? ": " + msg : ''));
+  }
 };
 
 global.shouldThrow = function(callback, type, msg) {
