@@ -39,7 +39,7 @@
     "grunt-contrib-jshint": "~0.7.2",
     "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
-    "es6-module-packager": "~0.1.1",
+    "es6-module-packager": "0.x",
     "jison": "~0.3.0",
     "keen.io": "0.0.3",
     "mocha": "*",
