@@ -20,6 +20,28 @@ describe('javascript-compiler api', function() {
       shouldCompileTo("{{foo}}", { bar_foo: "food" }, "food");
     });
   });
+  describe('#compilerInfo', function() {
+    var $superCheck, $superInfo;
+    beforeEach(function() {
+      $superCheck = handlebarsEnv.VM.checkRevision;
+      $superInfo = handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo;
+    });
+    afterEach(function() {
+      handlebarsEnv.VM.checkRevision = $superCheck;
+      handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = $superInfo;
+    });
+    it('should allow compilerInfo override', function() {
+      handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function() {
+        return 'this.compilerInfo = "crazy";';
+      };
+      handlebarsEnv.VM.checkRevision = function(compilerInfo) {
+        if (compilerInfo !== 'crazy') {
+          throw new Error('It didn\'t work');
+        }
+      };
+      shouldCompileTo("{{foo}} ", { foo: "food" }, "food ");
+    });
+  });
   describe('buffer', function() {
     var $superAppend, $superCreate;
     beforeEach(function() {
