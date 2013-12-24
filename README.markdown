@@ -423,6 +423,7 @@ grunt build release
 export HANDLEBARS_PATH=`pwd`
 
 cd $emberRepoDir
+bundle exec rake clean
 bundle exec rake test
 ```
 
@@ -438,6 +439,10 @@ yo release:release patch
 npm publish
 yo release:publish cdnjs handlebars.js dist/cdnjs/
 yo release:publish components handlebars.js dist/components/
+
+cd dist/components/
+gem build handlebars-source.gemspec
+gem push handlebars-source-*.gem
 ```
 
 After this point the handlebars site needs to be updated to point to the new version numbers.
