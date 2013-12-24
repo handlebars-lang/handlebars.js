@@ -103,7 +103,7 @@ module.exports = function(grunt) {
         files: [{
           cwd: 'dist/',
           expand: true,
-          src: ['handlebars*.js'],
+          src: ['handlebars*.js', '!*.min.js'],
           dest: 'dist/',
           rename: function(dest, src) {
             return dest + src.replace(/\.js$/, '.min.js');
