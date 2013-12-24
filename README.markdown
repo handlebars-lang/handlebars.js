@@ -323,6 +323,8 @@ Handlebars has been designed to work in any ECMAScript 3 environment. This inclu
 Older versions and other runtimes are likely to work but have not been formally
 tested.
 
+[![Selenium Test Status](https://saucelabs.com/browser-matrix/handlebars.svg)](https://saucelabs.com/u/handlebars)
+
 Performance
 -----------
 
