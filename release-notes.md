@@ -2,7 +2,33 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.2.0...master)
+
+## v1.2.0 - December 23rd, 2013
+- [#675](https://github.com/wycats/handlebars.js/issues/675) - Cannot compile empty template for partial ([@erwinw](https://api.github.com/users/erwinw))
+- [#677](https://github.com/wycats/handlebars.js/issues/677) - Triple brace statements fail under IE ([@hamzaCM](https://api.github.com/users/hamzaCM))
+- [#655](https://github.com/wycats/handlebars.js/issues/655) - Loading Handlebars using bower ([@niki4810](https://api.github.com/users/niki4810))
+- [#657](https://github.com/wycats/handlebars.js/pull/657) - Fixes issue where cli compiles non handlebars templates ([@chrishoage](https://api.github.com/users/chrishoage))
+- [#681](https://github.com/wycats/handlebars.js/pull/681) - Adds in-browser testing and Saucelabs CI ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#661](https://github.com/wycats/handlebars.js/pull/661) - Add @first and @index to #each object iteration ([@cgp](https://api.github.com/users/cgp))
+- [#650](https://github.com/wycats/handlebars.js/pull/650) - Handlebars is MIT-licensed ([@thomasboyt](https://api.github.com/users/thomasboyt))
+- [#641](https://github.com/wycats/handlebars.js/pull/641) - Document ember testing process ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#662](https://github.com/wycats/handlebars.js/issues/662) - handlebars-source 1.1.2 is missing from RubyGems.
+- [#656](https://github.com/wycats/handlebars.js/issues/656) - Expose COMPILER_REVISION checks as a hook ([@machty](https://api.github.com/users/machty))
+- [#668](https://github.com/wycats/handlebars.js/issues/668) - Consider publishing handlebars-runtime as a separate module on npm ([@dlmanning](https://api.github.com/users/dlmanning))
+- [#679](https://github.com/wycats/handlebars.js/issues/679) - Unable to override invokePartial ([@mattbrailsford](https://api.github.com/users/mattbrailsford))
+- [#646](https://github.com/wycats/handlebars.js/pull/646) - Fix "\\{{" immediately following "\{{" ([@dmarcotte](https://api.github.com/users/dmarcotte))
+- Allow extend to work with non-prototyped objects - eb53f2e
+- Add JavascriptCompiler public API tests - 1a751b2
+- Add AST test coverage for more complex paths - ddea5be
+- Fix handling of boolean escape in MustacheNode - b4968bb
+
+Compatibility notes:
+- `@index` and `@first` are now supported for `each` iteration on objects
+- `Handlebars.VM.checkRevision` and `Handlebars.JavaScriptCompiler.prototype.compilerInfo` now available to modify the version checking behavior.
+- Browserify users may link to the runtime library via `require('handlebars/runtime')`
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.1.2...v1.2.0)
 
 ## v1.1.2 - November 5th, 2013
 
