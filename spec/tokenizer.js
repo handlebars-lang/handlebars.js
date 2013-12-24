@@ -87,15 +87,15 @@ describe('Tokenizer', function() {
 
   it('supports escaping multiple escape characters', function() {
     var result = tokenize("{{foo}} \\\\{{bar}} \\\\{{baz}}");
-      shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+    shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
 
-      shouldBeToken(result[3], "CONTENT", " \\");
-      shouldBeToken(result[5], "ID", "bar");
-      shouldBeToken(result[7], "CONTENT", " \\");
-      shouldBeToken(result[9], "ID", "baz");
+    shouldBeToken(result[3], "CONTENT", " \\");
+    shouldBeToken(result[5], "ID", "bar");
+    shouldBeToken(result[7], "CONTENT", " \\");
+    shouldBeToken(result[9], "ID", "baz");
   });
 
-  it('supports mixed escaped delimiters and escaped escape characters', function() {
+  it('supports escaped mustaches after escaped escape characters', function() {
     var result = tokenize("{{foo}} \\\\{{bar}} \\{{baz}}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'CONTENT']);
 
@@ -104,6 +104,16 @@ describe('Tokenizer', function() {
     shouldBeToken(result[5], "ID", "bar");
     shouldBeToken(result[7], "CONTENT", " ");
     shouldBeToken(result[8], "CONTENT", "{{baz}}");
+  });
+
+  it('supports escaped escape characters after escaped mustaches', function() {
+    var result = tokenize("{{foo}} \\{{bar}} \\\\{{baz}}");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
+
+    shouldBeToken(result[4], "CONTENT", "{{bar}} ");
+    shouldBeToken(result[5], "CONTENT", "\\");
+    shouldBeToken(result[6], "OPEN", "{{");
+    shouldBeToken(result[7], "ID", "baz");
   });
 
   it('supports escaped escape character on a triple stash', function() {
