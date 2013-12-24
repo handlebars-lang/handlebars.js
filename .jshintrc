@@ -1,13 +1,6 @@
 {
     "predef": [
         "console",
-        "Ember",
-        "DS",
-        "Metamorph",
-        "ember_assert",
-        "ember_warn",
-        "ember_deprecate",
-        "ember_deprecateFunc",
         "require",
         "suite",
         "equal",
@@ -25,7 +18,8 @@
 
         "describe",
         "it",
-        "afterEach"
+        "afterEach",
+        "beforeEach"
     ],
 
     "node" : true,
