@@ -364,4 +364,31 @@ describe('Tokenizer', function() {
   it('does not time out in a mustache when invalid ID characters are used', function() {
     shouldMatchTokens(tokenize("{{foo & }}"), ['OPEN', 'ID']);
   });
+
+  it('tokenizes subexpressions', function() {
+    var result = tokenize("{{foo (bar)}}");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'CLOSE_SEXPR', 'CLOSE']);
+    shouldBeToken(result[1], "ID", "foo");
+    shouldBeToken(result[3], "ID", "bar");
+
+    result = tokenize("{{foo (a-x b-y)}}");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'ID', 'CLOSE_SEXPR', 'CLOSE']);
+    shouldBeToken(result[1], "ID", "foo");
+    shouldBeToken(result[3], "ID", "a-x");
+    shouldBeToken(result[4], "ID", "b-y");
+  });
+
+  it('tokenizes nested subexpressions', function() {
+    var result = tokenize("{{foo (bar (lol rofl)) (baz)}}");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'OPEN_SEXPR', 'ID', 'ID', 'CLOSE_SEXPR', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'CLOSE_SEXPR', 'CLOSE']);
+    shouldBeToken(result[3],  "ID", "bar");
+    shouldBeToken(result[5],  "ID", "lol");
+    shouldBeToken(result[6],  "ID", "rofl");
+    shouldBeToken(result[10], "ID", "baz");
+  });
+
+  it('tokenizes nested subexpressions: literals', function() {
+    var result = tokenize("{{foo (bar (lol true) false) (baz 1) (blah 'b') (blorg \"c\")}}");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'OPEN_SEXPR', 'ID', 'BOOLEAN', 'CLOSE_SEXPR', 'BOOLEAN', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'INTEGER', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'CLOSE']);
+  });
 });

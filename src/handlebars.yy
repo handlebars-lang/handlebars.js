@@ -44,11 +44,11 @@ statement
   ;
 
 openBlock
-  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
+  : OPEN_BLOCK sexpr CLOSE -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
   ;
 
 openInverse
-  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
+  : OPEN_INVERSE sexpr CLOSE -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
   ;
 
 closeBlock
@@ -58,10 +58,9 @@ closeBlock
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
-  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
+  : OPEN sexpr CLOSE -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
+  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
   ;
-
 
 partial
   : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3, stripFlags($1, $4), @$)
@@ -71,9 +70,9 @@ simpleInverse
   : OPEN_INVERSE CLOSE -> stripFlags($1, $2)
   ;
 
-inMustache
-  : path param* hash? -> [[$1].concat($2), $3]
-  | dataName -> [[$1], null]
+sexpr
+  : path param* hash? -> new yy.SexprNode([$1].concat($2), $3)
+  | dataName -> new yy.SexprNode([$1], null)
   ;
 
 param
@@ -82,6 +81,7 @@ param
   | INTEGER -> new yy.IntegerNode($1, @$)
   | BOOLEAN -> new yy.BooleanNode($1, @$)
   | dataName -> $1
+  | OPEN_SEXPR sexpr CLOSE_SEXPR {$2.isHelper = true; $$ = $2;}
   ;
 
 hash

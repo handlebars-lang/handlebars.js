@@ -12,8 +12,8 @@ function strip(start, end) {
 LEFT_STRIP    "~"
 RIGHT_STRIP   "~"
 
-LOOKAHEAD           [=~}\s\/.]
-LITERAL_LOOKAHEAD   [~}\s]
+LOOKAHEAD           [=~}\s\/.)]
+LITERAL_LOOKAHEAD   [~}\s)]
 
 /*
 ID is the inverse of control characters.
@@ -50,6 +50,9 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                  }
 
 <com>[\s\S]*?"--}}"              strip(0,4); this.popState(); return 'COMMENT';
+
+<mu>"("                          return 'OPEN_SEXPR';
+<mu>")"                          return 'CLOSE_SEXPR';
 
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
 <mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
