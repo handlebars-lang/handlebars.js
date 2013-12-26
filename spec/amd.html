@@ -54,7 +54,7 @@
       onload = function(){
 
         require(['handlebars'], function(Handlebars) {
-          window.Handlebars = Handlebars.default;
+          window.Handlebars = Handlebars['default'];
 
           require(['tests'], function(Handlebars) {
             // The test harness leaks under FF. We should have decent global leak coverage from other tests
