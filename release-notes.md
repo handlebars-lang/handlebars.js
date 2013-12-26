@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.2.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.2.1...master)
+
+## v1.2.1 - December 26th, 2013
+- [#684](https://github.com/wycats/handlebars.js/pull/684) - Allow any number of trailing characters for valid JavaScript variable ([@blakeembrey](https://api.github.com/users/blakeembrey))
+- [#686](https://github.com/wycats/handlebars.js/pull/686) - Falsy AMD module names in version 1.2.0 ([@kpdecker](https://api.github.com/users/kpdecker))
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.2.0...v1.2.1)
 
 ## v1.2.0 - December 23rd, 2013
 - [#675](https://github.com/wycats/handlebars.js/issues/675) - Cannot compile empty template for partial ([@erwinw](https://api.github.com/users/erwinw))
