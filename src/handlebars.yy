@@ -16,17 +16,17 @@ function stripFlags(open, close) {
 %%
 
 root
-  : statements EOF { return new yy.ProgramNode($1); }
-  | EOF { return new yy.ProgramNode([]); }
+  : statements EOF { return new yy.ProgramNode($1, @$); }
+  | EOF { return new yy.ProgramNode([], @$); }
   ;
 
 program
-  : simpleInverse statements -> new yy.ProgramNode([], $1, $2)
-  | statements simpleInverse statements -> new yy.ProgramNode($1, $2, $3)
-  | statements simpleInverse -> new yy.ProgramNode($1, $2, [])
-  | statements -> new yy.ProgramNode($1)
-  | simpleInverse -> new yy.ProgramNode([])
-  | "" -> new yy.ProgramNode([])
+  : simpleInverse statements -> new yy.ProgramNode([], $1, $2, @$)
+  | statements simpleInverse statements -> new yy.ProgramNode($1, $2, $3, @$)
+  | statements simpleInverse -> new yy.ProgramNode($1, $2, [], @$)
+  | statements -> new yy.ProgramNode($1, @$)
+  | simpleInverse -> new yy.ProgramNode([], @$)
+  | "" -> new yy.ProgramNode([], @$)
   ;
 
 statements
@@ -35,20 +35,20 @@ statements
   ;
 
 statement
-  : openInverse program closeBlock -> new yy.BlockNode($1, $2.inverse, $2, $3)
-  | openBlock program closeBlock -> new yy.BlockNode($1, $2, $2.inverse, $3)
+  : openInverse program closeBlock -> new yy.BlockNode($1, $2.inverse, $2, $3, @$)
+  | openBlock program closeBlock -> new yy.BlockNode($1, $2, $2.inverse, $3, @$)
   | mustache -> $1
   | partial -> $1
-  | CONTENT -> new yy.ContentNode($1)
-  | COMMENT -> new yy.CommentNode($1)
+  | CONTENT -> new yy.ContentNode($1, @$)
+  | COMMENT -> new yy.CommentNode($1, @$)
   ;
 
 openBlock
-  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
+  : OPEN_BLOCK inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
   ;
 
 openInverse
-  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
+  : OPEN_INVERSE inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
   ;
 
 closeBlock
@@ -58,13 +58,13 @@ closeBlock
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
-  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3))
+  : OPEN inMustache CLOSE -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
+  | OPEN_UNESCAPED inMustache CLOSE_UNESCAPED -> new yy.MustacheNode($2[0], $2[1], $1, stripFlags($1, $3), @$)
   ;
 
 
 partial
-  : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3, stripFlags($1, $4))
+  : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3, stripFlags($1, $4), @$)
   ;
 
 simpleInverse
@@ -78,14 +78,14 @@ inMustache
 
 param
   : path -> $1
-  | STRING -> new yy.StringNode($1)
-  | INTEGER -> new yy.IntegerNode($1)
-  | BOOLEAN -> new yy.BooleanNode($1)
+  | STRING -> new yy.StringNode($1, @$)
+  | INTEGER -> new yy.IntegerNode($1, @$)
+  | BOOLEAN -> new yy.BooleanNode($1, @$)
   | dataName -> $1
   ;
 
 hash
-  : hashSegment+ -> new yy.HashNode($1)
+  : hashSegment+ -> new yy.HashNode($1, @$)
   ;
 
 hashSegment
@@ -93,17 +93,17 @@ hashSegment
   ;
 
 partialName
-  : path -> new yy.PartialNameNode($1)
-  | STRING -> new yy.PartialNameNode(new yy.StringNode($1))
-  | INTEGER -> new yy.PartialNameNode(new yy.IntegerNode($1))
+  : path -> new yy.PartialNameNode($1, @$)
+  | STRING -> new yy.PartialNameNode(new yy.StringNode($1, @$), @$)
+  | INTEGER -> new yy.PartialNameNode(new yy.IntegerNode($1, @$))
   ;
 
 dataName
-  : DATA path -> new yy.DataNode($2)
+  : DATA path -> new yy.DataNode($2, @$)
   ;
 
 path
-  : pathSegments -> new yy.IdNode($1)
+  : pathSegments -> new yy.IdNode($1, @$)
   ;
 
 pathSegments
