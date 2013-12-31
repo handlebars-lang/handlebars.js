@@ -76,7 +76,7 @@ describe('subexpressions', function() {
   });
 
   it("as hashes", function() {
-    var string   = '{{blog fun=(equal true true)}}';
+    var string   = '{{blog fun=(equal (blog fun=1) "val is 1")}}';
 
     var helpers  = {
       blog: function(options) {
