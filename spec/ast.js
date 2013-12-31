@@ -68,14 +68,24 @@ describe('ast', function() {
     });
   });
   describe('BlockNode', function() {
+    it('should throw on mustache mismatch (old sexpr-less version)', function() {
+      shouldThrow(function() {
+        var mustacheNode = new handlebarsEnv.AST.MustacheNode([{ original: 'foo'}], null, '{{', {});
+        new handlebarsEnv.AST.BlockNode(mustacheNode, {}, {}, {path: {original: 'bar'}});
+      }, Handlebars.Exception, "foo doesn't match bar");
+    });
     it('should throw on mustache mismatch', function() {
       shouldThrow(function() {
-        new handlebarsEnv.AST.BlockNode({id: {original: 'foo'}}, {}, {}, {path: {original: 'bar'}});
+        var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
+        var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
+        new handlebarsEnv.AST.BlockNode(mustacheNode, {}, {}, {path: {original: 'bar'}});
       }, Handlebars.Exception, "foo doesn't match bar");
     });
 
     it('stores location info', function(){
-      var block = new handlebarsEnv.AST.BlockNode({strip: {}, id: {original: 'foo'}},
+      var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
+      var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
+      var block = new handlebarsEnv.AST.BlockNode(mustacheNode,
                                                   {strip: {}}, {strip: {}},
                                                   {
                                                     strip: {},

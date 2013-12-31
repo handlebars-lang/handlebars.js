@@ -142,4 +142,20 @@ describe('string params mode', function() {
 
     equals(result, "STOP ME FROM READING HACKER NEWS I need-a dad.joke wot", "Proper context variable output");
   });
+
+  it("with nested block ambiguous", function() {
+    var template = CompilerContext.compile('{{#with content}}{{#view}}{{firstName}} {{lastName}}{{/view}}{{/with}}', {stringParams: true});
+
+    var helpers  = {
+      with: function(options) {
+        return "WITH";
+      },
+      view: function() {
+        return "VIEW";
+      }
+    };
+
+    var result = template({}, {helpers: helpers});
+    equals(result, "WITH");
+  });
 });
