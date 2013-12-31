@@ -71,8 +71,8 @@ simpleInverse
   ;
 
 sexpr
-  : path param* hash? -> new yy.SexprNode([$1].concat($2), $3)
-  | dataName -> new yy.SexprNode([$1], null)
+  : path param* hash? -> new yy.SexprNode([$1].concat($2), $3, @$)
+  | dataName -> new yy.SexprNode([$1], null, @$)
   ;
 
 param
