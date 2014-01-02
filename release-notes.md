@@ -2,7 +2,21 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.2.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.3.0...master)
+
+## v1.3.0 - January 1st, 2014
+- [#690](https://github.com/wycats/handlebars.js/pull/690) - Added support for subexpressions ([@machty](https://api.github.com/users/machty))
+- [#696](https://github.com/wycats/handlebars.js/pull/696) - Fix for reserved keyword "default" ([@nateirwin](https://api.github.com/users/nateirwin))
+- [#692](https://github.com/wycats/handlebars.js/pull/692) - add line numbers to nodes when parsing ([@fivetanley](https://api.github.com/users/fivetanley))
+- [#695](https://github.com/wycats/handlebars.js/pull/695) - Pull options out from param setup to allow easier extension ([@blakeembrey](https://api.github.com/users/blakeembrey))
+- [#694](https://github.com/wycats/handlebars.js/pull/694) - Make the environment reusable ([@blakeembrey](https://api.github.com/users/blakeembrey))
+- [#636](https://github.com/wycats/handlebars.js/issues/636) - Print line and column of errors ([@sgronblo](https://api.github.com/users/sgronblo))
+- Use literal for data lookup - c1a93d3
+- Add stack handling sanity checks - cd885bf
+- Fix stack id "leak" on replaceStack - ddfe457
+- Fix incorrect stack pop when replacing literals - f4d337d
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.2.1...v1.3.0)
 
 ## v1.2.1 - December 26th, 2013
 - [#684](https://github.com/wycats/handlebars.js/pull/684) - Allow any number of trailing characters for valid JavaScript variable ([@blakeembrey](https://api.github.com/users/blakeembrey))
