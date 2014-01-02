@@ -78,8 +78,8 @@ describe('ast', function() {
       shouldThrow(function() {
         var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
         var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
-        new handlebarsEnv.AST.BlockNode(mustacheNode, {}, {}, {path: {original: 'bar'}});
-      }, Handlebars.Exception, "foo doesn't match bar");
+        new handlebarsEnv.AST.BlockNode(mustacheNode, {}, {}, {path: {original: 'bar'}}, {first_line: 2, first_column: 2});
+      }, Handlebars.Exception, "foo doesn't match bar - 2:2");
     });
 
     it('stores location info', function(){
@@ -102,22 +102,22 @@ describe('ast', function() {
           {part: 'foo'},
           {part: '..'},
           {part: 'bar'}
-        ]);
-      }, Handlebars.Exception, "Invalid path: foo..");
+        ], {first_line: 1, first_column: 1});
+      }, Handlebars.Exception, "Invalid path: foo.. - 1:1");
       shouldThrow(function() {
         new handlebarsEnv.AST.IdNode([
           {part: 'foo'},
           {part: '.'},
           {part: 'bar'}
-        ]);
-      }, Handlebars.Exception, "Invalid path: foo.");
+        ], {first_line: 1, first_column: 1});
+      }, Handlebars.Exception, "Invalid path: foo. - 1:1");
       shouldThrow(function() {
         new handlebarsEnv.AST.IdNode([
           {part: 'foo'},
           {part: 'this'},
           {part: 'bar'}
-        ]);
-      }, Handlebars.Exception, "Invalid path: foothis");
+        ], {first_line: 1, first_column: 1});
+      }, Handlebars.Exception, "Invalid path: foothis - 1:1");
     });
 
     it('stores location info', function(){
@@ -216,7 +216,7 @@ describe('ast', function() {
           firstColumn: 0,
           lastColumn: 0
         };
-        var pn = new handlebarsEnv.AST.ProgramNode([], {strip: {}}, [ clone ], LOCATION_INFO);
+        pn = new handlebarsEnv.AST.ProgramNode([], {strip: {}}, [ clone ], LOCATION_INFO);
         testLocationInfoStorage(pn);
 
         // Assert that the newly created ProgramNode has the same location
