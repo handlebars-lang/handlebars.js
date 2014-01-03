@@ -371,6 +371,8 @@ Handlebars in the Wild
   with 100+ handlebars helpers.
 * [hbs](http://github.com/donpark/hbs): An Express.js view engine adapter for Handlebars.js,
   from Don Park.
+* [koa-hbs](https://github.com/jwilm/koa-hbs): [koa](https://github.com/koajs/koa) generator based
+  renderer for Handlebars.js.
 * [jblotus](http://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com)
   for anyone who would like to try out Handlebars.js in their browser.
 * [jQuery plugin](http://71104.github.io/jquery-handlebars/): allows you to use
