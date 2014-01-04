@@ -362,9 +362,9 @@ describe('helpers', function() {
       var context = { hello: "Hello", world: "world" };
 
       var helpers = {
-        helperMissing: function(helper, context) {
-          if(helper === "link_to") {
-            return new Handlebars.SafeString("<a>" + context + "</a>");
+        helperMissing: function(mesg, options) {
+          if(options.name === "link_to") {
+            return new Handlebars.SafeString("<a>" + mesg + "</a>");
           }
         }
       };
@@ -433,6 +433,43 @@ describe('helpers', function() {
       var string = "{{#truthy}}yep{{/truthy}}";
       var boundData = { truthy: function() { return this.truthiness(); }, truthiness: function() { return false; } };
       shouldCompileTo(string, boundData, "");
+    });
+  });
+
+  describe('name field', function() {
+    var context = {};
+    var helpers = {
+      blockHelperMissing: function() {
+        return 'missing: ' + arguments[arguments.length-1].name;
+      },
+      helper: function() {
+        return 'ran: ' + arguments[arguments.length-1].name;
+      }
+    };
+
+    it('should include in ambiguous mustache calls', function() {
+      shouldCompileTo('{{helper}}', [context, helpers], 'ran: helper');
+    });
+    it('should include in helper mustache calls', function() {
+      shouldCompileTo('{{helper 1}}', [context, helpers], 'ran: helper');
+    });
+    it('should include in ambiguous block calls', function() {
+      shouldCompileTo('{{#helper}}{{/helper}}', [context, helpers], 'ran: helper');
+    });
+    it('should include in simple block calls', function() {
+      shouldCompileTo('{{#./helper}}{{/./helper}}', [context, helpers], 'missing: ./helper');
+    });
+    it('should include in helper block calls', function() {
+      shouldCompileTo('{{#helper 1}}{{/helper}}', [context, helpers], 'ran: helper');
+    });
+    it('should include in known helper calls', function() {
+      var template = CompilerContext.compile("{{helper}}", {knownHelpers: {'helper': true}, knownHelpersOnly: true});
+
+      equal(template({}, {helpers: helpers}), 'ran: helper');
+    });
+
+    it('should include full id', function() {
+      shouldCompileTo('{{#foo.helper}}{{/foo.helper}}', [{foo: {}}, helpers], 'missing: foo.helper');
     });
   });
 
