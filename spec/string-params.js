@@ -158,4 +158,19 @@ describe('string params mode', function() {
     var result = template({}, {helpers: helpers});
     equals(result, "WITH");
   });
+
+  it('should handle DATA', function() {
+    var template = CompilerContext.compile('{{foo @bar}}', { stringParams: true });
+
+    var helpers = {
+      foo: function(bar, options) {
+        equal(bar, 'bar');
+        equal(options.types[0], 'DATA');
+        return 'Foo!';
+      }
+    };
+
+    var result = template({}, { helpers: helpers });
+    equal(result, 'Foo!');
+  });
 });
