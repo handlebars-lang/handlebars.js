@@ -437,8 +437,7 @@ Handlebars utilizes the [release yeoman generator][generator-release] to perform
 A full release may be completed with the following:
 
 ```
-yo release:notes patch
-yo release:release patch
+yo release
 npm publish
 yo release:publish cdnjs handlebars.js dist/cdnjs/
 yo release:publish components handlebars.js dist/components/
