@@ -14,5 +14,10 @@ global.CompilerContext = {
 };
 
 function safeEval(templateSpec) {
-  return eval('(' + templateSpec + ')');
+  try {
+    return eval('(' + templateSpec + ')');
+  } catch (err) {
+    console.error(templateSpec);
+    throw err;
+  }
 }

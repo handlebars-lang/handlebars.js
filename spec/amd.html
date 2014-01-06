@@ -45,9 +45,14 @@
       };
 
       function safeEval(templateSpec) {
-        var ret;
-        eval('ret = ' + templateSpec);
-        return ret;
+        try {
+          var ret;
+          eval('ret = ' + templateSpec);
+          return ret;
+        } catch (err) {
+          console.error(templateSpec);
+          throw err;
+        }
       }
     </script>
     <script>
