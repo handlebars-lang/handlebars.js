@@ -132,7 +132,7 @@ into the person object you could still display the company's name with
 an expression like `{{../company.name}}`, so:
 
 ```
-{{#person}}{{name}} - {{../company.name}}{{/person}}
+{{#with person}}{{name}} - {{../company.name}}{{/person}}
 ```
 
 would render:
