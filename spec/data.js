@@ -236,4 +236,19 @@ describe('data', function() {
     equals("sad world?", result, "Overriden data output by helper");
   });
 
+  describe('@root', function() {
+    it('the root context can be looked up via @root', function() {
+      var template = CompilerContext.compile('{{@root.foo}}');
+      var result = template({foo: 'hello'}, { data: {} });
+      equals('hello', result);
+
+      result = template({foo: 'hello'}, {});
+      equals('hello', result);
+    });
+    it('passed root values take priority', function() {
+      var template = CompilerContext.compile('{{@root.foo}}');
+      var result = template({}, { data: {root: {foo: 'hello'} } });
+      equals('hello', result);
+    });
+  });
 });
