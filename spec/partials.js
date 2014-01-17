@@ -24,10 +24,10 @@ describe('partials', function() {
   });
 
   it("partials with parameters", function() {
-    var string = "Dudes: {{#dudes}}{{> dude otherDude=name}}{{/dudes}}";
-    var partial = "{{otherDude}} ({{url}}) ";
-    var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
+    var string = "Dudes: {{#dudes}}{{> dude others=..}}{{/dudes}}";
+    var partial = "{{others.foo}}{{name}} ({{url}}) ";
+    var hash = {foo: 'bar', dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: barYehuda (http://yehuda) barAlan (http://alan) ",
                     "Basic partials output based on current context.");
   });
 
