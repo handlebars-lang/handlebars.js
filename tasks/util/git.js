@@ -80,20 +80,27 @@ module.exports = {
     childProcess.exec('git tag -a --message=' + name + ' ' + name, {}, function(err, stdout, stderr) {
       if (err) {
         throw new Error('git.tag: ' + err.message);
-        throw err;
       }
 
       callback();
     });
   },
   tagName: function(callback) {
-    childProcess.exec('git tag -l --points-at HEAD', {}, function(err, stdout) {
+    childProcess.exec('git describe --tags', {}, function(err, stdout) {
       if (err) {
         throw new Error('git.tagName: ' + err.message);
       }
 
-      var tags = stdout.trim().split(/\n/),
-          versionTags = tags.filter(function(tag) { return /^v/.test(tag); });
+      var tags = stdout.trim().split(/\n/);
+      tags = tags.filter(function(info) {
+        info = info.split('-');
+        return info.length == 1;
+      });
+
+      var versionTags = tags.filter(function(info) {
+        return /^v/.test(info[0]);
+      });
+
       callback(undefined, versionTags[0] || tags[0]);
     });
   }
