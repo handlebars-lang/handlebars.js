@@ -63,7 +63,8 @@ mustache
   ;
 
 partial
-  : OPEN_PARTIAL partialName path? CLOSE -> new yy.PartialNode($2, $3, stripFlags($1, $4), @$)
+  : OPEN_PARTIAL partialName param hash? CLOSE -> new yy.PartialNode($2, $3, $4, stripFlags($1, $5), @$)
+  | OPEN_PARTIAL partialName hash? CLOSE -> new yy.PartialNode($2, undefined, $3, stripFlags($1, $4), @$)
   ;
 
 simpleInverse
