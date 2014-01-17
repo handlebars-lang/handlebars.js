@@ -20,8 +20,6 @@ env:
 matrix:
   include:
     - node_js: "0.10"
-      before_install:
-        - sudo apt-get install git
       env:
         - PUBLISH=true
         - secure: pLTzghtVll9yGKJI0AaB0uI8GypfWxLTaIB0ZL8//yN3nAEIKMhf/RRilYTsn/rKj2NUa7vt2edYILi3lttOUlCBOwTc9amiRms1W8Lwr/3IdWPeBLvLuH1zNJRm2lBAwU4LBSqaOwhGaxOQr6KHTnWudhNhgOucxpZfvfI/dFw=
