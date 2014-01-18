@@ -139,7 +139,7 @@ if (!argv.simple) {
   output.push(argv.namespace);
   output.push(' || {};\n');
 }
-function processTemplate(template, root) {
+function processTemplate(template, root, explicit) {
   var path = template,
       stat = fs.statSync(path);
   if (stat.isDirectory()) {
@@ -150,7 +150,7 @@ function processTemplate(template, root) {
         processTemplate(path, root || template);
       }
     });
-  } else if (extension.test(path)) {
+  } else if (explicit || extension.test(path)) {
     var data = fs.readFileSync(path, 'utf8');
 
     if (argv.bom && data.indexOf('\uFEFF') === 0) {
@@ -191,7 +191,7 @@ function processTemplate(template, root) {
 }
 
 argv._.forEach(function(template) {
-  processTemplate(template, argv.root);
+  processTemplate(template, argv.root, true);
 });
 
 // Output the content
