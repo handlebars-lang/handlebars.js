@@ -181,6 +181,11 @@ describe('builtin helpers', function() {
       equal(result, 'a!b!c!', 'should output data');
     });
 
+    it("each on implicit context", function() {
+      var string   = "{{#each}}{{text}}! {{/each}}cruel world!";
+      var hash     = [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}];
+      shouldCompileTo(string, [hash], "goodbye! Goodbye! GOODBYE! cruel world!");
+    });
   });
 
   it("#log", function() {
