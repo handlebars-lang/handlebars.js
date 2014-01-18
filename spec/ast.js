@@ -193,7 +193,7 @@ describe('ast', function() {
   describe("PartialNode", function(){
 
     it('stores location info', function(){
-      var pn = new handlebarsEnv.AST.PartialNode("so_partial", {}, {}, LOCATION_INFO);
+      var pn = new handlebarsEnv.AST.PartialNode("so_partial", {}, {}, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });

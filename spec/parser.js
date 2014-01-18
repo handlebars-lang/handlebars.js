@@ -84,6 +84,14 @@ describe('parser', function() {
     equals(ast_for("{{> foo bar}}"), "{{> PARTIAL:foo ID:bar }}\n");
   });
 
+  it('parses a partial with hash', function() {
+    equals(ast_for("{{> foo bar=bat}}"), "{{> PARTIAL:foo HASH{bar=ID:bat} }}\n");
+  });
+
+  it('parses a partial with context and hash', function() {
+    equals(ast_for("{{> foo bar bat=baz}}"), "{{> PARTIAL:foo ID:bar HASH{bat=ID:baz} }}\n");
+  });
+
   it('parses a partial with a complex name', function() {
     equals(ast_for("{{> shared/partial?.bar}}"), "{{> PARTIAL:shared/partial?.bar }}\n");
   });

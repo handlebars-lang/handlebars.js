@@ -23,6 +23,14 @@ describe('partials', function() {
     shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes:  Empty");
   });
 
+  it("partials with parameters", function() {
+    var string = "Dudes: {{#dudes}}{{> dude others=..}}{{/dudes}}";
+    var partial = "{{others.foo}}{{name}} ({{url}}) ";
+    var hash = {foo: 'bar', dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: barYehuda (http://yehuda) barAlan (http://alan) ",
+                    "Basic partials output based on current context.");
+  });
+
   it("partial in a partial", function() {
     var string = "Dudes: {{#dudes}}{{>dude}}{{/dudes}}";
     var dude = "{{name}} {{> url}} ";
