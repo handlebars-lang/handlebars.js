@@ -295,12 +295,20 @@ describe('Tokenizer', function() {
 
   it('tokenizes numbers', function() {
     var result = tokenize('{{ foo 1 }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'INTEGER', 'CLOSE']);
-    shouldBeToken(result[2], "INTEGER", "1");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'NUMBER', 'CLOSE']);
+    shouldBeToken(result[2], "NUMBER", "1");
+
+    result = tokenize('{{ foo 1.1 }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'NUMBER', 'CLOSE']);
+    shouldBeToken(result[2], "NUMBER", "1.1");
 
     result = tokenize('{{ foo -1 }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'INTEGER', 'CLOSE']);
-    shouldBeToken(result[2], "INTEGER", "-1");
+    shouldMatchTokens(result, ['OPEN', 'ID', 'NUMBER', 'CLOSE']);
+    shouldBeToken(result[2], "NUMBER", "-1");
+
+    result = tokenize('{{ foo -1.1 }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'NUMBER', 'CLOSE']);
+    shouldBeToken(result[2], "NUMBER", "-1.1");
   });
 
   it('tokenizes booleans', function() {
@@ -321,7 +329,7 @@ describe('Tokenizer', function() {
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'ID', 'CLOSE']);
 
     result = tokenize("{{ foo bar baz=1 }}");
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'INTEGER', 'CLOSE']);
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'NUMBER', 'CLOSE']);
 
     result = tokenize("{{ foo bar baz=true }}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'BOOLEAN', 'CLOSE']);
@@ -389,6 +397,6 @@ describe('Tokenizer', function() {
 
   it('tokenizes nested subexpressions: literals', function() {
     var result = tokenize("{{foo (bar (lol true) false) (baz 1) (blah 'b') (blorg \"c\")}}");
-    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'OPEN_SEXPR', 'ID', 'BOOLEAN', 'CLOSE_SEXPR', 'BOOLEAN', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'INTEGER', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'CLOSE']);
+    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'OPEN_SEXPR', 'ID', 'BOOLEAN', 'CLOSE_SEXPR', 'BOOLEAN', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'NUMBER', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'CLOSE']);
   });
 });

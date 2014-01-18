@@ -188,6 +188,17 @@ describe('helpers', function() {
       "found it! Goodbye cruel world!!");
   });
 
+  it("decimal number literals work", function() {
+    var string   = 'Message: {{hello -1.2 1.2}}';
+    var hash     = {};
+    var helpers  = {hello: function(times, times2) {
+      if(typeof times !== 'number') { times = "NaN"; }
+      if(typeof times2 !== 'number') { times2 = "NaN"; }
+      return "Hello " + times + " " + times2 + " times";
+    }};
+    shouldCompileTo(string, [hash, helpers], "Message: Hello -1.2 1.2 times", "template with a negative integer literal");
+  });
+
   it("negative number literals work", function() {
     var string   = 'Message: {{hello -12}}';
     var hash     = {};

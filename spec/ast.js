@@ -150,10 +150,10 @@ describe('ast', function() {
     });
   });
 
-  describe("IntegerNode", function(){
+  describe("NumberNode", function(){
 
     it('stores location info', function(){
-      var integer = new handlebarsEnv.AST.IntegerNode("6", LOCATION_INFO);
+      var integer = new handlebarsEnv.AST.NumberNode("6", LOCATION_INFO);
       testLocationInfoStorage(integer);
     });
   });

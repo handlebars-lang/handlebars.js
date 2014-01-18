@@ -79,7 +79,7 @@ sexpr
 param
   : path -> $1
   | STRING -> new yy.StringNode($1, @$)
-  | INTEGER -> new yy.IntegerNode($1, @$)
+  | NUMBER -> new yy.NumberNode($1, @$)
   | BOOLEAN -> new yy.BooleanNode($1, @$)
   | dataName -> $1
   | OPEN_SEXPR sexpr CLOSE_SEXPR {$2.isHelper = true; $$ = $2;}
@@ -96,7 +96,7 @@ hashSegment
 partialName
   : path -> new yy.PartialNameNode($1, @$)
   | STRING -> new yy.PartialNameNode(new yy.StringNode($1, @$), @$)
-  | INTEGER -> new yy.PartialNameNode(new yy.IntegerNode($1, @$))
+  | NUMBER -> new yy.PartialNameNode(new yy.NumberNode($1, @$))
   ;
 
 dataName
