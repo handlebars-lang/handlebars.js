@@ -10,7 +10,7 @@ module.exports = function(grunt) {
         jshintrc: '.jshintrc'
       },
       files: [
-        'dist/**/!(*.min|parser).js'
+        'dist/cjs/**/!(*.min|parser).js'
       ]
     },
 
