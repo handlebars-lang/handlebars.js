@@ -105,4 +105,59 @@ describe('track ids', function() {
 
     equals(template(context, {helpers: helpers}), 'HELP ME MY BOSS 1');
   });
+
+  describe('builtin helpers', function() {
+    var helpers = {
+      wycats: function(name, options) {
+        return name + ':' + options.data.contextPath + '\n';
+      }
+    };
+
+    describe('#each', function() {
+      it('should track contextPath for arrays', function() {
+        var template = CompilerContext.compile('{{#each array}}{{wycats name}}{{/each}}', {trackIds: true});
+
+        equals(template({array: [{name: 'foo'}, {name: 'bar'}]}, {helpers: helpers}), 'foo:array.0\nbar:array.1\n');
+      });
+      it('should track contextPath for keys', function() {
+        var template = CompilerContext.compile('{{#each object}}{{wycats name}}{{/each}}', {trackIds: true});
+
+        equals(template({object: {foo: {name: 'foo'}, bar: {name: 'bar'}}}, {helpers: helpers}), 'foo:object.foo\nbar:object.bar\n');
+      });
+      it('should handle nesting', function() {
+        var template = CompilerContext.compile('{{#each .}}{{#each .}}{{wycats name}}{{/each}}{{/each}}', {trackIds: true});
+
+        equals(template({array: [{name: 'foo'}, {name: 'bar'}]}, {helpers: helpers}), 'foo:.array..0\nbar:.array..1\n');
+      });
+    });
+    describe('#with', function() {
+      it('should track contextPath', function() {
+        var template = CompilerContext.compile('{{#with field}}{{wycats name}}{{/with}}', {trackIds: true});
+
+        equals(template({field: {name: 'foo'}}, {helpers: helpers}), 'foo:field\n');
+      });
+      it('should handle nesting', function() {
+        var template = CompilerContext.compile('{{#with bat}}{{#with field}}{{wycats name}}{{/with}}{{/with}}', {trackIds: true});
+
+        equals(template({bat: {field: {name: 'foo'}}}, {helpers: helpers}), 'foo:bat.field\n');
+      });
+    });
+    describe('#blockHelperMissing', function() {
+      it('should track contextPath for arrays', function() {
+        var template = CompilerContext.compile('{{#field}}{{wycats name}}{{/field}}', {trackIds: true});
+
+        equals(template({field: [{name: 'foo'}]}, {helpers: helpers}), 'foo:field.0\n');
+      });
+      it('should track contextPath for keys', function() {
+        var template = CompilerContext.compile('{{#field}}{{wycats name}}{{/field}}', {trackIds: true});
+
+        equals(template({field: {name: 'foo'}}, {helpers: helpers}), 'foo:field\n');
+      });
+      it('should handle nesting', function() {
+        var template = CompilerContext.compile('{{#bat}}{{#field}}{{wycats name}}{{/field}}{{/bat}}', {trackIds: true});
+
+        equals(template({bat: {field: {name: 'foo'}}}, {helpers: helpers}), 'foo:bat.field\n');
+      });
+    });
+  });
 });
