@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 
       var expected = fs.readFileSync('./spec/expected/empty.amd.js');
       if (stdout.toString() !== expected.toString()) {
-        throw new Error('Expected binary output differed:\n\n' + stdout + '\n\n' + expected);
+        throw new Error('Expected binary output differed:\n\n"' + stdout + '"\n\n"' + expected + '"');
       }
 
       done();
