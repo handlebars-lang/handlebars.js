@@ -49,7 +49,8 @@
     "mocha": "*",
     "mustache": "~0.7.2",
     "semver": "~2.1.0",
-    "underscore": "~1.5.1"
+    "underscore": "~1.5.1",
+    "load-grunt-tasks": "~0.3.0"
   },
   "main": "lib/index.js",
   "bin": {
