@@ -32,7 +32,7 @@ describe('javascript-compiler api', function() {
     });
     it('should allow compilerInfo override', function() {
       handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function() {
-        return 'this.compilerInfo = "crazy";';
+        return 'crazy';
       };
       handlebarsEnv.VM.checkRevision = function(compilerInfo) {
         if (compilerInfo !== 'crazy') {
