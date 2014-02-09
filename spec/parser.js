@@ -157,6 +157,10 @@ describe('parser', function() {
     shouldThrow(function() {
       ast_for("{{#goodbyes}}{{/hellos}}");
     }, Error, /goodbyes doesn't match hellos/);
+
+    shouldThrow(function() {
+      ast_for("{{{{goodbyes}}}} {{{{/hellos}}}}");
+    }, Error, /goodbyes doesn't match hellos/);
   });
 
   it('knows how to report the correct line number in errors', function() {

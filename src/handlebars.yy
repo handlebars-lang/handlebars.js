@@ -35,7 +35,7 @@ statements
   ;
 
 statement
-  : openRawBlock CONTENT END_RAW_BLOCK -> new yy.RawBlockNode($1, $2, @$)
+  : openRawBlock CONTENT END_RAW_BLOCK -> new yy.RawBlockNode($1, $2, $3, @$)
   | openInverse program closeBlock -> new yy.BlockNode($1, $2.inverse, $2, $3, @$)
   | openBlock program closeBlock -> new yy.BlockNode($1, $2, $2.inverse, $3, @$)
   | mustache -> $1

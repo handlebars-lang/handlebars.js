@@ -12,8 +12,8 @@ describe('helpers', function() {
   it("helper for raw block gets raw content", function() {
     var string   = "{{{{raw}}}} {{test}} {{{{/raw}}}}";
     var hash = { test: "hello" };
-    var helpers = { raw: function(content) { 
-        return content;
+    var helpers = { raw: function(options) {
+        return options.fn();
     } };
     shouldCompileTo(string, [hash, helpers], " {{test}} ",
                     "raw block helper gets raw content");
@@ -22,8 +22,8 @@ describe('helpers', function() {
   it("helper for raw block gets parameters", function() {
     var string   = "{{{{raw 1 2 3}}}} {{test}} {{{{/raw}}}}";
     var hash = { test: "hello" };
-    var helpers = { raw: function(content, a, b, c) { 
-        return content + a + b + c;
+    var helpers = { raw: function(a, b, c, options) {
+        return options.fn() + a + b + c;
     } };
     shouldCompileTo(string, [hash, helpers], " {{test}} 123",
                     "raw block helper gets raw content");

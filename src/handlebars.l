@@ -49,7 +49,11 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                    return 'CONTENT';
                                  }
 
-<raw>"{{{{/"[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]"}}}}" { yytext = yytext.substr(5, yyleng-9); this.popState(); return 'END_RAW_BLOCK'; }
+<raw>"{{{{/"[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]"}}}}" {
+                                  yytext = yytext.substr(5, yyleng-9);
+                                  this.popState();
+                                  return 'END_RAW_BLOCK';
+                                 }
 <raw>[^\x00]*?/("{{{{/")         { return 'CONTENT'; }
 
 <com>[\s\S]*?"--}}"              strip(0,4); this.popState(); return 'COMMENT';
@@ -58,7 +62,11 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>")"                          return 'CLOSE_SEXPR';
 
 <mu>"{{{{"                       { return 'OPEN_RAW_BLOCK'; }
-<mu>"}}}}"                       { this.popState(); this.begin('raw'); return 'CLOSE_RAW_BLOCK'; }
+<mu>"}}}}"                       {
+                                  this.popState();
+                                  this.begin('raw');
+                                  return 'CLOSE_RAW_BLOCK';
+                                 }
 <mu>"{{{{"[^\x00]*"}}}}"         {
                                   yytext = yytext.substr(4, yyleng-8);
                                   this.popState();
