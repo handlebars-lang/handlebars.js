@@ -1,5 +1,5 @@
 
-%x mu emu com
+%x mu emu com raw
 
 %{
 
@@ -49,11 +49,29 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                    return 'CONTENT';
                                  }
 
+<raw>"{{{{/"[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]"}}}}" {
+                                  yytext = yytext.substr(5, yyleng-9);
+                                  this.popState();
+                                  return 'END_RAW_BLOCK';
+                                 }
+<raw>[^\x00]*?/("{{{{/")         { return 'CONTENT'; }
+
 <com>[\s\S]*?"--}}"              strip(0,4); this.popState(); return 'COMMENT';
 
 <mu>"("                          return 'OPEN_SEXPR';
 <mu>")"                          return 'CLOSE_SEXPR';
 
+<mu>"{{{{"                       { return 'OPEN_RAW_BLOCK'; }
+<mu>"}}}}"                       {
+                                  this.popState();
+                                  this.begin('raw');
+                                  return 'CLOSE_RAW_BLOCK';
+                                 }
+<mu>"{{{{"[^\x00]*"}}}}"         {
+                                  yytext = yytext.substr(4, yyleng-8);
+                                  this.popState();
+                                  return 'RAW_BLOCK';
+                                 }
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
 <mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';
