@@ -1,4 +1,4 @@
-/*global CompilerContext, shouldCompileTo, compileWithPartials */
+/*global CompilerContext, shouldCompileTo, compileWithPartials, handlebarsEnv */
 describe('builtin helpers', function() {
   describe('#if', function() {
     it("if", function() {
@@ -189,12 +189,14 @@ describe('builtin helpers', function() {
   });
 
   it("#log", function() {
-
     var string = "{{log blah}}";
     var hash   = { blah: "whee" };
 
     var levelArg, logArg;
-    handlebarsEnv.log = function(level, arg){ levelArg = level, logArg = arg; };
+    handlebarsEnv.log = function(level, arg){
+      levelArg = level;
+      logArg = arg;
+    };
 
     shouldCompileTo(string, hash, "", "log should not display");
     equals(1, levelArg, "should call log with 1");
