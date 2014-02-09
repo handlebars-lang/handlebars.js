@@ -203,4 +203,25 @@ describe('builtin helpers', function() {
     equals("whee", logArg, "should call log with 'whee'");
   });
 
+
+  describe('#lookup', function() {
+    it('should lookup arbitrary content', function() {
+      var string = '{{#each goodbyes}}{{lookup ../data .}}{{/each}}',
+          hash   = {goodbyes: [0, 1], data: ['foo', 'bar']};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, 'foobar');
+    });
+    it('should not fail on undefined value', function() {
+      var string = '{{#each goodbyes}}{{lookup ../bar .}}{{/each}}',
+          hash   = {goodbyes: [0, 1], data: ['foo', 'bar']};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, '');
+    });
+  });
 });
