@@ -85,22 +85,6 @@ describe('data', function() {
     equals("Hello undefined", result, "@foo as a parameter retrieves template data");
   });
 
-  it("parameter data throws when using this scope references", function() {
-    var string = "{{#goodbyes}}{{text}} cruel {{@./name}}! {{/goodbyes}}";
-
-    shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error);
-  });
-
-  it("parameter data throws when using parent scope references", function() {
-    var string = "{{#goodbyes}}{{text}} cruel {{@../name}}! {{/goodbyes}}";
-
-    shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error);
-  });
-
   it("parameter data throws when using complex scope references", function() {
     var string = "{{#goodbyes}}{{text}} cruel {{@foo/../name}}! {{/goodbyes}}";
 
@@ -249,6 +233,25 @@ describe('data', function() {
       var template = CompilerContext.compile('{{@root.foo}}');
       var result = template({}, { data: {root: {foo: 'hello'} } });
       equals('hello', result);
+    });
+  });
+
+  describe('nesting', function() {
+    it('the root context can be looked up via @root', function() {
+      var template = CompilerContext.compile('{{#helper}}{{#helper}}{{@./depth}} {{@../depth}} {{@../../depth}}{{/helper}}{{/helper}}');
+      var result = template({foo: 'hello'}, {
+        helpers: {
+          helper: function(options) {
+            var frame = Handlebars.createFrame(options.data);
+            frame.depth = options.data.depth + 1;
+            return options.fn(this, {data: frame});
+          }
+        },
+        data: {
+          depth: 0
+        }
+      });
+      equals('2 1 0', result);
     });
   });
 });

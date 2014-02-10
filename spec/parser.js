@@ -21,6 +21,10 @@ describe('parser', function() {
     equals(ast_for("{{@foo}}"), "{{ @ID:foo [] }}\n");
   });
 
+  it('parses simple mustaches with data paths', function() {
+    equals(ast_for("{{@../foo}}"), "{{ @ID:foo [] }}\n");
+  });
+
   it('parses mustaches with paths', function() {
     equals(ast_for("{{foo/bar}}"), "{{ PATH:foo/bar [] }}\n");
   });
