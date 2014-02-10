@@ -352,8 +352,16 @@ See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/relea
 
 Known Issues
 ------------
+* Runtime/precompiler mismatches: Often result in errors like "can not find method match of object" or similar. Please verify the version of the runtime and the version used to precompile templates if odd issues occur after upgrading one component or another.
 * Handlebars.js can be cryptic when there's an error while rendering.
 * Using a variable, helper, or partial named `class` causes errors in IE browsers. (Instead, use `className`)
+
+Reporting Issues
+----------------
+
+Should you run into other issues with the project, please file an [issue][issue]. When filing issues a repo case running against the latest version of the code is appreciated. A [jsfiddle template][jsfiddle] is available for this purpose. As new versions are released the bitly link will be updated to point to a fiddle template with the latest version.
+
+We also accept [pull requests][pull-request]!
 
 Handlebars in the Wild
 ----------------------
@@ -447,7 +455,7 @@ gem build handlebars-source.gemspec
 gem push handlebars-source-*.gem
 ```
 
-After this point the handlebars site needs to be updated to point to the new version numbers.
+After this point the handlebars site needs to be updated to point to the new version numbers. The jsfiddle bitly link should be updated to point to the most recent distribution.
 
 License
 -------
@@ -457,3 +465,5 @@ Handlebars.js is released under the MIT license.
 [builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/bucket-listing.html?sort=lastmod&sortdir=desc
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
+[issue]: https://github.com/wycats/handlebars.js/issues/new
+[jsfiddle]: http://l.kde.cc/hbs-bug
