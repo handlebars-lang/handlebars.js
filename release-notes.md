@@ -2,7 +2,41 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v1.3.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.1...master)
+
+## v2.0.0-alpha.1 - February 10th, 2014
+- [#182](https://github.com/wycats/handlebars.js/pull/182) - Allow passing hash parameters to partials ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#392](https://github.com/wycats/handlebars.js/pull/392) - Access to root context in partials and helpers ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#472](https://github.com/wycats/handlebars.js/issues/472) - Helpers cannot have decimal parameters ([@kayleg](https://api.github.com/users/kayleg))
+- [#569](https://github.com/wycats/handlebars.js/pull/569) - Unable to lookup array values using @index ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#491](https://github.com/wycats/handlebars.js/pull/491) - For nested helpers: get the @ variables of the outer helper from the inner one ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#669](https://github.com/wycats/handlebars.js/issues/669) - Ability to unregister a helper ([@dbachrach](https://api.github.com/users/dbachrach))
+- [#730](https://github.com/wycats/handlebars.js/pull/730) - Raw block helpers ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#634](https://github.com/wycats/handlebars.js/pull/634) - It would be great to have the helper name passed to `blockHelperMissing` ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#729](https://github.com/wycats/handlebars.js/pull/729) - Convert template spec to object literal ([@kpdecker](https://api.github.com/users/kpdecker))
+
+- [#658](https://github.com/wycats/handlebars.js/issues/658) - Depthed helpers do not work after an upgrade from 1.0.0 ([@xibxor](https://api.github.com/users/xibxor))
+- [#671](https://github.com/wycats/handlebars.js/issues/671) - Crashes on no-parameter {{#each}} ([@stepancheg](https://api.github.com/users/stepancheg))
+- [#689](https://github.com/wycats/handlebars.js/issues/689) - broken template precompilation ([@AAS](https://api.github.com/users/AAS))
+- [#698](https://github.com/wycats/handlebars.js/pull/698) - Fix parser generation under windows ([@osiris43](https://api.github.com/users/osiris43))
+- [#699](https://github.com/wycats/handlebars.js/issues/699) - @DATA not compiles to invalid JS in stringParams mode ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#705](https://github.com/wycats/handlebars.js/issues/705) - 1.3.0 can not be wrapped in an IIFE ([@craigteegarden](https://api.github.com/users/craigteegarden))
+- [#706](https://github.com/wycats/handlebars.js/pull/706) - README: Use with helper instead of relying on blockHelperMissing ([@scottgonzalez](https://api.github.com/users/scottgonzalez))
+
+- [#700](https://github.com/wycats/handlebars.js/pull/700) - Remove redundant conditions ([@blakeembrey](https://api.github.com/users/blakeembrey))
+- [#704](https://github.com/wycats/handlebars.js/pull/704) - JavaScript Compiler Cleanup ([@blakeembrey](https://api.github.com/users/blakeembrey))
+
+Compatibility notes:
+- `helperMissing` helper no longer has the indexed name argument. Helper name is now available via `options.name`.
+- Precompiler output has changed, which breaks compatibility with prior versions of the runtime and precompiled output.
+- `JavaScriptCompiler.compilerInfo` now returns generic objects rather than javascript source.
+- AST changes
+  - INTEGER -> NUMBER
+  - Additional PartialNode hash parameter
+  - New RawBlockNode type
+- Data frames now have a `_parent` field. This is internal but is enumerable for performance/compatability reasons.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v1.3.0...v2.0.0-alpha.1)
 
 ## v1.3.0 - January 1st, 2014
 - [#690](https://github.com/wycats/handlebars.js/pull/690) - Added support for subexpressions ([@machty](https://api.github.com/users/machty))
