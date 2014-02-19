@@ -50,11 +50,41 @@
     <script src="/tmp/tests.js"></script>
     <script>
       onload = function(){
+        mocha.globals(['mochaResults'])
         // The test harness leaks under FF. We should have decent global leak coverage from other tests
         if (!navigator.userAgent.match(/Firefox\/([\d.]+)/)) {
           mocha.checkLeaks();
         }
-        mocha.run();
+        var runner = mocha.run();
+
+        //Reporting for saucelabs
+        var failedTests = [];
+        runner.on('end', function(){
+          window.mochaResults = runner.stats;
+          window.mochaResults.reports = failedTests;
+        });
+
+        runner.on('fail', logFailure);
+
+        function logFailure(test, err){
+
+          var flattenTitles = function(test){
+            var titles = [];
+            while (test.parent.title){
+              titles.push(test.parent.title);
+              test = test.parent;
+            }
+            return titles.reverse();
+          };
+
+          failedTests.push({
+            name: test.title,
+            result: false,
+            message: err.message,
+            stack: err.stack,
+            titles: flattenTitles(test)
+          });
+        };
       };
     </script>
   </head>
