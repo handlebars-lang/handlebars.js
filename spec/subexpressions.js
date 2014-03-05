@@ -29,6 +29,22 @@ describe('subexpressions', function() {
     shouldCompileTo(string, [context, helpers], "val is true");
   });
 
+  it("mixed paths and helpers", function() {
+    var string   = '{{blog baz.bat (equal a b) baz.bar}}';
+
+    var context  = { bar: "LOL", baz: {bat: 'foo!', bar: 'bar!'} };
+    var helpers  = {
+      blog: function(val, that, theOther) {
+        console.log(arguments);
+        return "val is " + val + ', ' + that + ' and ' + theOther;
+      },
+      equal: function(x, y) {
+        return x === y;
+      }
+    };
+    shouldCompileTo(string, [context, helpers], "val is foo!, true and bar!");
+  });
+
   it("supports much nesting", function() {
     var string   = '{{blog (equal (equal true true) true)}}';
 
