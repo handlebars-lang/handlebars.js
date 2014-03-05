@@ -147,7 +147,7 @@ describe('string params mode', function() {
     var template = CompilerContext.compile('{{#with content}}{{#view}}{{firstName}} {{lastName}}{{/view}}{{/with}}', {stringParams: true});
 
     var helpers  = {
-      with: function(options) {
+      'with': function(options) {
         return "WITH";
       },
       view: function() {
