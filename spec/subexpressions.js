@@ -89,6 +89,23 @@ describe('subexpressions', function() {
     shouldCompileTo(string, [{}, helpers], "val is true");
   });
 
+  it("multiple subexpressions in a hash", function() {
+    var string = '{{input aria-label=(t "Name") placeholder=(t "Example User")}}';
+
+    var helpers = {
+      input: function(options) {
+        var hash        = options.hash;
+        var ariaLabel   = Handlebars.Utils.escapeExpression(hash['aria-label']);
+        var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
+        return new Handlebars.SafeString('<input aria-label="' + ariaLabel + '" placeholder="' + placeholder + '" />');
+      },
+      t: function(defaultString) {
+        return new Handlebars.SafeString(defaultString);
+      }
+    }
+    shouldCompileTo(string, [{}, helpers], '<input aria-label="Name" placeholder="Example User" />');
+  });
+
   it("in string params mode,", function() {
     var template = CompilerContext.compile('{{snog (blorg foo x=y) yeah a=b}}', {stringParams: true});
 
