@@ -321,7 +321,7 @@ Handlebars has been designed to work in any ECMAScript 3 environment. This inclu
 - IE 6+
 
 Older versions and other runtimes are likely to work but have not been formally
-tested.
+tested. The compiler requires `JSON.stringify` to be implemented natively or via a polyfill. If using the precompiler this is not necessary.
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/handlebars.svg)](https://saucelabs.com/u/handlebars)
 
