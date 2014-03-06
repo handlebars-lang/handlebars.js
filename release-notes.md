@@ -2,7 +2,21 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.2...master)
+
+## v2.0.0-alpha.2 - March 6th, 2014
+- [#756](https://github.com/wycats/handlebars.js/pull/756) - fix bug in IE<=8 (no Array::map), closes #751 ([@jenseng](https://api.github.com/users/jenseng))
+- [#749](https://github.com/wycats/handlebars.js/pull/749) - properly handle multiple subexpressions in the same hash, fixes #748 ([@jenseng](https://api.github.com/users/jenseng))
+- [#743](https://github.com/wycats/handlebars.js/issues/743) - subexpression confusion/problem? ([@waynedpj](https://api.github.com/users/waynedpj))
+- [#746](https://github.com/wycats/handlebars.js/issues/746) - [CLI] support `handlebars --version` ([@apfelbox](https://api.github.com/users/apfelbox))
+- [#747](https://github.com/wycats/handlebars.js/pull/747) - updated grunt-saucelabs, failing tests revealed ([@Jonahss](https://api.github.com/users/Jonahss))
+- Make JSON a requirement for the compiler. - 058c0fb
+- Temporarily kill the AWS publish CI step - 8347ee2
+
+Compatibility notes:
+- A JSON polyfill is required to run the compiler under IE8 and below. It's recommended that the precompiler be used in lieu of running the compiler on these legacy environments.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.1...v2.0.0-alpha.2)
 
 ## v2.0.0-alpha.1 - February 10th, 2014
 - [#182](https://github.com/wycats/handlebars.js/pull/182) - Allow passing hash parameters to partials ([@kpdecker](https://api.github.com/users/kpdecker))
