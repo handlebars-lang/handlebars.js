@@ -75,10 +75,19 @@ var optimist = require('optimist')
         'type': 'boolean',
         'description': 'Removes the BOM (Byte Order Mark) from the beginning of the templates.',
         'alias': 'bom'
+      },
+      'v': {
+        'type': 'boolean',
+        'description': 'Prints the current compiler version',
+        'alias': 'version'
       }
     })
 
     .check(function(argv) {
+      if (argv.version) {
+        return;
+      }
+
       var template = [0];
       if (!argv._.length) {
         throw 'Must define at least one template or directory.';
@@ -108,6 +117,10 @@ var fs = require('fs'),
 
 var argv = optimist.argv,
     template = argv._[0];
+
+if (argv.version) {
+  return console.log(handlebars.VERSION);
+}
 
 // Convert the known list into a hash
 var known = {};
