@@ -35,7 +35,6 @@ describe('subexpressions', function() {
     var context  = { bar: "LOL", baz: {bat: 'foo!', bar: 'bar!'} };
     var helpers  = {
       blog: function(val, that, theOther) {
-        console.log(arguments);
         return "val is " + val + ', ' + that + ' and ' + theOther;
       },
       equal: function(x, y) {
