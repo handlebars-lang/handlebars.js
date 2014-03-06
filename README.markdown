@@ -65,11 +65,11 @@ embedded in them, as well as the text for a link:
 
 ```js
 Handlebars.registerHelper('link_to', function() {
-  return new Handlebars.SafeString("<a href='" + this.url + "'>" + this.body + "</a>");
+  return new Handlebars.SafeString("<a href='" + Handlebars.Utils.escapeExpression(this.url) + "'>" + Handlebars.Utils.escapeExpression(this.body) + "</a>");
 });
 
 var context = { posts: [{url: "/hello-world", body: "Hello World!"}] };
-var source = "<ul>{{#posts}}<li>{{{link_to}}}</li>{{/posts}}</ul>"
+var source = "<ul>{{#posts}}<li>{{link_to}}</li>{{/posts}}</ul>"
 
 var template = Handlebars.compile(source);
 template(context);
