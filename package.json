@@ -17,6 +17,7 @@
   "author": "Yehuda Katz",
   "license": "MIT",
   "readmeFilename": "README.md",
+  "browser": "./lib/handlebars.js",
   "engines": {
     "node": ">=0.4.7"
   },
