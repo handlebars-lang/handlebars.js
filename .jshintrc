@@ -23,7 +23,7 @@
     ],
 
     "node" : true,
-    "browser" : true,
+    "browser" : false,
     "esnext": true,
 
     "boss" : true,
