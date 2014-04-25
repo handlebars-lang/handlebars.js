@@ -52,6 +52,16 @@ module.exports = function(grunt) {
           dest: 'dist/'
         }]
       },
+      htmlbars: {
+        type: 'global',
+        export: 'Htmlbars',
+        files: [{
+          cwd: 'lib/',
+          expand: true,
+          src: ['htmlbars*.js'],
+          dest: 'dist/'
+        }]
+      },
 
       amd: {
         type: 'amd',
@@ -85,6 +95,12 @@ module.exports = function(grunt) {
           out: "dist/handlebars.amd.js"
         }
       },
+      html_dist: {
+        options: {
+          name: "htmlbars",
+          out: "dist/htmlbars.amd.js"
+        }
+      },
       runtime: {
         options: {
           name: "handlebars.runtime",
@@ -103,7 +119,7 @@ module.exports = function(grunt) {
         files: [{
           cwd: 'dist/',
           expand: true,
-          src: ['handlebars*.js', '!*.min.js'],
+          src: ['handlebars*.js', 'htmlbars*.js', '!*.min.js'],
           dest: 'dist/',
           rename: function(dest, src) {
             return dest + src.replace(/\.js$/, '.min.js');
@@ -171,7 +187,7 @@ module.exports = function(grunt) {
 
   this.registerTask('amd', ['packager:amd', 'requirejs']);
   this.registerTask('node', ['packager:cjs']);
-  this.registerTask('globals', ['packager:global']);
+  this.registerTask('globals', ['packager:global', 'packager:htmlbars']);
   this.registerTask('tests', ['concat:tests']);
 
   this.registerTask('release', 'Build final packages', ['amd', 'jshint', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
