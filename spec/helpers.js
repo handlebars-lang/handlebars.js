@@ -291,6 +291,7 @@ describe('helpers', function() {
       shouldCompileTo(string, [hash, helpers], "Message: Goodbye cruel world", "block helpers with multiple params");
     });
   });
+
   describe('hash', function() {
     it("helpers can take an optional hash", function() {
       var template = CompilerContext.compile('{{goodbye cruel="CRUEL" world="WORLD" times=12}}');
@@ -473,6 +474,9 @@ describe('helpers', function() {
       blockHelperMissing: function() {
         return 'missing: ' + arguments[arguments.length-1].name;
       },
+      helperMissing: function() {
+        return 'helper missing: ' + arguments[arguments.length-1].name;
+      },
       helper: function() {
         return 'ran: ' + arguments[arguments.length-1].name;
       }
@@ -501,6 +505,10 @@ describe('helpers', function() {
 
     it('should include full id', function() {
       shouldCompileTo('{{#foo.helper}}{{/foo.helper}}', [{foo: {}}, helpers], 'missing: foo.helper');
+    });
+
+    it('should include full id if a hash is passed', function() {
+      shouldCompileTo('{{#foo.helper bar=baz}}{{/foo.helper}}', [{foo: {}}, helpers], 'helper missing: foo.helper');
     });
   });
 
