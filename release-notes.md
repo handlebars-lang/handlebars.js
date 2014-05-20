@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.3...master)
+
+## v2.0.0-alpha.3 - May 19th, 2014
+- [#797](https://github.com/wycats/handlebars.js/pull/797) - Pass full helper ID to helperMissing when options are provided ([@tomdale](https://api.github.com/users/tomdale))
+- [#793](https://github.com/wycats/handlebars.js/pull/793) - Ensure isHelper is coerced to a boolean ([@mmun](https://api.github.com/users/mmun))
+- Refactor template init logic - 085e5e1
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.2...v2.0.0-alpha.3)
 
 ## v2.0.0-alpha.2 - March 6th, 2014
 - [#756](https://github.com/wycats/handlebars.js/pull/756) - fix bug in IE<=8 (no Array::map), closes #751 ([@jenseng](https://api.github.com/users/jenseng))
