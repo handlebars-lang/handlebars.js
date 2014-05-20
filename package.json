@@ -1,7 +1,7 @@
 {
   "name": "handlebars",
   "barename": "handlebars",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
   "homepage": "http://www.handlebarsjs.com/",
   "keywords": [
