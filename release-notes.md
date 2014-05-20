@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.4...master)
+
+## v2.0.0-alpha.4 - May 19th, 2014
+- Expose setup wrappers for compiled templates - 3638874
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.4)
 
 ## v2.0.0-alpha.3 - May 19th, 2014
 - [#797](https://github.com/wycats/handlebars.js/pull/797) - Pass full helper ID to helperMissing when options are provided ([@tomdale](https://api.github.com/users/tomdale))
