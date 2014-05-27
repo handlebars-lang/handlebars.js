@@ -1,4 +1,4 @@
-/*global CompilerContext, shouldCompileTo, compileWithPartials, handlebarsEnv */
+/*global CompilerContext, shouldCompileTo, shouldThrow, compileWithPartials, handlebarsEnv */
 describe('builtin helpers', function() {
   describe('#if', function() {
     it("if", function() {
@@ -182,9 +182,10 @@ describe('builtin helpers', function() {
     });
 
     it("each on implicit context", function() {
-      var string   = "{{#each}}{{text}}! {{/each}}cruel world!";
-      var hash     = [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}];
-      shouldCompileTo(string, [hash], "goodbye! Goodbye! GOODBYE! cruel world!");
+      shouldThrow(function() {
+        var template = CompilerContext.compile("{{#each}}{{text}}! {{/each}}cruel world!");
+        template({});
+      }, handlebarsEnv.Exception, 'Must pass iterator to #each');
     });
   });
 
