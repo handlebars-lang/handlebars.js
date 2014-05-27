@@ -59,6 +59,24 @@ describe('subexpressions', function() {
     shouldCompileTo(string, [context, helpers], "val is true");
   });
 
+  it('GH-800 : Complex subexpressions', function() {
+    var context  = {a: 'a', b:'b', c:{c:'c'}, d:'d', e: {e: 'e'}};
+    var helpers  = {
+      dash: function(a, b) {
+        return a + "-" + b;
+      },
+      concat: function(a, b) {
+        return a + b;
+      }
+    };
+
+    shouldCompileTo('{{dash "abc" (concat a b)}}', [context, helpers], 'abc-ab');
+    shouldCompileTo('{{dash d (concat a b)}}', [context, helpers], 'd-ab');
+    shouldCompileTo('{{dash c.c (concat a b)}}', [context, helpers], 'c-ab');
+    shouldCompileTo('{{dash (concat a b) c.c}}', [context, helpers], 'ab-c');
+    shouldCompileTo('{{dash (concat a e.e) c.c}}', [context, helpers], 'ae-c');
+  });
+
   it("provides each nested helper invocation its own options hash", function() {
     var string = '{{equal (equal true true) true}}';
 
