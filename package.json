@@ -55,6 +55,9 @@
   "bin": {
     "handlebars": "bin/handlebars"
   },
+  "publishConfig": {
+    "tag": "prerelease"
+  },
   "scripts": {
     "test": "grunt"
   }
