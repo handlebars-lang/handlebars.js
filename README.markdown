@@ -459,7 +459,7 @@ After this point the handlebars site needs to be updated to point to the new ver
 
 License
 -------
-Handlebars.js is released under the MIT license.
+Handlebars.js is released under the [MIT License (Expat)](https://tldrlegal.com/l/mit).
 
 [bower-repo]: https://github.com/components/handlebars.js
 [builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/bucket-listing.html?sort=lastmod&sortdir=desc
