@@ -12,11 +12,11 @@
 1. How can I include script tags in my template?
   If loading the template via an inlined `<script type="text/x-handlebars">` tag then you may need to break up the script tag with an empty comment to avoid browser parser errors:
 
-```
+  ```
   <script type="text/x-handlebars">
     foo
     <scr{{!}}ipt src="bar"></scr{{!}}ipt>
   </script>
-```
+  ```
 
   It's generally recommended that templates are served through external, precompiled, files, which do not suffer from this issue.
