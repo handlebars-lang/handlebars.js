@@ -455,7 +455,7 @@ gem build handlebars-source.gemspec
 gem push handlebars-source-*.gem
 ```
 
-After this point the handlebars site needs to be updated to point to the new version numbers. The jsfiddle bitly link should be updated to point to the most recent distribution.
+After this point the handlebars site needs to be updated to point to the new version numbers. The jsfiddle link should be updated to point to the most recent distribution for all instances in our documentation.
 
 License
 -------
@@ -466,4 +466,4 @@ Handlebars.js is released under the MIT license.
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
 [issue]: https://github.com/wycats/handlebars.js/issues/new
-[jsfiddle]: http://l.kde.cc/hbs-bug
+[jsfiddle]: http://jsfiddle.net/9D88g/11/
