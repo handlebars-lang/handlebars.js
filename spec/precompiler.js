@@ -1,14 +1,14 @@
 /*global shouldThrow */
 
-// NOP Under non-node environments
-if (typeof process === 'undefined') {
-  return;
-}
-
-var Handlebars = require('../lib'),
-    Precompiler = require('../lib/precompiler');
-
 describe('precompiler', function() {
+  // NOP Under non-node environments
+  if (typeof process === 'undefined') {
+    return;
+  }
+
+  var Handlebars = require('../lib'),
+      Precompiler = require('../lib/precompiler');
+
   var log,
       logFunction;
 
