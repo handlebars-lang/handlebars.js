@@ -92,4 +92,4 @@ var optimist = require('optimist')
 var argv = optimist.argv;
 argv.templates = argv._;
 delete argv._;
-return require('../lib/handlebars/precompiler')(argv);
+return require('../lib/precompiler').cli(argv);
