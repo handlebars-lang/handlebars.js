@@ -22,7 +22,7 @@ var optimist = require('optimist')
         'type': 'string',
         'description': 'Path to handlebar.js (only valid for amd-style)',
         'alias': 'handlebarPath',
-		    'default': ''
+  	    'default': ''
       },
       'k': {
         'type': 'string',
@@ -87,149 +87,9 @@ var optimist = require('optimist')
       if (argv.version) {
         return;
       }
-
-      var template = [0];
-      if (!argv._.length) {
-        throw 'Must define at least one template or directory.';
-      }
-
-      argv._.forEach(function(template) {
-        try {
-          fs.statSync(template);
-        } catch (err) {
-          throw 'Unable to open template file "' + template + '"';
-        }
-      });
-    })
-    .check(function(argv) {
-      if (argv.simple && argv.min) {
-        throw 'Unable to minimze simple output';
-      }
-      if (argv.simple && (argv._.length !== 1 || fs.statSync(argv._[0]).isDirectory())) {
-        throw 'Unable to output multiple templates in simple mode';
-      }
     });
 
-var fs = require('fs'),
-    handlebars = require('../lib'),
-    basename = require('path').basename,
-    uglify = require('uglify-js');
-
-var argv = optimist.argv,
-    template = argv._[0];
-
-if (argv.version) {
-  return console.log(handlebars.VERSION);
-}
-
-// Convert the known list into a hash
-var known = {};
-if (argv.known && !Array.isArray(argv.known)) {
-  argv.known = [argv.known];
-}
-if (argv.known) {
-  for (var i = 0, len = argv.known.length; i < len; i++) {
-    known[argv.known[i]] = true;
-  }
-}
-
-// Build file extension pattern
-var extension = argv.extension.replace(/[\\^$*+?.():=!|{}\-\[\]]/g, function(arg) { return '\\' + arg; });
-extension = new RegExp('\\.' + extension + '$');
-
-var output = [];
-if (!argv.simple) {
-  if (argv.amd) {
-    output.push('define([\'' + argv.handlebarPath + 'handlebars.runtime\'], function(Handlebars) {\n  Handlebars = Handlebars["default"];');
-  } else if (argv.commonjs) {
-    output.push('var Handlebars = require("' + argv.commonjs + '");');
-  } else {
-    output.push('(function() {\n');
-  }
-  output.push('  var template = Handlebars.template, templates = ');
-  output.push(argv.namespace);
-  output.push(' = ');
-  output.push(argv.namespace);
-  output.push(' || {};\n');
-}
-function processTemplate(template, root, explicit) {
-  var path = template,
-      stat = fs.statSync(path);
-  if (stat.isDirectory()) {
-    fs.readdirSync(template).map(function(file) {
-      var path = template + '/' + file;
-
-      if (extension.test(path) || fs.statSync(path).isDirectory()) {
-        processTemplate(path, root || template);
-      }
-    });
-  } else if (explicit || extension.test(path)) {
-    var data = fs.readFileSync(path, 'utf8');
-
-    if (argv.bom && data.indexOf('\uFEFF') === 0) {
-      data = data.substring(1);
-    }
-
-    var options = {
-      knownHelpers: known,
-      knownHelpersOnly: argv.o
-    };
-
-    if (argv.data) {
-      options.data = true;
-    }
-
-    // Clean the template name
-    if (!root) {
-      template = basename(template);
-    } else if (template.indexOf(root) === 0) {
-      template = template.substring(root.length+1);
-    }
-    template = template.replace(extension, '');
-
-    if (argv.simple) {
-      output.push(handlebars.precompile(data, options) + '\n');
-    } else if (argv.partial) {
-      if(argv.amd && (argv._.length == 1 && !fs.statSync(argv._[0]).isDirectory())) {
-        output.push('return ');
-      }
-      output.push('Handlebars.partials[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
-    } else {
-      if(argv.amd && (argv._.length == 1 && !fs.statSync(argv._[0]).isDirectory())) {
-        output.push('return ');
-      }
-      output.push('templates[\'' + template + '\'] = template(' + handlebars.precompile(data, options) + ');\n');
-    }
-  }
-}
-
-argv._.forEach(function(template) {
-  processTemplate(template, argv.root, true);
-});
-
-// Output the content
-if (!argv.simple) {
-  if (argv.amd) {
-    if(argv._.length > 1 || (argv._.length == 1 && fs.statSync(argv._[0]).isDirectory())) {
-      if(argv.partial){
-        output.push('return Handlebars.partials;\n');
-      } else {
-        output.push('return templates;\n');
-      }
-    }
-    output.push('});');
-  } else if (!argv.commonjs) {
-    output.push('})();');
-  }
-}
-output = output.join('');
-
-if (argv.min) {
-  output = uglify.minify(output, {fromString: true}).code;
-}
-
-if (argv.output) {
-  fs.writeFileSync(argv.output, output, 'utf8');
-} else {
-  console.log(output);
-}
+var argv = optimist.argv;
+argv.templates = argv._;
+delete argv._;
+return require('../lib/handlebars/precompiler')(argv);
