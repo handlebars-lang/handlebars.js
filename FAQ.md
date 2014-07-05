@@ -12,7 +12,7 @@
 1. How can I include script tags in my template?
   If loading the template via an inlined `<script type="text/x-handlebars">` tag then you may need to break up the script tag with an empty comment to avoid browser parser errors:
 
-  ```
+  ```html
   <script type="text/x-handlebars">
     foo
     <scr{{!}}ipt src="bar"></scr{{!}}ipt>
@@ -20,3 +20,18 @@
   ```
 
   It's generally recommended that templates are served through external, precompiled, files, which do not suffer from this issue.
+
+1. Why are my precompiled scripts throwing exceptions?
+  When using the precompiler, it's important that a supporting version of the Handlebars runtime be loaded on the target page. In version 1.x there were rudimentary checks to compare the version but these did not always work. This is fixed under 2.x but the version checking does not work between these two versions. If you see unexpected errors such as `undefined is not a function` or similar, please verify that the same version is being used for both the precompiler and the client. This can be checked via:
+
+  ```sh
+  handlebars --version
+  ```
+  If using the integrated precompiler and
+
+  ```javascript
+  console.log(Handlebars.VERSION);
+  ```
+  On the client side.
+
+  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/README.markdown#reporting-issues).
