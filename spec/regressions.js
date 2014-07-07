@@ -118,6 +118,10 @@ describe('Regressions', function() {
     }, Error, 'You must pass a string or Handlebars AST to Handlebars.precompile. You passed null');
   });
 
+  it('GH-731: zero context rendering', function() {
+    shouldCompileTo('{{#foo}} This is {{bar}} ~ {{/foo}}', {foo: 0, bar: 'OK'}, ' This is  ~ ');
+  });
+
   if (Handlebars.AST) {
     it("can pass through an already-compiled AST via compile/precompile", function() {
       equal(Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
