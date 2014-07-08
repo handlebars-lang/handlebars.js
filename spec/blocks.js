@@ -67,6 +67,24 @@ describe('blocks', function() {
       shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is false.");
     });
 
+    it("inverted section with empty string", function() {
+      var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+      var hash = {goodbyes: ""};
+      shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is empty string.");
+    });
+
+    it("inverted section with value NaN", function() {
+      var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+      var hash = {goodbyes: NaN};
+      shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is NaN.");
+    });
+
+    it("inverted section with value 0", function() {
+      var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
+      var hash = {goodbyes: 0};
+      shouldCompileTo(string, hash, "Right On!", "Inverted section rendered when value is 0.");
+    });
+
     it("inverted section with empty set", function() {
       var string = "{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}";
       var hash = {goodbyes: []};
