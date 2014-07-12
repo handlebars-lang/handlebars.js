@@ -158,6 +158,22 @@ describe('helpers', function() {
     shouldCompileTo(messageString, [rootMessage, { list: list }], "<p>Nobody&#x27;s here</p>", "the context of an inverse is the parent of the block");
   });
 
+  it('pathed lambas with parameters', function() {
+    var hash = {
+      helper: function() {
+        return 'winning';
+      }
+    };
+    hash.hash = hash;
+    var helpers = {
+      './helper': function() {
+        return 'fail';
+      }
+    };
+    shouldCompileTo('{{./helper 1}}', [hash, helpers], 'winning');
+    shouldCompileTo('{{hash/helper 1}}', [hash, helpers], 'winning');
+  });
+
   describe("helpers hash", function() {
     it("providing a helpers hash", function() {
       shouldCompileTo("Goodbye {{cruel}} {{world}}!", [{cruel: "cruel"}, {world: function() { return "world"; }}], "Goodbye cruel world!",
