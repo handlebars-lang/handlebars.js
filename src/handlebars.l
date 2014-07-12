@@ -28,7 +28,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 
 %%
 
-[^\x00]*?/("{{")                 {
+[^\x00\n]*?\n?/("{{")           {
                                    if(yytext.slice(-2) === "\\\\") {
                                      strip(0,1);
                                      this.begin("mu");
@@ -41,7 +41,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                    if(yytext) return 'CONTENT';
                                  }
 
-[^\x00]+                         return 'CONTENT';
+([^\x00\n]+\n?|\n)               return 'CONTENT';
 
 // marks CONTENT up to the next mustache or escaped mustache
 <emu>[^\x00]{2,}?/("{{"|"\\{{"|"\\\\{{"|<<EOF>>) {

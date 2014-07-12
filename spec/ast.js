@@ -251,22 +251,22 @@ describe('ast', function() {
     });
 
     it('gets line numbers correct when newlines appear', function(){
-      var secondContentNode = statements[2];
-      testColumns(secondContentNode, 1, 2, 21, 8);
+      testColumns(statements[2], 1, 2, 21, 0);
+      testColumns(statements[3], 2, 2, 0, 8);
     });
 
     it('gets MustacheNode line numbers correct across newlines', function(){
-      var secondMustacheNode = statements[3];
+      var secondMustacheNode = statements[4];
       testColumns(secondMustacheNode, 2, 2, 8, 22);
      });
 
      it('gets the block helper information correct', function(){
-       var blockHelperNode = statements[5];
+       var blockHelperNode = statements[7];
        testColumns(blockHelperNode, 3, 7, 8, 23);
      });
 
      it('correctly records the line numbers of an inverse of a block helper', function(){
-       var blockHelperNode = statements[5],
+       var blockHelperNode = statements[7],
            inverse = blockHelperNode.inverse;
 
        testColumns(inverse, 5, 6, 13, 0);
