@@ -122,6 +122,10 @@ describe('Regressions', function() {
     shouldCompileTo('{{#foo}} This is {{bar}} ~ {{/foo}}', {foo: 0, bar: 'OK'}, ' This is  ~ ');
   });
 
+  it('GH-820: zero pathed rendering', function() {
+    shouldCompileTo('{{foo.bar}}', {foo: 0}, '');
+  });
+
   if (Handlebars.AST) {
     it("can pass through an already-compiled AST via compile/precompile", function() {
       equal(Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
