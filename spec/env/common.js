@@ -1,3 +1,4 @@
+/*global CompilerContext, compileWithPartials, shouldCompileToWithPartials */
 global.shouldCompileTo = function(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };
@@ -10,15 +11,19 @@ global.shouldCompileToWithPartials = function(string, hashOrArray, partials, exp
 };
 
 global.compileWithPartials = function(string, hashOrArray, partials) {
-  var template = CompilerContext[partials ? 'compileWithPartial' : 'compile'](string), ary;
+  var template,
+      ary,
+      options;
   if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
     ary = [];
     ary.push(hashOrArray[0]);
-    ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
+    ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2], compat: hashOrArray[3] });
+    options = {compat: hashOrArray[3]};
   } else {
     ary = [hashOrArray];
   }
 
+  template = CompilerContext[partials ? 'compileWithPartial' : 'compile'](string, options);
   return template.apply(this, ary);
 };
 
