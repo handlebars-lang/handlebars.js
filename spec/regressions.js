@@ -128,7 +128,7 @@ describe('Regressions', function() {
 
   if (Handlebars.AST) {
     it("can pass through an already-compiled AST via compile/precompile", function() {
-      equal(Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
+      equal(Handlebars.compile(new Handlebars.AST.ProgramNode(true, [ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
     });
 
     it("can pass through an empty string", function() {

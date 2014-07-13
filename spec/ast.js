@@ -86,7 +86,7 @@ describe('ast', function() {
       var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
       var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
       var block = new handlebarsEnv.AST.BlockNode(mustacheNode,
-                                                  {strip: {}}, {strip: {}},
+                                                  {statements: [], strip: {}}, {statements: [], strip: {}},
                                                   {
                                                     strip: {},
                                                     path: {original: 'foo'}
@@ -201,12 +201,12 @@ describe('ast', function() {
 
     describe("storing location info", function(){
       it("stores when `inverse` argument isn't passed", function(){
-        var pn = new handlebarsEnv.AST.ProgramNode([], LOCATION_INFO);
+        var pn = new handlebarsEnv.AST.ProgramNode(false, [], LOCATION_INFO);
         testLocationInfoStorage(pn);
       });
 
       it("stores when `inverse` or `stripInverse` arguments passed", function(){
-        var pn = new handlebarsEnv.AST.ProgramNode([], {strip: {}}, undefined, LOCATION_INFO);
+        var pn = new handlebarsEnv.AST.ProgramNode(false, [], {strip: {}}, undefined, LOCATION_INFO);
         testLocationInfoStorage(pn);
 
         var clone = {
@@ -216,7 +216,7 @@ describe('ast', function() {
           firstColumn: 0,
           lastColumn: 0
         };
-        pn = new handlebarsEnv.AST.ProgramNode([], {strip: {}}, [ clone ], LOCATION_INFO);
+        pn = new handlebarsEnv.AST.ProgramNode(false, [], {strip: {}}, [ clone ], LOCATION_INFO);
         testLocationInfoStorage(pn);
 
         // Assert that the newly created ProgramNode has the same location

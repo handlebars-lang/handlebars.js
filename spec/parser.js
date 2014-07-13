@@ -184,7 +184,7 @@ describe('parser', function() {
 
   describe('externally compiled AST', function() {
     it('can pass through an already-compiled AST', function() {
-      equals(ast_for(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")])), "CONTENT[ \'Hello\' ]\n");
+      equals(ast_for(new Handlebars.AST.ProgramNode(false, [ new Handlebars.AST.ContentNode("Hello")])), "CONTENT[ \'Hello\' ]\n");
     });
   });
 });
