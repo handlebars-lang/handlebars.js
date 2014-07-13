@@ -272,5 +272,153 @@ describe('ast', function() {
        testColumns(inverse, 5, 6, 13, 0);
      });
   });
+
+  describe('standalone flags', function(){
+    describe('mustache', function() {
+      it('does not mark mustaches as standalone', function() {
+        var ast = Handlebars.parse('  {{comment}} ');
+        equals(ast.statements[0].omit, undefined);
+        equals(ast.statements[2].omit, undefined);
+      });
+    });
+    describe('blocks', function() {
+      it('marks block mustaches as standalone', function() {
+        var ast = Handlebars.parse(' {{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} '),
+            block = ast.statements[1];
+
+        equals(ast.statements[0].omit, true);
+
+        equals(block.program.statements[0].omit, true);
+        equals(block.program.statements[1].string, 'foo\n');
+        equals(block.program.statements[2].omit, true);
+
+        equals(block.inverse.statements[0].omit, true);
+        equals(block.inverse.statements[1].string, '  bar \n');
+        equals(block.inverse.statements[2].omit, true);
+
+        equals(ast.statements[2].omit, true);
+      });
+      it('marks initial block mustaches as standalone', function() {
+        var ast = Handlebars.parse('{{# comment}} \nfoo\n {{/comment}}'),
+            block = ast.statements[0];
+
+        equals(block.program.statements[0].omit, true);
+        equals(block.program.statements[1].string, 'foo\n');
+        equals(block.program.statements[2].omit, true);
+      });
+      it('marks mustaches with children as standalone', function() {
+        var ast = Handlebars.parse('{{# comment}} \n{{foo}}\n {{/comment}}'),
+            block = ast.statements[0];
+
+        equals(block.program.statements[0].omit, true);
+        equals(block.program.statements[1].id.original, 'foo');
+        equals(block.program.statements[2].omit, undefined);
+        equals(block.program.statements[3].omit, true);
+      });
+      it('marks nested block mustaches as standalone', function() {
+        var ast = Handlebars.parse('{{#foo}} \n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} \n{{/foo}}'),
+            statements = ast.statements[0].program.statements,
+            block = statements[1];
+
+        equals(statements[0].omit, true);
+
+        equals(block.program.statements[0].omit, true);
+        equals(block.program.statements[1].string, 'foo\n');
+        equals(block.program.statements[2].omit, true);
+
+        equals(block.inverse.statements[0].omit, true);
+        equals(block.inverse.statements[1].string, '  bar \n');
+        equals(block.inverse.statements[2].omit, true);
+
+        equals(statements[0].omit, true);
+      });
+      it('does not mark nested block mustaches as standalone', function() {
+        var ast = Handlebars.parse('{{#foo}} {{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} {{/foo}}'),
+            statements = ast.statements[0].program.statements,
+            block = statements[1];
+
+        equals(statements[0].omit, undefined);
+
+        equals(block.program.statements[0].omit, undefined);
+        equals(block.program.statements[1].string, 'foo\n');
+        equals(block.program.statements[2].omit, true);
+
+        equals(block.inverse.statements[0].omit, true);
+        equals(block.inverse.statements[1].string, '  bar \n');
+        equals(block.inverse.statements[2].omit, undefined);
+
+        equals(statements[0].omit, undefined);
+      });
+      it('does not mark nested initial block mustaches as standalone', function() {
+        var ast = Handlebars.parse('{{#foo}}{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}}{{/foo}}'),
+            statements = ast.statements[0].program.statements,
+            block = statements[0];
+
+        equals(block.program.statements[0].omit, undefined);
+        equals(block.program.statements[1].string, 'foo\n');
+        equals(block.program.statements[2].omit, true);
+
+        equals(block.inverse.statements[0].omit, true);
+        equals(block.inverse.statements[1].string, '  bar \n');
+        equals(block.inverse.statements[2].omit, undefined);
+
+        equals(statements[0].omit, undefined);
+      });
+
+      it('marks column 0 block mustaches as standalone', function() {
+        var ast = Handlebars.parse('test\n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} '),
+            block = ast.statements[1];
+
+        equals(ast.statements[0].omit, undefined);
+
+        equals(block.program.statements[0].omit, true);
+        equals(block.program.statements[1].string, 'foo\n');
+        equals(block.program.statements[2].omit, true);
+
+        equals(block.inverse.statements[0].omit, true);
+        equals(block.inverse.statements[1].string, '  bar \n');
+        equals(block.inverse.statements[2].omit, true);
+
+        equals(ast.statements[2].omit, true);
+      });
+    });
+    describe('partials', function() {
+      it('marks partial as standalone', function() {
+        var ast = Handlebars.parse('{{> partial }} ');
+        equals(ast.statements[1].omit, true);
+      });
+      it('marks indented partial as standalone', function() {
+        var ast = Handlebars.parse('  {{> partial }} ');
+        equals(ast.statements[0].omit, true);
+        equals(ast.statements[1].indent, '  ');
+        equals(ast.statements[2].omit, true);
+      });
+      it('marks those around content as not standalone', function() {
+        var ast = Handlebars.parse('a{{> partial }}');
+        equals(ast.statements[0].omit, undefined);
+
+        ast = Handlebars.parse('{{> partial }}a');
+        equals(ast.statements[1].omit, undefined);
+      });
+    });
+    describe('comments', function() {
+      it('marks comment as standalone', function() {
+        var ast = Handlebars.parse('{{! comment }} ');
+        equals(ast.statements[1].omit, true);
+      });
+      it('marks indented comment as standalone', function() {
+        var ast = Handlebars.parse('  {{! comment }} ');
+        equals(ast.statements[0].omit, true);
+        equals(ast.statements[2].omit, true);
+      });
+      it('marks those around content as not standalone', function() {
+        var ast = Handlebars.parse('a{{! comment }}');
+        equals(ast.statements[0].omit, undefined);
+
+        ast = Handlebars.parse('{{! comment }}a');
+        equals(ast.statements[1].omit, undefined);
+      });
+    });
+  });
 });
 
