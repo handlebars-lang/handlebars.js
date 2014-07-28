@@ -237,10 +237,10 @@ describe('Tokenizer', function() {
     shouldMatchTokens(result, ['OPEN_BLOCK', 'ID', 'CLOSE', 'CONTENT', 'OPEN_ENDBLOCK', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes inverse sections as "OPEN_INVERSE CLOSE"', function() {
-    shouldMatchTokens(tokenize("{{^}}"), ['OPEN_INVERSE', 'CLOSE']);
-    shouldMatchTokens(tokenize("{{else}}"), ['OPEN_INVERSE', 'CLOSE']);
-    shouldMatchTokens(tokenize("{{ else }}"), ['OPEN_INVERSE', 'CLOSE']);
+  it('tokenizes inverse sections as "INVERSE"', function() {
+    shouldMatchTokens(tokenize("{{^}}"), ['INVERSE']);
+    shouldMatchTokens(tokenize("{{else}}"), ['INVERSE']);
+    shouldMatchTokens(tokenize("{{ else }}"), ['INVERSE']);
   });
 
   it('tokenizes inverse sections with ID as "OPEN_INVERSE ID CLOSE"', function() {

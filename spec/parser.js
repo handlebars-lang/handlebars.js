@@ -121,11 +121,11 @@ describe('parser', function() {
   });
 
   it('parses empty blocks with empty inverse section', function() {
-    equals(ast_for("{{#foo}}{{^}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
+    equals(ast_for("{{#foo}}{{^}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
   });
 
   it('parses empty blocks with empty inverse (else-style) section', function() {
-    equals(ast_for("{{#foo}}{{else}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
+    equals(ast_for("{{#foo}}{{else}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
   });
 
   it('parses non-empty blocks with empty inverse section', function() {

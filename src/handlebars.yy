@@ -2,78 +2,68 @@
 
 %ebnf
 
-%{
-
-function stripFlags(open, close) {
-  return {
-    left: open.charAt(2) === '~',
-    right: close.charAt(0) === '~' || close.charAt(1) === '~'
-  };
-}
-
-%}
-
 %%
 
 root
-  : statements EOF { return new yy.ProgramNode($1, @$); }
-  | EOF { return new yy.ProgramNode([], @$); }
+  : program EOF { return $1; }
   ;
 
 program
-  : simpleInverse statements -> new yy.ProgramNode([], $1, $2, @$)
-  | statements simpleInverse statements -> new yy.ProgramNode($1, $2, $3, @$)
-  | statements simpleInverse -> new yy.ProgramNode($1, $2, [], @$)
-  | statements -> new yy.ProgramNode($1, @$)
-  | simpleInverse -> new yy.ProgramNode([], @$)
-  | "" -> new yy.ProgramNode([], @$)
-  ;
-
-statements
-  : statement -> [$1]
-  | statements statement { $1.push($2); $$ = $1; }
+  : statement* -> new yy.ProgramNode($1, {}, @$)
   ;
 
 statement
-  : openRawBlock CONTENT END_RAW_BLOCK -> new yy.RawBlockNode($1, $2, $3, @$)
-  | openInverse program closeBlock -> new yy.BlockNode($1, $2.inverse, $2, $3, @$)
-  | openBlock program closeBlock -> new yy.BlockNode($1, $2, $2.inverse, $3, @$)
-  | mustache -> $1
+  : mustache -> $1
+  | block -> $1
+  | rawBlock -> $1
   | partial -> $1
   | CONTENT -> new yy.ContentNode($1, @$)
   | COMMENT -> new yy.CommentNode($1, @$)
+  ;
+
+rawBlock
+  : openRawBlock CONTENT END_RAW_BLOCK -> new yy.RawBlockNode($1, $2, $3, @$)
   ;
 
 openRawBlock
   : OPEN_RAW_BLOCK sexpr CLOSE_RAW_BLOCK -> new yy.MustacheNode($2, null, '', '', @$)
   ;
 
+block
+  : openBlock program inverseAndProgram? closeBlock -> yy.prepareBlock($1, $2, $3, $4, false, @$)
+  | openInverse program inverseAndProgram? closeBlock -> yy.prepareBlock($1, $2, $3, $4, true, @$)
+  ;
+
 openBlock
-  : OPEN_BLOCK sexpr CLOSE -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
+  : OPEN_BLOCK sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), @$)
   ;
 
 openInverse
-  : OPEN_INVERSE sexpr CLOSE -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
+  : OPEN_INVERSE sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), @$)
+  ;
+
+inverseAndProgram
+  : INVERSE program -> { strip: yy.stripFlags($1, $1), program: $2 }
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK path CLOSE -> {path: $2, strip: stripFlags($1, $3)}
+  : OPEN_ENDBLOCK path CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
   ;
 
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN sexpr CLOSE -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
-  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheNode($2, null, $1, stripFlags($1, $3), @$)
+  : OPEN sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), @$)
+  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), @$)
   ;
 
 partial
-  : OPEN_PARTIAL partialName param hash? CLOSE -> new yy.PartialNode($2, $3, $4, stripFlags($1, $5), @$)
-  | OPEN_PARTIAL partialName hash? CLOSE -> new yy.PartialNode($2, undefined, $3, stripFlags($1, $4), @$)
+  : OPEN_PARTIAL partialName param hash? CLOSE -> new yy.PartialNode($2, $3, $4, yy.stripFlags($1, $5), @$)
+  | OPEN_PARTIAL partialName hash? CLOSE -> new yy.PartialNode($2, undefined, $3, yy.stripFlags($1, $4), @$)
   ;
 
 simpleInverse
-  : OPEN_INVERSE CLOSE -> stripFlags($1, $2)
+  : INVERSE -> yy.stripFlags($1, $1)
   ;
 
 sexpr

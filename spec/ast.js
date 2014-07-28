@@ -68,17 +68,9 @@ describe('ast', function() {
     });
   });
   describe('BlockNode', function() {
-    it('should throw on mustache mismatch (old sexpr-less version)', function() {
-      shouldThrow(function() {
-        var mustacheNode = new handlebarsEnv.AST.MustacheNode([{ original: 'foo'}], null, '{{', {});
-        new handlebarsEnv.AST.BlockNode(mustacheNode, {}, {}, {path: {original: 'bar'}});
-      }, Handlebars.Exception, "foo doesn't match bar");
-    });
     it('should throw on mustache mismatch', function() {
       shouldThrow(function() {
-        var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
-        var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
-        new handlebarsEnv.AST.BlockNode(mustacheNode, {}, {}, {path: {original: 'bar'}}, {first_line: 2, first_column: 2});
+        handlebarsEnv.parse("\n  {{#foo}}{{/bar}}")
       }, Handlebars.Exception, "foo doesn't match bar - 2:2");
     });
 
@@ -197,32 +189,12 @@ describe('ast', function() {
       testLocationInfoStorage(pn);
     });
   });
+
   describe("ProgramNode", function(){
 
-    describe("storing location info", function(){
-      it("stores when `inverse` argument isn't passed", function(){
-        var pn = new handlebarsEnv.AST.ProgramNode([], LOCATION_INFO);
-        testLocationInfoStorage(pn);
-      });
-
-      it("stores when `inverse` or `stripInverse` arguments passed", function(){
-        var pn = new handlebarsEnv.AST.ProgramNode([], {strip: {}}, undefined, LOCATION_INFO);
-        testLocationInfoStorage(pn);
-
-        var clone = {
-          strip: {},
-          firstLine: 0,
-          lastLine: 0,
-          firstColumn: 0,
-          lastColumn: 0
-        };
-        pn = new handlebarsEnv.AST.ProgramNode([], {strip: {}}, [ clone ], LOCATION_INFO);
-        testLocationInfoStorage(pn);
-
-        // Assert that the newly created ProgramNode has the same location
-        // information as the inverse
-        testLocationInfoStorage(pn.inverse);
-      });
+    it("storing location info", function(){
+      var pn = new handlebarsEnv.AST.ProgramNode([], {}, LOCATION_INFO);
+      testLocationInfoStorage(pn);
     });
   });
 
@@ -265,11 +237,18 @@ describe('ast', function() {
        testColumns(blockHelperNode, 3, 7, 8, 23);
      });
 
+     it('correctly records the line numbers the program of a block helper', function(){
+       var blockHelperNode = statements[5],
+           program = blockHelperNode.program;
+
+       testColumns(program, 3, 5, 8, 5);
+     });
+
      it('correctly records the line numbers of an inverse of a block helper', function(){
        var blockHelperNode = statements[5],
            inverse = blockHelperNode.inverse;
 
-       testColumns(inverse, 5, 6, 13, 0);
+       testColumns(inverse, 5, 7, 5, 0);
      });
   });
 });
