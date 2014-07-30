@@ -46,7 +46,7 @@
     "es6-module-packager": "1.x",
     "jison": "~0.3.0",
     "keen.io": "0.0.3",
-    "mocha": "*",
+    "mocha": "~1.20.0",
     "mustache": "~0.7.2",
     "semver": "~2.1.0",
     "underscore": "~1.5.1"
