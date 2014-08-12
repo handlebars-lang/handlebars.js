@@ -5,7 +5,7 @@ global.shouldCompileTo = function(string, hashOrArray, expected, message) {
 global.shouldCompileToWithPartials = function(string, hashOrArray, partials, expected, message) {
   var result = compileWithPartials(string, hashOrArray, partials);
   if (result !== expected) {
-    throw new Error("'" + expected + "' should === '" + result + "': " + message);
+    throw new Error("'" + result + "' should === '" + expected + "': " + message);
   }
 };
 
@@ -25,7 +25,7 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
 
 global.equals = global.equal = function(a, b, msg) {
   if (a !== b) {
-    throw new Error("'" + b + "' should === '" + a + "'" + (msg ? ": " + msg : ''));
+    throw new Error("'" + a + "' should === '" + b + "'" + (msg ? ": " + msg : ''));
   }
 };
 

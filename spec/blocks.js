@@ -1,4 +1,4 @@
-/*global CompilerContext, shouldCompileTo */
+/*global CompilerContext, shouldCompileTo, shouldThrow */
 describe('blocks', function() {
   it("array", function() {
     var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";
