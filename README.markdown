@@ -291,9 +291,8 @@ name sans the extension. These templates may be executed in the same
 manner as templates.
 
 If using the simple mode the precompiler will generate a single
-javascript method. To execute this method it must be passed to the using
-the `Handlebars.template` method and the resulting object may be as
-normal.
+javascript method. To execute this method it must be passed to
+the `Handlebars.template` method and the resulting object may be used as normal.
 
 ### Optimizations
 
