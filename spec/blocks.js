@@ -83,4 +83,15 @@ describe('blocks', function() {
         "No people");
     });
   });
+
+  describe('standalone sections', function() {
+    it('block standalone else sections', function() {
+      shouldCompileTo('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
+        'No people\n');
+      shouldCompileTo('{{#none}}\n{{.}}\n{{^}}\n{{none}}\n{{/none}}\n', {none: 'No people'},
+        'No people\n');
+      shouldCompileTo('\n{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
+        'No people\n');
+    });
+  });
 });
