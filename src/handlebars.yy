@@ -16,17 +16,17 @@ function stripFlags(open, close) {
 %%
 
 root
-  : statements EOF { return new yy.ProgramNode($1, @$); }
-  | EOF { return new yy.ProgramNode([], @$); }
+  : statements EOF { return new yy.ProgramNode(true, $1, @$); }
+  | EOF { return new yy.ProgramNode(true, [], @$); }
   ;
 
 program
-  : simpleInverse statements -> new yy.ProgramNode([], $1, $2, @$)
-  | statements simpleInverse statements -> new yy.ProgramNode($1, $2, $3, @$)
-  | statements simpleInverse -> new yy.ProgramNode($1, $2, [], @$)
-  | statements -> new yy.ProgramNode($1, @$)
-  | simpleInverse -> new yy.ProgramNode([], @$)
-  | "" -> new yy.ProgramNode([], @$)
+  : simpleInverse statements -> new yy.ProgramNode(false, [], $1, $2, @$)
+  | statements simpleInverse statements -> new yy.ProgramNode(false, $1, $2, $3, @$)
+  | statements simpleInverse -> new yy.ProgramNode(false, $1, $2, [], @$)
+  | statements -> new yy.ProgramNode(false, $1, @$)
+  | simpleInverse -> new yy.ProgramNode(false, [], @$)
+  | "" -> new yy.ProgramNode(false, [], @$)
   ;
 
 statements

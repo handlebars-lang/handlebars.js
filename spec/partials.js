@@ -1,4 +1,4 @@
-/*global CompilerContext, shouldCompileTo, shouldCompileToWithPartials */
+/*global CompilerContext, Handlebars, handlebarsEnv, shouldCompileTo, shouldCompileToWithPartials, shouldThrow */
 describe('partials', function() {
   it("basic partials", function() {
     var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
@@ -137,4 +137,22 @@ describe('partials', function() {
     var partial = "";
     var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
     shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: ");  });
+
+  describe('standalone partials', function() {
+    it("indented partials", function() {
+      var string = "Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}";
+      var dude = "{{name}}\n";
+      var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: dude}], true,
+            "Dudes:\n  Yehuda\n  Alan\n");
+    });
+    it("nested indented partials", function() {
+      var string = "Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}";
+      var dude = "{{name}}\n {{> url}}";
+      var url = "{{url}}!\n";
+      var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: dude, url: url}], true,
+            "Dudes:\n  Yehuda\n   http://yehuda!\n  Alan\n   http://alan!\n");
+    });
+  });
 });
