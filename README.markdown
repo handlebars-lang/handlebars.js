@@ -338,6 +338,14 @@ rewritten Handlebars (current version) is faster than the old version,
 and we will have some benchmarks in the near future.
 
 
+Mustache Compatibilty
+---------------------
+
+Handlebars deviates from the Mustache spec in a few key ways:
+- Alternative delimeters are not supported
+- Recrusive value lookup is not enabled by default. The compile time `compat` flag must be set to enable this functionality. Users should note that there is a performance cost for enabling this flag. The exact cost varies by template, but it's recommended that performance sensitive operations should avoid this mode and instead opt for explicit path references.
+- The optional Mustache-style lambdas are not supported. Instead Handlebars provides it's own lambda resolution that follows the behaviors of helpers.
+
 Building
 --------
 
