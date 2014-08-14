@@ -155,4 +155,19 @@ describe('partials', function() {
             "Dudes:\n  Yehuda\n   http://yehuda!\n  Alan\n   http://alan!\n");
     });
   });
+
+  describe('compat mode', function() {
+    it('partials can access parents', function() {
+      var string = 'Dudes: {{#dudes}}{{> dude}}{{/dudes}}';
+      var partial = '{{name}} ({{url}}) {{root}} ';
+      var hash = {root: 'yes', dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: partial}, true], true, 'Dudes: Yehuda (http://yehuda) yes Alan (http://alan) yes ');
+    });
+    it('partials inherit compat', function() {
+      var string = 'Dudes: {{> dude}}';
+      var partial = '{{#dudes}}{{name}} ({{url}}) {{root}} {{/dudes}}';
+      var hash = {root: 'yes', dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: partial}, true], true, 'Dudes: Yehuda (http://yehuda) yes Alan (http://alan) yes ');
+    });
+  });
 });
