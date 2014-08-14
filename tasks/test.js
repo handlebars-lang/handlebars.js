@@ -29,5 +29,16 @@ module.exports = function(grunt) {
       done();
     });
   });
-  grunt.registerTask('test', ['test:bin', 'test:mocha']);
+  grunt.registerTask('test:cov', function() {
+    var done = this.async();
+
+    var runner = childProcess.fork('node_modules/.bin/istanbul', ['cover', '--', './spec/env/runner.js'], {stdio: 'inherit'});
+    runner.on('close', function(code) {
+      if (code != 0) {
+        grunt.fatal(code + ' tests failed');
+      }
+      done();
+    });
+  });
+  grunt.registerTask('test', ['test:bin', 'test:cov']);
 };
