@@ -44,7 +44,7 @@ global.shouldThrow = function(callback, type, msg) {
       throw new Error('Type failure');
     }
     if (msg && !(msg.test ? msg.test(err.message) : msg === err.message)) {
-      throw new Error('Message failure');
+      equal(msg, err.message);
     }
   }
   if (failed) {

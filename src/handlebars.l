@@ -67,11 +67,6 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                   this.begin('raw');
                                   return 'CLOSE_RAW_BLOCK';
                                  }
-<mu>"{{{{"[^\x00]*"}}}}"         {
-                                  yytext = yytext.substr(4, yyleng-8);
-                                  this.popState();
-                                  return 'RAW_BLOCK';
-                                 }
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
 <mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';

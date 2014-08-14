@@ -130,12 +130,6 @@ describe('Regressions', function() {
     shouldCompileTo(string, data, "Hello Chris. You have just won $10000! Well, $6000, after taxes.", "the hello world mustache example works");
   });
 
-  it("Passing falsy values to Handlebars.compile throws an error", function() {
-    shouldThrow(function() {
-      CompilerContext.compile(null);
-    }, Error, 'You must pass a string or Handlebars AST to Handlebars.precompile. You passed null');
-  });
-
   it('GH-731: zero context rendering', function() {
     shouldCompileTo('{{#foo}} This is {{bar}} ~ {{/foo}}', {foo: 0, bar: 'OK'}, ' This is  ~ ');
   });
@@ -143,14 +137,4 @@ describe('Regressions', function() {
   it('GH-820: zero pathed rendering', function() {
     shouldCompileTo('{{foo.bar}}', {foo: 0}, '');
   });
-
-  if (Handlebars.AST) {
-    it("can pass through an already-compiled AST via compile/precompile", function() {
-      equal(Handlebars.compile(new Handlebars.AST.ProgramNode(true, [ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
-    });
-
-    it("can pass through an empty string", function() {
-      equal(Handlebars.compile('')(), '');
-    });
-  }
 });

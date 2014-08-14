@@ -91,6 +91,9 @@ describe('partials', function() {
     var dude = "{{name}}";
     var hash = {name:"Jeepers", another_dude:"Creepers"};
     shouldCompileToWithPartials(string, [hash, {}, {'shared/dude':dude}], true, "Dudes: Jeepers Creepers", "Partials can use globals or passed");
+
+    handlebarsEnv.unregisterPartial('global_test');
+    equals(handlebarsEnv.partials.global_test, undefined);
   });
 
   it("Multiple partial registration", function() {

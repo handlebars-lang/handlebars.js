@@ -39,6 +39,13 @@ describe('blocks', function() {
                     "Templates can access variables in contexts up the stack with relative path syntax");
   });
 
+  it('multiple blocks with complex lookup', function() {
+    var string = '{{#goodbyes}}{{../name}}{{../name}}{{/goodbyes}}';
+    var hash     = {name: 'Alan', goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}]};
+
+    shouldCompileTo(string, hash, 'AlanAlanAlanAlanAlanAlan');
+  });
+
   it("block with complex lookup using nested context", function() {
     var string = "{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}";
 
@@ -48,10 +55,10 @@ describe('blocks', function() {
   });
 
   it("block with deep nested complex lookup", function() {
-    var string = "{{#outer}}Goodbye {{#inner}}cruel {{../../omg}}{{/inner}}{{/outer}}";
-    var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
+    var string = "{{#outer}}Goodbye {{#inner}}cruel {{../sibling}} {{../../omg}}{{/inner}}{{/outer}}";
+    var hash = {omg: "OMG!", outer: [{ sibling: 'sad', inner: [{ text: "goodbye" }] }] };
 
-    shouldCompileTo(string, hash, "Goodbye cruel OMG!");
+    shouldCompileTo(string, hash, "Goodbye cruel sad OMG!");
   });
 
   describe('inverted sections', function() {

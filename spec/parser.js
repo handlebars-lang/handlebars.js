@@ -1,4 +1,4 @@
-/*global Handlebars */
+/*global Handlebars, shouldThrow */
 describe('parser', function() {
   if (!Handlebars.print) {
     return;

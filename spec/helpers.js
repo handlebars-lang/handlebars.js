@@ -208,20 +208,41 @@ describe('helpers', function() {
     });
   });
 
-  it("Multiple global helper registration", function() {
-    var helpers = handlebarsEnv.helpers;
-    handlebarsEnv.helpers = {};
+  describe('registration', function() {
+    it('unregisters', function() {
+      var helpers = handlebarsEnv.helpers;
+      handlebarsEnv.helpers = {};
 
-    handlebarsEnv.registerHelper({
-      'if': helpers['if'],
-      world: function() { return "world!"; },
-      test_helper: function() { return 'found it!'; }
+      handlebarsEnv.registerHelper('foo', function() {
+        return 'fail';
+      });
+      handlebarsEnv.unregisterHelper('foo');
+      equals(handlebarsEnv.helpers.foo, undefined);
     });
 
-    shouldCompileTo(
-      "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}",
-      [{cruel: "cruel"}],
-      "found it! Goodbye cruel world!!");
+    it('allows multiple globals', function() {
+      var helpers = handlebarsEnv.helpers;
+      handlebarsEnv.helpers = {};
+
+      handlebarsEnv.registerHelper({
+        'if': helpers['if'],
+        world: function() { return "world!"; },
+        test_helper: function() { return 'found it!'; }
+      });
+
+      shouldCompileTo(
+        "{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}",
+        [{cruel: "cruel"}],
+        "found it! Goodbye cruel world!!");
+    });
+    it('fails with multiple and args', function() {
+      shouldThrow(function() {
+        handlebarsEnv.registerHelper({
+          world: function() { return "world!"; },
+          test_helper: function() { return 'found it!'; }
+        }, {});
+      }, Error, 'Arg not supported with multiple helpers');
+    });
   });
 
   it("decimal number literals work", function() {
