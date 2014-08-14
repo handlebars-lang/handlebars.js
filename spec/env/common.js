@@ -17,7 +17,7 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
   if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
     ary = [];
     ary.push(hashOrArray[0]);
-    ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2], compat: hashOrArray[3] });
+    ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
     options = {compat: hashOrArray[3]};
   } else {
     ary = [hashOrArray];
