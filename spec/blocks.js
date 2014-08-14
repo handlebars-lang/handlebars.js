@@ -94,4 +94,25 @@ describe('blocks', function() {
         'No people\n');
     });
   });
+
+  describe('compat mode', function() {
+    it("block with deep recursive lookup lookup", function() {
+      var string = "{{#outer}}Goodbye {{#inner}}cruel {{omg}}{{/inner}}{{/outer}}";
+      var hash = {omg: "OMG!", outer: [{ inner: [{ text: "goodbye" }] }] };
+
+      shouldCompileTo(string, [hash, undefined, undefined, true], "Goodbye cruel OMG!");
+    });
+    it("block with deep recursive pathed lookup", function() {
+      var string = "{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}";
+      var hash = {omg: {yes: "OMG!"}, outer: [{ inner: [{ yes: 'no', text: "goodbye" }] }] };
+
+      shouldCompileTo(string, [hash, undefined, undefined, true], "Goodbye cruel OMG!");
+    });
+    it("block with missed recursive lookup", function() {
+      var string = "{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}";
+      var hash = {omg: {no: "OMG!"}, outer: [{ inner: [{ yes: 'no', text: "goodbye" }] }] };
+
+      shouldCompileTo(string, [hash, undefined, undefined, true], "Goodbye cruel ");
+    });
+  });
 });

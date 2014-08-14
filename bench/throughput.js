@@ -28,11 +28,13 @@ function makeSuite(bench, name, template, handlebarsOnly) {
       partials = template.partials,
 
       handlebarsOut,
+      compatOut,
       dustOut,
       ecoOut,
       mustacheOut;
 
   var handlebar = Handlebars.compile(template.handlebars, {data: false}),
+      compat =  Handlebars.compile(template.handlebars, {data: false, compat: true}),
       options = {helpers: template.helpers};
   _.each(template.partials && template.partials.handlebars, function(partial, name) {
     Handlebars.registerPartial(name, Handlebars.compile(partial, {data: false}));
@@ -41,6 +43,11 @@ function makeSuite(bench, name, template, handlebarsOnly) {
   handlebarsOut = handlebar(context, options);
   bench("handlebars", function() {
     handlebar(context, options);
+  });
+
+  compatOut = compat(context, options);
+  bench("compat", function() {
+    compat(context, options);
   });
 
   if (handlebarsOnly) {
@@ -107,6 +114,7 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     }
   }
 
+  compare(compatOut, 'compat');
   compare(dustOut, 'dust');
   compare(ecoOut, 'eco');
   compare(mustacheOut, 'mustache');
