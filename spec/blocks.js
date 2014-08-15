@@ -8,7 +8,12 @@ describe('blocks', function() {
 
     shouldCompileTo(string, {goodbyes: [], world: "world"}, "cruel world!",
                     "Arrays ignore the contents when empty");
+  });
 
+  it('array without data', function() {
+    var string   = '{{#goodbyes}}{{text}}{{/goodbyes}} {{#goodbyes}}{{text}}{{/goodbyes}}';
+    var hash     = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
+    shouldCompileTo(string, [hash,,,,false], 'goodbyeGoodbyeGOODBYE goodbyeGoodbyeGOODBYE');
   });
 
   it("array with @index", function() {

@@ -66,9 +66,29 @@ describe('builtin helpers', function() {
                       "each with array argument ignores the contents when empty");
     });
 
+    it('each without data', function() {
+      var string   = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
+      var hash     = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
+      shouldCompileTo(string, [hash,,,,false], 'goodbye! Goodbye! GOODBYE! cruel world!');
+
+      hash = {goodbyes: 'cruel', world: 'world'};
+      shouldCompileTo('{{#each .}}{{.}}{{/each}}', [hash,,,,false], 'cruelworld');
+    });
+
+    it('each without context', function() {
+      var string   = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
+      shouldCompileTo(string, [,,,,], 'cruel !');
+    });
+
     it("each with an object and @key", function() {
       var string   = "{{#each goodbyes}}{{@key}}. {{text}}! {{/each}}cruel {{world}}!";
-      var hash     = {goodbyes: {"<b>#1</b>": {text: "goodbye"}, 2: {text: "GOODBYE"}}, world: "world"};
+
+      function Clazz() {
+        this['<b>#1</b>'] = {text: 'goodbye'};
+        this[2] = {text: 'GOODBYE'};
+      }
+      Clazz.prototype.foo = 'fail';
+      var hash     = {goodbyes: new Clazz(), world: 'world'};
 
       // Object property iteration order is undefined according to ECMA spec,
       // so we need to check both possible orders
@@ -193,19 +213,77 @@ describe('builtin helpers', function() {
     });
   });
 
-  it("#log", function() {
-    var string = "{{log blah}}";
-    var hash   = { blah: "whee" };
+  describe("#log", function() {
+    var info,
+        error;
+    beforeEach(function() {
+      info = console.info;
+      error = console.error;
+    });
+    afterEach(function() {
+      console.info = info;
+      console.error = error;
+    });
 
-    var levelArg, logArg;
-    handlebarsEnv.log = function(level, arg){
-      levelArg = level;
-      logArg = arg;
-    };
+    it('should call logger at default level', function() {
+      var string = "{{log blah}}";
+      var hash   = { blah: "whee" };
 
-    shouldCompileTo(string, hash, "", "log should not display");
-    equals(1, levelArg, "should call log with 1");
-    equals("whee", logArg, "should call log with 'whee'");
+      var levelArg, logArg;
+      handlebarsEnv.log = function(level, arg){
+        levelArg = level;
+        logArg = arg;
+      };
+
+      shouldCompileTo(string, hash, "", "log should not display");
+      equals(1, levelArg, "should call log with 1");
+      equals("whee", logArg, "should call log with 'whee'");
+    });
+    it('should call logger at data level', function() {
+      var string = "{{log blah}}";
+      var hash   = { blah: "whee" };
+
+      var levelArg, logArg;
+      handlebarsEnv.log = function(level, arg){
+        levelArg = level;
+        logArg = arg;
+      };
+
+      shouldCompileTo(string, [hash,,,,{level: '03'}], "");
+      equals(3, levelArg);
+      equals("whee", logArg);
+    });
+    it('should not output to console', function() {
+      var string = "{{log blah}}";
+      var hash   = { blah: "whee" };
+
+      console.info = function() {
+        throw new Error();
+      };
+
+      shouldCompileTo(string, hash, "", "log should not display");
+    });
+    it('should log at data level', function() {
+      var string = "{{log blah}}";
+      var hash   = { blah: "whee" };
+      var called;
+
+      console.error = function(log) {
+        equals("whee", log);
+        called = true;
+      };
+
+      shouldCompileTo(string, [hash,,,,{level: '03'}], "");
+      equals(true, called);
+    });
+    it('should handle missing logger', function() {
+      var string = "{{log blah}}";
+      var hash   = { blah: "whee" };
+
+      console.error = undefined;
+
+      shouldCompileTo(string, [hash,,,,{level: '03'}], "");
+    });
   });
 
 

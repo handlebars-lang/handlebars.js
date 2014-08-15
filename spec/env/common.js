@@ -19,6 +19,10 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
     ary.push(hashOrArray[0]);
     ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
     options = {compat: hashOrArray[3]};
+    if (hashOrArray[4] != null) {
+      options.data = !!hashOrArray[4];
+      ary[1].data = hashOrArray[4];
+    }
   } else {
     ary = [hashOrArray];
   }

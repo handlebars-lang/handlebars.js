@@ -139,7 +139,17 @@ describe('partials', function() {
     var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
     var partial = "";
     var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: ");  });
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: ");
+  });
+
+  it("throw on missing partial", function() {
+    var compile = handlebarsEnv.compile;
+    handlebarsEnv.compile = undefined;
+    shouldThrow(function() {
+      shouldCompileTo('{{> dude}}', [{}, {}, {dude: 'fail'}], '');
+    }, Error, /The partial dude could not be compiled/);
+    handlebarsEnv.compile = compile;
+  });
 
   describe('standalone partials', function() {
     it("indented partials", function() {
