@@ -35,3 +35,6 @@
   On the client side.
 
   Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/README.markdown#reporting-issues).
+
+1. Why doesn't IE like the `default` name in the AMD module?
+  Some browsers such as particular versions of IE treat `default` as a reserved word in JavaScript source files. To safely use this you need to reference this via the `Handlebars['default']` lookup method. This is an unfortunate side effect of the shims necessary to backport the handlebars ES6 code to all current browsers.
