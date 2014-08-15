@@ -137,4 +137,12 @@ describe('Regressions', function() {
   it('GH-820: zero pathed rendering', function() {
     shouldCompileTo('{{foo.bar}}', {foo: 0}, '');
   });
+
+  it('GH-837: undefined values for helpers', function() {
+    var helpers = {
+      str: function(value) { return value + ''; }
+    };
+
+    shouldCompileTo('{{str bar.baz}}', [{}, helpers], 'undefined');
+  });
 });
