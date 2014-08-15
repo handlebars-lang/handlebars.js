@@ -214,6 +214,10 @@ describe('builtin helpers', function() {
   });
 
   describe("#log", function() {
+    if (typeof console === 'undefined') {
+      return;
+    }
+
     var info,
         error;
     beforeEach(function() {
