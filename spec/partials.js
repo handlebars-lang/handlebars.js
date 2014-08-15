@@ -1,11 +1,11 @@
 /*global CompilerContext, Handlebars, handlebarsEnv, shouldCompileTo, shouldCompileToWithPartials, shouldThrow */
 describe('partials', function() {
-  it("basic partials", function() {
-    var string = "Dudes: {{#dudes}}{{> dude}}{{/dudes}}";
-    var partial = "{{name}} ({{url}}) ";
-    var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
-    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes: Yehuda (http://yehuda) Alan (http://alan) ",
-                    "Basic partials output based on current context.");
+  it('basic partials', function() {
+    var string = 'Dudes: {{#dudes}}{{> dude}}{{/dudes}}';
+    var partial = '{{name}} ({{url}}) ';
+    var hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
+    shouldCompileToWithPartials(string, [hash, {}, {dude: partial},,false], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
   });
 
   it("partials with context", function() {
@@ -175,6 +175,12 @@ describe('partials', function() {
       var partial = '{{name}} ({{url}}) {{root}} ';
       var hash = {root: 'yes', dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
       shouldCompileToWithPartials(string, [hash, {}, {dude: partial}, true], true, 'Dudes: Yehuda (http://yehuda) yes Alan (http://alan) yes ');
+    });
+    it('partials can access parents without data', function() {
+      var string = 'Dudes: {{#dudes}}{{> dude}}{{/dudes}}';
+      var partial = '{{name}} ({{url}}) {{root}} ';
+      var hash = {root: 'yes', dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: partial}, true, false], true, 'Dudes: Yehuda (http://yehuda) yes Alan (http://alan) yes ');
     });
     it('partials inherit compat', function() {
       var string = 'Dudes: {{> dude}}';
