@@ -440,6 +440,21 @@ describe('helpers', function() {
 
       shouldCompileTo(string, [context, helpers], "Hello <a>world</a>");
     });
+
+    it("if a value is not found, custom helperMissing is used", function() {
+      var string = "{{hello}} {{link_to}}";
+      var context = { hello: "Hello", world: "world" };
+
+      var helpers = {
+        helperMissing: function(options) {
+          if(options.name === "link_to") {
+            return new Handlebars.SafeString("<a>winning</a>");
+          }
+        }
+      };
+
+      shouldCompileTo(string, [context, helpers], "Hello <a>winning</a>");
+    });
   });
 
   describe("knownHelpers", function() {
