@@ -70,6 +70,8 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
 <mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';
+<mu>"{{"{LEFT_STRIP}?"^"\s*{RIGHT_STRIP}?"}}"        this.popState(); return 'INVERSE';
+<mu>"{{"{LEFT_STRIP}?\s*"else"\s*{RIGHT_STRIP}?"}}"  this.popState(); return 'INVERSE';
 <mu>"{{"{LEFT_STRIP}?"^"         return 'OPEN_INVERSE';
 <mu>"{{"{LEFT_STRIP}?\s*"else"   return 'OPEN_INVERSE';
 <mu>"{{"{LEFT_STRIP}?"{"         return 'OPEN_UNESCAPED';

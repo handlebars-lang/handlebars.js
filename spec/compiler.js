@@ -41,7 +41,7 @@ describe('compiler', function() {
     });
 
     it('can utilize AST instance', function() {
-      equal(Handlebars.compile(new Handlebars.AST.ProgramNode(true, [ new Handlebars.AST.ContentNode("Hello")]))(), 'Hello');
+      equal(Handlebars.compile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")], {}))(), 'Hello');
     });
 
     it("can pass through an empty string", function() {
@@ -60,7 +60,7 @@ describe('compiler', function() {
     });
 
     it('can utilize AST instance', function() {
-      equal(/return "Hello"/.test(Handlebars.precompile(new Handlebars.AST.ProgramNode(true, [ new Handlebars.AST.ContentNode("Hello")]))), true);
+      equal(/return "Hello"/.test(Handlebars.precompile(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")]), {})), true);
     });
 
     it("can pass through an empty string", function() {
