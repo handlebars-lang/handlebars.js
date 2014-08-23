@@ -75,9 +75,39 @@ describe('precompiler', function() {
     Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], amd: true, extension: 'handlebars'});
     equal(/template\(amd\)/.test(log), true);
   });
+  it('should output multiple amd', function() {
+    Handlebars.precompile = function() { return 'amd'; };
+    Precompiler.cli({templates: [__dirname + '/artifacts'], amd: true, extension: 'handlebars'});
+    equal(/return templates/.test(log), true);
+    equal(/template\(amd\)/.test(log), true);
+  });
+  it('should output amd partials', function() {
+    Handlebars.precompile = function() { return 'amd'; };
+    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], amd: true, partial: true, extension: 'handlebars'});
+    equal(/return Handlebars\.partials\['empty'\]/.test(log), true);
+    equal(/template\(amd\)/.test(log), true);
+  });
+  it('should output multiple amd partials', function() {
+    Handlebars.precompile = function() { return 'amd'; };
+    Precompiler.cli({templates: [__dirname + '/artifacts'], amd: true, partial: true, extension: 'handlebars'});
+    equal(/return Handlebars\.partials\[/.test(log), false);
+    equal(/template\(amd\)/.test(log), true);
+  });
   it('should output commonjs templates', function() {
     Handlebars.precompile = function() { return 'commonjs'; };
     Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], commonjs: true, extension: 'handlebars'});
     equal(/template\(commonjs\)/.test(log), true);
+  });
+
+  it('should set data flag', function() {
+    Handlebars.precompile = function(data, options) { equal(options.data, true); return 'simple'; };
+    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', data: true});
+    equal(log, 'simple\n');
+  });
+
+  it('should set known helpers', function() {
+    Handlebars.precompile = function(data, options) { equal(options.knownHelpers.foo, true); return 'simple'; };
+    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', known: 'foo'});
+    equal(log, 'simple\n');
   });
 });
