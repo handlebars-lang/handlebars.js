@@ -1,3 +1,5 @@
+/*global shouldCompileTo, shouldCompileToWithPartials */
+
 describe('whitespace control', function() {
   it('should strip whitespace around mustache calls', function() {
     var hash = {foo: 'bar<'};
@@ -8,6 +10,8 @@ describe('whitespace control', function() {
 
     shouldCompileTo(' {{~&foo~}} ', hash, 'bar<');
     shouldCompileTo(' {{~{foo}~}} ', hash, 'bar<');
+
+    shouldCompileTo('1\n{{foo~}} \n\n 23\n{{bar}}4', {}, '1\n23\n4');
   });
 
   describe('blocks', function() {
@@ -18,6 +22,9 @@ describe('whitespace control', function() {
       shouldCompileTo(' {{#if foo~}} bar {{/if~}} ', hash, ' bar ');
       shouldCompileTo(' {{~#if foo}} bar {{~/if}} ', hash, ' bar ');
       shouldCompileTo(' {{#if foo}} bar {{/if}} ', hash, '  bar  ');
+
+      shouldCompileTo(' \n\n{{~#if foo~}} \n\nbar \n\n{{~/if~}}\n\n ', hash, 'bar');
+      shouldCompileTo(' a\n\n{{~#if foo~}} \n\nbar \n\n{{~/if~}}\n\na ', hash, ' abara ');
     });
     it('should strip whitespace around inverse block calls', function() {
       var hash = {};
@@ -26,6 +33,8 @@ describe('whitespace control', function() {
       shouldCompileTo(' {{^if foo~}} bar {{/if~}} ', hash, ' bar ');
       shouldCompileTo(' {{~^if foo}} bar {{~/if}} ', hash, ' bar ');
       shouldCompileTo(' {{^if foo}} bar {{/if}} ', hash, '  bar  ');
+
+      shouldCompileTo(' \n\n{{~^if foo~}} \n\nbar \n\n{{~/if~}}\n\n ', hash, 'bar');
     });
     it('should strip whitespace around complex block calls', function() {
       var hash = {foo: 'bar<'};
@@ -37,6 +46,9 @@ describe('whitespace control', function() {
 
       shouldCompileTo('{{#if foo~}} bar {{~else~}} baz {{~/if}}', hash, 'bar');
 
+      shouldCompileTo('\n\n{{~#if foo~}} \n\nbar \n\n{{~^~}} \n\nbaz \n\n{{~/if~}}\n\n', hash, 'bar');
+      shouldCompileTo('\n\n{{~#if foo~}} \n\n{{{foo}}} \n\n{{~^~}} \n\nbaz \n\n{{~/if~}}\n\n', hash, 'bar<');
+
       hash = {};
 
       shouldCompileTo('{{#if foo~}} bar {{~^~}} baz {{~/if}}', hash, 'baz');
@@ -45,6 +57,8 @@ describe('whitespace control', function() {
       shouldCompileTo('{{#if foo~}} bar {{~^}} baz {{/if}}', hash, ' baz ');
 
       shouldCompileTo('{{#if foo~}} bar {{~else~}} baz {{~/if}}', hash, 'baz');
+
+      shouldCompileTo('\n\n{{~#if foo~}} \n\nbar \n\n{{~^~}} \n\nbaz \n\n{{~/if~}}\n\n', hash, 'baz');
     });
   });
 
