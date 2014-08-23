@@ -139,6 +139,30 @@ describe('subexpressions', function() {
     shouldCompileTo(string, [{}, helpers], '<input aria-label="Name" placeholder="Example User" />');
   });
 
+  it("multiple subexpressions in a hash with context", function() {
+    var string = '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}';
+
+    var context = {
+      item: {
+        field: "Name",
+        placeholder: "Example User"
+      } 
+    };
+
+    var helpers = {
+      input: function(options) {
+        var hash        = options.hash;
+        var ariaLabel   = Handlebars.Utils.escapeExpression(hash['aria-label']);
+        var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
+        return new Handlebars.SafeString('<input aria-label="' + ariaLabel + '" placeholder="' + placeholder + '" />');
+      },
+      t: function(defaultString) {
+        return new Handlebars.SafeString(defaultString);
+      }
+    }
+    shouldCompileTo(string, [context, helpers], '<input aria-label="Name" placeholder="Example User" />');
+  });  
+
   it("in string params mode,", function() {
     var template = CompilerContext.compile('{{snog (blorg foo x=y) yeah a=b}}', {stringParams: true});
 
