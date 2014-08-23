@@ -1,5 +1,7 @@
 /*global shouldThrow */
 
+var uglify = require('uglify-js');
+
 describe('precompiler', function() {
   // NOP Under non-node environments
   if (typeof process === 'undefined') {
@@ -12,10 +14,13 @@ describe('precompiler', function() {
   var log,
       logFunction,
 
-      precompile;
+      precompile,
+      minify;
 
   beforeEach(function() {
     precompile = Handlebars.precompile;
+    minify = uglify.minify;
+
     logFunction = console.log;
     log = '';
     console.log = function() {
@@ -24,6 +29,7 @@ describe('precompiler', function() {
   });
   afterEach(function() {
     Handlebars.precompile = precompile;
+    uglify.minify = minify;
     console.log = logFunction;
   });
 
@@ -64,6 +70,10 @@ describe('precompiler', function() {
     Precompiler.cli({templates: [__dirname + '/artifacts'], extension: 'handlebars'});
     equal(/'empty'/.test(log), true);
     equal(/'example_1'/.test(log), true);
+  });
+  it('should protect from regexp patterns', function() {
+    Precompiler.cli({templates: [__dirname + '/artifacts'], extension: 'hb(s'});
+    // Success is not throwing
   });
   it('should output simple templates', function() {
     Handlebars.precompile = function() { return 'simple'; };
@@ -109,5 +119,12 @@ describe('precompiler', function() {
     Handlebars.precompile = function(data, options) { equal(options.knownHelpers.foo, true); return 'simple'; };
     Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', known: 'foo'});
     equal(log, 'simple\n');
+  });
+
+  it('should output minimized templates', function() {
+    Handlebars.precompile = function() { return 'amd'; };
+    uglify.minify = function() { return {code: 'min'}; };
+    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], min: true, extension: 'handlebars'});
+    equal(log, 'min');
   });
 });

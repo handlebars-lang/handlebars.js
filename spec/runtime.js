@@ -33,4 +33,24 @@ describe('runtime', function() {
       }, Error, /Template was precompiled with an older version of Handlebars than the current runtime/);
     });
   });
+
+  describe('#child', function() {
+    if (!Handlebars.compile) {
+      return;
+    }
+
+    it('should throw for depthed methods', function() {
+      shouldThrow(function() {
+        var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
+        template._setup({});
+        template._setup({});
+        template._child(1);
+      }, Error, '_child can not be used with depthed templates');
+    });
+    it('should expose child template', function() {
+      var template = Handlebars.compile('{{#foo}}bar{{/foo}}');
+      equal(template._child(1)(), 'bar');
+      equal(template._child(1)(), 'bar');
+    });
+  });
 });
