@@ -121,11 +121,11 @@ describe('parser', function() {
   });
 
   it('parses empty blocks with empty inverse section', function() {
-    equals(ast_for("{{#foo}}{{^}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
+    equals(ast_for("{{#foo}}{{^}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
   });
 
   it('parses empty blocks with empty inverse (else-style) section', function() {
-    equals(ast_for("{{#foo}}{{else}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
+    equals(ast_for("{{#foo}}{{else}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
   });
 
   it('parses non-empty blocks with empty inverse section', function() {
@@ -146,6 +146,9 @@ describe('parser', function() {
 
   it('parses a standalone inverse section', function() {
     equals(ast_for("{{^foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
+  });
+  it('parses a standalone inverse section', function() {
+    equals(ast_for("{{else foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
   });
 
   it("raises if there's a Parse error", function() {
@@ -184,7 +187,7 @@ describe('parser', function() {
 
   describe('externally compiled AST', function() {
     it('can pass through an already-compiled AST', function() {
-      equals(ast_for(new Handlebars.AST.ProgramNode(false, [ new Handlebars.AST.ContentNode("Hello")])), "CONTENT[ \'Hello\' ]\n");
+      equals(ast_for(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")])), "CONTENT[ \'Hello\' ]\n");
     });
   });
 });
