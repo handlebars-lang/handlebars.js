@@ -346,12 +346,6 @@ Handlebars deviates from the Mustache spec in a few key ways:
 - Recrusive value lookup is not enabled by default. The compile time `compat` flag must be set to enable this functionality. Users should note that there is a performance cost for enabling this flag. The exact cost varies by template, but it's recommended that performance sensitive operations should avoid this mode and instead opt for explicit path references.
 - The optional Mustache-style lambdas are not supported. Instead Handlebars provides it's own lambda resolution that follows the behaviors of helpers.
 
-Building
---------
-
-To build handlebars, just run `grunt build`, and the build will output to the `dist` directory.
-
-
 Upgrading
 ---------
 
@@ -359,16 +353,9 @@ See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/relea
 
 Known Issues
 ------------
-* Runtime/precompiler mismatches: Often result in errors like "can not find method match of object" or similar. Please verify the version of the runtime and the version used to precompile templates if odd issues occur after upgrading one component or another.
-* Handlebars.js can be cryptic when there's an error while rendering.
-* Using a variable, helper, or partial named `class` causes errors in IE browsers. (Instead, use `className`)
 
-Reporting Issues
-----------------
+See [FAQ.md](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
 
-Should you run into other issues with the project, please file an [issue][issue]. When filing issues a repo case running against the latest version of the code is appreciated. A [jsfiddle template][jsfiddle] is available for this purpose. As new versions are released the bitly link will be updated to point to a fiddle template with the latest version.
-
-We also accept [pull requests][pull-request]!
 
 Handlebars in the Wild
 ----------------------
@@ -409,68 +396,10 @@ External Resources
 
 Have a project using Handlebars? Send us a [pull request][pull-request]!
 
-Helping Out
------------
-
-To build Handlebars.js you'll need a few things installed.
-
-* Node.js
-* [Grunt](http://gruntjs.com/getting-started)
-
-Project dependencies may be installed via `npm install`.
-
-To build Handlebars.js from scratch, you'll want to run `grunt`
-in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To re-run tests, run `grunt test` or `npm test`.
-You can also run our set of benchmarks with `grunt bench`.
-
-The `grunt dev` implements watching for tests and allows for in browser testing at `http://localhost:9999/spec/`.
-
-If you notice any problems, please report them to the GitHub issue tracker at
-[http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
-Feel free to contact commondream or wycats through GitHub with any other
-questions or feature requests. To submit changes fork the project and
-send a pull request.
-
-### Ember testing
-
-The current ember distribution should be tested as part of the handlebars release process. This requires building the `handlebars-source` gem locally and then executing the ember test script.
-
-```sh
-grunt build release
-export HANDLEBARS_PATH=`pwd`
-
-cd $emberRepoDir
-bundle exec rake clean
-bundle exec rake test
-```
-
-### Releasing
-
-Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
-
-A full release may be completed with the following:
-
-```
-yo release
-npm publish
-yo release:publish cdnjs handlebars.js dist/cdnjs/
-yo release:publish components handlebars.js dist/components/
-
-cd dist/components/
-gem build handlebars-source.gemspec
-gem push handlebars-source-*.gem
-```
-
-After this point the handlebars site needs to be updated to point to the new version numbers. The jsfiddle link should be updated to point to the most recent distribution for all instances in our documentation.
-
 License
 -------
 Handlebars.js is released under the MIT license.
 
 [bower-repo]: https://github.com/components/handlebars.js
 [builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/bucket-listing.html?sort=lastmod&sortdir=desc
-[generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
-[issue]: https://github.com/wycats/handlebars.js/issues/new
-[jsfiddle]: http://jsfiddle.net/9D88g/11/
