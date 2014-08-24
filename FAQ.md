@@ -1,7 +1,7 @@
 # Frequently Asked Questions
 
 1. How can I file a bug report:
-  Please don't hesitate to let us know if you find something wrong! In general we are going to ask for an example of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle [template](http://jsfiddle.net/9D88g/11/) to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here)
+  See our guidelines on [reporting issues](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 1. Why is it slower when compiling?
   The Handlebars compiler must parse the template and construct a JavaScript program which can then be run. Under some environments such as older mobile devices this can have a performance impact which can be avoided by precompiling. Generally it's recommended that precompilation and the runtime library be used on all clients.
@@ -34,7 +34,7 @@
   ```
   On the client side.
 
-  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/README.markdown#reporting-issues).
+  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 1. Why doesn't IE like the `default` name in the AMD module?
   Some browsers such as particular versions of IE treat `default` as a reserved word in JavaScript source files. To safely use this you need to reference this via the `Handlebars['default']` lookup method. This is an unfortunate side effect of the shims necessary to backport the handlebars ES6 code to all current browsers.

@@ -2,9 +2,11 @@
 
 ## Reporting Issues
 
-Should you run into other issues with the project, please file an [issue][issue]. When filing issues a repo case running against the latest version of the code is appreciated. A [jsfiddle template][jsfiddle] is available for this purpose. As new versions are released this link will be updated to point to a fiddle template with the latest version.
+Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
 
-Failing test pull requests are welcomed for issues that can easily be reproduced and this also helps ensure that your issue won't regress in the future once it's fixed.
+Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]! In general we are going to ask for an example of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle [template][jsfiddle] to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here)
+
+Pull requests containing only failing thats demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
 ## Pull Requests
 
