@@ -335,8 +335,7 @@ does have some big performance advantages. Justin Marney, a.k.a.
 [gotascii](http://github.com/gotascii), confirmed that with an
 [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The
 rewritten Handlebars (current version) is faster than the old version,
-and we will have some benchmarks in the near future.
-
+with many [performance tests](https://travis-ci.org/wycats/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
 
 Mustache Compatibilty
 ---------------------
