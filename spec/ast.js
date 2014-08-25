@@ -222,29 +222,28 @@ describe('ast', function() {
     });
 
     it('gets line numbers correct when newlines appear', function(){
-      testColumns(statements[2], 1, 2, 21, 0);
-      testColumns(statements[3], 2, 2, 0, 8);
+      testColumns(statements[2], 1, 2, 21, 8);
     });
 
     it('gets MustacheNode line numbers correct across newlines', function(){
-      var secondMustacheNode = statements[4];
+      var secondMustacheNode = statements[3];
       testColumns(secondMustacheNode, 2, 2, 8, 22);
      });
 
      it('gets the block helper information correct', function(){
-       var blockHelperNode = statements[7];
+       var blockHelperNode = statements[5];
        testColumns(blockHelperNode, 3, 7, 8, 23);
      });
 
      it('correctly records the line numbers the program of a block helper', function(){
-       var blockHelperNode = statements[7],
+       var blockHelperNode = statements[5],
            program = blockHelperNode.program;
 
        testColumns(program, 3, 5, 8, 5);
      });
 
      it('correctly records the line numbers of an inverse of a block helper', function(){
-       var blockHelperNode = statements[7],
+       var blockHelperNode = statements[5],
            inverse = blockHelperNode.inverse;
 
        testColumns(inverse, 5, 7, 5, 0);
@@ -266,13 +265,8 @@ describe('ast', function() {
 
         equals(ast.statements[0].string, '');
 
-        equals(block.program.statements[0].string, '');
-        equals(block.program.statements[1].string, 'foo\n');
-        equals(block.program.statements[2].string, '');
-
-        equals(block.inverse.statements[0].string, '');
-        equals(block.inverse.statements[1].string, '  bar \n');
-        equals(block.inverse.statements[2].string, '');
+        equals(block.program.statements[0].string, 'foo\n');
+        equals(block.inverse.statements[0].string, '  bar \n');
 
         equals(ast.statements[2].string, '');
       });
@@ -280,9 +274,7 @@ describe('ast', function() {
         var ast = Handlebars.parse('{{# comment}} \nfoo\n {{/comment}}'),
             block = ast.statements[0];
 
-        equals(block.program.statements[0].string, '');
-        equals(block.program.statements[1].string, 'foo\n');
-        equals(block.program.statements[2].string, '');
+        equals(block.program.statements[0].string, 'foo\n');
       });
       it('marks mustaches with children as standalone', function() {
         var ast = Handlebars.parse('{{# comment}} \n{{foo}}\n {{/comment}}'),
@@ -290,8 +282,7 @@ describe('ast', function() {
 
         equals(block.program.statements[0].string, '');
         equals(block.program.statements[1].id.original, 'foo');
-        equals(block.program.statements[2].omit, undefined);
-        equals(block.program.statements[3].string, '');
+        equals(block.program.statements[2].string, '\n');
       });
       it('marks nested block mustaches as standalone', function() {
         var ast = Handlebars.parse('{{#foo}} \n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} \n{{/foo}}'),
@@ -300,13 +291,8 @@ describe('ast', function() {
 
         equals(statements[0].string, '');
 
-        equals(block.program.statements[0].string, '');
-        equals(block.program.statements[1].string, 'foo\n');
-        equals(block.program.statements[2].string, '');
-
-        equals(block.inverse.statements[0].string, '');
-        equals(block.inverse.statements[1].string, '  bar \n');
-        equals(block.inverse.statements[2].string, '');
+        equals(block.program.statements[0].string, 'foo\n');
+        equals(block.inverse.statements[0].string, '  bar \n');
 
         equals(statements[0].string, '');
       });
@@ -317,13 +303,8 @@ describe('ast', function() {
 
         equals(statements[0].omit, undefined);
 
-        equals(block.program.statements[0].omit, undefined);
-        equals(block.program.statements[1].string, 'foo\n');
-        equals(block.program.statements[2].string, '');
-
-        equals(block.inverse.statements[0].string, '');
-        equals(block.inverse.statements[1].string, '  bar \n');
-        equals(block.inverse.statements[2].omit, undefined);
+        equals(block.program.statements[0].string, ' \nfoo\n');
+        equals(block.inverse.statements[0].string, '  bar \n  ');
 
         equals(statements[0].omit, undefined);
       });
@@ -332,13 +313,8 @@ describe('ast', function() {
             statements = ast.statements[0].program.statements,
             block = statements[0];
 
-        equals(block.program.statements[0].omit, undefined);
-        equals(block.program.statements[1].string, 'foo\n');
-        equals(block.program.statements[2].string, '');
-
-        equals(block.inverse.statements[0].string, '');
-        equals(block.inverse.statements[1].string, '  bar \n');
-        equals(block.inverse.statements[2].omit, undefined);
+        equals(block.program.statements[0].string, ' \nfoo\n');
+        equals(block.inverse.statements[0].string, '  bar \n  ');
 
         equals(statements[0].omit, undefined);
       });
@@ -349,13 +325,8 @@ describe('ast', function() {
 
         equals(ast.statements[0].omit, undefined);
 
-        equals(block.program.statements[0].string, '');
-        equals(block.program.statements[1].string, 'foo\n');
-        equals(block.program.statements[2].string, '');
-
-        equals(block.inverse.statements[0].string, '');
-        equals(block.inverse.statements[1].string, '  bar \n');
-        equals(block.inverse.statements[2].string, '');
+        equals(block.program.statements[0].string, 'foo\n');
+        equals(block.inverse.statements[0].string, '  bar \n');
 
         equals(ast.statements[2].string, '');
       });

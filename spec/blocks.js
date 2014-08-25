@@ -102,8 +102,11 @@ describe('blocks', function() {
         'No people\n');
       shouldCompileTo('{{#none}}\n{{.}}\n{{^}}\n{{none}}\n{{/none}}\n', {none: 'No people'},
         'No people\n');
-      shouldCompileTo('\n{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
+      shouldCompileTo('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
         'No people\n');
+    });
+    it('should handle nesting', function() {
+      shouldCompileTo('{{#data}}\n{{#if true}}\n{{.}}\n{{/if}}\n{{/data}}\nOK.', {data: [1, 3, 5]}, '1\n3\n5\nOK.');
     });
   });
 
