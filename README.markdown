@@ -252,6 +252,14 @@ You can also use real html comments if you want them to end up in the output.
 ```
 
 
+### Compatibility
+
+There are a few Mustache behaviors that Handlebars does not implement.
+- Handlebars deviates from Mustache slightly in that it does not perform recursive lookup by default. The compile time `compat` flag must be set to enable this functionality. Users should note that there is a performance cost for enabling this flag. The exact cost varies by template, but it's recommended that performance sensitive operations should avoid this mode and instead opt for explicit path references.
+- The optional Mustache-style lambdas are not supported. Instead Handlebars provides it's own lambda resolution that follows the behaviors of helpers.
+- Alternative delimeters are not supported.
+
+
 Precompiling Templates
 ----------------------
 
@@ -337,13 +345,6 @@ does have some big performance advantages. Justin Marney, a.k.a.
 rewritten Handlebars (current version) is faster than the old version,
 with many [performance tests](https://travis-ci.org/wycats/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
 
-Mustache Compatibilty
----------------------
-
-Handlebars deviates from the Mustache spec in a few key ways:
-- Alternative delimeters are not supported
-- Recrusive value lookup is not enabled by default. The compile time `compat` flag must be set to enable this functionality. Users should note that there is a performance cost for enabling this flag. The exact cost varies by template, but it's recommended that performance sensitive operations should avoid this mode and instead opt for explicit path references.
-- The optional Mustache-style lambdas are not supported. Instead Handlebars provides it's own lambda resolution that follows the behaviors of helpers.
 
 Upgrading
 ---------
