@@ -39,18 +39,25 @@ describe('runtime', function() {
       return;
     }
 
-    it('should throw for depthed methods', function() {
+    it('should throw for depthed methods without depths', function() {
       shouldThrow(function() {
         var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
+        // Calling twice to hit the non-compiled case.
         template._setup({});
         template._setup({});
         template._child(1);
-      }, Error, '_child can not be used with depthed templates');
+      }, Error, 'must pass parent depths');
     });
     it('should expose child template', function() {
       var template = Handlebars.compile('{{#foo}}bar{{/foo}}');
+        // Calling twice to hit the non-compiled case.
       equal(template._child(1)(), 'bar');
       equal(template._child(1)(), 'bar');
+    });
+    it('should render depthed content', function() {
+      var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
+        // Calling twice to hit the non-compiled case.
+      equal(template._child(1, undefined, [{bar: 'baz'}])(), 'baz');
     });
   });
 });
