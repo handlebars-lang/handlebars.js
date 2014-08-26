@@ -149,7 +149,7 @@ module.exports = function(grunt) {
       sanity: {
         options: {
           build: process.env.TRAVIS_JOB_ID,
-          urls: ['http://localhost:9999/spec/umd.html?headless=true', 'http://localhost:9999/spec/amd-runtime?headless=true', 'http://localhost:9999/spec/umd-runtime.html?headless=true'],
+          urls: ['http://localhost:9999/spec/umd.html?headless=true', 'http://localhost:9999/spec/amd-runtime.html?headless=true', 'http://localhost:9999/spec/umd-runtime.html?headless=true'],
           detailedError: true,
           concurrency: 2,
           browsers: [
