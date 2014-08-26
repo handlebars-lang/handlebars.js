@@ -2,7 +2,50 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.4...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-beta.1...master)
+
+## v2.0.0-beta.1 - August 26th, 2014
+- [#787](https://github.com/wycats/handlebars.js/pull/787) - Remove whitespace surrounding standalone statements ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#827](https://github.com/wycats/handlebars.js/issues/827) - Render false literal as “false” ([@scoot557](https://api.github.com/users/scoot557))
+- [#767](https://github.com/wycats/handlebars.js/issues/767) - Subexpressions bug with hash and context ([@evensoul](https://api.github.com/users/evensoul))
+- Changes to 0/undefined handling
+  - [#731](https://github.com/wycats/handlebars.js/pull/731) - Strange behavior for {{#foo}} {{bar}} {{/foo}} when foo is 0 ([@kpdecker](https://api.github.com/users/kpdecker))
+  - [#820](https://github.com/wycats/handlebars.js/issues/820) - strange behavior for {{foo.bar}} when foo is 0 or null or false ([@zordius](https://api.github.com/users/zordius))
+  - [#837](https://github.com/wycats/handlebars.js/issues/837) - Strange input for custom helper ( foo.bar == false when foo is undefined ) ([@zordius](https://api.github.com/users/zordius))
+- [#819](https://github.com/wycats/handlebars.js/pull/819) - Implement recursive field lookup ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#764](https://github.com/wycats/handlebars.js/issues/764) - This reference not working for helpers ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#773](https://github.com/wycats/handlebars.js/issues/773) - Implicit parameters in {{#each}} introduces a peculiarity in helpers calling convention  ([@Bertrand](https://api.github.com/users/Bertrand))
+- [#783](https://github.com/wycats/handlebars.js/issues/783) - helperMissing and consistency for different expression types ([@ErisDS](https://api.github.com/users/ErisDS))
+- [#795](https://github.com/wycats/handlebars.js/pull/795) - Turn the precompile script into a wrapper around a module. ([@jwietelmann](https://api.github.com/users/jwietelmann))
+- [#823](https://github.com/wycats/handlebars.js/pull/823) - Support inverse sections on the with helper ([@dan-manges](https://api.github.com/users/dan-manges))
+- [#834](https://github.com/wycats/handlebars.js/pull/834) - Refactor blocks, programs and inverses ([@mmun](https://api.github.com/users/mmun))
+- [#852](https://github.com/wycats/handlebars.js/issues/852) - {{foo~}} space control behavior is different from older version ([@zordius](https://api.github.com/users/zordius))
+- [#835](https://github.com/wycats/handlebars.js/issues/835) - Templates overwritten if file is loaded twice
+
+- Expose escapeExpression on the root object - 980c38c
+- Remove nested function eval in blockHelperMissing - 6f22ec1
+- Fix compiler program de-duping - 9e3f824
+
+Compatibility notes:
+- The default build now outputs a generic UMD wrapper. This should be transparent change but may cause issues in some environments.
+- Runtime compatibility breaks in both directions. Ensure that both compiler and client are upgraded to 2.0.0-beta.1 or higher at the same time.
+  - `programWithDepth` has been removed an instead an array of context values is passed to fields needing depth lookups.
+- `false` values are now printed to output rather than silently dropped
+- Lines containing only block statements and whitespace are now removed. This matches the Mustache spec but may cause issues with code that expects whitespace to exist but would not otherwise.
+- Partials that are standalone will now indent their rendered content
+- `AST.ProgramNode`'s signature has changed. 
+- Numerious methods/features removed from psuedo-API classes
+  - `JavaScriptCompiler.register`
+  - `JavaScriptCompiler.replaceStack` no longer supports non-inline replace
+  - `Compiler.disassemble`
+  - `DECLARE` opcode
+  - `strip` opcode
+  - `lookup` opcode
+  - Content nodes may have their `string` values mutated over time. `original` field provides the unmodified value.
+- Removed unused `Handlebars.registerHelper` `inverse` parameter
+- `each` helper requires iterator parameter
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.4...v2.0.0-beta.1)
 
 ## v2.0.0-alpha.4 - May 19th, 2014
 - Expose setup wrappers for compiled templates - 3638874
