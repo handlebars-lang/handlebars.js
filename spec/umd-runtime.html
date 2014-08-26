@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Mocha</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
+    <style>
+      .headless .suite > h1,
+      .headless .test.pass {
+        display: none;
+      }
+    </style>
+
+    <script>
+      // Show only errors in "headless", non-interactive mode.
+      if (/headless=true/.test(location.href)) {
+        document.documentElement.className = 'headless';
+      }
+    </script>
+    <script src="/node_modules/mocha/mocha.js"></script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+
+    <script src="/spec/env/json2.js"></script>
+    <script src="/spec/env/require.js"></script>
+
+    <script src="/spec/env/common.js"></script>
+    <script>
+      requirejs.config({
+        paths: {
+          'handlebars.runtime': '/dist/handlebars.runtime'
+        }
+      });
+    </script>
+    <script>
+      onload = function(){
+        require(['handlebars.runtime'], function(Handlebars) {
+          describe('runtime', function() {
+            it('should load', function() {
+              equal(!!Handlebars.template, true);
+              equal(!!Handlebars.VERSION, true);
+            });
+          });
+
+          mocha.globals(['mochaResults'])
+          // The test harness leaks under FF. We should have decent global leak coverage from other tests
+          if (!navigator.userAgent.match(/Firefox\/([\d.]+)/)) {
+            mocha.checkLeaks();
+          }
+          var runner = mocha.run();
+
+          //Reporting for saucelabs
+          var failedTests = [];
+          runner.on('end', function(){
+            window.mochaResults = runner.stats;
+            window.mochaResults.reports = failedTests;
+          });
+
+          runner.on('fail', logFailure);
+
+          function logFailure(test, err){
+
+            var flattenTitles = function(test){
+              var titles = [];
+              while (test.parent.title){
+                titles.push(test.parent.title);
+                test = test.parent;
+              }
+              return titles.reverse();
+            };
+
+            failedTests.push({
+              name: test.title,
+              result: false,
+              message: err.message,
+              stack: err.stack,
+              titles: flattenTitles(test)
+            });
+          }
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

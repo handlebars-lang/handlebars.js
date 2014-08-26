@@ -43,7 +43,7 @@ module.exports = function(grunt) {
 
     packager: {
       global: {
-        type: 'global',
+        type: 'umd',
         export: 'Handlebars',
         files: [{
           cwd: 'lib/',
@@ -143,6 +143,17 @@ module.exports = function(grunt) {
             {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
             {browserName: 'internet explorer', version: 10, platform: 'Windows 8'},
             {browserName: 'internet explorer', version: 9, platform: 'Windows 7'}
+          ]
+        }
+      },
+      sanity: {
+        options: {
+          build: process.env.TRAVIS_JOB_ID,
+          urls: ['http://localhost:9999/spec/umd.html?headless=true', 'http://localhost:9999/spec/amd-runtime?headless=true', 'http://localhost:9999/spec/umd-runtime.html?headless=true'],
+          detailedError: true,
+          concurrency: 2,
+          browsers: [
+            {browserName: 'chrome'}
           ]
         }
       }
