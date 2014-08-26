@@ -43,12 +43,13 @@ If you notice any problems, please report them to the GitHub issue tracker at
 The current ember distribution should be tested as part of the handlebars release process. This requires building the `handlebars-source` gem locally and then executing the ember test script.
 
 ```sh
+npm link
 grunt build release
-export HANDLEBARS_PATH=`pwd`
+cp dist/*.js $emberRepoDir/bower_components/handlebars/
 
 cd $emberRepoDir
-bundle exec rake clean
-bundle exec rake test
+npm link handlebars
+npm test
 ```
 
 ## Releasing
