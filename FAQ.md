@@ -42,4 +42,11 @@
   Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 1. Why doesn't IE like the `default` name in the AMD module?
-  Some browsers such as particular versions of IE treat `default` as a reserved word in JavaScript source files. To safely use this you need to reference this via the `Handlebars['default']` lookup method. This is an unfortunate side effect of the shims necessary to backport the handlebars ES6 code to all current browsers.
+  Some browsers such as particular versions of IE treat `default` as a reserved word in JavaScript source files. To safely use this you need to reference this via the `Handlebars['default']` lookup method. This is an unfortunate side effect of the shims necessary to backport the Handlebars ES6 code to all current browsers.
+
+1. How do I load the runtime library when using AMD?
+  There are two options for loading under AMD environments. The first is to use the `handlebars.runtime.amd.js` file. This may require a [path mapping](https://github.com/wycats/handlebars.js/blob/master/spec/amd-runtime.html#L31) as well as access via the `default` field.
+
+  The other option is to load the `handlebars.runtime.js` UMD build, which might not require path configuration and exposes the library as both the module root and the `default` field for compatibility. 
+
+  If not using ES6 transpilers or accessing submodules in the build the former option should be sufficent for most use cases.
