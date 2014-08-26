@@ -1,6 +1,5 @@
 /*global shouldThrow */
 
-var uglify = require('uglify-js');
 
 describe('precompiler', function() {
   // NOP Under non-node environments
@@ -9,7 +8,8 @@ describe('precompiler', function() {
   }
 
   var Handlebars = require('../lib'),
-      Precompiler = require('../lib/precompiler');
+      Precompiler = require('../lib/precompiler'),
+      uglify = require('uglify-js');
 
   var log,
       logFunction,
