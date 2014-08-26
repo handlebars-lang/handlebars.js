@@ -50,6 +50,14 @@ describe("basic context", function() {
     shouldCompileTo("num: {{.}}", 0, "num: 0");
     shouldCompileTo("num: {{num1/num2}}", {num1: {num2: 0}}, "num: 0");
   });
+  it('false', function() {
+    shouldCompileTo('val1: {{val1}}, val2: {{val2}}', {val1: false, val2: new Boolean(false)}, 'val1: false, val2: false');
+    shouldCompileTo('val: {{.}}', false, 'val: false');
+    shouldCompileTo('val: {{val1/val2}}', {val1: {val2: false}}, 'val: false');
+
+    shouldCompileTo('val1: {{{val1}}}, val2: {{{val2}}}', {val1: false, val2: new Boolean(false)}, 'val1: false, val2: false');
+    shouldCompileTo('val: {{{val1/val2}}}', {val1: {val2: false}}, 'val: false');
+  });
 
   it("newlines", function() {
       shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");

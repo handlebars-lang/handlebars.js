@@ -30,8 +30,8 @@ describe('utils', function() {
       equals(Handlebars.Utils.escapeExpression(''), '');
       equals(Handlebars.Utils.escapeExpression(undefined), '');
       equals(Handlebars.Utils.escapeExpression(null), '');
-      equals(Handlebars.Utils.escapeExpression(false), '');
 
+      equals(Handlebars.Utils.escapeExpression(false), 'false');
       equals(Handlebars.Utils.escapeExpression(0), '0');
     });
     it('should handle empty objects', function() {
