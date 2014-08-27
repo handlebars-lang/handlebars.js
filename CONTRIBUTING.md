@@ -61,7 +61,6 @@ A full release may be completed with the following:
 ```
 yo release
 npm publish
-yo release:publish cdnjs handlebars.js dist/cdnjs/
 yo release:publish components handlebars.js dist/components/
 
 cd dist/components/
