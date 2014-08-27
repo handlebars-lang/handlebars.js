@@ -8,6 +8,8 @@ Should you run into other issues with the project, please don't hesitate to let 
 
 Pull requests containing only failing thats demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
+Documentation issues on the handlebarsjs.com site should be reported on [handlebars-site](https://github.com/wycats/handlebars-site).
+
 ## Pull Requests
 
 We also accept [pull requests][pull-request]!
