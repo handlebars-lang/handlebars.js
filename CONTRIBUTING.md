@@ -75,4 +75,4 @@ After this point the handlebars site needs to be updated to point to the new ver
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
 [issue]: https://github.com/wycats/handlebars.js/issues/new
-[jsfiddle]: http://jsfiddle.net/9D88g/25/
+[jsfiddle]: http://jsfiddle.net/9D88g/26/
