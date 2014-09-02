@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-beta.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0...master)
+
+## v2.0.0 - September 1st, 2014
+- Update jsfiddle to 2.0.0-beta.1 - 0670f65
+- Add contrib note regarding handlebarsjs.com docs - 4d17e3c
+- Play nice with gemspec version numbers - 64d5481
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-beta.1...v2.0.0)
 
 ## v2.0.0-beta.1 - August 26th, 2014
 - [#787](https://github.com/wycats/handlebars.js/pull/787) - Remove whitespace surrounding standalone statements ([@kpdecker](https://api.github.com/users/kpdecker))
