@@ -16,6 +16,8 @@ Installing
 ----------
 Installing Handlebars is easy. Simply download the package [from the official site](http://handlebarsjs.com/) or the [bower repository][bower-repo] and add it to your web pages (you should usually use the most recent version).
 
+For web browsers, a free CDN is available at [jsDelivr](http://www.jsdelivr.com/#!handlebarsjs).  Advanced usage, such as [version aliasing & concocting](https://github.com/jsdelivr/jsdelivr#usage), is available. 
+
 Alternatively, if you prefer having the latest version of handlebars from
 the 'master' branch, passing builds of the 'master' branch are automatically
 published to S3. You may download the latest passing master build by grabbing
