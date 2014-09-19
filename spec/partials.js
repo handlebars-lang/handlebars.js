@@ -46,6 +46,13 @@ describe('partials', function() {
     }, Handlebars.Exception, 'The partial whatever could not be found');
   });
 
+  it("registering undefined partial throws an exception", function() {
+    shouldThrow(function() {
+      var undef;
+      handlebarsEnv.registerPartial('undefined_test', undef);
+    }, Handlebars.Exception, 'Attempting to register a partial as undefined');
+  });
+
   it("rendering template partial in vm mode throws an exception", function() {
     shouldThrow(function() {
       var template = CompilerContext.compile("{{> whatever}}");
