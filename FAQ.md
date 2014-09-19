@@ -57,4 +57,4 @@
 
   The other option is to load the `handlebars.runtime.js` UMD build, which might not require path configuration and exposes the library as both the module root and the `default` field for compatibility. 
 
-  If not using ES6 transpilers or accessing submodules in the build the former option should be sufficent for most use cases.
+  If not using ES6 transpilers or accessing submodules in the build the former option should be sufficient for most use cases.
