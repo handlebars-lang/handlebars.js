@@ -41,8 +41,8 @@ describe('partials', function() {
 
   it("rendering undefined partial throws an exception", function() {
     shouldThrow(function() {
-        var template = CompilerContext.compile("{{> whatever}}");
-        template();
+      var template = CompilerContext.compile("{{> whatever}}");
+      template();
     }, Handlebars.Exception, 'The partial whatever could not be found');
   });
 
@@ -71,10 +71,10 @@ describe('partials', function() {
   });
 
   it("GH-14: a partial preceding a selector", function() {
-     var string = "Dudes: {{>dude}} {{another_dude}}";
-     var dude = "{{name}}";
-     var hash = {name:"Jeepers", another_dude:"Creepers"};
-     shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
+    var string = "Dudes: {{>dude}} {{another_dude}}";
+    var dude = "{{name}}";
+    var hash = {name:"Jeepers", another_dude:"Creepers"};
+    shouldCompileToWithPartials(string, [hash, {}, {dude:dude}], true, "Dudes: Jeepers Creepers", "Regular selectors can follow a partial");
   });
 
   it("Partials with slash paths", function() {
