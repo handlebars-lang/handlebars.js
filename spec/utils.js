@@ -25,6 +25,12 @@ describe('utils', function() {
       var string = new Handlebars.SafeString('foo<&"\'>');
       equals(Handlebars.Utils.escapeExpression(string), 'foo<&"\'>');
 
+      var obj = {
+        toHTML: function() {
+          return 'foo<&"\'>';
+        }
+      };
+      equals(Handlebars.Utils.escapeExpression(obj), 'foo<&"\'>');
     });
     it('should handle falsy', function() {
       equals(Handlebars.Utils.escapeExpression(''), '');
