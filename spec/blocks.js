@@ -89,6 +89,20 @@ describe('blocks', function() {
       shouldCompileTo("{{#people}}{{name}}{{^}}{{none}}{{/people}}", {none: "No people"},
         "No people");
     });
+    it("chained inverted sections", function() {
+      shouldCompileTo("{{#people}}{{name}}{{else if none}}{{none}}{{/people}}", {none: "No people"},
+        "No people");
+      shouldCompileTo("{{#people}}{{name}}{{else if nothere}}fail{{else unless nothere}}{{none}}{{/people}}", {none: "No people"},
+        "No people");
+      shouldCompileTo("{{#people}}{{name}}{{else if none}}{{none}}{{else}}fail{{/people}}", {none: "No people"},
+        "No people");
+    });
+    it("chained inverted sections with mismatch", function() {
+      shouldThrow(function() {
+        shouldCompileTo("{{#people}}{{name}}{{else if none}}{{none}}{{/if}}", {none: "No people"},
+          "No people");
+      }, Error);
+    });
 
     it("block inverted sections with empty arrays", function() {
       shouldCompileTo("{{#people}}{{name}}{{^}}{{none}}{{/people}}", {none: "No people", people: []},
@@ -103,6 +117,12 @@ describe('blocks', function() {
       shouldCompileTo('{{#none}}\n{{.}}\n{{^}}\n{{none}}\n{{/none}}\n', {none: 'No people'},
         'No people\n');
       shouldCompileTo('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
+        'No people\n');
+    });
+    it('block standalone chained else sections', function() {
+      shouldCompileTo('{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
+        'No people\n');
+      shouldCompileTo('{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{^}}\n{{/people}}\n', {none: 'No people'},
         'No people\n');
     });
     it('should handle nesting', function() {

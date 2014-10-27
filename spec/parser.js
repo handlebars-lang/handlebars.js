@@ -116,6 +116,10 @@ describe('parser', function() {
     equals(ast_for("{{#foo}} bar {{else}} baz {{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n    CONTENT[ ' baz ' ]\n");
   });
 
+  it('parses multiple inverse sections', function() {
+    equals(ast_for("{{#foo}} bar {{else if bar}}{{else}} baz {{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n    BLOCK:\n      {{ ID:if [ID:bar] }}\n      PROGRAM:\n      {{^}}\n        CONTENT[ ' baz ' ]\n");
+  });
+
   it('parses empty blocks', function() {
     equals(ast_for("{{#foo}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
   });
@@ -147,8 +151,10 @@ describe('parser', function() {
   it('parses a standalone inverse section', function() {
     equals(ast_for("{{^foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
   });
-  it('parses a standalone inverse section', function() {
-    equals(ast_for("{{else foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
+  it('throws on old inverse section', function() {
+    shouldThrow(function() {
+      equals(ast_for("{{else foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
+    }, Error);
   });
 
   it("raises if there's a Parse error", function() {
