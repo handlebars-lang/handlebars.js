@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var optimist = require('optimist')
-    .usage('Precompile handlebar templates.\nUsage: $0 template...', {
+    .usage('Precompile handlebar templates.\nUsage: $0 [template|directory]...', {
       'f': {
         'type': 'string',
         'description': 'Output File',
@@ -80,6 +80,11 @@ var optimist = require('optimist')
         'type': 'boolean',
         'description': 'Prints the current compiler version',
         'alias': 'version'
+      },
+
+      'help': {
+        'type': 'boolean',
+        'description': 'Outputs this message'
       }
     })
 
@@ -89,7 +94,14 @@ var optimist = require('optimist')
       }
     });
 
+
 var argv = optimist.argv;
 argv.templates = argv._;
 delete argv._;
+
+if (argv.help || !argv.templates.length) {
+  optimist.showHelp();
+  return;
+}
+
 return require('../lib/precompiler').cli(argv);
