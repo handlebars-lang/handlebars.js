@@ -66,6 +66,9 @@ describe('whitespace control', function() {
     shouldCompileToWithPartials('foo {{~> dude~}} ', [{}, {}, {dude: 'bar'}], true, 'foobar');
     shouldCompileToWithPartials('foo {{> dude~}} ', [{}, {}, {dude: 'bar'}], true, 'foo bar');
     shouldCompileToWithPartials('foo {{> dude}} ', [{}, {}, {dude: 'bar'}], true, 'foo bar ');
+
+    shouldCompileToWithPartials('foo\n {{~> dude}} ', [{}, {}, {dude: 'bar'}], true, 'foobar');
+    shouldCompileToWithPartials('foo\n {{> dude}} ', [{}, {}, {dude: 'bar'}], true, 'foo\n bar');
   });
 
   it('should only strip whitespace once', function() {
