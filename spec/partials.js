@@ -167,6 +167,14 @@ describe('partials', function() {
       shouldCompileToWithPartials(string, [hash, {}, {dude: dude, url: url}], true,
             "Dudes:\n  Yehuda\n   http://yehuda!\n  Alan\n   http://alan!\n");
     });
+    it("prevent nested indented partials", function() {
+      var string = "Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}";
+      var dude = "{{name}}\n {{> url}}";
+      var url = "{{url}}!\n";
+      var hash = {dudes: [{name: "Yehuda", url: "http://yehuda"}, {name: "Alan", url: "http://alan"}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: dude, url: url}, {preventIndent: true}], true,
+            "Dudes:\n  Yehuda\n http://yehuda!\n  Alan\n http://alan!\n");
+    });
   });
 
   describe('compat mode', function() {
