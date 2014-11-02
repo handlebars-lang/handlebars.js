@@ -109,46 +109,46 @@ describe('parser', function() {
   });
 
   it('parses an inverse section', function() {
-    equals(ast_for("{{#foo}} bar {{^}} baz {{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n    CONTENT[ ' baz ' ]\n");
+    equals(ast_for("{{#foo}} bar {{^}} baz {{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n    CONTENT[ ' baz ' ]\n");
   });
 
   it('parses an inverse (else-style) section', function() {
-    equals(ast_for("{{#foo}} bar {{else}} baz {{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n    CONTENT[ ' baz ' ]\n");
+    equals(ast_for("{{#foo}} bar {{else}} baz {{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n    CONTENT[ ' baz ' ]\n");
   });
 
   it('parses empty blocks', function() {
-    equals(ast_for("{{#foo}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n");
+    equals(ast_for("{{#foo}}{{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n");
   });
 
   it('parses empty blocks with empty inverse section', function() {
-    equals(ast_for("{{#foo}}{{^}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
+    equals(ast_for("{{#foo}}{{^}}{{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n  {{^}}\n");
   });
 
   it('parses empty blocks with empty inverse (else-style) section', function() {
-    equals(ast_for("{{#foo}}{{else}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n");
+    equals(ast_for("{{#foo}}{{else}}{{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n  {{^}}\n");
   });
 
   it('parses non-empty blocks with empty inverse section', function() {
-    equals(ast_for("{{#foo}} bar {{^}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n");
+    equals(ast_for("{{#foo}} bar {{^}}{{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n");
   });
 
   it('parses non-empty blocks with empty inverse (else-style) section', function() {
-    equals(ast_for("{{#foo}} bar {{else}}{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n");
+    equals(ast_for("{{#foo}} bar {{else}}{{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n    CONTENT[ ' bar ' ]\n  {{^}}\n");
   });
 
   it('parses empty blocks with non-empty inverse section', function() {
-    equals(ast_for("{{#foo}}{{^}} bar {{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n    CONTENT[ ' bar ' ]\n");
+    equals(ast_for("{{#foo}}{{^}} bar {{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n  {{^}}\n    CONTENT[ ' bar ' ]\n");
   });
 
   it('parses empty blocks with non-empty inverse (else-style) section', function() {
-    equals(ast_for("{{#foo}}{{else}} bar {{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  PROGRAM:\n  {{^}}\n    CONTENT[ ' bar ' ]\n");
+    equals(ast_for("{{#foo}}{{else}} bar {{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n  {{^}}\n    CONTENT[ ' bar ' ]\n");
   });
 
   it('parses a standalone inverse section', function() {
-    equals(ast_for("{{^foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
+    equals(ast_for("{{^foo}}bar{{/foo}}"), "BLOCK:\n  ID:foo []\n  {{^}}\n    CONTENT[ 'bar' ]\n");
   });
   it('parses a standalone inverse section', function() {
-    equals(ast_for("{{else foo}}bar{{/foo}}"), "BLOCK:\n  {{ ID:foo [] }}\n  {{^}}\n    CONTENT[ 'bar' ]\n");
+    equals(ast_for("{{else foo}}bar{{/foo}}"), "BLOCK:\n  ID:foo []\n  {{^}}\n    CONTENT[ 'bar' ]\n");
   });
 
   it("raises if there's a Parse error", function() {

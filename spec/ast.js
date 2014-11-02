@@ -71,7 +71,7 @@ describe('ast', function() {
     it('should throw on mustache mismatch', function() {
       shouldThrow(function() {
         handlebarsEnv.parse("\n  {{#foo}}{{/bar}}");
-      }, Handlebars.Exception, "foo doesn't match bar - 2:2");
+      }, Handlebars.Exception, "foo doesn't match bar - 2:5");
     });
 
     it('stores location info', function(){
