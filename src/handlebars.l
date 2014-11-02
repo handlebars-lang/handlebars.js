@@ -56,7 +56,10 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                  }
 <raw>[^\x00]*?/("{{{{/")         { return 'CONTENT'; }
 
-<com>[\s\S]*?"--}}"              strip(0,4); this.popState(); return 'COMMENT';
+<com>[\s\S]*?"--"{RIGHT_STRIP}?"}}" {
+  this.popState();
+  return 'COMMENT';
+}
 
 <mu>"("                          return 'OPEN_SEXPR';
 <mu>")"                          return 'CLOSE_SEXPR';
@@ -76,8 +79,15 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"{{"{LEFT_STRIP}?\s*"else"   return 'OPEN_INVERSE';
 <mu>"{{"{LEFT_STRIP}?"{"         return 'OPEN_UNESCAPED';
 <mu>"{{"{LEFT_STRIP}?"&"         return 'OPEN';
-<mu>"{{!--"                      this.popState(); this.begin('com');
-<mu>"{{!"[\s\S]*?"}}"            strip(3,5); this.popState(); return 'COMMENT';
+<mu>"{{"{LEFT_STRIP}?"!--" {
+  this.unput(yytext);
+  this.popState();
+  this.begin('com');
+}
+<mu>"{{"{LEFT_STRIP}?"!"[\s\S]*?"}}" {
+  this.popState();
+  return 'COMMENT';
+}
 <mu>"{{"{LEFT_STRIP}?            return 'OPEN';
 
 <mu>"="                          return 'EQUALS';

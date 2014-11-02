@@ -137,7 +137,7 @@ describe('ast', function() {
   describe("CommentNode", function(){
 
     it('stores location info', function(){
-      var comment = new handlebarsEnv.AST.CommentNode("HI", LOCATION_INFO);
+      var comment = new handlebarsEnv.AST.CommentNode("HI", {}, LOCATION_INFO);
       testLocationInfoStorage(comment);
     });
   });

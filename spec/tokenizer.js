@@ -217,19 +217,19 @@ describe('Tokenizer', function() {
   it('tokenizes a comment as "COMMENT"', function() {
     var result = tokenize("foo {{! this is a comment }} bar {{ baz }}");
     shouldMatchTokens(result, ['CONTENT', 'COMMENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
-    shouldBeToken(result[1], "COMMENT", " this is a comment ");
+    shouldBeToken(result[1], "COMMENT", "{{! this is a comment }}");
   });
 
   it('tokenizes a block comment as "COMMENT"', function() {
     var result = tokenize("foo {{!-- this is a {{comment}} --}} bar {{ baz }}");
     shouldMatchTokens(result, ['CONTENT', 'COMMENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
-    shouldBeToken(result[1], "COMMENT", " this is a {{comment}} ");
+    shouldBeToken(result[1], "COMMENT", "{{!-- this is a {{comment}} --}}");
   });
 
   it('tokenizes a block comment with whitespace as "COMMENT"', function() {
     var result = tokenize("foo {{!-- this is a\n{{comment}}\n--}} bar {{ baz }}");
     shouldMatchTokens(result, ['CONTENT', 'COMMENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);
-    shouldBeToken(result[1], "COMMENT", " this is a\n{{comment}}\n");
+    shouldBeToken(result[1], "COMMENT", "{{!-- this is a\n{{comment}}\n--}}");
   });
 
   it('tokenizes open and closing blocks as OPEN_BLOCK, ID, CLOSE ..., OPEN_ENDBLOCK ID CLOSE', function() {

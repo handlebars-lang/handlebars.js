@@ -18,7 +18,7 @@ statement
   | rawBlock -> $1
   | partial -> $1
   | CONTENT -> new yy.ContentNode($1, @$)
-  | COMMENT -> new yy.CommentNode($1, @$)
+  | COMMENT -> new yy.CommentNode(yy.stripComment($1), yy.stripFlags($1, $1), @$)
   ;
 
 rawBlock
