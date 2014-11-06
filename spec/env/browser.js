@@ -9,6 +9,8 @@ global.Handlebars = undefined;
 vm.runInThisContext(fs.readFileSync(__dirname + '/../../dist/handlebars.js'), 'dist/handlebars.js');
 
 global.CompilerContext = {
+  browser: true,
+
   compile: function(template, options) {
     var templateSpec = handlebarsEnv.precompile(template, options);
     return handlebarsEnv.template(safeEval(templateSpec));

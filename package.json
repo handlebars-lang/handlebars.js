@@ -21,7 +21,8 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
-    "optimist": "~0.3"
+    "optimist": "~0.3",
+    "source-map": "^0.1.40"
   },
   "optionalDependencies": {
     "uglify-js": "~2.3"
