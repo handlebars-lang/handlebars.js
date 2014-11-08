@@ -30,7 +30,7 @@ openRawBlock
   ;
 
 block
-  : openBlock program inverseAndProgram? closeBlock -> yy.prepareBlock($1, $2, $3, $4, false, @$)
+  : openBlock program inverseChain? closeBlock -> yy.prepareBlock($1, $2, $3, $4, false, @$)
   | openInverse program inverseAndProgram? closeBlock -> yy.prepareBlock($1, $2, $3, $4, true, @$)
   ;
 
@@ -42,8 +42,24 @@ openInverse
   : OPEN_INVERSE sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), @$)
   ;
 
+openInverseChain
+  : OPEN_INVERSE_CHAIN sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), @$)
+  ;
+
 inverseAndProgram
   : INVERSE program -> { strip: yy.stripFlags($1, $1), program: $2 }
+  ;
+
+inverseChain
+  : openInverseChain program inverseChain? {
+    var inverse = yy.prepareBlock($1, $2, $3, $3, false, @$),
+        program = new yy.ProgramNode(yy.prepareProgram([inverse]), {}, @$);
+
+    program.inverse = inverse;
+
+    $$ = { strip: $1.strip, program: program, chain: true };
+  }
+  | inverseAndProgram -> $1
   ;
 
 closeBlock
