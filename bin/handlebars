@@ -7,6 +7,10 @@ var optimist = require('optimist')
         'description': 'Output File',
         'alias': 'output'
       },
+      'map': {
+        'type': 'string',
+        'description': 'Source Map File'
+      },
       'a': {
         'type': 'boolean',
         'description': 'Exports amd style (require.js)',

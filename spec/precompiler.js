@@ -98,7 +98,8 @@ describe('precompiler', function() {
   });
   it('should output multiple amd', function() {
     Handlebars.precompile = function() { return 'amd'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts'], amd: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [__dirname + '/artifacts'], amd: true, extension: 'handlebars', namespace: 'foo'});
+    equal(/templates = foo = foo \|\|/.test(log), true);
     equal(/return templates/.test(log), true);
     equal(/template\(amd\)/.test(log), true);
   });
@@ -155,5 +156,18 @@ describe('precompiler', function() {
     uglify.minify = function() { return {code: 'min'}; };
     Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], min: true, extension: 'handlebars'});
     equal(log, 'min');
+  });
+
+  it('should output map', function() {
+    fs.writeFileSync = function(_file, _content) {
+      console.error(arguments);
+      file = _file;
+      content = _content;
+    };
+
+    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], map: 'foo.js.map', extension: 'handlebars'});
+
+    equal(file, 'foo.js.map');
+    equal(/sourceMappingURL=/.test(log), true);
   });
 });
