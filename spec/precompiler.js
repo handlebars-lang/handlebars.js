@@ -164,4 +164,11 @@ describe('precompiler', function() {
     equal(file, 'foo.js.map');
     equal(/sourceMappingURL=/.test(log), true);
   });
+
+  it('should output map', function() {
+    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], min: true, map: 'foo.js.map', extension: 'handlebars'});
+
+    equal(file, 'foo.js.map');
+    equal(/sourceMappingURL=/.test(log), true);
+  });
 });
