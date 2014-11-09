@@ -60,6 +60,10 @@ describe('helpers', function() {
     }};
     shouldCompileToWithPartials(string, [hash, helpers], true, "<a href='/root/goodbye'>Goodbye</a>");
   });
+  it('helper returning undefined value', function() {
+    shouldCompileTo(' {{nothere}}', [{}, {nothere: function() {}}], ' ');
+    shouldCompileTo(' {{#nothere}}{{/nothere}}', [{}, {nothere: function() {}}], ' ');
+  });
 
   it("block helper", function() {
     var string   = "{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!";

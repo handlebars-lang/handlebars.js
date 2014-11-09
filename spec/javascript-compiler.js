@@ -63,7 +63,7 @@ describe('javascript-compiler api', function() {
     });
     it('should allow append buffer override', function() {
       handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function(string) {
-        return $superAppend.call(this, string + ' + "_foo"');
+        return $superAppend.call(this, [string, ' + "_foo"']);
       };
       shouldCompileTo("{{foo}}", { foo: "food" }, "food_foo");
     });
