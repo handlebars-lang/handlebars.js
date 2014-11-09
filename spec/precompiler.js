@@ -159,12 +159,6 @@ describe('precompiler', function() {
   });
 
   it('should output map', function() {
-    fs.writeFileSync = function(_file, _content) {
-      console.error(arguments);
-      file = _file;
-      content = _content;
-    };
-
     Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], map: 'foo.js.map', extension: 'handlebars'});
 
     equal(file, 'foo.js.map');
