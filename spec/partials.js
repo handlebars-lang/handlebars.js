@@ -158,6 +158,15 @@ describe('partials', function() {
     handlebarsEnv.compile = compile;
   });
 
+  it('should pass compiler flags', function() {
+    if (Handlebars.compile) {
+      var env = Handlebars.create();
+      env.registerPartial('partial', '{{foo}}');
+      var template = env.compile('{{foo}} {{> partial}}', {noEscape: true});
+      equal(template({foo: '<'}), '< <');
+    }
+  });
+
   describe('standalone partials', function() {
     it("indented partials", function() {
       var string = "Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}";
