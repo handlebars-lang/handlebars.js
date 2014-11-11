@@ -59,5 +59,10 @@
   },
   "scripts": {
     "test": "grunt"
+  },
+  "jspm": {
+    "main": "handlebars",
+    "directories": { "lib": "dist/amd" },
+    "buildConfig": { "minify": true }
   }
 }
