@@ -157,6 +157,14 @@ describe('parser', function() {
     }, Error);
   });
 
+  it('parses block with block params', function() {
+    equals(ast_for("{{#foo as |bar baz|}}content{{/foo}}"), "BLOCK:\n  ID:foo []\n  PROGRAM:\n    BLOCK PARAMS: [ bar baz ]\n    CONTENT[ 'content' ]\n");
+  });
+
+  it('parses inverse block with block params', function() {
+    equals(ast_for("{{^foo as |bar baz|}}content{{/foo}}"), "BLOCK:\n  ID:foo []\n  {{^}}\n    BLOCK PARAMS: [ bar baz ]\n    CONTENT[ 'content' ]\n");
+  });
+
   it("raises if there's a Parse error", function() {
     shouldThrow(function() {
       ast_for("foo{{^}}bar");
@@ -193,7 +201,7 @@ describe('parser', function() {
 
   describe('externally compiled AST', function() {
     it('can pass through an already-compiled AST', function() {
-      equals(ast_for(new Handlebars.AST.ProgramNode([ new Handlebars.AST.ContentNode("Hello")])), "CONTENT[ \'Hello\' ]\n");
+      equals(ast_for(new Handlebars.AST.ProgramNode([new Handlebars.AST.ContentNode("Hello")], null)), "CONTENT[ \'Hello\' ]\n");
     });
   });
 });

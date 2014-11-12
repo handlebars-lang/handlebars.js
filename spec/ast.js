@@ -192,7 +192,7 @@ describe('ast', function() {
 
   describe('ProgramNode', function(){
     it('storing location info', function(){
-      var pn = new handlebarsEnv.AST.ProgramNode([], {}, LOCATION_INFO);
+      var pn = new handlebarsEnv.AST.ProgramNode([], null, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });

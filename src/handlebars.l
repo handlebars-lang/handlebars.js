@@ -12,7 +12,7 @@ function strip(start, end) {
 LEFT_STRIP    "~"
 RIGHT_STRIP   "~"
 
-LOOKAHEAD           [=~}\s\/.)]
+LOOKAHEAD           [=~}\s\/.)|]
 LITERAL_LOOKAHEAD   [~}\s)]
 
 /*
@@ -103,6 +103,8 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"true"/{LITERAL_LOOKAHEAD}   return 'BOOLEAN';
 <mu>"false"/{LITERAL_LOOKAHEAD}  return 'BOOLEAN';
 <mu>\-?[0-9]+(?:\.[0-9]+)?/{LITERAL_LOOKAHEAD} return 'NUMBER';
+<mu>"as"\s+"|"                   return 'OPEN_BLOCK_PARAMS';
+<mu>"|"                          return 'CLOSE_BLOCK_PARAMS';
 
 <mu>{ID}                         return 'ID';
 
