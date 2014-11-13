@@ -9,7 +9,7 @@ root
   ;
 
 program
-  : statement* -> new yy.ProgramNode(yy.prepareProgram($1), {}, @$)
+  : statement* -> new yy.ProgramNode(yy.prepareProgram($1), null, {}, @$)
   ;
 
 statement
@@ -39,11 +39,11 @@ block
   ;
 
 openBlock
-  : OPEN_BLOCK sexpr CLOSE -> { sexpr: $2, strip: yy.stripFlags($1, $3) }
+  : OPEN_BLOCK sexpr blockParams? CLOSE -> { sexpr: $2, blockParams: $3, strip: yy.stripFlags($1, $4) }
   ;
 
 openInverse
-  : OPEN_INVERSE sexpr CLOSE -> { sexpr: $2, strip: yy.stripFlags($1, $3) }
+  : OPEN_INVERSE sexpr blockParams? CLOSE -> { sexpr: $2, blockParams: $3, strip: yy.stripFlags($1, $4) }
   ;
 
 openInverseChain
@@ -57,7 +57,7 @@ inverseAndProgram
 inverseChain
   : openInverseChain program inverseChain? {
     var inverse = yy.prepareBlock($1, $2, $3, $3, false, @$),
-        program = new yy.ProgramNode(yy.prepareProgram([inverse]), {}, @$);
+        program = new yy.ProgramNode(yy.prepareProgram([inverse]), null, {}, @$);
 
     program.inverse = inverse;
 
@@ -104,6 +104,10 @@ hashSegment
   : ID EQUALS param -> [$1, $3]
   ;
 
+blockParams
+  : OPEN_BLOCK_PARAMS ID+ CLOSE_BLOCK_PARAMS -> $2
+  ;
+
 partialName
   : path -> new yy.PartialNameNode($1, @$)
   | STRING -> new yy.PartialNameNode(new yy.StringNode($1, @$), @$)
@@ -122,4 +126,3 @@ pathSegments
   : pathSegments SEP ID { $1.push({part: $3, separator: $2}); $$ = $1; }
   | ID -> [{part: $1}]
   ;
-
