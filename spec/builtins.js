@@ -173,6 +173,16 @@ describe('builtin helpers', function() {
       equal(result, "GOODBYE! cruel world!", "The @last variable is used");
     });
 
+    it("each object with @last", function() {
+      var string = "{{#each goodbyes}}{{#if @last}}{{text}}! {{/if}}{{/each}}cruel {{world}}!";
+      var hash   = {goodbyes: {'foo': {text: "goodbye"}, bar: {text: "Goodbye"}}, world: "world"};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, "Goodbye! cruel world!", "The @last variable is used");
+    });
+
     it("each with nested @last", function() {
       var string = "{{#each goodbyes}}({{#if @last}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @last}}{{text}}!{{/if}}{{/each}}{{#if @last}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!";
       var hash   = {goodbyes: [{text: "goodbye"}, {text: "Goodbye"}, {text: "GOODBYE"}], world: "world"};
