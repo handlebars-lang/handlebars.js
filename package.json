@@ -33,7 +33,7 @@
     "benchmark": "~1.0",
     "dustjs-linkedin": "~2.0.2",
     "eco": "~1.1.0-rc-3",
-    "es6-module-packager": "1.x",
+    "es6-module-packager": "^2.0.0",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.10",
     "grunt-contrib-clean": "~0.4.1",
