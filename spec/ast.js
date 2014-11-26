@@ -5,22 +5,21 @@ describe('ast', function() {
   }
 
   var LOCATION_INFO = {
-    last_line: 0,
-    first_line: 0,
-    first_column: 0,
-    last_column: 0
+    start: {
+      line: 1,
+      column: 1
+    },
+    end: {
+      line: 1,
+      column: 1
+    }
   };
 
   function testLocationInfoStorage(node){
-    var properties = [ 'firstLine', 'lastLine', 'firstColumn', 'lastColumn' ],
-        property,
-        propertiesLen = properties.length,
-        i;
-
-    for (i = 0; i < propertiesLen; i++){
-      property = properties[0];
-      equals(node[property], 0);
-    }
+    equals(node.loc.start.line, 1);
+    equals(node.loc.start.column, 1);
+    equals(node.loc.end.line, 1);
+    equals(node.loc.end.column, 1);
   }
 
   describe('MustacheNode', function() {
@@ -94,21 +93,21 @@ describe('ast', function() {
           {part: 'foo'},
           {part: '..'},
           {part: 'bar'}
-        ], {first_line: 1, first_column: 1});
+        ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foo.. - 1:1");
       shouldThrow(function() {
         new handlebarsEnv.AST.IdNode([
           {part: 'foo'},
           {part: '.'},
           {part: 'bar'}
-        ], {first_line: 1, first_column: 1});
+        ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foo. - 1:1");
       shouldThrow(function() {
         new handlebarsEnv.AST.IdNode([
           {part: 'foo'},
           {part: 'this'},
           {part: 'bar'}
-        ], {first_line: 1, first_column: 1});
+        ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foothis - 1:1");
     });
 
@@ -201,10 +200,10 @@ describe('ast', function() {
     var ast, statements;
 
     function testColumns(node, firstLine, lastLine, firstColumn, lastColumn){
-      equals(node.firstLine, firstLine);
-      equals(node.lastLine, lastLine);
-      equals(node.firstColumn, firstColumn);
-      equals(node.lastColumn, lastColumn);
+      equals(node.loc.start.line, firstLine);
+      equals(node.loc.start.column, firstColumn);
+      equals(node.loc.end.line, lastLine);
+      equals(node.loc.end.column, lastColumn);
     }
 
     ast = Handlebars.parse("line 1 {{line1Token}}\n line 2 {{line2token}}\n line 3 {{#blockHelperOnLine3}}\nline 4{{line4token}}\n" +
