@@ -5,7 +5,7 @@ var _ = require('underscore'),
     fs = require('fs'),
     vm = require('vm');
 
-global.Handlebars = undefined;
+global.Handlebars = 'no-conflict';
 vm.runInThisContext(fs.readFileSync(__dirname + '/../../dist/handlebars.js'), 'dist/handlebars.js');
 
 global.CompilerContext = {

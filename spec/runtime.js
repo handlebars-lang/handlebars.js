@@ -60,4 +60,22 @@ describe('runtime', function() {
       equal(template._child(1, undefined, [{bar: 'baz'}])(), 'baz');
     });
   });
+
+  describe('#noConflict', function() {
+    if (!CompilerContext.browser) {
+      return;
+    }
+
+    it('should reset on no conflict', function() {
+      var reset = Handlebars;
+      Handlebars.noConflict();
+      equal(Handlebars, 'no-conflict');
+
+      Handlebars = 'really, none';
+      reset.noConflict();
+      equal(Handlebars, 'really, none');
+
+      Handlebars = reset;
+    });
+  });
 });

@@ -5,7 +5,7 @@ var _ = require('underscore'),
     fs = require('fs'),
     vm = require('vm');
 
-global.Handlebars = undefined;
+global.Handlebars = 'no-conflict';
 vm.runInThisContext(fs.readFileSync(__dirname + '/../../dist/handlebars.runtime.js'), 'dist/handlebars.runtime.js');
 
 var parse = require('../../dist/cjs/handlebars/compiler/base').parse;
@@ -13,6 +13,8 @@ var compiler = require('../../dist/cjs/handlebars/compiler/compiler');
 var JavaScriptCompiler = require('../../dist/cjs/handlebars/compiler/javascript-compiler')['default'];
 
 global.CompilerContext = {
+  browser: true,
+
   compile: function(template, options) {
     // Hack the compiler on to the environment for these specific tests
     handlebarsEnv.precompile = function(template, options) {
