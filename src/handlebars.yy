@@ -5,7 +5,7 @@
 %%
 
 root
-  : program EOF { yy.prepareProgram($1.statements, true); return $1; }
+  : program EOF { yy.prepareProgram($1.body, true); return $1; }
   ;
 
 program

@@ -77,7 +77,7 @@ describe('ast', function() {
       var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
       var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
       var block = new handlebarsEnv.AST.BlockNode(mustacheNode,
-                                                  {statements: [], strip: {}}, {statements: [], strip: {}},
+                                                  {body: [], strip: {}}, {body: [], strip: {}},
                                                   {
                                                     strip: {},
                                                     path: {original: 'foo'}
@@ -197,7 +197,7 @@ describe('ast', function() {
   });
 
   describe("Line Numbers", function(){
-    var ast, statements;
+    var ast, body;
 
     function testColumns(node, firstLine, lastLine, firstColumn, lastColumn){
       equals(node.loc.start.line, firstLine);
@@ -208,41 +208,41 @@ describe('ast', function() {
 
     ast = Handlebars.parse("line 1 {{line1Token}}\n line 2 {{line2token}}\n line 3 {{#blockHelperOnLine3}}\nline 4{{line4token}}\n" +
                            "line5{{else}}\n{{line6Token}}\n{{/blockHelperOnLine3}}");
-    statements = ast.statements;
+    body = ast.body;
 
     it('gets ContentNode line numbers', function(){
-      var contentNode = statements[0];
+      var contentNode = body[0];
       testColumns(contentNode, 1, 1, 0, 7);
     });
 
     it('gets MustacheNode line numbers', function(){
-      var mustacheNode = statements[1];
+      var mustacheNode = body[1];
       testColumns(mustacheNode, 1, 1, 7, 21);
     });
 
     it('gets line numbers correct when newlines appear', function(){
-      testColumns(statements[2], 1, 2, 21, 8);
+      testColumns(body[2], 1, 2, 21, 8);
     });
 
     it('gets MustacheNode line numbers correct across newlines', function(){
-      var secondMustacheNode = statements[3];
+      var secondMustacheNode = body[3];
       testColumns(secondMustacheNode, 2, 2, 8, 22);
      });
 
      it('gets the block helper information correct', function(){
-       var blockHelperNode = statements[5];
+       var blockHelperNode = body[5];
        testColumns(blockHelperNode, 3, 7, 8, 23);
      });
 
      it('correctly records the line numbers the program of a block helper', function(){
-       var blockHelperNode = statements[5],
+       var blockHelperNode = body[5],
            program = blockHelperNode.program;
 
        testColumns(program, 3, 5, 8, 5);
      });
 
      it('correctly records the line numbers of an inverse of a block helper', function(){
-       var blockHelperNode = statements[5],
+       var blockHelperNode = body[5],
            inverse = blockHelperNode.inverse;
 
        testColumns(inverse, 5, 7, 5, 0);
@@ -253,118 +253,118 @@ describe('ast', function() {
     describe('mustache', function() {
       it('does not mark mustaches as standalone', function() {
         var ast = Handlebars.parse('  {{comment}} ');
-        equals(!!ast.statements[0].string, true);
-        equals(!!ast.statements[2].string, true);
+        equals(!!ast.body[0].string, true);
+        equals(!!ast.body[2].string, true);
       });
     });
     describe('blocks', function() {
       it('marks block mustaches as standalone', function() {
         var ast = Handlebars.parse(' {{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} '),
-            block = ast.statements[1];
+            block = ast.body[1];
 
-        equals(ast.statements[0].string, '');
+        equals(ast.body[0].string, '');
 
-        equals(block.program.statements[0].string, 'foo\n');
-        equals(block.inverse.statements[0].string, '  bar \n');
+        equals(block.program.body[0].string, 'foo\n');
+        equals(block.inverse.body[0].string, '  bar \n');
 
-        equals(ast.statements[2].string, '');
+        equals(ast.body[2].string, '');
       });
       it('marks initial block mustaches as standalone', function() {
         var ast = Handlebars.parse('{{# comment}} \nfoo\n {{/comment}}'),
-            block = ast.statements[0];
+            block = ast.body[0];
 
-        equals(block.program.statements[0].string, 'foo\n');
+        equals(block.program.body[0].string, 'foo\n');
       });
       it('marks mustaches with children as standalone', function() {
         var ast = Handlebars.parse('{{# comment}} \n{{foo}}\n {{/comment}}'),
-            block = ast.statements[0];
+            block = ast.body[0];
 
-        equals(block.program.statements[0].string, '');
-        equals(block.program.statements[1].id.original, 'foo');
-        equals(block.program.statements[2].string, '\n');
+        equals(block.program.body[0].string, '');
+        equals(block.program.body[1].id.original, 'foo');
+        equals(block.program.body[2].string, '\n');
       });
       it('marks nested block mustaches as standalone', function() {
         var ast = Handlebars.parse('{{#foo}} \n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} \n{{/foo}}'),
-            statements = ast.statements[0].program.statements,
-            block = statements[1];
+            body = ast.body[0].program.body,
+            block = body[1];
 
-        equals(statements[0].string, '');
+        equals(body[0].string, '');
 
-        equals(block.program.statements[0].string, 'foo\n');
-        equals(block.inverse.statements[0].string, '  bar \n');
+        equals(block.program.body[0].string, 'foo\n');
+        equals(block.inverse.body[0].string, '  bar \n');
 
-        equals(statements[0].string, '');
+        equals(body[0].string, '');
       });
       it('does not mark nested block mustaches as standalone', function() {
         var ast = Handlebars.parse('{{#foo}} {{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} {{/foo}}'),
-            statements = ast.statements[0].program.statements,
-            block = statements[1];
+            body = ast.body[0].program.body,
+            block = body[1];
 
-        equals(statements[0].omit, undefined);
+        equals(body[0].omit, undefined);
 
-        equals(block.program.statements[0].string, ' \nfoo\n');
-        equals(block.inverse.statements[0].string, '  bar \n  ');
+        equals(block.program.body[0].string, ' \nfoo\n');
+        equals(block.inverse.body[0].string, '  bar \n  ');
 
-        equals(statements[0].omit, undefined);
+        equals(body[0].omit, undefined);
       });
       it('does not mark nested initial block mustaches as standalone', function() {
         var ast = Handlebars.parse('{{#foo}}{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}}{{/foo}}'),
-            statements = ast.statements[0].program.statements,
-            block = statements[0];
+            body = ast.body[0].program.body,
+            block = body[0];
 
-        equals(block.program.statements[0].string, ' \nfoo\n');
-        equals(block.inverse.statements[0].string, '  bar \n  ');
+        equals(block.program.body[0].string, ' \nfoo\n');
+        equals(block.inverse.body[0].string, '  bar \n  ');
 
-        equals(statements[0].omit, undefined);
+        equals(body[0].omit, undefined);
       });
 
       it('marks column 0 block mustaches as standalone', function() {
         var ast = Handlebars.parse('test\n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} '),
-            block = ast.statements[1];
+            block = ast.body[1];
 
-        equals(ast.statements[0].omit, undefined);
+        equals(ast.body[0].omit, undefined);
 
-        equals(block.program.statements[0].string, 'foo\n');
-        equals(block.inverse.statements[0].string, '  bar \n');
+        equals(block.program.body[0].string, 'foo\n');
+        equals(block.inverse.body[0].string, '  bar \n');
 
-        equals(ast.statements[2].string, '');
+        equals(ast.body[2].string, '');
       });
     });
     describe('partials', function() {
       it('marks partial as standalone', function() {
         var ast = Handlebars.parse('{{> partial }} ');
-        equals(ast.statements[1].string, '');
+        equals(ast.body[1].string, '');
       });
       it('marks indented partial as standalone', function() {
         var ast = Handlebars.parse('  {{> partial }} ');
-        equals(ast.statements[0].string, '');
-        equals(ast.statements[1].indent, '  ');
-        equals(ast.statements[2].string, '');
+        equals(ast.body[0].string, '');
+        equals(ast.body[1].indent, '  ');
+        equals(ast.body[2].string, '');
       });
       it('marks those around content as not standalone', function() {
         var ast = Handlebars.parse('a{{> partial }}');
-        equals(ast.statements[0].omit, undefined);
+        equals(ast.body[0].omit, undefined);
 
         ast = Handlebars.parse('{{> partial }}a');
-        equals(ast.statements[1].omit, undefined);
+        equals(ast.body[1].omit, undefined);
       });
     });
     describe('comments', function() {
       it('marks comment as standalone', function() {
         var ast = Handlebars.parse('{{! comment }} ');
-        equals(ast.statements[1].string, '');
+        equals(ast.body[1].string, '');
       });
       it('marks indented comment as standalone', function() {
         var ast = Handlebars.parse('  {{! comment }} ');
-        equals(ast.statements[0].string, '');
-        equals(ast.statements[2].string, '');
+        equals(ast.body[0].string, '');
+        equals(ast.body[2].string, '');
       });
       it('marks those around content as not standalone', function() {
         var ast = Handlebars.parse('a{{! comment }}');
-        equals(ast.statements[0].omit, undefined);
+        equals(ast.body[0].omit, undefined);
 
         ast = Handlebars.parse('{{! comment }}a');
-        equals(ast.statements[1].omit, undefined);
+        equals(ast.body[1].omit, undefined);
       });
     });
   });
