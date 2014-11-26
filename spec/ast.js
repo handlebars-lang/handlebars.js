@@ -24,21 +24,16 @@ describe('ast', function() {
 
   describe('MustacheNode', function() {
     function testEscape(open, expected) {
-      var mustache = new handlebarsEnv.AST.MustacheNode([{}], {}, open, false);
+      var mustache = new handlebarsEnv.AST.MustacheNode([{}], open, false);
       equals(mustache.escaped, expected);
     }
 
     it('should store args', function() {
       var id = {isSimple: true},
           hash = {},
-          mustache = new handlebarsEnv.AST.MustacheNode([id, 'param1'], hash, '', false, LOCATION_INFO);
-      equals(mustache.type, 'mustache');
-      equals(mustache.hash, hash);
+          mustache = new handlebarsEnv.AST.MustacheNode([id, 'param1'], '', false, LOCATION_INFO);
+      equals(mustache.type, 'MustacheStatement');
       equals(mustache.escaped, true);
-      equals(mustache.id, id);
-      equals(mustache.params.length, 1);
-      equals(mustache.params[0], 'param1');
-      equals(!!mustache.isHelper, true);
       testLocationInfoStorage(mustache);
     });
     it('should accept token for escape', function() {
@@ -280,7 +275,7 @@ describe('ast', function() {
             block = ast.body[0];
 
         equals(block.program.body[0].string, '');
-        equals(block.program.body[1].id.original, 'foo');
+        equals(block.program.body[1].sexpr.id.original, 'foo');
         equals(block.program.body[2].string, '\n');
       });
       it('marks nested block mustaches as standalone', function() {

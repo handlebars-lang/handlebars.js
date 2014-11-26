@@ -47,7 +47,7 @@ openInverse
   ;
 
 openInverseChain
-  : OPEN_INVERSE_CHAIN sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN_INVERSE_CHAIN sexpr CLOSE -> new yy.MustacheNode($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
   ;
 
 inverseAndProgram
@@ -73,8 +73,8 @@ closeBlock
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN sexpr CLOSE -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
-  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheNode($2, null, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN sexpr CLOSE -> new yy.MustacheNode($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheNode($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
   ;
 
 partial
