@@ -78,12 +78,11 @@ mustache
   ;
 
 partial
-  : OPEN_PARTIAL partialName param hash? CLOSE -> new yy.PartialNode($2, $3, $4, yy.stripFlags($1, $5), yy.locInfo(@$))
-  | OPEN_PARTIAL partialName hash? CLOSE -> new yy.PartialNode($2, undefined, $3, yy.stripFlags($1, $4), yy.locInfo(@$))
+  : OPEN_PARTIAL sexpr CLOSE -> new yy.PartialNode($2, yy.stripFlags($1, $3), yy.locInfo(@$))
   ;
 
 sexpr
-  : path param* hash? -> new yy.SexprNode([$1].concat($2), $3, yy.locInfo(@$))
+  : helperName param* hash? -> new yy.SexprNode([$1].concat($2), $3, yy.locInfo(@$))
   | dataName -> new yy.SexprNode([$1], null, yy.locInfo(@$))
   ;
 
@@ -108,10 +107,10 @@ blockParams
   : OPEN_BLOCK_PARAMS ID+ CLOSE_BLOCK_PARAMS -> $2
   ;
 
-partialName
-  : path -> new yy.PartialNameNode($1, yy.locInfo(@$))
-  | STRING -> new yy.PartialNameNode(new yy.StringNode($1, yy.locInfo(@$)), yy.locInfo(@$))
-  | NUMBER -> new yy.PartialNameNode(new yy.NumberNode($1, yy.locInfo(@$)))
+helperName
+  : path -> $1
+  | STRING -> new yy.StringNode($1, yy.locInfo(@$)), yy.locInfo(@$)
+  | NUMBER -> new yy.NumberNode($1, yy.locInfo(@$))
   ;
 
 dataName

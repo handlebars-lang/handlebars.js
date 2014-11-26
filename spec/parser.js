@@ -82,6 +82,8 @@ describe('parser', function() {
 
   it('parses a partial', function() {
     equals(ast_for("{{> foo }}"), "{{> PARTIAL:foo }}\n");
+    equals(ast_for("{{> 'foo' }}"), "{{> PARTIAL:foo }}\n");
+    equals(ast_for("{{> 1 }}"), "{{> PARTIAL:1 }}\n");
   });
 
   it('parses a partial with context', function() {
