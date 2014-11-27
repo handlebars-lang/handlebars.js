@@ -92,7 +92,7 @@ param
   | NUMBER -> new yy.NumberNode($1, yy.locInfo(@$))
   | BOOLEAN -> new yy.BooleanNode($1, yy.locInfo(@$))
   | dataName -> $1
-  | OPEN_SEXPR sexpr CLOSE_SEXPR {$2.isHelper = true; $$ = $2;}
+  | OPEN_SEXPR sexpr CLOSE_SEXPR -> $2
   ;
 
 hash
