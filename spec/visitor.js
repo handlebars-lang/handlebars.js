@@ -20,14 +20,14 @@ describe('Visitor', function() {
   it('should traverse to stubs', function() {
     var visitor = new Handlebars.Visitor();
 
-    visitor.STRING = function(string) {
-      equal(string.string, '2');
+    visitor.StringLiteral = function(string) {
+      equal(string.value, '2');
     };
-    visitor.NUMBER = function(number) {
-      equal(number.stringModeValue, 1);
+    visitor.NumberLiteral = function(number) {
+      equal(number.value, 1);
     };
-    visitor.BOOLEAN = function(bool) {
-      equal(bool.stringModeValue, true);
+    visitor.BooleanLiteral = function(bool) {
+      equal(bool.value, true);
     };
     visitor.ID = function(id) {
       equal(id.original, 'foo.bar');
