@@ -171,13 +171,13 @@ describe('subexpressions', function() {
         equals(a, 'foo');
         equals(options.types.length, 2, "string params for outer helper processed correctly");
         equals(options.types[0], 'sexpr', "string params for outer helper processed correctly");
-        equals(options.types[1], 'ID', "string params for outer helper processed correctly");
+        equals(options.types[1], 'PathExpression', "string params for outer helper processed correctly");
         return a + b;
       },
 
       blorg: function(a, options) {
         equals(options.types.length, 1, "string params for inner helper processed correctly");
-        equals(options.types[0], 'ID', "string params for inner helper processed correctly");
+        equals(options.types[0], 'PathExpression', "string params for inner helper processed correctly");
         return a;
       }
     };

@@ -58,7 +58,7 @@ describe('string params mode', function() {
     var helpers = {
       tomdale: function(desire, noun, trueBool, falseBool, options) {
         equal(options.types[0], 'StringLiteral', "the string type is passed");
-        equal(options.types[1], 'ID', "the expression type is passed");
+        equal(options.types[1], 'PathExpression', "the expression type is passed");
         equal(options.types[2], 'BooleanLiteral', "the expression type is passed");
         equal(desire, "need", "the string form is passed for strings");
         equal(noun, "dad.joke", "the string form is passed for expressions");
@@ -78,10 +78,10 @@ describe('string params mode', function() {
     var helpers = {
       tomdale: function(exclamation, options) {
         equal(exclamation, 'he.says');
-        equal(options.types[0], 'ID');
+        equal(options.types[0], 'PathExpression');
 
         equal(options.hashTypes.desire, 'StringLiteral');
-        equal(options.hashTypes.noun, 'ID');
+        equal(options.hashTypes.noun, 'PathExpression');
         equal(options.hashTypes.bool, 'BooleanLiteral');
         equal(options.hash.desire, 'need');
         equal(options.hash.noun, 'dad.joke');
@@ -102,7 +102,7 @@ describe('string params mode', function() {
     var helpers = {
       tomdale: function(exclamation, options) {
         equal(exclamation, "he.says");
-        equal(options.types[0], "ID");
+        equal(options.types[0], 'PathExpression');
 
         equal(options.contexts.length, 1);
         equal(options.hashContexts.noun, context);
@@ -165,8 +165,8 @@ describe('string params mode', function() {
 
     var helpers = {
       foo: function(bar, options) {
-        equal(bar, 'bar');
-        equal(options.types[0], 'DATA');
+        equal(bar, '@bar');
+        equal(options.types[0], 'PathExpression');
         return 'Foo!';
       }
     };

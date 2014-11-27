@@ -29,8 +29,8 @@ describe('Visitor', function() {
     visitor.BooleanLiteral = function(bool) {
       equal(bool.value, true);
     };
-    visitor.ID = function(id) {
-      equal(id.original, 'foo.bar');
+    visitor.PathExpression = function(id) {
+      equal(/foo\.bar$/.test(id.original), true);
     };
     visitor.ContentStatement = function(content) {
       equal(content.value, ' ');

@@ -114,11 +114,11 @@ helperName
   ;
 
 dataName
-  : DATA path -> new yy.DataNode($2, yy.locInfo(@$))
+  : DATA pathSegments -> new yy.PathNode(true, $2, yy.locInfo(@$))
   ;
 
 path
-  : pathSegments -> new yy.IdNode($1, yy.locInfo(@$))
+  : pathSegments -> new yy.PathNode(false, $1, yy.locInfo(@$))
   ;
 
 pathSegments

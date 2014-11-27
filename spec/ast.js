@@ -81,24 +81,24 @@ describe('ast', function() {
       testLocationInfoStorage(block);
     });
   });
-  describe('IdNode', function() {
+  describe('PathNode', function() {
     it('should throw on invalid path', function() {
       shouldThrow(function() {
-        new handlebarsEnv.AST.IdNode([
+        new handlebarsEnv.AST.PathNode(false, [
           {part: 'foo'},
           {part: '..'},
           {part: 'bar'}
         ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foo.. - 1:1");
       shouldThrow(function() {
-        new handlebarsEnv.AST.IdNode([
+        new handlebarsEnv.AST.PathNode(false, [
           {part: 'foo'},
           {part: '.'},
           {part: 'bar'}
         ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foo. - 1:1");
       shouldThrow(function() {
-        new handlebarsEnv.AST.IdNode([
+        new handlebarsEnv.AST.PathNode(false, [
           {part: 'foo'},
           {part: 'this'},
           {part: 'bar'}
@@ -107,7 +107,7 @@ describe('ast', function() {
     });
 
     it('stores location info', function(){
-      var idNode = new handlebarsEnv.AST.IdNode([], LOCATION_INFO);
+      var idNode = new handlebarsEnv.AST.PathNode(false, [], LOCATION_INFO);
       testLocationInfoStorage(idNode);
     });
   });
@@ -157,14 +157,6 @@ describe('ast', function() {
     it('stores location info', function(){
       var bool = new handlebarsEnv.AST.BooleanNode("true", LOCATION_INFO);
       testLocationInfoStorage(bool);
-    });
-  });
-
-  describe("DataNode", function(){
-
-    it('stores location info', function(){
-      var data = new handlebarsEnv.AST.DataNode("YES", LOCATION_INFO);
-      testLocationInfoStorage(data);
     });
   });
 
