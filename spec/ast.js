@@ -258,7 +258,7 @@ describe('ast', function() {
             block = ast.body[0];
 
         equals(block.program.body[0].value, '');
-        equals(block.program.body[1].sexpr.id.original, 'foo');
+        equals(block.program.body[1].sexpr.path.original, 'foo');
         equals(block.program.body[2].value, '\n');
       });
       it('marks nested block mustaches as standalone', function() {

@@ -100,7 +100,7 @@ hash
   ;
 
 hashSegment
-  : ID EQUALS param -> [$1, $3]
+  : ID EQUALS param -> new yy.HashPair($1, $3, yy.locInfo(@$))
   ;
 
 blockParams
