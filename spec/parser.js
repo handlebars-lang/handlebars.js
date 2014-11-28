@@ -166,7 +166,6 @@ describe('parser', function() {
   it('parses inverse block with block params', function() {
     equals(ast_for("{{^foo as |bar baz|}}content{{/foo}}"), "BLOCK:\n  PATH:foo []\n  {{^}}\n    BLOCK PARAMS: [ bar baz ]\n    CONTENT[ 'content' ]\n");
   });
-
   it("raises if there's a Parse error", function() {
     shouldThrow(function() {
       ast_for("foo{{^}}bar");
@@ -184,6 +183,18 @@ describe('parser', function() {
     shouldThrow(function() {
       ast_for("{{{{goodbyes}}}} {{{{/hellos}}}}");
     }, Error, /goodbyes doesn't match hellos/);
+  });
+
+  it('should handle invalid paths', function() {
+    shouldThrow(function() {
+      ast_for("{{foo/../bar}}");
+    }, Error, /Invalid path: foo\/\.\. - 1:2/);
+    shouldThrow(function() {
+      ast_for("{{foo/./bar}}");
+    }, Error, /Invalid path: foo\/\. - 1:2/);
+    shouldThrow(function() {
+      ast_for("{{foo/this/bar}}");
+    }, Error, /Invalid path: foo\/this - 1:2/);
   });
 
   it('knows how to report the correct line number in errors', function() {

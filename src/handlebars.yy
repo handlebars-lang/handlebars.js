@@ -47,7 +47,7 @@ openInverse
   ;
 
 openInverseChain
-  : OPEN_INVERSE_CHAIN sexpr CLOSE -> new yy.MustacheStatement($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN_INVERSE_CHAIN sexpr CLOSE -> yy.prepareMustache($2, $1, yy.stripFlags($1, $3), @$)
   ;
 
 inverseAndProgram
@@ -73,8 +73,8 @@ closeBlock
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN sexpr CLOSE -> new yy.MustacheStatement($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
-  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheStatement($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN sexpr CLOSE -> yy.prepareMustache($2, $1, yy.stripFlags($1, $3), @$)
+  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> yy.prepareMustache($2, $1, yy.stripFlags($1, $3), @$)
   ;
 
 partial
@@ -82,8 +82,8 @@ partial
   ;
 
 sexpr
-  : helperName param* hash? -> new yy.SubExpression([$1].concat($2), $3, yy.locInfo(@$))
-  | dataName -> new yy.SubExpression([$1], null, yy.locInfo(@$))
+  : helperName param* hash? -> new yy.SubExpression($1, $2, $3, yy.locInfo(@$))
+  | dataName -> new yy.SubExpression($1, null, null, yy.locInfo(@$))
   ;
 
 param
@@ -114,11 +114,11 @@ helperName
   ;
 
 dataName
-  : DATA pathSegments -> new yy.PathExpression(true, $2, yy.locInfo(@$))
+  : DATA pathSegments -> yy.preparePath(true, $2, @$)
   ;
 
 path
-  : pathSegments -> new yy.PathExpression(false, $1, yy.locInfo(@$))
+  : pathSegments -> yy.preparePath(false, $1, @$)
   ;
 
 pathSegments

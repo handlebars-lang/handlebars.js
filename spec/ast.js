@@ -23,42 +23,13 @@ describe('ast', function() {
   }
 
   describe('MustacheStatement', function() {
-    function testEscape(open, expected) {
-      var mustache = new handlebarsEnv.AST.MustacheStatement([{}], open, false);
-      equals(mustache.escaped, expected);
-    }
-
     it('should store args', function() {
       var id = {isSimple: true},
           hash = {},
-          mustache = new handlebarsEnv.AST.MustacheStatement([id, 'param1'], '', false, LOCATION_INFO);
+          mustache = new handlebarsEnv.AST.MustacheStatement({}, true, {}, LOCATION_INFO);
       equals(mustache.type, 'MustacheStatement');
       equals(mustache.escaped, true);
       testLocationInfoStorage(mustache);
-    });
-    it('should accept token for escape', function() {
-      testEscape('{{', true);
-      testEscape('{{~', true);
-      testEscape('{{#', true);
-      testEscape('{{~#', true);
-      testEscape('{{/', true);
-      testEscape('{{~/', true);
-      testEscape('{{^', true);
-      testEscape('{{~^', true);
-      testEscape('{', true);
-      testEscape('{', true);
-
-      testEscape('{{&', false);
-      testEscape('{{~&', false);
-      testEscape('{{{', false);
-      testEscape('{{~{', false);
-    });
-    it('should accept boolean for escape', function() {
-      testEscape(true, true);
-      testEscape({}, true);
-
-      testEscape(false, false);
-      testEscape(undefined, false);
     });
   });
   describe('BlockStatement', function() {
@@ -70,7 +41,7 @@ describe('ast', function() {
 
     it('stores location info', function(){
       var sexprNode = new handlebarsEnv.AST.SubExpression([{ original: 'foo'}], null);
-      var mustacheNode = new handlebarsEnv.AST.MustacheStatement(sexprNode, null, '{{', {});
+      var mustacheNode = new handlebarsEnv.AST.MustacheStatement(sexprNode, false, {});
       var block = new handlebarsEnv.AST.BlockStatement(mustacheNode,
                                                   {body: [], strip: {}}, {body: [], strip: {}},
                                                   {
@@ -82,32 +53,8 @@ describe('ast', function() {
     });
   });
   describe('PathExpression', function() {
-    it('should throw on invalid path', function() {
-      shouldThrow(function() {
-        new handlebarsEnv.AST.PathExpression(false, [
-          {part: 'foo'},
-          {part: '..'},
-          {part: 'bar'}
-        ], {start: {line: 1, column: 1}});
-      }, Handlebars.Exception, "Invalid path: foo.. - 1:1");
-      shouldThrow(function() {
-        new handlebarsEnv.AST.PathExpression(false, [
-          {part: 'foo'},
-          {part: '.'},
-          {part: 'bar'}
-        ], {start: {line: 1, column: 1}});
-      }, Handlebars.Exception, "Invalid path: foo. - 1:1");
-      shouldThrow(function() {
-        new handlebarsEnv.AST.PathExpression(false, [
-          {part: 'foo'},
-          {part: 'this'},
-          {part: 'bar'}
-        ], {start: {line: 1, column: 1}});
-      }, Handlebars.Exception, "Invalid path: foothis - 1:1");
-    });
-
     it('stores location info', function(){
-      var idNode = new handlebarsEnv.AST.PathExpression(false, [], LOCATION_INFO);
+      var idNode = new handlebarsEnv.AST.PathExpression(false, 0, [], 'foo', LOCATION_INFO);
       testLocationInfoStorage(idNode);
     });
   });
