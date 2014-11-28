@@ -9,7 +9,7 @@ root
   ;
 
 program
-  : statement* -> new yy.ProgramNode(yy.prepareProgram($1), null, {}, yy.locInfo(@$))
+  : statement* -> new yy.Program(yy.prepareProgram($1), null, {}, yy.locInfo(@$))
   ;
 
 statement
@@ -18,11 +18,11 @@ statement
   | rawBlock -> $1
   | partial -> $1
   | content -> $1
-  | COMMENT -> new yy.CommentNode(yy.stripComment($1), yy.stripFlags($1, $1), yy.locInfo(@$))
+  | COMMENT -> new yy.CommentStatement(yy.stripComment($1), yy.stripFlags($1, $1), yy.locInfo(@$))
   ;
 
 content
-  : CONTENT -> new yy.ContentNode($1, yy.locInfo(@$))
+  : CONTENT -> new yy.ContentStatement($1, yy.locInfo(@$))
   ;
 
 rawBlock
@@ -47,7 +47,7 @@ openInverse
   ;
 
 openInverseChain
-  : OPEN_INVERSE_CHAIN sexpr CLOSE -> new yy.MustacheNode($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN_INVERSE_CHAIN sexpr CLOSE -> new yy.MustacheStatement($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
   ;
 
 inverseAndProgram
@@ -57,7 +57,7 @@ inverseAndProgram
 inverseChain
   : openInverseChain program inverseChain? {
     var inverse = yy.prepareBlock($1, $2, $3, $3, false, yy.locInfo(@$)),
-        program = new yy.ProgramNode(yy.prepareProgram([inverse]), null, {}, yy.locInfo(@$));
+        program = new yy.Program(yy.prepareProgram([inverse]), null, {}, yy.locInfo(@$));
 
     program.inverse = inverse;
 
@@ -73,30 +73,30 @@ closeBlock
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN sexpr CLOSE -> new yy.MustacheNode($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
-  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheNode($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN sexpr CLOSE -> new yy.MustacheStatement($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
+  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> new yy.MustacheStatement($2, $1, yy.stripFlags($1, $3), yy.locInfo(@$))
   ;
 
 partial
-  : OPEN_PARTIAL sexpr CLOSE -> new yy.PartialNode($2, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN_PARTIAL sexpr CLOSE -> new yy.PartialStatement($2, yy.stripFlags($1, $3), yy.locInfo(@$))
   ;
 
 sexpr
-  : helperName param* hash? -> new yy.SexprNode([$1].concat($2), $3, yy.locInfo(@$))
-  | dataName -> new yy.SexprNode([$1], null, yy.locInfo(@$))
+  : helperName param* hash? -> new yy.SubExpression([$1].concat($2), $3, yy.locInfo(@$))
+  | dataName -> new yy.SubExpression([$1], null, yy.locInfo(@$))
   ;
 
 param
   : path -> $1
-  | STRING -> new yy.StringNode($1, yy.locInfo(@$))
-  | NUMBER -> new yy.NumberNode($1, yy.locInfo(@$))
-  | BOOLEAN -> new yy.BooleanNode($1, yy.locInfo(@$))
+  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$))
+  | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
+  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
   | dataName -> $1
   | OPEN_SEXPR sexpr CLOSE_SEXPR -> $2
   ;
 
 hash
-  : hashSegment+ -> new yy.HashNode($1, yy.locInfo(@$))
+  : hashSegment+ -> new yy.Hash($1, yy.locInfo(@$))
   ;
 
 hashSegment
@@ -109,16 +109,16 @@ blockParams
 
 helperName
   : path -> $1
-  | STRING -> new yy.StringNode($1, yy.locInfo(@$)), yy.locInfo(@$)
-  | NUMBER -> new yy.NumberNode($1, yy.locInfo(@$))
+  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$)), yy.locInfo(@$)
+  | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
   ;
 
 dataName
-  : DATA pathSegments -> new yy.PathNode(true, $2, yy.locInfo(@$))
+  : DATA pathSegments -> new yy.PathExpression(true, $2, yy.locInfo(@$))
   ;
 
 path
-  : pathSegments -> new yy.PathNode(false, $1, yy.locInfo(@$))
+  : pathSegments -> new yy.PathExpression(false, $1, yy.locInfo(@$))
   ;
 
 pathSegments

@@ -203,7 +203,7 @@ describe('parser', function() {
 
   describe('externally compiled AST', function() {
     it('can pass through an already-compiled AST', function() {
-      equals(ast_for(new Handlebars.AST.ProgramNode([new Handlebars.AST.ContentNode("Hello")], null)), "CONTENT[ \'Hello\' ]\n");
+      equals(ast_for(new Handlebars.AST.Program([new Handlebars.AST.ContentStatement("Hello")], null)), "CONTENT[ \'Hello\' ]\n");
     });
   });
 });

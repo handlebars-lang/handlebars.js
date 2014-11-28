@@ -22,16 +22,16 @@ describe('ast', function() {
     equals(node.loc.end.column, 1);
   }
 
-  describe('MustacheNode', function() {
+  describe('MustacheStatement', function() {
     function testEscape(open, expected) {
-      var mustache = new handlebarsEnv.AST.MustacheNode([{}], open, false);
+      var mustache = new handlebarsEnv.AST.MustacheStatement([{}], open, false);
       equals(mustache.escaped, expected);
     }
 
     it('should store args', function() {
       var id = {isSimple: true},
           hash = {},
-          mustache = new handlebarsEnv.AST.MustacheNode([id, 'param1'], '', false, LOCATION_INFO);
+          mustache = new handlebarsEnv.AST.MustacheStatement([id, 'param1'], '', false, LOCATION_INFO);
       equals(mustache.type, 'MustacheStatement');
       equals(mustache.escaped, true);
       testLocationInfoStorage(mustache);
@@ -61,7 +61,7 @@ describe('ast', function() {
       testEscape(undefined, false);
     });
   });
-  describe('BlockNode', function() {
+  describe('BlockStatement', function() {
     it('should throw on mustache mismatch', function() {
       shouldThrow(function() {
         handlebarsEnv.parse("\n  {{#foo}}{{/bar}}");
@@ -69,9 +69,9 @@ describe('ast', function() {
     });
 
     it('stores location info', function(){
-      var sexprNode = new handlebarsEnv.AST.SexprNode([{ original: 'foo'}], null);
-      var mustacheNode = new handlebarsEnv.AST.MustacheNode(sexprNode, null, '{{', {});
-      var block = new handlebarsEnv.AST.BlockNode(mustacheNode,
+      var sexprNode = new handlebarsEnv.AST.SubExpression([{ original: 'foo'}], null);
+      var mustacheNode = new handlebarsEnv.AST.MustacheStatement(sexprNode, null, '{{', {});
+      var block = new handlebarsEnv.AST.BlockStatement(mustacheNode,
                                                   {body: [], strip: {}}, {body: [], strip: {}},
                                                   {
                                                     strip: {},
@@ -81,24 +81,24 @@ describe('ast', function() {
       testLocationInfoStorage(block);
     });
   });
-  describe('PathNode', function() {
+  describe('PathExpression', function() {
     it('should throw on invalid path', function() {
       shouldThrow(function() {
-        new handlebarsEnv.AST.PathNode(false, [
+        new handlebarsEnv.AST.PathExpression(false, [
           {part: 'foo'},
           {part: '..'},
           {part: 'bar'}
         ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foo.. - 1:1");
       shouldThrow(function() {
-        new handlebarsEnv.AST.PathNode(false, [
+        new handlebarsEnv.AST.PathExpression(false, [
           {part: 'foo'},
           {part: '.'},
           {part: 'bar'}
         ], {start: {line: 1, column: 1}});
       }, Handlebars.Exception, "Invalid path: foo. - 1:1");
       shouldThrow(function() {
-        new handlebarsEnv.AST.PathNode(false, [
+        new handlebarsEnv.AST.PathExpression(false, [
           {part: 'foo'},
           {part: 'this'},
           {part: 'bar'}
@@ -107,69 +107,63 @@ describe('ast', function() {
     });
 
     it('stores location info', function(){
-      var idNode = new handlebarsEnv.AST.PathNode(false, [], LOCATION_INFO);
+      var idNode = new handlebarsEnv.AST.PathExpression(false, [], LOCATION_INFO);
       testLocationInfoStorage(idNode);
     });
   });
 
-  describe("HashNode", function(){
-
+  describe('Hash', function(){
     it('stores location info', function(){
-      var hash = new handlebarsEnv.AST.HashNode([], LOCATION_INFO);
+      var hash = new handlebarsEnv.AST.Hash([], LOCATION_INFO);
       testLocationInfoStorage(hash);
     });
   });
 
-  describe("ContentNode", function(){
-
+  describe('ContentStatement', function(){
     it('stores location info', function(){
-      var content = new handlebarsEnv.AST.ContentNode("HI", LOCATION_INFO);
+      var content = new handlebarsEnv.AST.ContentStatement("HI", LOCATION_INFO);
       testLocationInfoStorage(content);
     });
   });
 
-  describe("CommentNode", function(){
-
+  describe('CommentStatement', function(){
     it('stores location info', function(){
-      var comment = new handlebarsEnv.AST.CommentNode("HI", {}, LOCATION_INFO);
+      var comment = new handlebarsEnv.AST.CommentStatement("HI", {}, LOCATION_INFO);
       testLocationInfoStorage(comment);
     });
   });
 
-  describe("NumberNode", function(){
-
+  describe('NumberLiteral', function(){
     it('stores location info', function(){
-      var integer = new handlebarsEnv.AST.NumberNode("6", LOCATION_INFO);
+      var integer = new handlebarsEnv.AST.NumberLiteral("6", LOCATION_INFO);
       testLocationInfoStorage(integer);
     });
   });
 
-  describe("StringNode", function(){
-
+  describe('StringLiteral', function(){
     it('stores location info', function(){
-      var string = new handlebarsEnv.AST.StringNode("6", LOCATION_INFO);
+      var string = new handlebarsEnv.AST.StringLiteral("6", LOCATION_INFO);
       testLocationInfoStorage(string);
     });
   });
 
-  describe("BooleanNode", function(){
-
+  describe('BooleanLiteral', function(){
     it('stores location info', function(){
-      var bool = new handlebarsEnv.AST.BooleanNode("true", LOCATION_INFO);
+      var bool = new handlebarsEnv.AST.BooleanLiteral("true", LOCATION_INFO);
       testLocationInfoStorage(bool);
     });
   });
 
-  describe("PartialNode", function(){
+  describe('PartialStatement', function(){
     it('stores location info', function(){
-      var pn = new handlebarsEnv.AST.PartialNode('so_partial', {}, LOCATION_INFO);
+      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
 
-  describe('ProgramNode', function(){
+  describe('Program', function(){
     it('storing location info', function(){
-      var pn = new handlebarsEnv.AST.ProgramNode([], null, {}, LOCATION_INFO);
+      var pn = new handlebarsEnv.AST.Program([], null, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
@@ -193,7 +187,7 @@ describe('ast', function() {
       testColumns(contentNode, 1, 1, 0, 7);
     });
 
-    it('gets MustacheNode line numbers', function(){
+    it('gets MustacheStatement line numbers', function(){
       var mustacheNode = body[1];
       testColumns(mustacheNode, 1, 1, 7, 21);
     });
@@ -202,9 +196,9 @@ describe('ast', function() {
       testColumns(body[2], 1, 2, 21, 8);
     });
 
-    it('gets MustacheNode line numbers correct across newlines', function(){
-      var secondMustacheNode = body[3];
-      testColumns(secondMustacheNode, 2, 2, 8, 22);
+    it('gets MustacheStatement line numbers correct across newlines', function(){
+      var secondMustacheStatement = body[3];
+      testColumns(secondMustacheStatement, 2, 2, 8, 22);
      });
 
      it('gets the block helper information correct', function(){
