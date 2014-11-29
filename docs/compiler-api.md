@@ -55,7 +55,7 @@ interface Statement <: Node { }
 
 interface MustacheStatement <: Statement {
     type: "MustacheStatement";
-    sexpr: Subexpression;
+    sexpr: SubExpression;
     escaped: boolean;
 
     strip: StripFlags | null;
@@ -63,7 +63,7 @@ interface MustacheStatement <: Statement {
 
 interface BlockStatement <: Statement {
     type: "BlockStatement";
-    sexpr: Subexpression;
+    sexpr: SubExpression;
     program: Program | null;
     inverse: Program | null;
 
@@ -74,7 +74,7 @@ interface BlockStatement <: Statement {
 
 interface PartialStatement <: Statement {
     type: "PartialStatement";
-    sexpr: Subexpression;
+    sexpr: SubExpression;
     
     indent: string;
     strip: StripFlags | null;
@@ -100,7 +100,7 @@ interface CommentStatement <: Statement {
 interface Expression <: Node { }
 ```
 
-##### Subexpressions
+##### SubExpressions
 
 ```java
 interface SubExpression <: Expression {
