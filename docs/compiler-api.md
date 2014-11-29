@@ -45,28 +45,31 @@ interface Program <: Node {
     body: [ Statement ];
     
     blockParams: [ string ];
-    strip: StripFlags | null;
 }
 ```
 
 ### Statements
 
 ```java
-interface Statement <: Node {
-    strip: StripFlags | null;
-}
+interface Statement <: Node { }
 
 interface MustacheStatement <: Statement {
     type: "MustacheStatement";
     sexpr: Subexpression;
     escaped: boolean;
+
+    strip: StripFlags | null;
 }
 
 interface BlockStatement <: Statement {
     type: "BlockStatement";
     sexpr: Subexpression;
-    program: Program;
+    program: Program | null;
     inverse: Program | null;
+
+    openStrip: StripFlags | null;
+    inverseStrip: StripFlags | null;
+    closeStrip: StripFlags | null;
 }
 
 interface PartialStatement <: Statement {
@@ -74,6 +77,7 @@ interface PartialStatement <: Statement {
     sexpr: Subexpression;
     
     indent: string;
+    strip: StripFlags | null;
 }
 
 interface ContentStatement <: Statement {
@@ -85,6 +89,8 @@ interface ContentStatement <: Statement {
 interface CommentStatement <: Statement {
     type: "CommentStatement";
     value: string;
+
+    strip: StripFlags | null;
 }
 ```
 
@@ -167,14 +173,12 @@ interface HashPair <: Node {
 }
 
 interface StripFlags {
-    left: boolean;
-    right: boolean;
+    open: boolean;
+    close: boolean;
 }
 ```
 
 `StripFlags` are used to signify whitespace control character that may have been entered on a given statement.
-
-TODO : Document what the flags mean or drop this from things like Program.
 
 ## AST Visitor
 

@@ -5,11 +5,11 @@
 %%
 
 root
-  : program EOF { yy.prepareProgram($1.body, true); return $1; }
+  : program EOF { return $1; }
   ;
 
 program
-  : statement* -> new yy.Program(yy.prepareProgram($1), null, {}, yy.locInfo(@$))
+  : statement* -> new yy.Program($1, null, {}, yy.locInfo(@$))
   ;
 
 statement
@@ -26,7 +26,7 @@ content
   ;
 
 rawBlock
-  : openRawBlock content END_RAW_BLOCK -> yy.prepareRawBlock($1, $2, $3, yy.locInfo(@$))
+  : openRawBlock content END_RAW_BLOCK -> yy.prepareRawBlock($1, $2, $3, @$)
   ;
 
 openRawBlock
@@ -34,8 +34,8 @@ openRawBlock
   ;
 
 block
-  : openBlock program inverseChain? closeBlock -> yy.prepareBlock($1, $2, $3, $4, false, yy.locInfo(@$))
-  | openInverse program inverseAndProgram? closeBlock -> yy.prepareBlock($1, $2, $3, $4, true, yy.locInfo(@$))
+  : openBlock program inverseChain? closeBlock -> yy.prepareBlock($1, $2, $3, $4, false, @$)
+  | openInverse program inverseAndProgram? closeBlock -> yy.prepareBlock($1, $2, $3, $4, true, @$)
   ;
 
 openBlock
@@ -56,10 +56,9 @@ inverseAndProgram
 
 inverseChain
   : openInverseChain program inverseChain? {
-    var inverse = yy.prepareBlock($1, $2, $3, $3, false, yy.locInfo(@$)),
-        program = new yy.Program(yy.prepareProgram([inverse]), null, {}, yy.locInfo(@$));
-
-    program.inverse = inverse;
+    var inverse = yy.prepareBlock($1, $2, $3, $3, false, @$),
+        program = new yy.Program([inverse], null, {}, yy.locInfo(@$));
+    program.chained = true;
 
     $$ = { strip: $1.strip, program: program, chain: true };
   }

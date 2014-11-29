@@ -42,13 +42,14 @@ describe('ast', function() {
     it('stores location info', function(){
       var sexprNode = new handlebarsEnv.AST.SubExpression([{ original: 'foo'}], null);
       var mustacheNode = new handlebarsEnv.AST.MustacheStatement(sexprNode, false, {});
-      var block = new handlebarsEnv.AST.BlockStatement(mustacheNode,
-                                                  {body: [], strip: {}}, {body: [], strip: {}},
-                                                  {
-                                                    strip: {},
-                                                    path: {original: 'foo'}
-                                                  },
-                                                  LOCATION_INFO);
+      var block = new handlebarsEnv.AST.BlockStatement(
+            mustacheNode,
+            {body: []},
+            {body: []},
+            {},
+            {},
+            {},
+            LOCATION_INFO);
       testLocationInfoStorage(block);
     });
   });
