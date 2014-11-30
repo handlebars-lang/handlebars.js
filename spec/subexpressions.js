@@ -1,4 +1,4 @@
-/*global CompilerContext, shouldCompileTo */
+/*global CompilerContext, Handlebars, shouldCompileTo, shouldThrow */
 describe('subexpressions', function() {
   it("arg-less helper", function() {
     var string   = "{{foo (bar)}}!";
@@ -135,7 +135,7 @@ describe('subexpressions', function() {
       t: function(defaultString) {
         return new Handlebars.SafeString(defaultString);
       }
-    }
+    };
     shouldCompileTo(string, [{}, helpers], '<input aria-label="Name" placeholder="Example User" />');
   });
 
@@ -159,7 +159,7 @@ describe('subexpressions', function() {
       t: function(defaultString) {
         return new Handlebars.SafeString(defaultString);
       }
-    }
+    };
     shouldCompileTo(string, [context, helpers], '<input aria-label="Name" placeholder="Example User" />');
   });  
 
@@ -170,14 +170,14 @@ describe('subexpressions', function() {
       snog: function(a, b, options) {
         equals(a, 'foo');
         equals(options.types.length, 2, "string params for outer helper processed correctly");
-        equals(options.types[0], 'sexpr', "string params for outer helper processed correctly");
-        equals(options.types[1], 'ID', "string params for outer helper processed correctly");
+        equals(options.types[0], 'SubExpression', "string params for outer helper processed correctly");
+        equals(options.types[1], 'PathExpression', "string params for outer helper processed correctly");
         return a + b;
       },
 
       blorg: function(a, options) {
         equals(options.types.length, 1, "string params for inner helper processed correctly");
-        equals(options.types[0], 'ID', "string params for inner helper processed correctly");
+        equals(options.types[0], 'PathExpression', "string params for inner helper processed correctly");
         return a;
       }
     };
@@ -196,7 +196,7 @@ describe('subexpressions', function() {
 
     var helpers  = {
       blog: function(options) {
-        equals(options.hashTypes.fun, 'sexpr');
+        equals(options.hashTypes.fun, 'SubExpression');
         return "val is " + options.hash.fun;
       },
       bork: function() {

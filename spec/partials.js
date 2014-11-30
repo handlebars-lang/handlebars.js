@@ -23,6 +23,12 @@ describe('partials', function() {
     shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, "Dudes:  Empty");
   });
 
+  it('partials with duplicate parameters', function() {
+    shouldThrow(function() {
+      CompilerContext.compile('Dudes: {{>dude dudes foo bar=baz}}');
+    }, Error, 'Unsupported number of partial arguments: 2 - 1:7');
+  });
+
   it("partials with parameters", function() {
     var string = "Dudes: {{#dudes}}{{> dude others=..}}{{/dudes}}";
     var partial = "{{others.foo}}{{name}} ({{url}}) ";
