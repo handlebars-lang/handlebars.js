@@ -47,7 +47,7 @@ openInverse
   ;
 
 openInverseChain
-  : OPEN_INVERSE_CHAIN sexpr CLOSE -> yy.prepareMustache($2, $1, yy.stripFlags($1, $3), @$)
+  : OPEN_INVERSE_CHAIN sexpr blockParams? CLOSE -> { sexpr: $2, blockParams: $3, strip: yy.stripFlags($1, $4) }
   ;
 
 inverseAndProgram

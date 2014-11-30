@@ -1,3 +1,4 @@
+/*global Handlebars */
 function shouldMatchTokens(result, tokens) {
   for (var index = 0; index < result.length; index++) {
     equals(result[index].name, tokens[index]);
@@ -404,13 +405,16 @@ describe('Tokenizer', function() {
     var result = tokenize("{{#foo as |bar|}}");
     shouldMatchTokens(result, ['OPEN_BLOCK', 'ID', 'OPEN_BLOCK_PARAMS', 'ID', 'CLOSE_BLOCK_PARAMS', 'CLOSE']);
 
-    var result = tokenize("{{#foo as |bar baz|}}");
+    result = tokenize("{{#foo as |bar baz|}}");
     shouldMatchTokens(result, ['OPEN_BLOCK', 'ID', 'OPEN_BLOCK_PARAMS', 'ID', 'ID', 'CLOSE_BLOCK_PARAMS', 'CLOSE']);
 
-    var result = tokenize("{{#foo as | bar baz |}}");
+    result = tokenize("{{#foo as | bar baz |}}");
     shouldMatchTokens(result, ['OPEN_BLOCK', 'ID', 'OPEN_BLOCK_PARAMS', 'ID', 'ID', 'CLOSE_BLOCK_PARAMS', 'CLOSE']);
 
-    var result = tokenize("{{#foo as as | bar baz |}}");
+    result = tokenize("{{#foo as as | bar baz |}}");
     shouldMatchTokens(result, ['OPEN_BLOCK', 'ID', 'ID', 'OPEN_BLOCK_PARAMS', 'ID', 'ID', 'CLOSE_BLOCK_PARAMS', 'CLOSE']);
+
+    result = tokenize("{{else foo as |bar baz|}}");
+    shouldMatchTokens(result, ['OPEN_INVERSE_CHAIN', 'ID', 'OPEN_BLOCK_PARAMS', 'ID', 'ID', 'CLOSE_BLOCK_PARAMS', 'CLOSE']);
   });
 });

@@ -166,6 +166,9 @@ describe('parser', function() {
   it('parses inverse block with block params', function() {
     equals(ast_for("{{^foo as |bar baz|}}content{{/foo}}"), "BLOCK:\n  PATH:foo []\n  {{^}}\n    BLOCK PARAMS: [ bar baz ]\n    CONTENT[ 'content' ]\n");
   });
+  it('parses chained inverse block with block params', function() {
+    equals(ast_for("{{#foo}}{{else foo as |bar baz|}}content{{/foo}}"), "BLOCK:\n  PATH:foo []\n  PROGRAM:\n  {{^}}\n    BLOCK:\n      PATH:foo []\n      PROGRAM:\n        BLOCK PARAMS: [ bar baz ]\n        CONTENT[ 'content' ]\n");
+  });
   it("raises if there's a Parse error", function() {
     shouldThrow(function() {
       ast_for("foo{{^}}bar");
