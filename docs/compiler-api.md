@@ -208,6 +208,29 @@ scanner.accept(ast);
 
 The `Handlebars.JavaScriptCompiler` object has a number of methods that may be customized to alter the output of the compiler:
 
+- `nameLookup(parent, name, type)`
+  Used to generate the code to resolve a give path component.
+
+  - `parent` is the existing code in the path resolution
+  - `name` is the current path component
+  - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, or `partial`.
+
+- `depthedLookup(name)`
+  Used to generate code that resolves parameters within any context in the stack. Is only used in `compat` mode. 
+
+- `compilerInfo()`
+  Allows for custom compiler flags used in the runtime version checking logic.
+
+- `appendToBuffer(source, location, explicit)`
+    Allows for code buffer emitting code. Defaults behavior is string concatenation.
+
+    - `source` is the source code whose result is to be appending
+    - `location` is the location of the source in the source map.
+    - `explicit` is a flag signaling that the emit operation must occur, vs. the lazy evaled options otherwise.
+
+- `initializeBuffer()`
+    Allows for buffers other than the default string buffer to be used. Generally needs to be paired with a custom `appendToBuffer` implementation.
+
 ```javascript
 function MyCompiler() {
   Handlebars.JavaScriptCompiler.apply(this, arguments);
