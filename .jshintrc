@@ -45,6 +45,7 @@
     "plusplus": false,
     "regexp": false,
     "undef": true,
+    "unused": true,
     "sub": true,
     "strict": false,
     "white": false
