@@ -28,6 +28,8 @@ To build Handlebars.js you'll need a few things installed.
 * Node.js
 * [Grunt](http://gruntjs.com/getting-started)
 
+Before building, you need to make sure that the Git submodule `spec/mustache` is included (i.e. the directory `spec/mustache` should not be empty). To include it, if using Git version 1.6.5 or newer, use `git clone --recursive` rather than `git clone`. Or, if you already cloned without `--recursive`, use `git submodule update --init`.
+
 Project dependencies may be installed via `npm install`.
 
 To build Handlebars.js from scratch, you'll want to run `grunt`

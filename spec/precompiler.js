@@ -61,7 +61,7 @@ describe('precompiler', function() {
   it('should throw when combining simple and minimized', function() {
     shouldThrow(function() {
       Precompiler.cli({templates: [__dirname], simple: true, min: true});
-    }, Handlebars.Exception, 'Unable to minimze simple output');
+    }, Handlebars.Exception, 'Unable to minimize simple output');
   });
   it('should throw when combining simple and multiple templates', function() {
     shouldThrow(function() {
