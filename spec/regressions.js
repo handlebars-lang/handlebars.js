@@ -1,4 +1,4 @@
-/*global CompilerContext, Handlebars, shouldCompileTo, shouldThrow */
+/*global CompilerContext, shouldCompileTo, shouldThrow */
 describe('Regressions', function() {
   it("GH-94: Cannot read property of undefined", function() {
     var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
@@ -144,5 +144,22 @@ describe('Regressions', function() {
     };
 
     shouldCompileTo('{{str bar.baz}}', [{}, helpers], 'undefined');
+  });
+
+  it('GH-926: Depths and de-dupe', function() {
+    var context = {
+      name: 'foo',
+      data: [
+        1
+      ],
+      notData: [
+        1
+      ]
+    };
+
+    var template = CompilerContext.compile('{{#if dater}}{{#each data}}{{../name}}{{/each}}{{else}}{{#each notData}}{{../name}}{{/each}}{{/if}}');
+
+    var result = template(context);
+    equals(result, 'foo');
   });
 });
