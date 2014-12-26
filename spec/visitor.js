@@ -5,11 +5,6 @@ describe('Visitor', function() {
     return;
   }
 
-  function ast_for(template) {
-    var ast = Handlebars.parse(template);
-    return Handlebars.print(ast);
-  }
-
   it('should provide coverage', function() {
     // Simply run the thing and make sure it does not fail and that all of the
     // stub methods are executed
