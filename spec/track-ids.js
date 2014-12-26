@@ -106,6 +106,27 @@ describe('track ids', function() {
     equals(template(context, {helpers: helpers}), 'HELP ME MY BOSS 1');
   });
 
+  it('should use block param paths', function() {
+    var template = CompilerContext.compile('{{#doIt as |is|}}{{wycats is.a slave.driver is}}{{/doIt}}', {trackIds: true});
+
+    var helpers = {
+      doIt: function(options) {
+        var blockParams = [this.is];
+        blockParams.path = ['zomg'];
+        return options.fn(this, {blockParams: blockParams});
+      },
+      wycats: function(passiveVoice, noun, blah, options) {
+        equal(options.ids[0], 'zomg.a');
+        equal(options.ids[1], 'slave.driver');
+        equal(options.ids[2], 'zomg');
+
+        return "HELP ME MY BOSS " + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
+      }
+    };
+
+    equals(template(context, {helpers: helpers}), 'HELP ME MY BOSS zomg.a:foo slave.driver:bar');
+  });
+
   describe('builtin helpers', function() {
     var helpers = {
       wycats: function(name, options) {
@@ -128,6 +149,17 @@ describe('track ids', function() {
         var template = CompilerContext.compile('{{#each .}}{{#each .}}{{wycats name}}{{/each}}{{/each}}', {trackIds: true});
 
         equals(template({array: [{name: 'foo'}, {name: 'bar'}]}, {helpers: helpers}), 'foo:.array..0\nbar:.array..1\n');
+      });
+      it('should handle block params', function() {
+        var helpers = {
+          wycats: function(name, options) {
+            return name + ':' + options.ids[0] + '\n';
+          }
+        };
+
+        var template = CompilerContext.compile('{{#each array as |value|}}{{wycats value.name}}{{/each}}', {trackIds: true});
+
+        equals(template({array: [{name: 'foo'}, {name: 'bar'}]}, {helpers: helpers}), 'foo:array.0.name\nbar:array.1.name\n');
       });
     });
     describe('#with', function() {

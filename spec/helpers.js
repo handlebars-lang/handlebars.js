@@ -657,4 +657,64 @@ describe('helpers', function() {
       equals(result, "GOODBYE cruel WORLD goodbye", "Helper executed");
     });
   });
+
+  describe('block params', function() {
+    it('should take presedence over context values', function() {
+      var hash = {value: 'foo'};
+      var helpers = {
+        goodbyes: function(options) {
+          equals(options.fn.blockParams, 1);
+          return options.fn({value: 'bar'}, {blockParams: [1, 2]});
+        }
+      };
+      shouldCompileTo('{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}', [hash, helpers], '1foo');
+    });
+    it('should take presedence over helper values', function() {
+      var hash = {};
+      var helpers = {
+        value: function() {
+          return 'foo';
+        },
+        goodbyes: function(options) {
+          equals(options.fn.blockParams, 1);
+          return options.fn({}, {blockParams: [1, 2]});
+        }
+      };
+      shouldCompileTo('{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}', [hash, helpers], '1foo');
+    });
+    it('should not take presedence over pathed values', function() {
+      var hash = {value: 'bar'};
+      var helpers = {
+        value: function() {
+          return 'foo';
+        },
+        goodbyes: function(options) {
+          equals(options.fn.blockParams, 1);
+          return options.fn(this, {blockParams: [1, 2]});
+        }
+      };
+      shouldCompileTo('{{#goodbyes as |value|}}{{./value}}{{/goodbyes}}{{value}}', [hash, helpers], 'barfoo');
+    });
+    it('should take presednece over parent block params', function() {
+      var hash = {value: 'foo'},
+          value = 1;
+      var helpers = {
+        goodbyes: function(options) {
+          return options.fn({value: 'bar'}, {blockParams: options.fn.blockParams === 1 ? [value++, value++] : undefined});
+        }
+      };
+      shouldCompileTo('{{#goodbyes as |value|}}{{#goodbyes}}{{value}}{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{/goodbyes}}{{/goodbyes}}{{value}}', [hash, helpers], '13foo');
+    });
+
+    it('should allow block params on chained helpers', function() {
+      var hash = {value: 'foo'};
+      var helpers = {
+        goodbyes: function(options) {
+          equals(options.fn.blockParams, 1);
+          return options.fn({value: 'bar'}, {blockParams: [1, 2]});
+        }
+      };
+      shouldCompileTo('{{#if bar}}{{else goodbyes as |value|}}{{value}}{{/if}}{{value}}', [hash, helpers], '1foo');
+    });
+  });
 });
