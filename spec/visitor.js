@@ -1,7 +1,7 @@
-/*global Handlebars */
+/*global Handlebars, shouldThrow */
 
 describe('Visitor', function() {
-  if (!Handlebars.Visitor) {
+  if (!Handlebars.Visitor || !Handlebars.print) {
     return;
   }
 
@@ -23,9 +23,15 @@ describe('Visitor', function() {
     };
     visitor.BooleanLiteral = function(bool) {
       equal(bool.value, true);
+
+      equal(this.parents.length, 4);
+      equal(this.parents[0].type, 'SubExpression');
+      equal(this.parents[1].type, 'SubExpression');
+      equal(this.parents[2].type, 'BlockStatement');
+      equal(this.parents[3].type, 'Program');
     };
     visitor.PathExpression = function(id) {
-      equal(/foo\.bar$/.test(id.original), true);
+      equal(/(foo\.)?bar$/.test(id.original), true);
     };
     visitor.ContentStatement = function(content) {
       equal(content.value, ' ');
@@ -35,5 +41,104 @@ describe('Visitor', function() {
     };
 
     visitor.accept(Handlebars.parse('{{#foo.bar (foo.bar 1 "2" true) foo=@foo.bar}}{{!comment}}{{> bar }} {{/foo.bar}}'));
+  });
+
+  it('should return undefined');
+
+  describe('mutating', function() {
+    describe('fields', function() {
+      it('should replace value', function() {
+        var visitor = new Handlebars.Visitor();
+
+        visitor.mutating = true;
+        visitor.StringLiteral = function(string) {
+          return new Handlebars.AST.NumberLiteral(42, string.locInfo);
+        };
+
+        var ast = Handlebars.parse('{{foo foo="foo"}}');
+        visitor.accept(ast);
+        equals(Handlebars.print(ast), '{{ PATH:foo [] HASH{foo=NUMBER{42}} }}\n');
+      });
+      it('should treat undefined resonse as identity', function() {
+        var visitor = new Handlebars.Visitor();
+        visitor.mutating = true;
+
+        var ast = Handlebars.parse('{{foo foo=42}}');
+        visitor.accept(ast);
+        equals(Handlebars.print(ast), '{{ PATH:foo [] HASH{foo=NUMBER{42}} }}\n');
+      });
+      it('should remove false responses', function() {
+        var visitor = new Handlebars.Visitor();
+
+        visitor.mutating = true;
+        visitor.Hash = function() {
+          return false;
+        };
+
+        var ast = Handlebars.parse('{{foo foo=42}}');
+        visitor.accept(ast);
+        equals(Handlebars.print(ast), '{{ PATH:foo [] }}\n');
+      });
+      it('should throw when removing required values', function() {
+        shouldThrow(function() {
+          var visitor = new Handlebars.Visitor();
+
+          visitor.mutating = true;
+          visitor.SubExpression = function() {
+            return false;
+          };
+
+          var ast = Handlebars.parse('{{foo 42}}');
+          visitor.accept(ast);
+        }, Handlebars.Exception, 'MustacheStatement requires sexpr');
+      });
+      it('should throw when returning non-node responses', function() {
+        shouldThrow(function() {
+          var visitor = new Handlebars.Visitor();
+
+          visitor.mutating = true;
+          visitor.SubExpression = function() {
+            return {};
+          };
+
+          var ast = Handlebars.parse('{{foo 42}}');
+          visitor.accept(ast);
+        }, Handlebars.Exception, 'Unexpected node type "undefined" found when accepting sexpr on MustacheStatement');
+      });
+    });
+    describe('arrays', function() {
+      it('should replace value', function() {
+        var visitor = new Handlebars.Visitor();
+
+        visitor.mutating = true;
+        visitor.StringLiteral = function(string) {
+          return new Handlebars.AST.NumberLiteral(42, string.locInfo);
+        };
+
+        var ast = Handlebars.parse('{{foo "foo"}}');
+        visitor.accept(ast);
+        equals(Handlebars.print(ast), '{{ PATH:foo [NUMBER{42}] }}\n');
+      });
+      it('should treat undefined resonse as identity', function() {
+        var visitor = new Handlebars.Visitor();
+        visitor.mutating = true;
+
+        var ast = Handlebars.parse('{{foo 42}}');
+        visitor.accept(ast);
+        equals(Handlebars.print(ast), '{{ PATH:foo [NUMBER{42}] }}\n');
+      });
+      it('should remove false responses', function() {
+        var visitor = new Handlebars.Visitor();
+
+        visitor.mutating = true;
+        visitor.NumberLiteral = function() {
+          return false;
+        };
+
+        var ast = Handlebars.parse('{{foo 42}}');
+        visitor.accept(ast);
+        equals(Handlebars.print(ast), '{{ PATH:foo [] }}\n');
+      });
+    });
   });
 });
