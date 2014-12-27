@@ -21,37 +21,37 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
-    "optimist": "~0.3",
+    "optimist": "^0.6.1",
     "source-map": "^0.1.40"
   },
   "optionalDependencies": {
     "uglify-js": "~2.3"
   },
   "devDependencies": {
-    "async": "~0.2.9",
+    "async": "^0.9.0",
     "aws-sdk": "~1.5.0",
     "benchmark": "~1.0",
-    "dustjs-linkedin": "~2.0.2",
+    "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
     "es6-module-packager": "^2.0.0",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.10",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-connect": "~0.5.0",
-    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-clean": "0.x",
+    "grunt-contrib-concat": "0.x",
+    "grunt-contrib-connect": "0.x",
+    "grunt-contrib-copy": "0.x",
     "grunt-contrib-jshint": "0.x",
-    "grunt-contrib-requirejs": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.2",
-    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-requirejs": "0.x",
+    "grunt-contrib-uglify": "0.x",
+    "grunt-contrib-watch": "0.x",
     "grunt-saucelabs": "8.x",
     "istanbul": "^0.3.0",
     "jison": "~0.3.0",
     "keen.io": "0.0.3",
     "mocha": "~1.20.0",
-    "mustache": "~0.7.2",
-    "semver": "~2.1.0",
-    "underscore": "~1.5.1"
+    "mustache": "0.x",
+    "semver": "^4.0.0",
+    "underscore": "^1.5.1"
   },
   "main": "lib/index.js",
   "bin": {
