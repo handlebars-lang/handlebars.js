@@ -1,9 +1,13 @@
 /*global CompilerContext, Handlebars */
-var SourceMap = require('source-map'),
-      SourceMapConsumer = SourceMap.SourceMapConsumer;
+try {
+  var SourceMap = require('source-map'),
+        SourceMapConsumer = SourceMap.SourceMapConsumer;
+} catch (err) {
+  /* NOP for in browser */
+}
 
 describe('source-map', function() {
-  if (!Handlebars.precompile) {
+  if (!Handlebars.precompile || !SourceMap) {
     return;
   }
 
