@@ -1,9 +1,13 @@
 /*global CompilerContext, Handlebars */
-var SourceMap = require('source-map'),
-      SourceMapConsumer = SourceMap.SourceMapConsumer;
+try {
+  var SourceMap = require('source-map'),
+        SourceMapConsumer = SourceMap.SourceMapConsumer;
+} catch (err) {
+  /* NOP for in browser */
+}
 
 describe('source-map', function() {
-  if (!Handlebars.precompile) {
+  if (!Handlebars.precompile || !SourceMap) {
     return;
   }
 
@@ -14,8 +18,8 @@ describe('source-map', function() {
     equal(!!template.map, !CompilerContext.browser);
   });
   it('should map source properly', function() {
-    var source = '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}',
-        template = Handlebars.precompile(source, {destName: 'dest.js', srcName: 'src.hbs'});
+    var template = '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}';
+    template = Handlebars.precompile(template, {destName: 'dest.js', srcName: 'src.hbs'});
 
     if (template.map) {
       var consumer = new SourceMapConsumer(template.map),
