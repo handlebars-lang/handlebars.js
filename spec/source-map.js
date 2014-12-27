@@ -18,8 +18,8 @@ describe('source-map', function() {
     equal(!!template.map, !CompilerContext.browser);
   });
   it('should map source properly', function() {
-    var template = '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}';
-    template = Handlebars.precompile(template, {destName: 'dest.js', srcName: 'src.hbs'});
+    var source = '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}',
+        template = Handlebars.precompile(source, {destName: 'dest.js', srcName: 'src.hbs'});
 
     if (template.map) {
       var consumer = new SourceMapConsumer(template.map),
