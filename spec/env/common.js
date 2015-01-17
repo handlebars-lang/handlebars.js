@@ -45,7 +45,7 @@ global.shouldThrow = function(callback, type, msg) {
     failed = true;
   } catch (err) {
     if (type && !(err instanceof type)) {
-      throw new Error('Type failure');
+      throw new Error('Type failure: ' + err);
     }
     if (msg && !(msg.test ? msg.test(err.message) : msg === err.message)) {
       equal(msg, err.message);
