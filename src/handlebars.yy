@@ -77,7 +77,13 @@ mustache
   ;
 
 partial
-  : OPEN_PARTIAL sexpr CLOSE -> new yy.PartialStatement($2, yy.stripFlags($1, $3), yy.locInfo(@$))
+  : OPEN_PARTIAL partial_expr CLOSE -> new yy.PartialStatement($2, yy.stripFlags($1, $3), yy.locInfo(@$))
+  ;
+
+partial_expr
+  : helperName param* hash? -> new yy.PartialExpression($1, $2, $3, yy.locInfo(@$))
+  | dataName -> new yy.PartialExpression($1, null, null, yy.locInfo(@$))
+  | OPEN_SEXPR sexpr CLOSE_SEXPR param* hash? -> new yy.PartialExpression($2, $4, $5, yy.locInfo(@$))
   ;
 
 sexpr

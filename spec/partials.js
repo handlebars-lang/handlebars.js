@@ -8,6 +8,32 @@ describe('partials', function() {
     shouldCompileToWithPartials(string, [hash, {}, {dude: partial},,false], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
   });
 
+  it('dynamic partials', function() {
+    var string = 'Dudes: {{#dudes}}{{> (partial)}}{{/dudes}}';
+    var partial = '{{name}} ({{url}}) ';
+    var hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+    var helpers = {
+      partial: function() {
+        return 'dude';
+      }
+    };
+    shouldCompileToWithPartials(string, [hash, helpers, {dude: partial}], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
+    shouldCompileToWithPartials(string, [hash, helpers, {dude: partial},,false], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
+  });
+  it('failing dynamic partials', function() {
+    var string = 'Dudes: {{#dudes}}{{> (partial)}}{{/dudes}}';
+    var partial = '{{name}} ({{url}}) ';
+    var hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+    var helpers = {
+      partial: function() {
+        return 'missing';
+      }
+    };
+    shouldThrow(function() {
+      shouldCompileToWithPartials(string, [hash, helpers, {dude: partial}], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
+    }, Handlebars.Exception, 'The partial missing could not be found');
+  });
+
   it("partials with context", function() {
     var string = "Dudes: {{>dude dudes}}";
     var partial = "{{#this}}{{name}} ({{url}}) {{/this}}";

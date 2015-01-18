@@ -115,6 +115,17 @@ interface SubExpression <: Expression {
 
 `isHelper` is not required and is used to disambiguate between cases such as `{{foo}}` and `(foo)`, which have slightly different call behaviors.
 
+```java
+interface PartialExpression <: Expression {
+    type: "PartialExpression";
+    name: PathExpression | SubExpression;
+    params: [ Expression ];
+    hash: Hash;
+}
+```
+
+`path` may be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`
+
 ##### Paths
 
 ```java
@@ -220,6 +231,8 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
   - `parent` is the existing code in the path resolution
   - `name` is the current path component
   - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, or `partial`.
+
+  Note that this does not impact dynamic partials, which implementors need to be aware of. Overriding `VM.resolvePartial` may be required to support dynamic cases.
 
 - `depthedLookup(name)`
   Used to generate code that resolves parameters within any context in the stack. Is only used in `compat` mode. 
