@@ -55,15 +55,21 @@ interface Statement <: Node { }
 
 interface MustacheStatement <: Statement {
     type: "MustacheStatement";
-    sexpr: SubExpression;
-    escaped: boolean;
 
+    path: PathExpression;
+    params: [ Expression ];
+    hash: Hash;
+
+    escaped: boolean;
     strip: StripFlags | null;
 }
 
 interface BlockStatement <: Statement {
     type: "BlockStatement";
-    sexpr: SubExpression;
+    path: PathExpression;
+    params: [ Expression ];
+    hash: Hash;
+
     program: Program | null;
     inverse: Program | null;
 
@@ -74,12 +80,19 @@ interface BlockStatement <: Statement {
 
 interface PartialStatement <: Statement {
     type: "PartialStatement";
-    sexpr: SubExpression;
+    name: PathExpression | SubExpression;
+    params: [ Expression ];
+    hash: Hash;
     
     indent: string;
     strip: StripFlags | null;
 }
+```
 
+`name` will be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`, otherwise this is a path or literal whose `original` value is used to lookup the desired partial.
+
+
+```java
 interface ContentStatement <: Statement {
     type: "ContentStatement";
     value: string;
@@ -108,23 +121,8 @@ interface SubExpression <: Expression {
     path: PathExpression;
     params: [ Expression ];
     hash: Hash;
-    
-    isHelper: true | null;
 }
 ```
-
-`isHelper` is not required and is used to disambiguate between cases such as `{{foo}}` and `(foo)`, which have slightly different call behaviors.
-
-```java
-interface PartialExpression <: Expression {
-    type: "PartialExpression";
-    name: PathExpression | Literal | SubExpression;
-    params: [ Expression ];
-    hash: Hash;
-}
-```
-
-`name` will be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`, otherwise this is a path or literal whose `original` value is used to lookup the desired partial.
 
 ##### Paths
 
