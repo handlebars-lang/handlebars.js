@@ -204,7 +204,7 @@ function ImportScanner() {
 ImportScanner.prototype = new Visitor();
 
 ImportScanner.prototype.PartialStatement = function(partial) {
-  this.partials.push({request: partial.sexpr.original});
+  this.partials.push({request: partial.name.original});
 
   Visitor.prototype.PartialStatement.call(this, partial);
 };

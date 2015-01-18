@@ -26,7 +26,7 @@ describe('ast', function() {
     it('should store args', function() {
       var id = {isSimple: true},
           hash = {},
-          mustache = new handlebarsEnv.AST.MustacheStatement({}, true, {}, LOCATION_INFO);
+          mustache = new handlebarsEnv.AST.MustacheStatement({}, null, null, true, {}, LOCATION_INFO);
       equals(mustache.type, 'MustacheStatement');
       equals(mustache.escaped, true);
       testLocationInfoStorage(mustache);
@@ -40,10 +40,10 @@ describe('ast', function() {
     });
 
     it('stores location info', function(){
-      var sexprNode = new handlebarsEnv.AST.SubExpression([{ original: 'foo'}], null);
-      var mustacheNode = new handlebarsEnv.AST.MustacheStatement(sexprNode, false, {});
+      var mustacheNode = new handlebarsEnv.AST.MustacheStatement([{ original: 'foo'}], null, null, false, {});
       var block = new handlebarsEnv.AST.BlockStatement(
             mustacheNode,
+            null, null,
             {body: []},
             {body: []},
             {},
@@ -104,7 +104,7 @@ describe('ast', function() {
 
   describe('PartialStatement', function(){
     it('stores location info', function(){
-      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', {}, LOCATION_INFO);
+      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', [], {}, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
@@ -200,7 +200,7 @@ describe('ast', function() {
             block = ast.body[0];
 
         equals(block.program.body[0].value, '');
-        equals(block.program.body[1].sexpr.path.original, 'foo');
+        equals(block.program.body[1].path.original, 'foo');
         equals(block.program.body[2].value, '\n');
       });
       it('marks nested block mustaches as standalone', function() {

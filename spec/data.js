@@ -93,6 +93,17 @@ describe('data', function() {
     }, Error);
   });
 
+  it('data can be functions', function() {
+    var template = CompilerContext.compile('{{@hello}}');
+    var result = template({}, { data: { hello: function() { return 'hello'; } } });
+    equals('hello', result);
+  });
+  it('data can be functions with params', function() {
+    var template = CompilerContext.compile('{{@hello "hello"}}');
+    var result = template({}, { data: { hello: function(arg) { return arg; } } });
+    equals('hello', result);
+  });
+
   it("data is inherited downstream", function() {
     var template = CompilerContext.compile("{{#let foo=1 bar=2}}{{#let foo=bar.baz}}{{@bar}}{{@foo}}{{/let}}{{@foo}}{{/let}}", { data: true });
     var helpers = {
