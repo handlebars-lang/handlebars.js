@@ -19,6 +19,12 @@ describe('javascript-compiler api', function() {
       };
       shouldCompileTo("{{foo}}", { bar_foo: "food" }, "food");
     });
+
+    // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases
+    // to avoid errors in older browsers.
+    it('should handle reserved words', function() {
+      shouldCompileTo("{{foo}} {{~null~}}", { foo: "food" }, "food");
+    });
   });
   describe('#compilerInfo', function() {
     var $superCheck, $superInfo;
