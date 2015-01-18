@@ -118,13 +118,13 @@ interface SubExpression <: Expression {
 ```java
 interface PartialExpression <: Expression {
     type: "PartialExpression";
-    name: PathExpression | SubExpression;
+    name: PathExpression | Literal | SubExpression;
     params: [ Expression ];
     hash: Hash;
 }
 ```
 
-`path` may be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`
+`name` will be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`, otherwise this is a path or literal whose `original` value is used to lookup the desired partial.
 
 ##### Paths
 
