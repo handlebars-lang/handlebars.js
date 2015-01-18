@@ -1,4 +1,4 @@
-/*global CompilerContext, Handlebars, beforeEach, shouldCompileTo */
+/*global CompilerContext, Handlebars, beforeEach, shouldCompileTo, shouldThrow */
 global.handlebarsEnv = null;
 
 beforeEach(function() {
@@ -36,6 +36,10 @@ describe("basic context", function() {
 
     shouldCompileTo('    {{~! comment ~}}      blah', {}, 'blah');
     shouldCompileTo('    {{~!-- long-comment --~}}      blah', {}, 'blah');
+    shouldCompileTo('    {{! comment ~}}      blah', {}, '    blah');
+    shouldCompileTo('    {{!-- long-comment --~}}      blah', {}, '    blah');
+    shouldCompileTo('    {{~! comment}}      blah', {}, '      blah');
+    shouldCompileTo('    {{~!-- long-comment --}}      blah', {}, '      blah');
   });
 
   it("boolean", function() {
@@ -140,12 +144,12 @@ describe("basic context", function() {
   });
   it("pathed block functions without context argument", function() {
     shouldCompileTo("{{#foo.awesome}}inner{{/foo.awesome}}",
-        {foo: {awesome: function(options) { return this; }}},
+        {foo: {awesome: function() { return this; }}},
         "inner", "block functions are called with options");
   });
   it("depthed block functions without context argument", function() {
     shouldCompileTo("{{#with value}}{{#../awesome}}inner{{/../awesome}}{{/with}}",
-        {value: true, awesome: function(options) { return this; }},
+        {value: true, awesome: function() { return this; }},
         "inner", "block functions are called with options");
   });
 
