@@ -55,15 +55,21 @@ interface Statement <: Node { }
 
 interface MustacheStatement <: Statement {
     type: "MustacheStatement";
-    sexpr: SubExpression;
-    escaped: boolean;
 
+    path: PathExpression;
+    params: [ Expression ];
+    hash: Hash;
+
+    escaped: boolean;
     strip: StripFlags | null;
 }
 
 interface BlockStatement <: Statement {
     type: "BlockStatement";
-    sexpr: SubExpression;
+    path: PathExpression;
+    params: [ Expression ];
+    hash: Hash;
+
     program: Program | null;
     inverse: Program | null;
 
@@ -74,12 +80,19 @@ interface BlockStatement <: Statement {
 
 interface PartialStatement <: Statement {
     type: "PartialStatement";
-    sexpr: SubExpression;
+    name: PathExpression | SubExpression;
+    params: [ Expression ];
+    hash: Hash;
     
     indent: string;
     strip: StripFlags | null;
 }
+```
 
+`name` will be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`, otherwise this is a path or literal whose `original` value is used to lookup the desired partial.
+
+
+```java
 interface ContentStatement <: Statement {
     type: "ContentStatement";
     value: string;
@@ -108,12 +121,8 @@ interface SubExpression <: Expression {
     path: PathExpression;
     params: [ Expression ];
     hash: Hash;
-    
-    isHelper: true | null;
 }
 ```
-
-`isHelper` is not required and is used to disambiguate between cases such as `{{foo}}` and `(foo)`, which have slightly different call behaviors.
 
 ##### Paths
 
@@ -195,7 +204,7 @@ function ImportScanner() {
 ImportScanner.prototype = new Visitor();
 
 ImportScanner.prototype.PartialStatement = function(partial) {
-  this.partials.push({request: partial.sexpr.original});
+  this.partials.push({request: partial.name.original});
 
   Visitor.prototype.PartialStatement.call(this, partial);
 };
@@ -220,6 +229,8 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
   - `parent` is the existing code in the path resolution
   - `name` is the current path component
   - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, or `partial`.
+
+  Note that this does not impact dynamic partials, which implementors need to be aware of. Overriding `VM.resolvePartial` may be required to support dynamic cases.
 
 - `depthedLookup(name)`
   Used to generate code that resolves parameters within any context in the stack. Is only used in `compat` mode. 
