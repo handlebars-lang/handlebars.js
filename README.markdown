@@ -99,7 +99,7 @@ helps to protect you against accidental XSS problems caused by malicious
 data passed from the server as JSON.
 
 To explicitly *not* escape the contents, use the triple-mustache
-(`{{{}}}`). You have seen this used in the above example.
+(`{{{}}}`). This is this used in the Strings example below.
 
 
 Differences Between Handlebars.js and Mustache
