@@ -197,7 +197,7 @@ template(data);
 ```
 
 Whenever the block helper is called it is given one or more parameters,
-any arguments that are passed in the helper in the call and an `options`
+any arguments that are passed into the helper in the call, and an `options`
 object containing the `fn` function which executes the block's child.
 The block's current context may be accessed through `this`.
 
