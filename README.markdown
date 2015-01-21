@@ -110,7 +110,7 @@ templates easier and also changes a tiny detail of how partials work.
 ### Paths
 
 Handlebars.js supports an extended expression syntax that we call paths.
-Paths are made up of typical expressions and . characters. Expressions
+Paths are made up of typical expressions and `.` characters. Expressions
 allow you to not only display data from the current context, but to
 display data from contexts that are descendants and ancestors of the
 current context.
