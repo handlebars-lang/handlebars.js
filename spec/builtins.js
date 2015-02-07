@@ -276,15 +276,17 @@ describe('builtin helpers', function() {
       equals(3, levelArg);
       equals("whee", logArg);
     });
-    it('should not output to console', function() {
+    it('should not output to info', function() {
       var string = "{{log blah}}";
       var hash   = { blah: "whee" };
 
-      console.info = function() {
-        throw new Error();
+      console.info = function(log) {
+        equals("whee", log);
+        called = true;
       };
 
-      shouldCompileTo(string, hash, "", "log should not display");
+      shouldCompileTo(string, hash, "");
+      equals(true, called);
     });
     it('should log at data level', function() {
       var string = "{{log blah}}";
