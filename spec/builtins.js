@@ -237,13 +237,16 @@ describe('builtin helpers', function() {
       return;
     }
 
-    var info,
+    var log,
+        info,
         error;
     beforeEach(function() {
+      log = console.log;
       info = console.info;
       error = console.error;
     });
     afterEach(function() {
+      console.log = log;
       console.info = info;
       console.error = error;
     });
