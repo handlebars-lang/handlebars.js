@@ -276,11 +276,15 @@ describe('builtin helpers', function() {
       equals(3, levelArg);
       equals("whee", logArg);
     });
-    it('should not output to info', function() {
+    it('should output to info', function() {
       var string = "{{log blah}}";
       var hash   = { blah: "whee" };
 
       console.info = function(log) {
+        equals("whee", log);
+        called = true;
+      };
+      console.log = function(log) {
         equals("whee", log);
         called = true;
       };
