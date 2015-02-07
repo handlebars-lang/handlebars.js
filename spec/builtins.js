@@ -279,6 +279,7 @@ describe('builtin helpers', function() {
     it('should output to info', function() {
       var string = "{{log blah}}";
       var hash   = { blah: "whee" };
+      var called;
 
       console.info = function(log) {
         equals("whee", log);
