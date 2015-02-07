@@ -110,6 +110,7 @@ helperName
   | dataName -> $1
   | STRING -> new yy.StringLiteral($1, yy.locInfo(@$)), yy.locInfo(@$)
   | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
+  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
   ;
 
 partialName
