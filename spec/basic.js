@@ -231,18 +231,20 @@ describe("basic context", function() {
   });
 
   it("pass string literals", function() {
-    shouldCompileTo('{{"foo"}}', {}, "foo", "works with strings");
-    shouldCompileTo('{{"foo"}}', { foo: "bar" }, "foo", "uses the provided string instead of lookup in the context object");
+    shouldCompileTo('{{"foo"}}', {}, "");
+    shouldCompileTo('{{"foo"}}', { foo: "bar" }, "bar");
   });
 
   it("pass number literals", function() {
-    shouldCompileTo("{{12}}", {}, "12", "works with numbers");
-    shouldCompileTo("{{12}}", { "12": "bar" }, "12", "uses the provided number instead of lookup in the context object");
+    shouldCompileTo("{{12}}", {}, "");
+    shouldCompileTo("{{12}}", { "12": "bar" }, "bar");
+    shouldCompileTo("{{12.34}}", {}, "");
+    shouldCompileTo("{{12.34}}", { "12.34": "bar" }, "bar");
   });
 
   it("pass boolean literals", function() {
-    shouldCompileTo("{{true}}", {}, "true", "works with true");
-    shouldCompileTo("{{true}}", { "true": "foo" }, "true", "uses the primitive true instead of lookup in the context object");
-    shouldCompileTo("{{false}}", { "false": "foo" }, "false", "uses the primitive false instead of lookup in the context object");
+    shouldCompileTo("{{true}}", {}, "");
+    shouldCompileTo("{{true}}", { "": "foo" }, "");
+    shouldCompileTo("{{false}}", { "false": "foo" }, "foo");
   });
 });
