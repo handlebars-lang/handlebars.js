@@ -66,7 +66,7 @@ inverseChain
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK path CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
+  : OPEN_ENDBLOCK helperName CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
   ;
 
 mustache
@@ -81,11 +81,7 @@ partial
   ;
 
 param
-  : path -> $1
-  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$))
-  | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
-  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
-  | dataName -> $1
+  : helperName -> $1
   | sexpr -> $1
   ;
 
@@ -108,8 +104,9 @@ blockParams
 helperName
   : path -> $1
   | dataName -> $1
-  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$)), yy.locInfo(@$)
+  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$))
   | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
+  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
   ;
 
 partialName

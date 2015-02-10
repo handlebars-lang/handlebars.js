@@ -10,6 +10,10 @@ describe('parser', function() {
   }
 
   it('parses simple mustaches', function() {
+    equals(ast_for('{{123}}'), "{{ NUMBER{123} [] }}\n");
+    equals(ast_for('{{"foo"}}'), '{{ "foo" [] }}\n');
+    equals(ast_for('{{false}}'), '{{ BOOLEAN{false} [] }}\n');
+    equals(ast_for('{{true}}'), '{{ BOOLEAN{true} [] }}\n');
     equals(ast_for('{{foo}}'), "{{ PATH:foo [] }}\n");
     equals(ast_for('{{foo?}}'), "{{ PATH:foo? [] }}\n");
     equals(ast_for('{{foo_}}'), "{{ PATH:foo_ [] }}\n");

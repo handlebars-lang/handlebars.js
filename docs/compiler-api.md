@@ -56,7 +56,7 @@ interface Statement <: Node { }
 interface MustacheStatement <: Statement {
     type: "MustacheStatement";
 
-    path: PathExpression;
+    path: PathExpression | Literal;
     params: [ Expression ];
     hash: Hash;
 
