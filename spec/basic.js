@@ -230,21 +230,32 @@ describe("basic context", function() {
     }, Error);
   });
 
-  it("pass string literals", function() {
-    shouldCompileTo('{{"foo"}}', {}, "");
-    shouldCompileTo('{{"foo"}}', { foo: "bar" }, "bar");
+  it('pass string literals', function() {
+    shouldCompileTo('{{"foo"}}', {}, '');
+    shouldCompileTo('{{"foo"}}', { foo: 'bar' }, 'bar');
+    shouldCompileTo('{{#"foo"}}{{.}}{{/"foo"}}', { foo: ['bar', 'baz'] }, 'barbaz');
   });
 
-  it("pass number literals", function() {
-    shouldCompileTo("{{12}}", {}, "");
-    shouldCompileTo("{{12}}", { "12": "bar" }, "bar");
-    shouldCompileTo("{{12.34}}", {}, "");
-    shouldCompileTo("{{12.34}}", { "12.34": "bar" }, "bar");
+  it('pass number literals', function() {
+    shouldCompileTo('{{12}}', {}, '');
+    shouldCompileTo('{{12}}', { '12': 'bar' }, 'bar');
+    shouldCompileTo('{{12.34}}', {}, '');
+    shouldCompileTo('{{12.34}}', { '12.34': 'bar' }, 'bar');
+    shouldCompileTo('{{12.34 1}}', { '12.34': function(arg) { return 'bar' + arg; } }, 'bar1');
   });
 
-  it("pass boolean literals", function() {
-    shouldCompileTo("{{true}}", {}, "");
-    shouldCompileTo("{{true}}", { "": "foo" }, "");
-    shouldCompileTo("{{false}}", { "false": "foo" }, "foo");
+  it('pass boolean literals', function() {
+    shouldCompileTo('{{true}}', {}, '');
+    shouldCompileTo('{{true}}', { '': 'foo' }, '');
+    shouldCompileTo('{{false}}', { 'false': 'foo' }, 'foo');
+  });
+
+  it('should handle literals in subexpression', function() {
+    var helpers = {
+      foo: function(arg) {
+        return arg;
+      }
+    };
+    shouldCompileTo('{{foo (false)}}', [{ 'false': function() { return 'bar'; } }, helpers], 'bar');
   });
 });
