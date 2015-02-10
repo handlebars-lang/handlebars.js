@@ -2,7 +2,57 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.0...master)
+
+## v3.0.0 - February 10th, 2015
+- [#941](https://github.com/wycats/handlebars.js/pull/941) - Add support for dynamic partial names ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#940](https://github.com/wycats/handlebars.js/pull/940) - Add missing reserved words so compiler knows to use array syntax: ([@mattflaschen](https://api.github.com/users/mattflaschen))
+- [#938](https://github.com/wycats/handlebars.js/pull/938) - Fix example using #with helper ([@diwo](https://api.github.com/users/diwo))
+- [#930](https://github.com/wycats/handlebars.js/pull/930) - Add parent tracking and mutation to AST visitors ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#926](https://github.com/wycats/handlebars.js/issues/926) - Depthed lookups fail when program duplicator runs ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#918](https://github.com/wycats/handlebars.js/pull/918) - Add instructions for 'spec/mustache' to CONTRIBUTING.md, fix a few typos ([@oneeman](https://api.github.com/users/oneeman))
+- [#915](https://github.com/wycats/handlebars.js/pull/915) - Ast update ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#910](https://github.com/wycats/handlebars.js/issues/910) - Different behavior of {{@last}} when {{#each}} in {{#each}} ([@zordius](https://api.github.com/users/zordius))
+- [#907](https://github.com/wycats/handlebars.js/issues/907) - Implement named helper variable references ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#906](https://github.com/wycats/handlebars.js/pull/906) - Add parser support for block params ([@mmun](https://api.github.com/users/mmun))
+- [#903](https://github.com/wycats/handlebars.js/issues/903) - Only provide aliases for multiple use calls ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#902](https://github.com/wycats/handlebars.js/pull/902) - Generate Source Maps ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#901](https://github.com/wycats/handlebars.js/issues/901) - Still escapes with noEscape enabled on isolated Handlebars environment ([@zedknight](https://api.github.com/users/zedknight))
+- [#896](https://github.com/wycats/handlebars.js/pull/896) - Simplify BlockNode by removing intermediate MustacheNode ([@mmun](https://api.github.com/users/mmun))
+- [#892](https://github.com/wycats/handlebars.js/pull/892) - Implement parser for else chaining of helpers ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#889](https://github.com/wycats/handlebars.js/issues/889) - Consider extensible parser API ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#887](https://github.com/wycats/handlebars.js/issues/887) - Handlebars.noConflict() option? ([@bradvogel](https://api.github.com/users/bradvogel))
+- [#886](https://github.com/wycats/handlebars.js/issues/886) - Add SafeString to context (or use duck-typing) ([@dominicbarnes](https://api.github.com/users/dominicbarnes))
+- [#870](https://github.com/wycats/handlebars.js/pull/870) - Registering undefined partial throws exception. ([@max-b](https://api.github.com/users/max-b))
+- [#866](https://github.com/wycats/handlebars.js/issues/866) - comments don't respect whitespace control ([@75lb](https://api.github.com/users/75lb))
+- [#863](https://github.com/wycats/handlebars.js/pull/863) - + jsDelivr CDN info ([@tomByrer](https://api.github.com/users/tomByrer))
+- [#858](https://github.com/wycats/handlebars.js/issues/858) - Disable new default auto-indent at included partials ([@majodev](https://api.github.com/users/majodev))
+- [#856](https://github.com/wycats/handlebars.js/pull/856) - jspm compatibility ([@MajorBreakfast](https://api.github.com/users/MajorBreakfast))
+- [#805](https://github.com/wycats/handlebars.js/issues/805) - Request: "strict" lookups ([@nzakas](https://api.github.com/users/nzakas))
+
+- Export the default object for handlebars/runtime - 5594416
+- Lookup partials when undefined - 617dd57
+
+Compatibility notes:
+- Runtime breaking changes. Must match 3.x runtime and precompiler.
+- The AST has been upgraded to a public API.
+  - There are a number of changes to this, but the format is now documented in docs/compiler-api.md
+  - The Visitor API has been expanded to support mutation and provide a base implementation
+- The `JavaScriptCompiler` APIs have been formalized and documented. As part of the sourcemap handling these should be updated to return arrays for concatenation.
+- `JavaScriptCompiler.namespace` has been removed as it was unused.
+- `SafeString` is now duck typed on `toHTML`
+
+New Features:
+- noConflict
+- Source Maps
+- Block Params
+- Strict Mode
+- @last and other each changes
+- Chained else blocks
+- @data methods can now have helper parameters passed to them
+- Dynamic partials
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0...v3.0.0)
 
 ## v2.0.0 - September 1st, 2014
 - Update jsfiddle to 2.0.0-beta.1 - 0670f65
