@@ -366,6 +366,7 @@ Handlebars in the Wild
   and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
   as its template engine.
 * [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
+* [dashbars](https://github.com/pismute/dashbars) A modern helper library for Handlebars.js.
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
   structure your views, also with automatic data binding support.
 * [Ghost](https://ghost.org/) Just a blogging platform.
