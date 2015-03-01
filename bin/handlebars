@@ -103,7 +103,7 @@ var argv = optimist.argv;
 argv.templates = argv._;
 delete argv._;
 
-if (argv.help || !argv.templates.length) {
+if (argv.help || (!argv.templates.length && !argv.version)) {
   optimist.showHelp();
   return;
 }
