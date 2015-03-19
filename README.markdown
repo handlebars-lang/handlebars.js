@@ -239,16 +239,20 @@ template(data);
 Partials can also accept parameters
 
 ```js
-var source = "<div>{{> roster people=listOfPeople rosterName}}</div>";
+var source = "<div>{{> roster rosterProperties people=listOfPeople}}</div>";
 
 Handlebars.registerPartial('roster', '<h2>{{rosterName}}</h2>{{#people}}<span>{{id}}: {{name}}</span>{{/people}}')
 var template = Handlebars.compile(source);
 
-var data = { "listOfPeople": [
-    { "name": "Alan", "id": 1 },
-    { "name": "Yehuda", "id": 2 }
-  ], 
-  "rosterName": "Cool People" };
+var data = {
+	"listOfPeople": [
+		{ "name": "Alan", "id": 1 },
+		{ "name": "Yehuda", "id": 2 }
+	], 
+	"rosterProperties": {
+		"rosterName": "Cool People"
+	}
+};
 
 template(data);
 
