@@ -236,6 +236,31 @@ template(data);
 // </ul>
 ```
 
+Partials can also accept parameters
+
+```js
+var source = "<div>{{> roster people=listOfPeople rosterName}}</div>";
+
+Handlebars.registerPartial('roster', '<h2>{{rosterName}}</h2>{{#people}}<span>{{id}}: {{name}}</span>{{/people}}')
+var template = Handlebars.compile(source);
+
+var data = { "listOfPeople": [
+    { "name": "Alan", "id": 1 },
+    { "name": "Yehuda", "id": 2 }
+  ], 
+  "rosterName": "Cool People" };
+
+template(data);
+
+// Should render:
+// <div>
+//  <h2>Cool People</h2>
+//   <span>1: Alan</span>
+//   <span>2: Yehuda</span>
+// </div>
+
+```
+
 ### Comments
 
 You can add comments to your templates with the following syntax:
