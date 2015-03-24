@@ -2,7 +2,16 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.1...master)
+
+## v3.0.1 - March 24th, 2015
+- [#984](https://github.com/wycats/handlebars.js/pull/984) - Adding documentation for passing arguments into partials ([@johneke](https://api.github.com/users/johneke))
+- [#973](https://github.com/wycats/handlebars.js/issues/973) - version 3 is slower than version 2 ([@elover](https://api.github.com/users/elover))
+- [#966](https://github.com/wycats/handlebars.js/issues/966) - "handlebars --version" does not work with v3.0.0 ([@abloomston](https://api.github.com/users/abloomston))
+- [#964](https://github.com/wycats/handlebars.js/pull/964) - default is a reserved word ([@grassick](https://api.github.com/users/grassick))
+- [#962](https://github.com/wycats/handlebars.js/pull/962) - Add dashbars' link on README. ([@pismute](https://api.github.com/users/pismute))
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.0...v3.0.1)
 
 ## v3.0.0 - February 10th, 2015
 - [#941](https://github.com/wycats/handlebars.js/pull/941) - Add support for dynamic partial names ([@kpdecker](https://api.github.com/users/kpdecker))
