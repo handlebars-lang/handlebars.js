@@ -322,6 +322,13 @@ describe('Tokenizer', function() {
     shouldBeToken(result[2], "BOOLEAN", "false");
   });
 
+  it('tokenizes undefined and null', function() {
+    var result = tokenize('{{ foo undefined null }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'UNDEFINED', 'NULL', 'CLOSE']);
+    shouldBeToken(result[2], 'UNDEFINED', 'undefined');
+    shouldBeToken(result[3], 'NULL', 'null');
+  });
+
   it('tokenizes hash arguments', function() {
     var result = tokenize("{{ foo bar=baz }}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'EQUALS', 'ID', 'CLOSE']);

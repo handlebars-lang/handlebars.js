@@ -66,6 +66,16 @@ describe("basic context", function() {
     shouldCompileTo('val: {{{val1/val2}}}', {val1: {val2: false}}, 'val: false');
   });
 
+  it('should handle undefined and null', function() {
+    shouldCompileTo('{{awesome undefined null}}',
+        {
+          awesome: function(_undefined, _null, options) {
+            return (_undefined === undefined) + ' ' + (_null === null) + ' ' + (typeof options);
+          }
+        },
+        'true true object');
+  });
+
   it("newlines", function() {
       shouldCompileTo("Alan's\nTest", {}, "Alan's\nTest");
       shouldCompileTo("Alan's\rTest", {}, "Alan's\rTest");

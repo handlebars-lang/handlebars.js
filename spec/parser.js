@@ -58,6 +58,10 @@ describe('parser', function() {
     equals(ast_for("{{foo false}}"), "{{ PATH:foo [BOOLEAN{false}] }}\n");
   });
 
+  it('parses mustaches with undefined and null parameters', function() {
+    equals(ast_for("{{foo undefined null}}"), "{{ PATH:foo [UNDEFINED, NULL] }}\n");
+  });
+
   it('parses mutaches with DATA parameters', function() {
     equals(ast_for("{{foo @bar}}"), "{{ PATH:foo [@PATH:bar] }}\n");
   });

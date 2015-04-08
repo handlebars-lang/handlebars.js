@@ -9,7 +9,7 @@ describe('Visitor', function() {
     // Simply run the thing and make sure it does not fail and that all of the
     // stub methods are executed
     var visitor = new Handlebars.Visitor();
-    visitor.accept(Handlebars.parse('{{foo}}{{#foo (bar 1 "1" true) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'));
+    visitor.accept(Handlebars.parse('{{foo}}{{#foo (bar 1 "1" true undefined null) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'));
   });
 
   it('should traverse to stubs', function() {

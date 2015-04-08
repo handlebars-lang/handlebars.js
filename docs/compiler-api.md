@@ -164,6 +164,14 @@ interface NumberLiteral <: Literal {
     value: number;
     original: number;
 }
+
+interface UndefinedLiteral <: Literal {
+    type: "UndefinedLiteral";
+}
+
+interface NullLiteral <: Literal {
+    type: "NullLiteral";
+}
 ```
 
 

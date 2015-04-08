@@ -102,6 +102,8 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"@"                          return 'DATA';
 <mu>"true"/{LITERAL_LOOKAHEAD}   return 'BOOLEAN';
 <mu>"false"/{LITERAL_LOOKAHEAD}  return 'BOOLEAN';
+<mu>"undefined"/{LITERAL_LOOKAHEAD} return 'UNDEFINED';
+<mu>"null"/{LITERAL_LOOKAHEAD}   return 'NULL';
 <mu>\-?[0-9]+(?:\.[0-9]+)?/{LITERAL_LOOKAHEAD} return 'NUMBER';
 <mu>"as"\s+"|"                   return 'OPEN_BLOCK_PARAMS';
 <mu>"|"                          return 'CLOSE_BLOCK_PARAMS';
