@@ -28,12 +28,17 @@
 
     <script src="/spec/env/common.js"></script>
     <script>
+      var requireFailure;
+
       requirejs.config({
         paths: {
           handlebars: '/dist/handlebars.amd',
           tests: '/tmp/tests'
         }
       });
+      requirejs.onError = function (err) {
+        requireFailure = err;
+      };
 
       var CompilerContext = {
         compile: function(template, options) {
@@ -79,16 +84,26 @@
 
             runner.on('fail', logFailure);
 
-            function logFailure(test, err){
+            // Inject any require initilizer failures into the first test so they are properly
+            // reported.
+            if (requireFailure) {
+              runner.on('hook end', function(hook){
+                if (requireFailure) {
+                  runner.uncaught(requireFailure);
+                  requireFailure = undefined;
+                }
+              });
+            }
 
-              var flattenTitles = function(test){
+            function logFailure(test, err){
+              function flattenTitles(test){
                 var titles = [];
                 while (test.parent.title){
                   titles.push(test.parent.title);
                   test = test.parent;
                 }
                 return titles.reverse();
-              };
+              }
 
               failedTests.push({
                 name: test.title,
@@ -97,7 +112,7 @@
                 stack: err.stack,
                 titles: flattenTitles(test)
               });
-            };
+            }
           });
         });
       };
