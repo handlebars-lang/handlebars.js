@@ -1,7 +1,9 @@
 /*global CompilerContext, Handlebars */
 try {
-  var SourceMap = require('source-map'),
-        SourceMapConsumer = SourceMap.SourceMapConsumer;
+  if (typeof define !== 'function' || !define.amd) {
+    var SourceMap = require('source-map'),
+          SourceMapConsumer = SourceMap.SourceMapConsumer;
+  }
 } catch (err) {
   /* NOP for in browser */
 }
