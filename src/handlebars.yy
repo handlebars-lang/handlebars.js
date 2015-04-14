@@ -83,8 +83,6 @@ partial
 param
   : helperName -> $1
   | sexpr -> $1
-  | UNDEFINED -> new yy.UndefinedLiteral(yy.locInfo(@$))
-  | NULL -> new yy.NullLiteral(yy.locInfo(@$))
   ;
 
 sexpr
@@ -109,6 +107,8 @@ helperName
   | STRING -> new yy.StringLiteral($1, yy.locInfo(@$))
   | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
   | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
+  | UNDEFINED -> new yy.UndefinedLiteral(yy.locInfo(@$))
+  | NULL -> new yy.NullLiteral(yy.locInfo(@$))
   ;
 
 partialName

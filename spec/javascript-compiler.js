@@ -23,7 +23,7 @@ describe('javascript-compiler api', function() {
     // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases
     // to avoid errors in older browsers.
     it('should handle reserved words', function() {
-      shouldCompileTo("{{foo}} {{~[null]~}}", { foo: "food" }, "food");
+      shouldCompileTo("{{foo}} {{~null~}}", { foo: "food" }, "food");
     });
   });
   describe('#compilerInfo', function() {

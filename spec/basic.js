@@ -74,6 +74,20 @@ describe("basic context", function() {
           }
         },
         'true true object');
+    shouldCompileTo('{{undefined}}',
+        {
+          undefined: function() {
+            return 'undefined!';
+          }
+        },
+        'undefined!');
+    shouldCompileTo('{{null}}',
+        {
+          null: function() {
+            return 'null!';
+          }
+        },
+        'null!');
   });
 
   it("newlines", function() {
