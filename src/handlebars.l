@@ -110,7 +110,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 
 <mu>{ID}                         return 'ID';
 
-<mu>'['[^\]]*']'                 yytext = strip(1,2); return 'ID';
+<mu>'['[^\]]*']'                 return 'ID';
 <mu>.                            return 'INVALID';
 
 <INITIAL,mu><<EOF>>              return 'EOF';

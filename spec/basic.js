@@ -227,10 +227,12 @@ describe("basic context", function() {
   });
 
   it("this keyword nested inside path", function() {
-    var string = "{{#hellos}}{{text/this/foo}}{{/hellos}}";
     shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error);
+      CompilerContext.compile('{{#hellos}}{{text/this/foo}}{{/hellos}}');
+    }, Error, 'Invalid path: text/this - 1:13');
+
+    shouldCompileTo('{{[this]}}', {'this': 'bar'}, 'bar');
+    shouldCompileTo('{{text/[this]}}', {text: {'this': 'bar'}}, 'bar');
   });
 
   it("this keyword in helpers", function() {
@@ -251,7 +253,16 @@ describe("basic context", function() {
     var string = "{{#hellos}}{{foo text/this/foo}}{{/hellos}}";
     shouldThrow(function() {
       CompilerContext.compile(string);
-    }, Error);
+    }, Error, 'Invalid path: text/this - 1:17');
+
+    shouldCompileTo(
+        '{{foo [this]}}',
+        {foo: function(value) { return value; }, 'this': 'bar'},
+        'bar');
+    shouldCompileTo(
+        '{{foo text/[this]}}',
+        {foo: function(value) { return value; }, text: {'this': 'bar'}},
+        'bar');
   });
 
   it('pass string literals', function() {
