@@ -76,14 +76,14 @@ describe("basic context", function() {
         'true true object');
     shouldCompileTo('{{undefined}}',
         {
-          undefined: function() {
+          'undefined': function() {
             return 'undefined!';
           }
         },
         'undefined!');
     shouldCompileTo('{{null}}',
         {
-          null: function() {
+          'null': function() {
             return 'null!';
           }
         },
