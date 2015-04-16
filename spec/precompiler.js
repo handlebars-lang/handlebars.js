@@ -1,6 +1,4 @@
-/*global shouldThrow */
-
-
+/*eslint-disable no-console */
 describe('precompiler', function() {
   // NOP Under non-node environments
   if (typeof process === 'undefined') {

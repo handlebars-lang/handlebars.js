@@ -1,26 +1,34 @@
-/*global CompilerContext, shouldCompileTo, shouldThrow */
 describe('Regressions', function() {
-  it("GH-94: Cannot read property of undefined", function() {
-    var data = {"books":[{"title":"The origin of species","author":{"name":"Charles Darwin"}},{"title":"Lazarillo de Tormes"}]};
-    var string = "{{#books}}{{title}}{{author.name}}{{/books}}";
-    shouldCompileTo(string, data, "The origin of speciesCharles DarwinLazarillo de Tormes",
-                    "Renders without an undefined property error");
+  it('GH-94: Cannot read property of undefined', function() {
+    var data = {
+      'books': [{
+        'title': 'The origin of species',
+        'author': {
+          'name': 'Charles Darwin'
+        }
+      }, {
+        'title': 'Lazarillo de Tormes'
+      }]
+    };
+    var string = '{{#books}}{{title}}{{author.name}}{{/books}}';
+    shouldCompileTo(string, data, 'The origin of speciesCharles DarwinLazarillo de Tormes',
+                    'Renders without an undefined property error');
   });
 
   it("GH-150: Inverted sections print when they shouldn't", function() {
-    var string = "{{^set}}not set{{/set}} :: {{#set}}set{{/set}}";
+    var string = '{{^set}}not set{{/set}} :: {{#set}}set{{/set}}';
 
-    shouldCompileTo(string, {}, "not set :: ", "inverted sections run when property isn't present in context");
-    shouldCompileTo(string, {set: undefined}, "not set :: ", "inverted sections run when property is undefined");
-    shouldCompileTo(string, {set: false}, "not set :: ", "inverted sections run when property is false");
-    shouldCompileTo(string, {set: true}, " :: set", "inverted sections don't run when property is true");
+    shouldCompileTo(string, {}, 'not set :: ', "inverted sections run when property isn't present in context");
+    shouldCompileTo(string, {set: undefined}, 'not set :: ', 'inverted sections run when property is undefined');
+    shouldCompileTo(string, {set: false}, 'not set :: ', 'inverted sections run when property is false');
+    shouldCompileTo(string, {set: true}, ' :: set', "inverted sections don't run when property is true");
   });
 
-  it("GH-158: Using array index twice, breaks the template", function() {
-    var string = "{{arr.[0]}}, {{arr.[1]}}";
-    var data = { "arr": [1,2] };
+  it('GH-158: Using array index twice, breaks the template', function() {
+    var string = '{{arr.[0]}}, {{arr.[1]}}';
+    var data = { 'arr': [1, 2] };
 
-    shouldCompileTo(string, data, "1, 2", "it works as expected");
+    shouldCompileTo(string, data, '1, 2', 'it works as expected');
   });
 
   it("bug reported by @fat where lambdas weren't being properly resolved", function() {
@@ -39,12 +47,12 @@ describe('Regressions', function() {
         + '{{/hasThings}}';
     var data = {
       thing: function() {
-        return "blah";
+        return 'blah';
       },
       things: [
-        {className: "one", word: "@fat"},
-        {className: "two", word: "@dhg"},
-        {className: "three", word:"@sayrer"}
+        {className: 'one', word: '@fat'},
+        {className: 'two', word: '@dhg'},
+        {className: 'three', word: '@sayrer'}
       ],
       hasThings: function() {
         return true;
@@ -63,14 +71,14 @@ describe('Regressions', function() {
 
   it('GH-408: Multiple loops fail', function() {
     var context = [
-      { name: "John Doe", location: { city: "Chicago" } },
-      { name: "Jane Doe", location: { city: "New York"} }
+      { name: 'John Doe', location: { city: 'Chicago' } },
+      { name: 'Jane Doe', location: { city: 'New York'} }
     ];
 
     var template = CompilerContext.compile('{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}');
 
     var result = template(context);
-    equals(result, "John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe", 'It should output multiple times');
+    equals(result, 'John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe', 'It should output multiple times');
   });
 
   it('GS-428: Nested if else rendering', function() {
@@ -95,11 +103,13 @@ describe('Regressions', function() {
   });
 
   it('GH-534: Object prototype aliases', function() {
+    /*eslint-disable no-extend-native */
     Object.prototype[0xD834] = true;
 
     shouldCompileTo('{{foo}}', { foo: 'bar' }, 'bar');
 
     delete Object.prototype[0xD834];
+    /*eslint-enable no-extend-native */
   });
 
   it('GH-437: Matching escaping', function() {
@@ -111,23 +121,23 @@ describe('Regressions', function() {
     }, Error);
   });
 
-  it("GH-676: Using array in escaping mustache fails", function() {
-    var string = "{{arr}}";
-    var data = { "arr": [1,2] };
+  it('GH-676: Using array in escaping mustache fails', function() {
+    var string = '{{arr}}';
+    var data = { 'arr': [1, 2] };
 
-    shouldCompileTo(string, data, data.arr.toString(), "it works as expected");
+    shouldCompileTo(string, data, data.arr.toString(), 'it works as expected');
   });
 
-  it("Mustache man page", function() {
-    var string = "Hello {{name}}. You have just won ${{value}}!{{#in_ca}} Well, ${{taxed_value}}, after taxes.{{/in_ca}}";
+  it('Mustache man page', function() {
+    var string = 'Hello {{name}}. You have just won ${{value}}!{{#in_ca}} Well, ${{taxed_value}}, after taxes.{{/in_ca}}';
     var data = {
-      "name": "Chris",
-      "value": 10000,
-      "taxed_value": 10000 - (10000 * 0.4),
-      "in_ca": true
+      'name': 'Chris',
+      'value': 10000,
+      'taxed_value': 10000 - (10000 * 0.4),
+      'in_ca': true
     };
 
-    shouldCompileTo(string, data, "Hello Chris. You have just won $10000! Well, $6000, after taxes.", "the hello world mustache example works");
+    shouldCompileTo(string, data, 'Hello Chris. You have just won $10000! Well, $6000, after taxes.', 'the hello world mustache example works');
   });
 
   it('GH-731: zero context rendering', function() {

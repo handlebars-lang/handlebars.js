@@ -18,7 +18,7 @@ module.exports = function(grunt) {
     grunt.log.writeln('Updating to version ' + version);
 
     async.each([
-        ['lib/handlebars/base.js', /var VERSION = "(.*)";/, 'var VERSION = "' + version + '";'],
+        ['lib/handlebars/base.js', /var VERSION = ['"](.*)['"];/, 'var VERSION = "' + version + '";'],
         ['components/bower.json', /"version":.*/, '"version": "' + version + '",'],
         ['components/handlebars.js.nuspec', /<version>.*<\/version>/, '<version>' + version + '</version>']
       ],
