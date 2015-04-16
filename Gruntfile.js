@@ -81,7 +81,7 @@ module.exports = function(grunt) {
         output: {
           path: 'dist/',
           library: 'Handlebars',
-          libraryType: 'umd'
+          libraryTarget: 'umd'
         }
       },
       handlebars: {
