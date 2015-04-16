@@ -1,3 +1,4 @@
+/*eslint-disable no-console */
 var fs = require('fs'),
     Mocha = require('mocha'),
     path = require('path');
@@ -6,7 +7,7 @@ var errors = 0,
     testDir = path.dirname(__dirname),
     grep = process.argv[2];
 
-var files = [ testDir + "/basic.js" ];
+var files = [ testDir + '/basic.js' ];
 
 var files = fs.readdirSync(testDir)
       .filter(function(name) { return (/.*\.js$/).test(name); })
@@ -15,7 +16,9 @@ var files = fs.readdirSync(testDir)
 run('./node', function() {
   run('./browser', function() {
     run('./runtime', function() {
+      /*eslint-disable no-process-exit */
       process.exit(errors);
+      /*eslint-enable no-process-exit */
     });
   });
 });

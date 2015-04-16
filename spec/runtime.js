@@ -1,5 +1,3 @@
-/*globals Handlebars, shouldThrow */
-
 describe('runtime', function() {
   describe('#template', function() {
     it('should throw on invalid templates', function() {

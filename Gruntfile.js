@@ -1,16 +1,16 @@
-var childProcess = require('child_process');
-
+/*eslint-disable no-process-env */
 module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    jshint: {
+    eslint: {
       options: {
-        jshintrc: '.jshintrc'
       },
       files: [
-        'dist/cjs/**/!(*.min|parser).js'
+        '*.js',
+        'lib/**/!(*.min|parser).js',
+        'spec/**/!(*.amd|json2|require).js'
       ]
     },
 
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         options: {
-          processContent: function(content, path) {
+          processContent: function(content) {
             return grunt.template.process('/*!\n\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n@license\n*/\n')
                 + content;
           }
@@ -41,54 +41,78 @@ module.exports = function(grunt) {
       }
     },
 
-    packager: {
-      global: {
-        type: 'umd',
-        export: 'Handlebars',
-        files: [{
-          cwd: 'lib/',
-          expand: true,
-          src: ['handlebars*.js'],
-          dest: 'dist/'
-        }]
+    babel: {
+      options: {
+        loose: ['es6.modules']
       },
-
       amd: {
-        type: 'amd',
-        anonymous: true,
+        options: {
+          modules: 'amd'
+        },
         files: [{
           expand: true,
           cwd: 'lib/',
-          src: '**/!(index).js',
+          src: '**/!(index|precompiler).js',
           dest: 'dist/amd/'
         }]
       },
 
       cjs: {
-        type: 'cjs',
+        options: {
+          modules: 'common'
+        },
         files: [{
-          expand: true,
           cwd: 'lib/',
+          expand: true,
           src: '**/!(index).js',
           dest: 'dist/cjs/'
         }]
       }
     },
+    webpack: {
+      options: {
+        context: __dirname,
+        module: {
+          loaders: [
+            // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
+            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules' }
+          ]
+        },
+        output: {
+          path: 'dist/',
+          library: 'Handlebars',
+          libraryTarget: 'umd'
+        }
+      },
+      handlebars: {
+        entry: './lib/handlebars.js',
+        output: {
+          filename: 'handlebars.js'
+        }
+      },
+      runtime: {
+        entry: './lib/handlebars.runtime.js',
+        output: {
+          filename: 'handlebars.runtime.js'
+        }
+      }
+    },
+
     requirejs: {
       options: {
-        optimize: "none",
-        baseUrl: "dist/amd/"
+        optimize: 'none',
+        baseUrl: 'dist/amd/'
       },
       dist: {
         options: {
-          name: "handlebars",
-          out: "dist/handlebars.amd.js"
+          name: 'handlebars',
+          out: 'dist/handlebars.amd.js'
         }
       },
       runtime: {
         options: {
-          name: "handlebars.runtime",
-          out: "dist/handlebars.runtime.amd.js"
+          name: 'handlebars.runtime',
+          out: 'dist/handlebars.runtime.amd.js'
         }
       }
     },
@@ -172,18 +196,18 @@ module.exports = function(grunt) {
   });
 
   // Build a new version of the library
-  this.registerTask('build', "Builds a distributable version of the current project", [
+  this.registerTask('build', 'Builds a distributable version of the current project', [
+                    'eslint',
                     'parser',
                     'node',
-                    'globals',
-                    'jshint']);
+                    'globals']);
 
-  this.registerTask('amd', ['packager:amd', 'requirejs']);
-  this.registerTask('node', ['packager:cjs']);
-  this.registerTask('globals', ['packager:global']);
+  this.registerTask('amd', ['babel:amd', 'requirejs']);
+  this.registerTask('node', ['babel:cjs']);
+  this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['amd', 'jshint', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -191,11 +215,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-saucelabs');
-  grunt.loadNpmTasks('es6-module-packager');
+  grunt.loadNpmTasks('grunt-webpack');
 
   grunt.task.loadTasks('tasks');
 

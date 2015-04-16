@@ -1,5 +1,3 @@
-/*global Handlebars, shouldThrow */
-
 describe('Visitor', function() {
   if (!Handlebars.Visitor || !Handlebars.print) {
     return;

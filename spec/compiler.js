@@ -1,5 +1,3 @@
-/*global Handlebars, shouldThrow */
-
 describe('compiler', function() {
   if (!Handlebars.compile) {
     return;
@@ -41,10 +39,10 @@ describe('compiler', function() {
     });
 
     it('can utilize AST instance', function() {
-      equal(Handlebars.compile(new Handlebars.AST.Program([ new Handlebars.AST.ContentStatement("Hello")], null, {}))(), 'Hello');
+      equal(Handlebars.compile(new Handlebars.AST.Program([ new Handlebars.AST.ContentStatement('Hello')], null, {}))(), 'Hello');
     });
 
-    it("can pass through an empty string", function() {
+    it('can pass through an empty string', function() {
       equal(Handlebars.compile('')(), '');
     });
   });
@@ -60,10 +58,10 @@ describe('compiler', function() {
     });
 
     it('can utilize AST instance', function() {
-      equal(/return "Hello"/.test(Handlebars.precompile(new Handlebars.AST.Program([ new Handlebars.AST.ContentStatement("Hello")]), null, {})), true);
+      equal(/return "Hello"/.test(Handlebars.precompile(new Handlebars.AST.Program([ new Handlebars.AST.ContentStatement('Hello')]), null, {})), true);
     });
 
-    it("can pass through an empty string", function() {
+    it('can pass through an empty string', function() {
       equal(/return ""/.test(Handlebars.precompile('')), true);
     });
   });

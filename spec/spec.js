@@ -5,12 +5,11 @@ describe('spec', function() {
   }
 
   var _ = require('underscore'),
-      Handlebars = require('../lib'),
       fs = require('fs');
 
-  var specDir =__dirname + '/mustache/specs/';
+  var specDir = __dirname + '/mustache/specs/';
   var specs = _.filter(fs.readdirSync(specDir), function(name) {
-    return /.*\.json$/.test(name);
+    return (/.*\.json$/).test(name);
   });
 
   _.each(specs, function(name) {
@@ -26,8 +25,8 @@ describe('spec', function() {
           // We nest the entire response from partials, not just the literals
           || (name === 'partials.json' && test.name === 'Standalone Indentation')
 
-          || /\{\{\=/.test(test.template)
-          || _.any(test.partials, function(partial) { return /\{\{\=/.test(partial); })) {
+          || (/\{\{\=/).test(test.template)
+          || _.any(test.partials, function(partial) { return (/\{\{\=/).test(partial); })) {
         it.skip(name + ' - ' + test.name);
         return;
       }
@@ -35,7 +34,9 @@ describe('spec', function() {
       var data = _.clone(test.data);
       if (data.lambda) {
         // Blergh
+        /*eslint-disable no-eval */
         data.lambda = eval('(' + data.lambda.js + ')');
+        /*eslint-enable no-eval */
       }
       it(name + ' - ' + test.name, function() {
         if (test.partials) {

@@ -1,4 +1,3 @@
-/*global CompilerContext, Handlebars, shouldThrow */
 var Exception = Handlebars.Exception;
 
 describe('strict', function() {

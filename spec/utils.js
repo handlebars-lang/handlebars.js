@@ -1,19 +1,17 @@
-/*global Handlebars, shouldCompileTo */
-
 describe('utils', function() {
   describe('#SafeString', function() {
-    it("constructing a safestring from a string and checking its type", function() {
-      var safe = new Handlebars.SafeString("testing 1, 2, 3");
+    it('constructing a safestring from a string and checking its type', function() {
+      var safe = new Handlebars.SafeString('testing 1, 2, 3');
       if (!(safe instanceof Handlebars.SafeString)) {
         throw new Error('Must be instance of SafeString');
       }
-      equals(safe == 'testing 1, 2, 3', true, 'SafeString is equivalent to its underlying string');
+      equals(safe.toString(), 'testing 1, 2, 3', 'SafeString is equivalent to its underlying string');
     });
 
-    it("it should not escape SafeString properties", function() {
-      var name = new Handlebars.SafeString("<em>Sean O&#x27;Malley</em>");
+    it('it should not escape SafeString properties', function() {
+      var name = new Handlebars.SafeString('<em>Sean O&#x27;Malley</em>');
 
-      shouldCompileTo('{{name}}', [{ name: name }], "<em>Sean O&#x27;Malley</em>");
+      shouldCompileTo('{{name}}', [{name: name}], '<em>Sean O&#x27;Malley</em>');
     });
   });
 

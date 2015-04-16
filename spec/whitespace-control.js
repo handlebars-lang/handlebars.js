@@ -1,5 +1,3 @@
-/*global shouldCompileTo, shouldCompileToWithPartials */
-
 describe('whitespace control', function() {
   it('should strip whitespace around mustache calls', function() {
     var hash = {foo: 'bar<'};
