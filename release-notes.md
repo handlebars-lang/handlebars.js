@@ -2,7 +2,18 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.2...master)
+
+## v3.0.2 - April 20th, 2015
+- [#998](https://github.com/wycats/handlebars.js/pull/998) - Add full support for es6 ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#994](https://github.com/wycats/handlebars.js/issues/994) - Access Handlebars.Visitor in browser ([@tamlyn](https://api.github.com/users/tamlyn))
+- [#990](https://github.com/wycats/handlebars.js/issues/990) - Allow passing null/undefined literals subexpressions ([@blimmer](https://api.github.com/users/blimmer))
+- [#989](https://github.com/wycats/handlebars.js/issues/989) - Source-map error with requirejs ([@SteppeEagle](https://api.github.com/users/SteppeEagle))
+- [#967](https://github.com/wycats/handlebars.js/issues/967) - can't access "this" property  ([@75lb](https://api.github.com/users/75lb))
+- Use captureStackTrace for error handler - a009a97
+- Ignore branches tested without coverage monitoring - 37a664b
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.1...v3.0.2)
 
 ## v3.0.1 - March 24th, 2015
 - [#984](https://github.com/wycats/handlebars.js/pull/984) - Adding documentation for passing arguments into partials ([@johneke](https://api.github.com/users/johneke))
