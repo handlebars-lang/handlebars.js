@@ -29,6 +29,8 @@
   },
   "rules": {
     // Disabling for tests, for now.
-    "no-path-concat": 0
+    "no-path-concat": 0,
+
+    "no-var": 0
   }
 }
