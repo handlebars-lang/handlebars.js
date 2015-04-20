@@ -6,7 +6,7 @@ describe('precompiler', function() {
   }
 
   var Handlebars = require('../lib'),
-      Precompiler = require('../lib/precompiler'),
+      Precompiler = require('../dist/cjs/precompiler'),
       fs = require('fs'),
       uglify = require('uglify-js');
 

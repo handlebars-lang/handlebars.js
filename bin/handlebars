@@ -108,4 +108,4 @@ if (argv.help || (!argv.templates.length && !argv.version)) {
   return;
 }
 
-return require('../lib/precompiler').cli(argv);
+return require('../dist/cjs/precompiler').cli(argv);

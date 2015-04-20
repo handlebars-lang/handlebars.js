@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'lib/',
-          src: '**/!(index|precompiler).js',
+          src: '**/!(index).js',
           dest: 'dist/amd/'
         }]
       },
