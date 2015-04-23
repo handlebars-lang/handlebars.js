@@ -1,7 +1,8 @@
-/*global CompilerContext, Handlebars */
 try {
-  var SourceMap = require('source-map'),
-        SourceMapConsumer = SourceMap.SourceMapConsumer;
+  if (typeof define !== 'function' || !define.amd) {
+    var SourceMap = require('source-map'),
+         SourceMapConsumer = SourceMap.SourceMapConsumer;
+  }
 } catch (err) {
   /* NOP for in browser */
 }
@@ -18,13 +19,13 @@ describe('source-map', function() {
     equal(!!template.map, !CompilerContext.browser);
   });
   it('should map source properly', function() {
-    var source = '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}',
-        template = Handlebars.precompile(source, {destName: 'dest.js', srcName: 'src.hbs'});
+    var templateSource = '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}',
+        template = Handlebars.precompile(templateSource, {destName: 'dest.js', srcName: 'src.hbs'});
 
     if (template.map) {
       var consumer = new SourceMapConsumer(template.map),
           lines = template.code.split('\n'),
-          srcLines = source.split('\n'),
+          srcLines = templateSource.split('\n'),
 
           generated = grepLine('"  b"', lines),
           source = grepLine('  b', srcLines);
@@ -41,7 +42,7 @@ function grepLine(token, lines) {
     var column = lines[i].indexOf(token);
     if (column >= 0) {
       return {
-        line: i+1,
+        line: i + 1,
         column: column
       };
     }

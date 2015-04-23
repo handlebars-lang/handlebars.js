@@ -28,11 +28,16 @@
 
     <script src="/spec/env/common.js"></script>
     <script>
+      var requireFailure;
+
       requirejs.config({
         paths: {
           'handlebars.runtime': '/dist/handlebars.runtime.amd'
         }
       });
+      requirejs.onError = function (err) {
+        requireFailure = err;
+      };
     </script>
     <script>
       onload = function(){
@@ -59,6 +64,17 @@
           });
 
           runner.on('fail', logFailure);
+
+          // Inject any require initilizer failures into the first test so they are properly
+          // reported.
+          if (requireFailure) {
+            runner.on('hook end', function(hook){
+              if (requireFailure) {
+                runner.uncaught(requireFailure);
+                requireFailure = undefined;
+              }
+            });
+          }
 
           function logFailure(test, err){
 

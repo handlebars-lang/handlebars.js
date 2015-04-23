@@ -1,8 +1,6 @@
-/*global handlebarsEnv */
 require('./common');
 
-var _ = require('underscore'),
-    fs = require('fs'),
+var fs = require('fs'),
     vm = require('vm');
 
 global.Handlebars = 'no-conflict';
@@ -21,10 +19,12 @@ global.CompilerContext = {
 };
 
 function safeEval(templateSpec) {
+  /*eslint-disable no-eval, no-console */
   try {
     return eval('(' + templateSpec + ')');
   } catch (err) {
     console.error(templateSpec);
     throw err;
   }
+  /*eslint-enable no-eval, no-console */
 }

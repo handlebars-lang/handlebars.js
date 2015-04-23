@@ -13,6 +13,7 @@ Gruntfile.js
 bench/*
 configurations/*
 components/*
+coverage/*
 dist/cdnjs/*
 dist/components/*
 spec/*

@@ -1,4 +1,3 @@
-/*global CompilerContext */
 describe('track ids', function() {
   var context;
   beforeEach(function() {
@@ -27,7 +26,7 @@ describe('track ids', function() {
         equal(options.ids[0], 'is.a');
         equal(options.ids[1], 'slave.driver');
 
-        return "HELP ME MY BOSS " + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
+        return 'HELP ME MY BOSS ' + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
       }
     };
 
@@ -41,7 +40,7 @@ describe('track ids', function() {
         equal(options.hashIds.bat, 'is.a');
         equal(options.hashIds.baz, 'slave.driver');
 
-        return "HELP ME MY BOSS " + options.hashIds.bat + ':' + options.hash.bat + ' ' + options.hashIds.baz + ':' + options.hash.baz;
+        return 'HELP ME MY BOSS ' + options.hashIds.bat + ':' + options.hash.bat + ' ' + options.hashIds.baz + ':' + options.hash.baz;
       }
     };
 
@@ -55,7 +54,7 @@ describe('track ids', function() {
         equal(options.ids[0], 'is.a');
         equal(options.ids[1], '../slave.driver');
 
-        return "HELP ME MY BOSS " + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
+        return 'HELP ME MY BOSS ' + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
       }
     };
 
@@ -69,11 +68,11 @@ describe('track ids', function() {
         equal(options.ids[0], '@is.a');
         equal(options.ids[1], '@slave.driver');
 
-        return "HELP ME MY BOSS " + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
+        return 'HELP ME MY BOSS ' + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
       }
     };
 
-    equals(template({}, {helpers: helpers, data:context}), 'HELP ME MY BOSS @is.a:foo @slave.driver:bar');
+    equals(template({}, {helpers: helpers, data: context}), 'HELP ME MY BOSS @is.a:foo @slave.driver:bar');
   });
 
   it('should return null for constants', function() {
@@ -85,7 +84,7 @@ describe('track ids', function() {
         equal(options.ids[1], null);
         equal(options.hashIds.key, null);
 
-        return "HELP ME MY BOSS " + passiveVoice + ' ' + noun + ' ' + options.hash.key;
+        return 'HELP ME MY BOSS ' + passiveVoice + ' ' + noun + ' ' + options.hash.key;
       }
     };
 
@@ -99,7 +98,7 @@ describe('track ids', function() {
       wycats: function(passiveVoice, options) {
         equal(options.ids[0], true);
 
-        return "HELP ME MY BOSS " + passiveVoice;
+        return 'HELP ME MY BOSS ' + passiveVoice;
       }
     };
 
@@ -120,7 +119,7 @@ describe('track ids', function() {
         equal(options.ids[1], 'slave.driver');
         equal(options.ids[2], 'zomg');
 
-        return "HELP ME MY BOSS " + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
+        return 'HELP ME MY BOSS ' + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
       }
     };
 
@@ -129,6 +128,9 @@ describe('track ids', function() {
 
   describe('builtin helpers', function() {
     var helpers = {
+      blockParams: function(name, options) {
+        return name + ':' + options.ids[0] + '\n';
+      },
       wycats: function(name, options) {
         return name + ':' + options.data.contextPath + '\n';
       }
@@ -151,13 +153,7 @@ describe('track ids', function() {
         equals(template({array: [{name: 'foo'}, {name: 'bar'}]}, {helpers: helpers}), 'foo:.array..0\nbar:.array..1\n');
       });
       it('should handle block params', function() {
-        var helpers = {
-          wycats: function(name, options) {
-            return name + ':' + options.ids[0] + '\n';
-          }
-        };
-
-        var template = CompilerContext.compile('{{#each array as |value|}}{{wycats value.name}}{{/each}}', {trackIds: true});
+        var template = CompilerContext.compile('{{#each array as |value|}}{{blockParams value.name}}{{/each}}', {trackIds: true});
 
         equals(template({array: [{name: 'foo'}, {name: 'bar'}]}, {helpers: helpers}), 'foo:array.0.name\nbar:array.1.name\n');
       });

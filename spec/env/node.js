@@ -1,4 +1,3 @@
-/*global handlebarsEnv */
 require('./common');
 
 global.Handlebars = require('../../lib');
@@ -14,10 +13,12 @@ global.CompilerContext = {
 };
 
 function safeEval(templateSpec) {
+  /*eslint-disable no-eval, no-console */
   try {
     return eval('(' + templateSpec + ')');
   } catch (err) {
     console.error(templateSpec);
     throw err;
   }
+  /*eslint-enable no-eval, no-console */
 }

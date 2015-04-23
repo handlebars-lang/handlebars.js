@@ -1,4 +1,3 @@
-/*global Handlebars, handlebarsEnv, shouldThrow */
 describe('ast', function() {
   if (!Handlebars.AST) {
     return;
@@ -15,7 +14,7 @@ describe('ast', function() {
     }
   };
 
-  function testLocationInfoStorage(node){
+  function testLocationInfoStorage(node) {
     equals(node.loc.start.line, 1);
     equals(node.loc.start.column, 1);
     equals(node.loc.end.line, 1);
@@ -24,9 +23,7 @@ describe('ast', function() {
 
   describe('MustacheStatement', function() {
     it('should store args', function() {
-      var id = {isSimple: true},
-          hash = {},
-          mustache = new handlebarsEnv.AST.MustacheStatement({}, true, {}, LOCATION_INFO);
+      var mustache = new handlebarsEnv.AST.MustacheStatement({}, null, null, true, {}, LOCATION_INFO);
       equals(mustache.type, 'MustacheStatement');
       equals(mustache.escaped, true);
       testLocationInfoStorage(mustache);
@@ -35,15 +32,15 @@ describe('ast', function() {
   describe('BlockStatement', function() {
     it('should throw on mustache mismatch', function() {
       shouldThrow(function() {
-        handlebarsEnv.parse("\n  {{#foo}}{{/bar}}");
+        handlebarsEnv.parse('\n  {{#foo}}{{/bar}}');
       }, Handlebars.Exception, "foo doesn't match bar - 2:5");
     });
 
-    it('stores location info', function(){
-      var sexprNode = new handlebarsEnv.AST.SubExpression([{ original: 'foo'}], null);
-      var mustacheNode = new handlebarsEnv.AST.MustacheStatement(sexprNode, false, {});
+    it('stores location info', function() {
+      var mustacheNode = new handlebarsEnv.AST.MustacheStatement([{ original: 'foo'}], null, null, false, {});
       var block = new handlebarsEnv.AST.BlockStatement(
             mustacheNode,
+            null, null,
             {body: []},
             {body: []},
             {},
@@ -54,126 +51,126 @@ describe('ast', function() {
     });
   });
   describe('PathExpression', function() {
-    it('stores location info', function(){
+    it('stores location info', function() {
       var idNode = new handlebarsEnv.AST.PathExpression(false, 0, [], 'foo', LOCATION_INFO);
       testLocationInfoStorage(idNode);
     });
   });
 
-  describe('Hash', function(){
-    it('stores location info', function(){
+  describe('Hash', function() {
+    it('stores location info', function() {
       var hash = new handlebarsEnv.AST.Hash([], LOCATION_INFO);
       testLocationInfoStorage(hash);
     });
   });
 
-  describe('ContentStatement', function(){
-    it('stores location info', function(){
-      var content = new handlebarsEnv.AST.ContentStatement("HI", LOCATION_INFO);
+  describe('ContentStatement', function() {
+    it('stores location info', function() {
+      var content = new handlebarsEnv.AST.ContentStatement('HI', LOCATION_INFO);
       testLocationInfoStorage(content);
     });
   });
 
-  describe('CommentStatement', function(){
-    it('stores location info', function(){
-      var comment = new handlebarsEnv.AST.CommentStatement("HI", {}, LOCATION_INFO);
+  describe('CommentStatement', function() {
+    it('stores location info', function() {
+      var comment = new handlebarsEnv.AST.CommentStatement('HI', {}, LOCATION_INFO);
       testLocationInfoStorage(comment);
     });
   });
 
-  describe('NumberLiteral', function(){
-    it('stores location info', function(){
-      var integer = new handlebarsEnv.AST.NumberLiteral("6", LOCATION_INFO);
+  describe('NumberLiteral', function() {
+    it('stores location info', function() {
+      var integer = new handlebarsEnv.AST.NumberLiteral('6', LOCATION_INFO);
       testLocationInfoStorage(integer);
     });
   });
 
-  describe('StringLiteral', function(){
-    it('stores location info', function(){
-      var string = new handlebarsEnv.AST.StringLiteral("6", LOCATION_INFO);
+  describe('StringLiteral', function() {
+    it('stores location info', function() {
+      var string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO);
       testLocationInfoStorage(string);
     });
 
-    it('stores whether it was a double quoted or single quoted string', function(){
-      var string = new handlebarsEnv.AST.StringLiteral("6", LOCATION_INFO, '"');
+    it('stores whether it was a double quoted or single quoted string', function() {
+      var string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO, '"');
       equals(string.isDoubleQuoted, true);
       equals(string.isSingleQuoted, false);
       equals(string.quoteType, 'double');
 
-      string = new handlebarsEnv.AST.StringLiteral("6", LOCATION_INFO, '\'');
+      string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO, '\'');
       equals(string.isDoubleQuoted, false);
       equals(string.isSingleQuoted, true);
       equals(string.quoteType, 'single');
     });
   });
 
-  describe('BooleanLiteral', function(){
-    it('stores location info', function(){
-      var bool = new handlebarsEnv.AST.BooleanLiteral("true", LOCATION_INFO);
+  describe('BooleanLiteral', function() {
+    it('stores location info', function() {
+      var bool = new handlebarsEnv.AST.BooleanLiteral('true', LOCATION_INFO);
       testLocationInfoStorage(bool);
     });
   });
 
-  describe('PartialStatement', function(){
-    it('stores location info', function(){
-      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', {}, LOCATION_INFO);
+  describe('PartialStatement', function() {
+    it('stores location info', function() {
+      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', [], {}, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
 
-  describe('Program', function(){
-    it('storing location info', function(){
+  describe('Program', function() {
+    it('storing location info', function() {
       var pn = new handlebarsEnv.AST.Program([], null, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
 
-  describe("Line Numbers", function(){
+  describe('Line Numbers', function() {
     var ast, body;
 
-    function testColumns(node, firstLine, lastLine, firstColumn, lastColumn){
+    function testColumns(node, firstLine, lastLine, firstColumn, lastColumn) {
       equals(node.loc.start.line, firstLine);
       equals(node.loc.start.column, firstColumn);
       equals(node.loc.end.line, lastLine);
       equals(node.loc.end.column, lastColumn);
     }
 
-    ast = Handlebars.parse("line 1 {{line1Token}}\n line 2 {{line2token}}\n line 3 {{#blockHelperOnLine3}}\nline 4{{line4token}}\n" +
-                           "line5{{else}}\n{{line6Token}}\n{{/blockHelperOnLine3}}");
+    ast = Handlebars.parse('line 1 {{line1Token}}\n line 2 {{line2token}}\n line 3 {{#blockHelperOnLine3}}\nline 4{{line4token}}\n' +
+                           'line5{{else}}\n{{line6Token}}\n{{/blockHelperOnLine3}}');
     body = ast.body;
 
-    it('gets ContentNode line numbers', function(){
+    it('gets ContentNode line numbers', function() {
       var contentNode = body[0];
       testColumns(contentNode, 1, 1, 0, 7);
     });
 
-    it('gets MustacheStatement line numbers', function(){
+    it('gets MustacheStatement line numbers', function() {
       var mustacheNode = body[1];
       testColumns(mustacheNode, 1, 1, 7, 21);
     });
 
-    it('gets line numbers correct when newlines appear', function(){
+    it('gets line numbers correct when newlines appear', function() {
       testColumns(body[2], 1, 2, 21, 8);
     });
 
-    it('gets MustacheStatement line numbers correct across newlines', function(){
+    it('gets MustacheStatement line numbers correct across newlines', function() {
       var secondMustacheStatement = body[3];
       testColumns(secondMustacheStatement, 2, 2, 8, 22);
      });
 
-     it('gets the block helper information correct', function(){
+     it('gets the block helper information correct', function() {
        var blockHelperNode = body[5];
        testColumns(blockHelperNode, 3, 7, 8, 23);
      });
 
-     it('correctly records the line numbers the program of a block helper', function(){
+     it('correctly records the line numbers the program of a block helper', function() {
        var blockHelperNode = body[5],
            program = blockHelperNode.program;
 
        testColumns(program, 3, 5, 8, 5);
      });
 
-     it('correctly records the line numbers of an inverse of a block helper', function(){
+     it('correctly records the line numbers of an inverse of a block helper', function() {
        var blockHelperNode = body[5],
            inverse = blockHelperNode.inverse;
 
@@ -181,7 +178,7 @@ describe('ast', function() {
      });
   });
 
-  describe('standalone flags', function(){
+  describe('standalone flags', function() {
     describe('mustache', function() {
       it('does not mark mustaches as standalone', function() {
         var ast = Handlebars.parse('  {{comment}} ');
@@ -212,7 +209,7 @@ describe('ast', function() {
             block = ast.body[0];
 
         equals(block.program.body[0].value, '');
-        equals(block.program.body[1].sexpr.path.original, 'foo');
+        equals(block.program.body[1].path.original, 'foo');
         equals(block.program.body[2].value, '\n');
       });
       it('marks nested block mustaches as standalone', function() {

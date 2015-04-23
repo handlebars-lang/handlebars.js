@@ -30,7 +30,7 @@ rawBlock
   ;
 
 openRawBlock
-  : OPEN_RAW_BLOCK sexpr CLOSE_RAW_BLOCK -> { sexpr: $2 }
+  : OPEN_RAW_BLOCK helperName param* hash? CLOSE_RAW_BLOCK -> { path: $2, params: $3, hash: $4 }
   ;
 
 block
@@ -39,15 +39,15 @@ block
   ;
 
 openBlock
-  : OPEN_BLOCK sexpr blockParams? CLOSE -> { sexpr: $2, blockParams: $3, strip: yy.stripFlags($1, $4) }
+  : OPEN_BLOCK helperName param* hash? blockParams? CLOSE -> { path: $2, params: $3, hash: $4, blockParams: $5, strip: yy.stripFlags($1, $6) }
   ;
 
 openInverse
-  : OPEN_INVERSE sexpr blockParams? CLOSE -> { sexpr: $2, blockParams: $3, strip: yy.stripFlags($1, $4) }
+  : OPEN_INVERSE helperName param* hash? blockParams? CLOSE -> { path: $2, params: $3, hash: $4, blockParams: $5, strip: yy.stripFlags($1, $6) }
   ;
 
 openInverseChain
-  : OPEN_INVERSE_CHAIN sexpr blockParams? CLOSE -> { sexpr: $2, blockParams: $3, strip: yy.stripFlags($1, $4) }
+  : OPEN_INVERSE_CHAIN helperName param* hash? blockParams? CLOSE -> { path: $2, params: $3, hash: $4, blockParams: $5, strip: yy.stripFlags($1, $6) }
   ;
 
 inverseAndProgram
@@ -66,33 +66,27 @@ inverseChain
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK path CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
+  : OPEN_ENDBLOCK helperName CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
   ;
 
 mustache
   // Parsing out the '&' escape token at AST level saves ~500 bytes after min due to the removal of one parser node.
   // This also allows for handler unification as all mustache node instances can utilize the same handler
-  : OPEN sexpr CLOSE -> yy.prepareMustache($2, $1, yy.stripFlags($1, $3), @$)
-  | OPEN_UNESCAPED sexpr CLOSE_UNESCAPED -> yy.prepareMustache($2, $1, yy.stripFlags($1, $3), @$)
+  : OPEN helperName param* hash? CLOSE -> yy.prepareMustache($2, $3, $4, $1, yy.stripFlags($1, $5), @$)
+  | OPEN_UNESCAPED helperName param* hash? CLOSE_UNESCAPED -> yy.prepareMustache($2, $3, $4, $1, yy.stripFlags($1, $5), @$)
   ;
 
 partial
-  : OPEN_PARTIAL sexpr CLOSE -> new yy.PartialStatement($2, yy.stripFlags($1, $3), yy.locInfo(@$))
-  ;
-
-sexpr
-  : helperName param* hash? -> new yy.SubExpression($1, $2, $3, yy.locInfo(@$))
-  | dataName -> new yy.SubExpression($1, null, null, yy.locInfo(@$))
+  : OPEN_PARTIAL partialName param* hash? CLOSE -> new yy.PartialStatement($2, $3, $4, yy.stripFlags($1, $5), yy.locInfo(@$))
   ;
 
 param
-  : path -> $1
-  | DOUBLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "'")
-  | SINGLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "\"")
-  | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
-  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
-  | dataName -> $1
-  | OPEN_SEXPR sexpr CLOSE_SEXPR -> $2
+  : helperName -> $1
+  | sexpr -> $1
+  ;
+
+sexpr
+  : OPEN_SEXPR helperName param* hash? CLOSE_SEXPR -> new yy.SubExpression($2, $3, $4, yy.locInfo(@$))
   ;
 
 hash
@@ -100,18 +94,27 @@ hash
   ;
 
 hashSegment
-  : ID EQUALS param -> new yy.HashPair($1, $3, yy.locInfo(@$))
+  : ID EQUALS param -> new yy.HashPair(yy.id($1), $3, yy.locInfo(@$))
   ;
 
 blockParams
-  : OPEN_BLOCK_PARAMS ID+ CLOSE_BLOCK_PARAMS -> $2
+  : OPEN_BLOCK_PARAMS ID+ CLOSE_BLOCK_PARAMS -> yy.id($2)
   ;
 
 helperName
   : path -> $1
-  | DOUBLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "'")
-  | SINGLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "\"")
+  | dataName -> $1
+  | DOUBLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "\"")
+  | SINGLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "'")
   | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
+  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
+  | UNDEFINED -> new yy.UndefinedLiteral(yy.locInfo(@$))
+  | NULL -> new yy.NullLiteral(yy.locInfo(@$))
+  ;
+
+partialName
+  : helperName -> $1
+  | sexpr -> $1
   ;
 
 dataName
@@ -123,6 +126,6 @@ path
   ;
 
 pathSegments
-  : pathSegments SEP ID { $1.push({part: $3, separator: $2}); $$ = $1; }
-  | ID -> [{part: $1}]
+  : pathSegments SEP ID { $1.push({part: yy.id($3), original: $3, separator: $2}); $$ = $1; }
+  | ID -> [{part: yy.id($1), original: $1}]
   ;

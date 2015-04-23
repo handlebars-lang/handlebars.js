@@ -110,7 +110,7 @@ templates easier and also changes a tiny detail of how partials work.
 ### Paths
 
 Handlebars.js supports an extended expression syntax that we call paths.
-Paths are made up of typical expressions and . characters. Expressions
+Paths are made up of typical expressions and `.` characters. Expressions
 allow you to not only display data from the current context, but to
 display data from contexts that are descendants and ancestors of the
 current context.
@@ -134,7 +134,7 @@ into the person object you could still display the company's name with
 an expression like `{{../company.name}}`, so:
 
 ```
-{{#with person}}{{name}} - {{../company.name}}{{/person}}
+{{#with person}}{{name}} - {{../company.name}}{{/with}}
 ```
 
 would render:
@@ -197,7 +197,7 @@ template(data);
 ```
 
 Whenever the block helper is called it is given one or more parameters,
-any arguments that are passed in the helper in the call and an `options`
+any arguments that are passed into the helper in the call, and an `options`
 object containing the `fn` function which executes the block's child.
 The block's current context may be accessed through `this`.
 
@@ -234,6 +234,35 @@ template(data);
 //   <li><a href="/people/1">Alan</a></li>
 //   <li><a href="/people/2">Yehuda</a></li>
 // </ul>
+```
+
+Partials can also accept parameters
+
+```js
+var source = "<div>{{> roster rosterProperties people=listOfPeople}}</div>";
+
+Handlebars.registerPartial('roster', '<h2>{{rosterName}}</h2>{{#people}}<span>{{id}}: {{name}}</span>{{/people}}')
+var template = Handlebars.compile(source);
+
+var data = {
+	"listOfPeople": [
+		{ "name": "Alan", "id": 1 },
+		{ "name": "Yehuda", "id": 2 }
+	], 
+	"rosterProperties": {
+		"rosterName": "Cool People"
+	}
+};
+
+template(data);
+
+// Should render:
+// <div>
+//  <h2>Cool People</h2>
+//   <span>1: Alan</span>
+//   <span>2: Yehuda</span>
+// </div>
+
 ```
 
 ### Comments
@@ -366,6 +395,7 @@ Handlebars in the Wild
   and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
   as its template engine.
 * [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
+* [dashbars](https://github.com/pismute/dashbars) A modern helper library for Handlebars.js.
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
   structure your views, also with automatic data binding support.
 * [Ghost](https://ghost.org/) Just a blogging platform.

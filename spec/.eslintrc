@@ -1,0 +1,36 @@
+{
+  "globals": {
+    "CompilerContext": true,
+    "Handlebars": true,
+    "handlebarsEnv": true,
+
+    "shouldCompileTo": true,
+    "shouldCompileToWithPartials": true,
+    "shouldThrow": true,
+    "compileWithPartials": true,
+
+    "console": true,
+    "require": true,
+    "suite": true,
+    "equal": true,
+    "equals": true,
+    "test": true,
+    "testBoth": true,
+    "raises": true,
+    "deepEqual": true,
+    "start": true,
+    "stop": true,
+    "ok": true,
+    "strictEqual": true,
+    "define": true
+  },
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    // Disabling for tests, for now.
+    "no-path-concat": 0,
+
+    "no-var": 0
+  }
+}

@@ -1,4 +1,3 @@
-/*global CompilerContext, compileWithPartials, shouldCompileToWithPartials */
 global.shouldCompileTo = function(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };
@@ -14,7 +13,7 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
   var template,
       ary,
       options;
-  if(Object.prototype.toString.call(hashOrArray) === "[object Array]") {
+  if (Object.prototype.toString.call(hashOrArray) === '[object Array]') {
     ary = [];
     ary.push(hashOrArray[0]);
     ary.push({ helpers: hashOrArray[1], partials: hashOrArray[2] });
@@ -34,7 +33,7 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
 
 global.equals = global.equal = function(a, b, msg) {
   if (a !== b) {
-    throw new Error("'" + a + "' should === '" + b + "'" + (msg ? ": " + msg : ''));
+    throw new Error("'" + a + "' should === '" + b + "'" + (msg ? ': ' + msg : ''));
   }
 };
 
@@ -45,7 +44,7 @@ global.shouldThrow = function(callback, type, msg) {
     failed = true;
   } catch (err) {
     if (type && !(err instanceof type)) {
-      throw new Error('Type failure');
+      throw new Error('Type failure: ' + err);
     }
     if (msg && !(msg.test ? msg.test(err.message) : msg === err.message)) {
       equal(msg, err.message);

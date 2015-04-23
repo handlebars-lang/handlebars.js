@@ -1,5 +1,3 @@
-/*global Handlebars, shouldThrow */
-
 describe('Visitor', function() {
   if (!Handlebars.Visitor || !Handlebars.print) {
     return;
@@ -9,7 +7,7 @@ describe('Visitor', function() {
     // Simply run the thing and make sure it does not fail and that all of the
     // stub methods are executed
     var visitor = new Handlebars.Visitor();
-    visitor.accept(Handlebars.parse('{{foo}}{{#foo (bar 1 "1" true) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'));
+    visitor.accept(Handlebars.parse('{{foo}}{{#foo (bar 1 "1" true undefined null) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'));
   });
 
   it('should traverse to stubs', function() {
@@ -24,11 +22,10 @@ describe('Visitor', function() {
     visitor.BooleanLiteral = function(bool) {
       equal(bool.value, true);
 
-      equal(this.parents.length, 4);
+      equal(this.parents.length, 3);
       equal(this.parents[0].type, 'SubExpression');
-      equal(this.parents[1].type, 'SubExpression');
-      equal(this.parents[2].type, 'BlockStatement');
-      equal(this.parents[3].type, 'Program');
+      equal(this.parents[1].type, 'BlockStatement');
+      equal(this.parents[2].type, 'Program');
     };
     visitor.PathExpression = function(id) {
       equal(/(foo\.)?bar$/.test(id.original), true);
@@ -84,26 +81,26 @@ describe('Visitor', function() {
           var visitor = new Handlebars.Visitor();
 
           visitor.mutating = true;
-          visitor.SubExpression = function() {
+          visitor.PathExpression = function() {
             return false;
           };
 
           var ast = Handlebars.parse('{{foo 42}}');
           visitor.accept(ast);
-        }, Handlebars.Exception, 'MustacheStatement requires sexpr');
+        }, Handlebars.Exception, 'MustacheStatement requires path');
       });
       it('should throw when returning non-node responses', function() {
         shouldThrow(function() {
           var visitor = new Handlebars.Visitor();
 
           visitor.mutating = true;
-          visitor.SubExpression = function() {
+          visitor.PathExpression = function() {
             return {};
           };
 
           var ast = Handlebars.parse('{{foo 42}}');
           visitor.accept(ast);
-        }, Handlebars.Exception, 'Unexpected node type "undefined" found when accepting sexpr on MustacheStatement');
+        }, Handlebars.Exception, 'Unexpected node type "undefined" found when accepting path on MustacheStatement');
       });
     });
     describe('arrays', function() {

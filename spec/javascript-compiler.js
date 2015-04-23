@@ -1,4 +1,3 @@
-/*global Handlebars, beforeEach, handlebarsEnv, shouldCompileTo */
 describe('javascript-compiler api', function() {
   if (!Handlebars.JavaScriptCompiler) {
     return;
@@ -17,7 +16,15 @@ describe('javascript-compiler api', function() {
       handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function(parent, name) {
         return parent + '.bar_' + name;
       };
-      shouldCompileTo("{{foo}}", { bar_foo: "food" }, "food");
+      /*eslint-disable camelcase */
+      shouldCompileTo('{{foo}}', { bar_foo: 'food' }, 'food');
+      /*eslint-enable camelcase */
+    });
+
+    // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases
+    // to avoid errors in older browsers.
+    it('should handle reserved words', function() {
+      shouldCompileTo('{{foo}} {{~null~}}', { foo: 'food' }, 'food');
     });
   });
   describe('#compilerInfo', function() {
@@ -39,7 +46,7 @@ describe('javascript-compiler api', function() {
           throw new Error('It didn\'t work');
         }
       };
-      shouldCompileTo("{{foo}} ", { foo: "food" }, "food ");
+      shouldCompileTo('{{foo}} ', { foo: 'food' }, 'food ');
     });
   });
   describe('buffer', function() {
@@ -59,13 +66,13 @@ describe('javascript-compiler api', function() {
       handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer = function() {
         return this.quotedString('foo_');
       };
-      shouldCompileTo("{{foo}} ", { foo: "food" }, "foo_food ");
+      shouldCompileTo('{{foo}} ', { foo: 'food' }, 'foo_food ');
     });
     it('should allow append buffer override', function() {
       handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function(string) {
         return $superAppend.call(this, [string, ' + "_foo"']);
       };
-      shouldCompileTo("{{foo}}", { foo: "food" }, "food_foo");
+      shouldCompileTo('{{foo}}', { foo: 'food' }, 'food_foo');
     });
   });
 });
