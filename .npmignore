@@ -1,7 +1,7 @@
 .DS_Store
 .gitignore
 .rvmrc
-.jshintrc
+.eslintrc
 .travis.yml
 .rspec
 Gemfile
