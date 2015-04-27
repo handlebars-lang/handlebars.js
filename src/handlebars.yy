@@ -104,7 +104,8 @@ blockParams
 helperName
   : path -> $1
   | dataName -> $1
-  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$))
+  | DOUBLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "\"")
+  | SINGLE_QUOTED_STRING -> new yy.StringLiteral($1, yy.locInfo(@$), "'")
   | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
   | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
   | UNDEFINED -> new yy.UndefinedLiteral(yy.locInfo(@$))

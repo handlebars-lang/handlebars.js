@@ -90,6 +90,18 @@ describe('ast', function() {
       var string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO);
       testLocationInfoStorage(string);
     });
+
+    it('stores whether it was a double quoted or single quoted string', function() {
+      var string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO, '"');
+      equals(string.isDoubleQuoted, true);
+      equals(string.isSingleQuoted, false);
+      equals(string.quoteType, 'double');
+
+      string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO, '\'');
+      equals(string.isDoubleQuoted, false);
+      equals(string.isSingleQuoted, true);
+      equals(string.quoteType, 'single');
+    });
   });
 
   describe('BooleanLiteral', function() {

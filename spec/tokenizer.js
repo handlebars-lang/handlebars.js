@@ -263,34 +263,34 @@ describe('Tokenizer', function() {
     shouldBeToken(result[3], 'ID', 'baz');
   });
 
-  it('tokenizes mustaches with String params as "OPEN ID ID STRING CLOSE"', function() {
+  it('tokenizes mustaches with String params as "OPEN ID ID DOUBLE_QUOTED_STRING CLOSE"', function() {
+    var result = tokenize('{{ foo bar "baz" }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'DOUBLE_QUOTED_STRING', 'CLOSE']);
+    shouldBeToken(result[3], 'DOUBLE_QUOTED_STRING', 'baz');
+  });
+
+  it('tokenizes mustaches with String params using single quotes as "OPEN ID ID SINGLE_QUOTED_STRING CLOSE"', function() {
     var result = tokenize('{{ foo bar \'baz\' }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
-    shouldBeToken(result[3], 'STRING', 'baz');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'SINGLE_QUOTED_STRING', 'CLOSE']);
+    shouldBeToken(result[3], 'SINGLE_QUOTED_STRING', 'baz');
   });
 
-  it('tokenizes mustaches with String params using single quotes as "OPEN ID ID STRING CLOSE"', function() {
-    var result = tokenize("{{ foo bar \'baz\' }}");
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
-    shouldBeToken(result[3], 'STRING', 'baz');
-  });
-
-  it('tokenizes String params with spaces inside as "STRING"', function() {
+  it('tokenizes String params with spaces inside as "DOUBLE_QUOTED_STRING"', function() {
     var result = tokenize('{{ foo bar "baz bat" }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
-    shouldBeToken(result[3], 'STRING', 'baz bat');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'DOUBLE_QUOTED_STRING', 'CLOSE']);
+    shouldBeToken(result[3], 'DOUBLE_QUOTED_STRING', 'baz bat');
   });
 
-  it('tokenizes String params with escapes quotes as STRING', function() {
+  it('tokenizes String params with escaped quotes as DOUBLE_QUOTED_STRING', function() {
     var result = tokenize('{{ foo "bar\\"baz" }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'STRING', 'CLOSE']);
-    shouldBeToken(result[2], 'STRING', 'bar"baz');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'DOUBLE_QUOTED_STRING', 'CLOSE']);
+    shouldBeToken(result[2], 'DOUBLE_QUOTED_STRING', 'bar"baz');
   });
 
-  it('tokenizes String params using single quotes with escapes quotes as STRING', function() {
-    var result = tokenize("{{ foo 'bar\\'baz' }}");
-    shouldMatchTokens(result, ['OPEN', 'ID', 'STRING', 'CLOSE']);
-    shouldBeToken(result[2], 'STRING', "bar'baz");
+  it('tokenizes String params using single quotes with escaped quotes as SINGLE_QUOTED_STRING', function() {
+    var result = tokenize('{{ foo \'bar\\\'baz\' }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SINGLE_QUOTED_STRING', 'CLOSE']);
+    shouldBeToken(result[2], 'SINGLE_QUOTED_STRING', 'bar\'baz');
   });
 
   it('tokenizes numbers', function() {
@@ -347,14 +347,14 @@ describe('Tokenizer', function() {
     result = tokenize('{{ foo bar\n  baz=bat }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'ID', 'CLOSE']);
 
-    result = tokenize('{{ foo bar baz=\"bat\" }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'STRING', 'CLOSE']);
+    result = tokenize('{{ foo bar baz="bat" }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'DOUBLE_QUOTED_STRING', 'CLOSE']);
 
-    result = tokenize('{{ foo bar baz=\"bat\" bam=wot }}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'STRING', 'ID', 'EQUALS', 'ID', 'CLOSE']);
+    result = tokenize('{{ foo bar baz="bat" bam=wot }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'DOUBLE_QUOTED_STRING', 'ID', 'EQUALS', 'ID', 'CLOSE']);
 
-    result = tokenize('{{foo omg bar=baz bat=\"bam\"}}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'ID', 'ID', 'EQUALS', 'STRING', 'CLOSE']);
+    result = tokenize('{{foo omg bar=baz bat="bam"}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'ID', 'ID', 'EQUALS', 'DOUBLE_QUOTED_STRING', 'CLOSE']);
     shouldBeToken(result[2], 'ID', 'omg');
   });
 
@@ -403,8 +403,8 @@ describe('Tokenizer', function() {
   });
 
   it('tokenizes nested subexpressions: literals', function() {
-    var result = tokenize("{{foo (bar (lol true) false) (baz 1) (blah 'b') (blorg \"c\")}}");
-    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'OPEN_SEXPR', 'ID', 'BOOLEAN', 'CLOSE_SEXPR', 'BOOLEAN', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'NUMBER', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'STRING', 'CLOSE_SEXPR', 'CLOSE']);
+    var result = tokenize('{{foo (bar (lol true) false) (baz 1) (blah \'b\') (blorg "c")}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'OPEN_SEXPR', 'ID', 'OPEN_SEXPR', 'ID', 'BOOLEAN', 'CLOSE_SEXPR', 'BOOLEAN', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'NUMBER', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'SINGLE_QUOTED_STRING', 'CLOSE_SEXPR', 'OPEN_SEXPR', 'ID', 'DOUBLE_QUOTED_STRING', 'CLOSE_SEXPR', 'CLOSE']);
   });
 
   it('tokenizes block params', function() {

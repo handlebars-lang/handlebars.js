@@ -97,8 +97,8 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>\s+                          // ignore whitespace
 <mu>"}"{RIGHT_STRIP}?"}}"        this.popState(); return 'CLOSE_UNESCAPED';
 <mu>{RIGHT_STRIP}?"}}"           this.popState(); return 'CLOSE';
-<mu>'"'("\\"["]|[^"])*'"'        yytext = strip(1,2).replace(/\\"/g,'"'); return 'STRING';
-<mu>"'"("\\"[']|[^'])*"'"        yytext = strip(1,2).replace(/\\'/g,"'"); return 'STRING';
+<mu>'"'("\\"["]|[^"])*'"'        yytext = strip(1,2).replace(/\\"/g,'"'); return 'DOUBLE_QUOTED_STRING';
+<mu>"'"("\\"[']|[^'])*"'"        yytext = strip(1,2).replace(/\\'/g,"'"); return 'SINGLE_QUOTED_STRING';
 <mu>"@"                          return 'DATA';
 <mu>"true"/{LITERAL_LOOKAHEAD}   return 'BOOLEAN';
 <mu>"false"/{LITERAL_LOOKAHEAD}  return 'BOOLEAN';
