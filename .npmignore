@@ -10,6 +10,7 @@ Rakefile
 Gruntfile.js
 *.gemspec
 *.nuspec
+*.log
 bench/*
 configurations/*
 components/*
