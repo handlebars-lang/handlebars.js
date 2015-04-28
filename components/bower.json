@@ -1,6 +1,6 @@
 {
   "name": "handlebars",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "main": "handlebars.js",
   "dependencies": {}
 }
