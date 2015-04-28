@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.3...master)
+
+## v3.0.3 - April 28th, 2015
+- [#1004](https://github.com/wycats/handlebars.js/issues/1004) - Latest version breaks with RequireJS (global is undefined) ([@boskee](https://api.github.com/users/boskee))
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.2...v3.0.3)
 
 ## v3.0.2 - April 20th, 2015
 - [#998](https://github.com/wycats/handlebars.js/pull/998) - Add full support for es6 ([@kpdecker](https://api.github.com/users/kpdecker))
