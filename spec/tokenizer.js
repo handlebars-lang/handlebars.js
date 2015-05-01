@@ -264,7 +264,7 @@ describe('Tokenizer', function() {
   });
 
   it('tokenizes mustaches with String params as "OPEN ID ID STRING CLOSE"', function() {
-    var result = tokenize('{{ foo bar \'baz\' }}');
+    var result = tokenize('{{ foo bar \"baz\" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[3], 'STRING', 'baz');
   });
