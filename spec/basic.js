@@ -22,6 +22,10 @@ describe('basic context', function() {
                     'It works if all the required keys are provided');
   });
 
+  it('compiling with a string context', function() {
+    shouldCompileTo('{{.}}{{length}}', 'bye', 'bye3');
+  });
+
   it('compiling with an undefined context', function() {
     shouldCompileTo('Goodbye\n{{cruel}}\n{{world.bar}}!', undefined, 'Goodbye\n\n!');
 
