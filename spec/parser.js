@@ -65,7 +65,7 @@ describe('parser', function() {
     equals(astFor('{{foo undefined null}}'), '{{ PATH:foo [UNDEFINED, NULL] }}\n');
   });
 
-  it('parses mutaches with DATA parameters', function() {
+  it('parses mustaches with DATA parameters', function() {
     equals(astFor('{{foo @bar}}'), '{{ PATH:foo [@PATH:bar] }}\n');
   });
 
