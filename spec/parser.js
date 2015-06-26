@@ -231,4 +231,28 @@ describe('parser', function() {
       equals(astFor(new Handlebars.AST.Program([new Handlebars.AST.ContentStatement('Hello')], null)), 'CONTENT[ \'Hello\' ]\n');
     });
   });
+
+  it('GH1024 - should track program location properly', function() {
+    var p = Handlebars.parse('\n'
+      + '  {{#if foo}}\n'
+      + '    {{bar}}\n'
+      + '       {{else}}    {{baz}}\n'
+      + '\n'
+      + '     {{/if}}\n'
+      + '    ');
+
+    // We really need a deep equals but for now this should be stable...
+    equals(JSON.stringify(p.loc), JSON.stringify({
+      start: { line: 1, column: 0 },
+      end: { line: 7, column: 4 }
+    }));
+    equals(JSON.stringify(p.body[1].program.loc), JSON.stringify({
+      start: { line: 2, column: 13 },
+      end: { line: 4, column: 7 }
+    }));
+    equals(JSON.stringify(p.body[1].inverse.loc), JSON.stringify({
+      start: { line: 4, column: 15 },
+      end: { line: 6, column: 5 }
+    }));
+  });
 });

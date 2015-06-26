@@ -123,8 +123,18 @@ describe('ast', function() {
       equals(node.loc.end.column, lastColumn);
     }
 
-    ast = Handlebars.parse('line 1 {{line1Token}}\n line 2 {{line2token}}\n line 3 {{#blockHelperOnLine3}}\nline 4{{line4token}}\n' +
-                           'line5{{else}}\n{{line6Token}}\n{{/blockHelperOnLine3}}');
+    ast = Handlebars.parse(
+              'line 1 {{line1Token}}\n'             // 1
+            + ' line 2 {{line2token}}\n'            // 2
+            + ' line 3 {{#blockHelperOnLine3}}\n'   // 3
+            + 'line 4{{line4token}}\n'              // 4
+            + 'line5{{else}}\n'                     // 5
+            + '{{line6Token}}\n'                    // 6
+            + '{{/blockHelperOnLine3}}\n'           // 7
+            + '{{#open}}\n'                         // 8
+            + '{{else inverse}}\n'                  // 9
+            + '{{else}}\n'                          // 10
+            + '{{/open}}');                         // 11
     body = ast.body;
 
     it('gets ContentNode line numbers', function() {
@@ -155,14 +165,23 @@ describe('ast', function() {
        var blockHelperNode = body[5],
            program = blockHelperNode.program;
 
-       testColumns(program, 3, 5, 8, 5);
+       testColumns(program, 3, 5, 31, 5);
      });
 
      it('correctly records the line numbers of an inverse of a block helper', function() {
        var blockHelperNode = body[5],
            inverse = blockHelperNode.inverse;
 
-       testColumns(inverse, 5, 7, 5, 0);
+       testColumns(inverse, 5, 7, 13, 0);
+     });
+
+     it('correctly records the line number of chained inverses', function() {
+       var chainInverseNode = body[7];
+
+       testColumns(chainInverseNode.program, 8, 9, 9, 0);
+       testColumns(chainInverseNode.inverse, 9, 10, 16, 0);
+       testColumns(chainInverseNode.inverse.body[0].program, 9, 10, 16, 0);
+       testColumns(chainInverseNode.inverse.body[0].inverse, 10, 11, 8, 0);
      });
   });
 

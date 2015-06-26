@@ -9,7 +9,7 @@ root
   ;
 
 program
-  : statement* -> new yy.Program($1, null, {}, yy.locInfo(@$))
+  : statement* -> yy.prepareProgram($1)
   ;
 
 statement
@@ -57,7 +57,7 @@ inverseAndProgram
 inverseChain
   : openInverseChain program inverseChain? {
     var inverse = yy.prepareBlock($1, $2, $3, $3, false, @$),
-        program = new yy.Program([inverse], null, {}, yy.locInfo(@$));
+        program = yy.prepareProgram([inverse], $2.loc);
     program.chained = true;
 
     $$ = { strip: $1.strip, program: program, chain: true };
