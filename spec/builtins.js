@@ -49,7 +49,7 @@ describe('builtin helpers', function() {
     });
     it('with should change context', function() {
       var string = '{{#with foo}}{{.}}/{{foo}}{{bar}}{{baz}}{{/with}}';
-      shouldCompileTo(string, {foo: 1, bar: 2, baz: 3}, '1/');
+      shouldCompileTo(string, {foo: 'a', bar: 'b', baz: 'c'}, 'a/');
     });
     it('with with block params', function() {
       var string = '{{#with person as |p|}}{{p.first}} {{p.last}}{{/with}}';
@@ -57,7 +57,7 @@ describe('builtin helpers', function() {
     });
     it('with with block params should not change context', function() {
       var string = '{{#with foo as |bar|}}{{.}}/{{foo}}{{bar}}{{baz}}{{/with}}';
-      shouldCompileTo(string, {foo: 1, bar: 2, baz: 3, toString: function() { return '!'; }}, '!/113');
+      shouldCompileTo(string, {foo: 'a', bar: 'b', baz: 'c', toString: function() { return 'd'; }}, 'd/aac');
     });
   });
 
