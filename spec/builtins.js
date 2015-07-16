@@ -49,19 +49,19 @@ describe('builtin helpers', function() {
     });
     it('with should change context', function() {
       var string = '{{#with foo}}{{foo}}{{bar}}{{baz}}/{{.}}{{/with}}/{{foo}}{{bar}}{{baz}}';
-      shouldCompileTo(string, {foo: 'a', bar: 'b', baz: 'c'}, '/a/abc');
+      shouldCompileTo(string, {foo: 'a', bar: 'b', baz: 'c'}, '/a/abc', 'should change context');
     });
     it('with with block params', function() {
       var string = '{{#with person as |p|}}{{p.first}} {{p.last}}{{/with}}';
-      shouldCompileTo(string, {person: {first: 'Alan', last: 'Johnson'}}, 'Alan Johnson');
+      shouldCompileTo(string, {person: {first: 'Alan', last: 'Johnson'}}, 'Alan Johnson', 'should work with block params');
     });
     it('with with block params should not change context', function() {
       var string = '{{#with foo as |bar|}}{{foo}}{{bar}}{{baz}}/{{.}}{{/with}}/{{foo}}{{bar}}{{baz}}';
-      shouldCompileTo(string, {foo: 'a', bar: 'b', baz: 'c', toString: function() { return 'd'; }}, 'aac/d/abc');
+      shouldCompileTo(string, {foo: 'a', bar: 'b', baz: 'c', toString: function() { return 'd'; }}, 'aac/d/abc', 'should not change context when using block params');
     });
     it('with with block params should nest', function() {
       var string = '{{#with foo as |bar|}}{{#with bar as |baz|}}{{foo}}{{bar}}{{baz}}{{/with}}/{{foo}}{{bar}}{{baz}}{{/with}}/{{foo}}{{bar}}{{baz}}';
-      shouldCompileTo(string, {foo: 'a'}, 'aaa/aa/a');
+      shouldCompileTo(string, {foo: 'a'}, 'aaa/aa/a', 'should work with nested block params');
     });
   });
 
