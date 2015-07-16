@@ -136,14 +136,28 @@ describe('builtin helpers', function() {
       equal(result, '0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!', 'The @index variable is used');
     });
 
+    it('each should change context', function() {
+      var string = '{{#each foo}}{{.}}{{bar}}{{@key}} {{@index}} {{@first}} {{@last}} {{baz}}{{/each}}';
+      var hash = {foo: ['a', 'b', 'c'], bar: 'd', baz: 'e'};
+      shouldCompileTo(string, hash, 'a0 0 true false b1 1 false false c2 2 false true ');
+    });
+
     it('each with block params', function() {
-      var string = '{{#each goodbyes as |value index|}}{{index}}. {{value.text}}! {{#each ../goodbyes as |childValue childIndex|}} {{index}} {{childIndex}}{{/each}} After {{index}} {{/each}}{{index}}cruel {{world}}!';
+      var string = '{{#each goodbyes as |value index|}}{{index}}. {{value.text}}! {{#each goodbyes as |childValue childIndex|}} {{index}} {{childIndex}}{{/each}} After {{index}} {{/each}}{{index}}cruel {{world}}!';
       var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}], world: 'world'};
+      shouldCompileTo(string, hash, '0. goodbye!  0 0 0 1 After 0 1. Goodbye!  1 0 1 1 After 1 cruel world!');
+    });
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
+    it('each with block params should not change context', function() {
+      var string = '{{#each foo as |bar barKey barIndex barFirst barLast|}}{{.}}{{bar}}{{barKey}} {{barIndex}} {{barFirst}} {{barLast}} {{baz}}{{/each}}';
+      var hash = {foo: ['a', 'b', 'c'], bar: 'd', baz: 'e', toString: function() { return 'f'; } };
+      shouldCompileTo(string, hash, 'fa0 0 true false efb1 1 false false efc2 2 false true e');
+    });
 
-      equal(result, '0. goodbye!  0 0 0 1 After 0 1. Goodbye!  1 0 1 1 After 1 cruel world!');
+    it('each with block params should nest', function() {
+      var string = '{{#each foo as |bar|}}{{#each bar as |baz|}}{{baz}}{{/each}}/{{/each}}';
+      var hash = {foo: [ ['a', 'b', 'c'], ['d', 'e', 'f'] ] };
+      shouldCompileTo(string, hash, 'abc/def/');
     });
 
     it('each object with @index', function() {
