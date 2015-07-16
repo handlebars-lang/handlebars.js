@@ -160,6 +160,18 @@ describe('builtin helpers', function() {
       shouldCompileTo(string, hash, 'abc/def/', 'should work with nested block params');
     });
 
+    it('each with empty string property', function() {
+      var string = '{{#each obj}}{{.}}({{@key}} {{@index}} {{@first}} {{@last}})/{{/each}}';
+      var hash = {obj: {'': 'Please Select', 'selected': 'Selected'} };
+
+      // Object property iteration order is undefined according to ECMA spec,
+      // so we need to check both possible orders
+      // @see http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
+      var actual = compileWithPartials(string, hash);
+      equals(actual === 'Please Select( 0 true false)/Selected(selected 1 false true)/' ||
+             actual === 'Selected(selected 0 true false)/Please Select( 1 false true)/', true, 'should iterate over empty string property');
+    });
+
     it('each object with @index', function() {
       var string = '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!';
       var hash = {goodbyes: {'a': {text: 'goodbye'}, b: {text: 'Goodbye'}, c: {text: 'GOODBYE'}}, world: 'world'};
