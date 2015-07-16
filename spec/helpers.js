@@ -35,7 +35,7 @@ describe('helpers', function() {
           return options.fn();
       }
     };
-    shouldCompileTo(string, [{}, helpers], ' {{{{b}}}} {{{{/b}}}} ');
+    shouldCompileTo(string, [{}, helpers], ' {{{{b}}}} {{{{/b}}}} ', 'raw block helper should get nested raw block as raw content');
   });
 
   it('helper block with complex lookup expression', function() {
