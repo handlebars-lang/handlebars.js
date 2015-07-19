@@ -53,6 +53,9 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <raw>"{{{{"/[^/]                 this.begin('raw'); return 'CONTENT';
 <raw>"{{{{/"[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]"}}}}" {
                                   this.popState();
+                                  // Should be using `this.topState()` below, but it currently
+                                  // returns the second top instead of the first top. Opened an
+                                  // issue about it at https://github.com/zaach/jison/issues/291
                                   if (this.conditionStack[this.conditionStack.length-1] === 'raw') {
                                     return 'CONTENT';
                                   } else {
