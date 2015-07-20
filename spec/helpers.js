@@ -28,6 +28,16 @@ describe('helpers', function() {
                     'raw block helper gets raw content');
   });
 
+  it('helper for nested raw block gets raw content', function() {
+    var string = '{{{{a}}}} {{{{b}}}} {{{{/b}}}} {{{{/a}}}}';
+    var helpers = {
+        a: function(options) {
+          return options.fn();
+      }
+    };
+    shouldCompileTo(string, [{}, helpers], ' {{{{b}}}} {{{{/b}}}} ', 'raw block helper should get nested raw block as raw content');
+  });
+
   it('helper block with complex lookup expression', function() {
     var string = '{{#goodbyes}}{{../name}}{{/goodbyes}}';
     var hash = {name: 'Alan'};

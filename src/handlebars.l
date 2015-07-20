@@ -49,12 +49,21 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                    return 'CONTENT';
                                  }
 
+// nested raw block will create stacked 'raw' condition
+<raw>"{{{{"/[^/]                 this.begin('raw'); return 'CONTENT';
 <raw>"{{{{/"[^\s!"#%-,\.\/;->@\[-\^`\{-~]+/[=}\s\/.]"}}}}" {
-                                  yytext = yytext.substr(5, yyleng-9);
                                   this.popState();
-                                  return 'END_RAW_BLOCK';
+                                  // Should be using `this.topState()` below, but it currently
+                                  // returns the second top instead of the first top. Opened an
+                                  // issue about it at https://github.com/zaach/jison/issues/291
+                                  if (this.conditionStack[this.conditionStack.length-1] === 'raw') {
+                                    return 'CONTENT';
+                                  } else {
+                                    yytext = yytext.substr(5, yyleng-9);
+                                    return 'END_RAW_BLOCK';
+                                  }
                                  }
-<raw>[^\x00]*?/("{{{{/")         { return 'CONTENT'; }
+<raw>[^\x00]*?/("{{{{")          { return 'CONTENT'; }
 
 <com>[\s\S]*?"--"{RIGHT_STRIP}?"}}" {
   this.popState();
