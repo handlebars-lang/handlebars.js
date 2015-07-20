@@ -207,8 +207,12 @@ describe('basic context', function() {
   });
 
   it('literal references', function() {
-    shouldCompileTo('Goodbye {{[foo bar]}} world!', {'foo bar': 'beautiful'},
-        'Goodbye beautiful world!', 'Literal paths can be used');
+    shouldCompileTo('Goodbye {{[foo bar]}} world!', {'foo bar': 'beautiful'}, 'Goodbye beautiful world!');
+    shouldCompileTo('Goodbye {{"foo bar"}} world!', {'foo bar': 'beautiful'}, 'Goodbye beautiful world!');
+    shouldCompileTo("Goodbye {{'foo bar'}} world!", {'foo bar': 'beautiful'}, 'Goodbye beautiful world!');
+    shouldCompileTo('Goodbye {{"foo[bar"}} world!', {'foo[bar': 'beautiful'}, 'Goodbye beautiful world!');
+    shouldCompileTo('Goodbye {{"foo\'bar"}} world!', {"foo'bar": 'beautiful'}, 'Goodbye beautiful world!');
+    shouldCompileTo("Goodbye {{'foo\"bar'}} world!", {'foo"bar': 'beautiful'}, 'Goodbye beautiful world!');
   });
 
   it("that current context path ({{.}}) doesn't hit helpers", function() {
