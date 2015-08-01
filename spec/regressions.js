@@ -172,4 +172,14 @@ describe('Regressions', function() {
     var result = template(context);
     equals(result, 'foo');
   });
+
+  it('GH-1021: Each empty string key', function() {
+    var data = {
+      '': 'foo',
+      'name': 'Chris',
+      'value': 10000
+    };
+
+    shouldCompileTo('{{#each data}}Key: {{@key}}\n{{/each}}', {data: data}, 'Key: \nKey: name\nKey: value\n');
+  });
 });
