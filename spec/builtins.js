@@ -47,6 +47,10 @@ describe('builtin helpers', function() {
       var string = '{{#with person}}Person is present{{else}}Person is not present{{/with}}';
       shouldCompileTo(string, {}, 'Person is not present');
     });
+    it('with provides block parameter', function() {
+      var string = '{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}';
+      shouldCompileTo(string, {person: {first: 'Alan', last: 'Johnson'}}, 'Alan Johnson');
+    });
   });
 
   describe('#each', function() {
