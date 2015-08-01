@@ -51,6 +51,12 @@ describe('builtin helpers', function() {
       var string = '{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}';
       shouldCompileTo(string, {person: {first: 'Alan', last: 'Johnson'}}, 'Alan Johnson');
     });
+    it('works when data is disabled', function() {
+      var template = CompilerContext.compile('{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}', {data: false});
+
+      var result = template({person: {first: 'Alan', last: 'Johnson'}});
+      equals(result, 'Alan Johnson');
+    });
   });
 
   describe('#each', function() {
