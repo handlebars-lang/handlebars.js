@@ -43,7 +43,8 @@ module.exports = function(grunt) {
 
     babel: {
       options: {
-        loose: ['es6.modules']
+        loose: ['es6.modules'],
+        auxiliaryCommentBefore: 'istanbul ignore next'
       },
       amd: {
         options: {
@@ -75,7 +76,7 @@ module.exports = function(grunt) {
         module: {
           loaders: [
             // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules' }
+            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next' }
           ]
         },
         output: {
