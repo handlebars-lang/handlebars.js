@@ -16,6 +16,7 @@
     "objectLiteralDuplicateProperties": true,
     "objectLiteralShorthandMethods": true,
     "objectLiteralShorthandProperties": true,
+    "restParams": true,
     "spread": true,
     "templateStrings": true
   },
