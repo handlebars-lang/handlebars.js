@@ -35,8 +35,8 @@ function makeSuite(bench, name, template, handlebarsOnly) {
   var handlebar = Handlebars.compile(template.handlebars, {data: false}),
       compat = Handlebars.compile(template.handlebars, {data: false, compat: true}),
       options = {helpers: template.helpers};
-  _.each(template.partials && template.partials.handlebars, function(partial) {
-    Handlebars.registerPartial(name, Handlebars.compile(partial, {data: false}));
+  _.each(template.partials && template.partials.handlebars, function(partial, partialName) {
+    Handlebars.registerPartial(partialName, Handlebars.compile(partial, {data: false}));
   });
 
   handlebarsOut = handlebar(context, options);
