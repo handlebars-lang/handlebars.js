@@ -100,6 +100,10 @@ describe('ast', function() {
   });
 
   describe('PartialStatement', function() {
+    it('provides default params', function() {
+      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', undefined, {}, {}, LOCATION_INFO);
+      equals(pn.params.length, 0);
+    });
     it('stores location info', function() {
       var pn = new handlebarsEnv.AST.PartialStatement('so_partial', [], {}, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
@@ -110,6 +114,13 @@ describe('ast', function() {
     it('storing location info', function() {
       var pn = new handlebarsEnv.AST.Program([], null, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
+    });
+  });
+
+  describe('SubExpression', function() {
+    it('provides default params', function() {
+      var pn = new handlebarsEnv.AST.SubExpression('path', undefined, {}, LOCATION_INFO);
+      equals(pn.params.length, 0);
     });
   });
 

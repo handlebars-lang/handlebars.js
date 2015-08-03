@@ -40,5 +40,17 @@ module.exports = function(grunt) {
       done();
     });
   });
-  grunt.registerTask('test', ['test:bin', 'test:cov']);
+
+  grunt.registerTask('test:check-cov', function() {
+    var done = this.async();
+
+    var runner = childProcess.fork('node_modules/.bin/istanbul', ['check-coverage', '--statements', '100', '--functions', '100', '--branches', '100', '--lines 100'], {stdio: 'inherit'});
+    runner.on('close', function(code) {
+      if (code != 0) {
+        grunt.fatal('Coverage check failed: ' + code);
+      }
+      done();
+    });
+  });
+  grunt.registerTask('test', ['test:bin', 'test:cov', 'test:check-cov']);
 };

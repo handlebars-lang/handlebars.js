@@ -65,6 +65,13 @@ describe('blocks', function() {
     shouldCompileTo(string, hash, 'Goodbye cruel sad OMG!');
   });
 
+  it('works with cached blocks', function() {
+    var template = CompilerContext.compile('{{#each person}}{{#with .}}{{first}} {{last}}{{/with}}{{/each}}', {data: false});
+
+    var result = template({person: [{first: 'Alan', last: 'Johnson'}, {first: 'Alan', last: 'Johnson'}]});
+    equals(result, 'Alan JohnsonAlan Johnson');
+  });
+
   describe('inverted sections', function() {
     it('inverted sections with unset value', function() {
       var string = '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}';
