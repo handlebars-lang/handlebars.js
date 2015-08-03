@@ -47,12 +47,14 @@ describe('track ids', function() {
     equals(template(context, {helpers: helpers}), 'HELP ME MY BOSS is.a:foo slave.driver:bar');
   });
   it('should note ../ and ./ references', function() {
-    var template = CompilerContext.compile('{{wycats ./is.a ../slave.driver}}', {trackIds: true});
+    var template = CompilerContext.compile('{{wycats ./is.a ../slave.driver this.is.a this}}', {trackIds: true});
 
     var helpers = {
-      wycats: function(passiveVoice, noun, options) {
+      wycats: function(passiveVoice, noun, thiz, thiz2, options) {
         equal(options.ids[0], 'is.a');
         equal(options.ids[1], '../slave.driver');
+        equal(options.ids[2], 'is.a');
+        equal(options.ids[3], '');
 
         return 'HELP ME MY BOSS ' + options.ids[0] + ':' + passiveVoice + ' ' + options.ids[1] + ':' + noun;
       }
