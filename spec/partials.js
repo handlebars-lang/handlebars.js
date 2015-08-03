@@ -238,6 +238,12 @@ describe('partials', function() {
       var hash = {root: 'yes', dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
       shouldCompileToWithPartials(string, [hash, {}, {dude: partial}, true], true, 'Dudes: Yehuda (http://yehuda) yes Alan (http://alan) yes ');
     });
+    it('partials can access parents with custom context', function() {
+      var string = 'Dudes: {{#dudes}}{{> dude "test"}}{{/dudes}}';
+      var partial = '{{name}} ({{url}}) {{root}} ';
+      var hash = {root: 'yes', dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: partial}, true], true, 'Dudes: Yehuda (http://yehuda) yes Alan (http://alan) yes ');
+    });
     it('partials can access parents without data', function() {
       var string = 'Dudes: {{#dudes}}{{> dude}}{{/dudes}}';
       var partial = '{{name}} ({{url}}) {{root}} ';
