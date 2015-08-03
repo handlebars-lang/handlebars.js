@@ -321,11 +321,17 @@ describe('builtin helpers', function() {
     });
     it('should handle missing logger', function() {
       var string = '{{log blah}}';
-      var hash = { blah: 'whee' };
+      var hash = { blah: 'whee' },
+          called = false;
 
       console.error = undefined;
+      console.log = function(log) {
+        equals('whee', log);
+        called = true;
+      };
 
       shouldCompileTo(string, [hash,,,, {level: '03'}], '');
+      equals(true, called);
     });
 
     it('should handle string log levels', function() {
