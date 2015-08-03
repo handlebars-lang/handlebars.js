@@ -190,4 +190,48 @@ describe('track ids', function() {
       });
     });
   });
+
+  describe('partials', function() {
+    var helpers = {
+      blockParams: function(name, options) {
+        return name + ':' + options.ids[0] + '\n';
+      },
+      wycats: function(name, options) {
+        return name + ':' + options.data.contextPath + '\n';
+      }
+    };
+
+    it('should pass track id for basic partial', function() {
+      var template = CompilerContext.compile('Dudes: {{#dudes}}{{> dude}}{{/dudes}}', {trackIds: true}),
+          hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+
+      var partials = {
+        dude: CompilerContext.compile('{{wycats name}}', {trackIds: true})
+      };
+
+      equals(template(hash, {helpers: helpers, partials: partials}), 'Dudes: Yehuda:dudes.0\nAlan:dudes.1\n');
+    });
+
+    it('should pass track id for context partial', function() {
+      var template = CompilerContext.compile('Dudes: {{> dude dudes}}', {trackIds: true}),
+          hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+
+      var partials = {
+        dude: CompilerContext.compile('{{#each this}}{{wycats name}}{{/each}}', {trackIds: true})
+      };
+
+      equals(template(hash, {helpers: helpers, partials: partials}), 'Dudes: Yehuda:dudes..0\nAlan:dudes..1\n');
+    });
+
+    it('should invalidate context for partials with parameters', function() {
+      var template = CompilerContext.compile('Dudes: {{#dudes}}{{> dude . bar="foo"}}{{/dudes}}', {trackIds: true}),
+          hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+
+      var partials = {
+        dude: CompilerContext.compile('{{wycats name}}', {trackIds: true})
+      };
+
+      equals(template(hash, {helpers: helpers, partials: partials}), 'Dudes: Yehuda:true\nAlan:true\n');
+    });
+  });
 });
