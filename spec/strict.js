@@ -78,6 +78,23 @@ describe('strict', function() {
         template({hello: {}});
       }, Exception, /"bar" not defined in/);
     });
+
+    it('should allow undefined parameters when passed to helpers', function() {
+      var template = CompilerContext.compile('{{#unless foo}}success{{/unless}}', {strict: true});
+      equals(template({}), 'success');
+    });
+
+    it('should allow undefined hash when passed to helpers', function() {
+      var template = CompilerContext.compile('{{helper value=@foo}}', {strict: true});
+      var helpers = {
+        helper: function(options) {
+          equals('value' in options.hash, true);
+          equals(options.hash.value, undefined);
+          return 'success';
+        }
+      };
+      equals(template({}, {helpers: helpers}), 'success');
+    });
   });
 
   describe('assume objects', function() {
