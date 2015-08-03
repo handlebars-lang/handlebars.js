@@ -286,7 +286,7 @@ describe('builtin helpers', function() {
       };
 
       shouldCompileTo(string, [hash,,,, {level: '03'}], '');
-      equals(3, levelArg);
+      equals('03', levelArg);
       equals('whee', logArg);
     });
     it('should output to info', function() {
@@ -326,6 +326,66 @@ describe('builtin helpers', function() {
       console.error = undefined;
 
       shouldCompileTo(string, [hash,,,, {level: '03'}], '');
+    });
+
+    it('should handle string log levels', function() {
+      var string = '{{log blah}}';
+      var hash = { blah: 'whee' };
+      var called;
+
+      console.error = function(log) {
+        equals('whee', log);
+        called = true;
+      };
+
+      shouldCompileTo(string, [hash,,,, {level: 'error'}], '');
+      equals(true, called);
+
+      called = false;
+
+      shouldCompileTo(string, [hash,,,, {level: 'ERROR'}], '');
+      equals(true, called);
+    });
+    it('should handle hash log levels', function() {
+      var string = '{{log blah level="error"}}';
+      var hash = { blah: 'whee' };
+      var called;
+
+      console.error = function(log) {
+        equals('whee', log);
+        called = true;
+      };
+
+      shouldCompileTo(string, hash, '');
+      equals(true, called);
+    });
+    it('should handle hash log levels', function() {
+      var string = '{{log blah level="debug"}}';
+      var hash = { blah: 'whee' };
+      var called = false;
+
+      console.info = console.log = console.error = console.debug = function(log) {
+        equals('whee', log);
+        called = true;
+      };
+
+      shouldCompileTo(string, hash, '');
+      equals(false, called);
+    });
+    it('should pass multiple log arguments', function() {
+      var string = '{{log blah "foo" 1}}';
+      var hash = { blah: 'whee' };
+      var called;
+
+      console.info = console.log = function(log1, log2, log3) {
+        equals('whee', log1);
+        equals('foo', log2);
+        equals(1, log3);
+        called = true;
+      };
+
+      shouldCompileTo(string, hash, '');
+      equals(true, called);
     });
     /*eslint-enable no-console */
   });
