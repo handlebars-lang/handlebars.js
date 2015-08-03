@@ -182,4 +182,18 @@ describe('Regressions', function() {
 
     shouldCompileTo('{{#each data}}Key: {{@key}}\n{{/each}}', {data: data}, 'Key: \nKey: name\nKey: value\n');
   });
+
+  it('GH-1054: Should handle simple safe string responses', function() {
+    var root = '{{#wrap}}{{>partial}}{{/wrap}}';
+    var partials = {
+      partial: '{{#wrap}}<partial>{{/wrap}}'
+    };
+    var helpers = {
+      wrap: function(options) {
+        return new Handlebars.SafeString(options.fn());
+      }
+    };
+
+    shouldCompileToWithPartials(root, [{}, helpers, partials], true, '<partial>');
+  });
 });
