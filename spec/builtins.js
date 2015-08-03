@@ -32,6 +32,11 @@ describe('builtin helpers', function() {
       shouldCompileTo(string, {goodbye: function() {return this.foo; }, world: 'world'}, 'cruel world!',
                       'if with function does not show the contents when returns undefined');
     });
+
+    it('should not change the depth list', function() {
+      var string = '{{#with foo}}{{#if goodbye}}GOODBYE cruel {{../world}}!{{/if}}{{/with}}';
+      shouldCompileTo(string, {foo: {goodbye: true}, world: 'world'}, 'GOODBYE cruel world!');
+    });
   });
 
   describe('#with', function() {

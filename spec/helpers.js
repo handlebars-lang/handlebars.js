@@ -38,6 +38,19 @@ describe('helpers', function() {
     shouldCompileTo(string, [{}, helpers], ' {{{{b}}}} {{{{/b}}}} ', 'raw block helper should get nested raw block as raw content');
   });
 
+  it('helper block with identical context', function() {
+    var string = '{{#goodbyes}}{{name}}{{/goodbyes}}';
+    var hash = {name: 'Alan'};
+    var helpers = {goodbyes: function(options) {
+      var out = '';
+      var byes = ['Goodbye', 'goodbye', 'GOODBYE'];
+      for (var i = 0, j = byes.length; i < j; i++) {
+        out += byes[i] + ' ' + options.fn(this) + '! ';
+      }
+      return out;
+    }};
+    shouldCompileTo(string, [hash, helpers], 'Goodbye Alan! goodbye Alan! GOODBYE Alan! ');
+  });
   it('helper block with complex lookup expression', function() {
     var string = '{{#goodbyes}}{{../name}}{{/goodbyes}}';
     var hash = {name: 'Alan'};
@@ -45,7 +58,7 @@ describe('helpers', function() {
       var out = '';
       var byes = ['Goodbye', 'goodbye', 'GOODBYE'];
       for (var i = 0, j = byes.length; i < j; i++) {
-        out += byes[i] + ' ' + options.fn(this) + '! ';
+        out += byes[i] + ' ' + options.fn({}) + '! ';
       }
       return out;
     }};
