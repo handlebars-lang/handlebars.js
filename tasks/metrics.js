@@ -36,7 +36,7 @@ module.exports = function(grunt) {
           return done();
         }
 
-        emit(keen, events, function(err, res) {
+        emit(keen, events, function(err) {
           if (err) {
             throw err;
           }

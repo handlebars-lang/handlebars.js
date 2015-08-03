@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 
     var cmd = './node_modules/.bin/jison';
 
-    if(process.platform === 'win32'){
+    if (process.platform === 'win32') {
         cmd = 'node_modules\\.bin\\jison.cmd';
     }
 

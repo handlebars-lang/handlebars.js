@@ -1,0 +1,14 @@
+{
+  "globals": {
+    "require": true
+  },
+  "rules": {
+    // Disabling for tests, for now.
+    "no-path-concat": 0,
+
+    "no-var": 0,
+    "no-shadow": 0,
+    "handle-callback-err": 0,
+    "no-console": 0
+  }
+}

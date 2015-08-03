@@ -9,6 +9,8 @@ module.exports = function(grunt) {
       },
       files: [
         '*.js',
+        'bench/**/*.js',
+        'tasks/**/*.js',
         'lib/**/!(*.min|parser).js',
         'spec/**/!(*.amd|json2|require).js'
       ]

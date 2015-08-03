@@ -33,9 +33,9 @@ module.exports = function(grunt) {
       });
   });
 
-  function replace(path, regex, replace) {
+  function replace(path, regex, value) {
     var content = grunt.file.read(path);
-    content = content.replace(regex, replace);
+    content = content.replace(regex, value);
     grunt.file.write(path, content);
   }
 };

@@ -4,11 +4,11 @@ module.exports = {
       return 'foo ' + value;
     },
     header: function() {
-      return "Colors";
+      return 'Colors';
     }
   },
-  handlebars: "{{echo (header)}}",
-  eco: "<%= @echo(@header()) %>"
+  handlebars: '{{echo (header)}}',
+  eco: '<%= @echo(@header()) %>'
 };
 
 module.exports.context = module.exports.helpers;

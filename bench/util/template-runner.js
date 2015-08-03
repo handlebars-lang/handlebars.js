@@ -22,6 +22,8 @@ module.exports = function(grunt, makeSuite, callback) {
   });
 
   warmer.bench(function() {
-    callback && callback(warmer.times, warmer.scaled);
+    if (callback) {
+      callback(warmer.times, warmer.scaled);
+    }
   });
 };

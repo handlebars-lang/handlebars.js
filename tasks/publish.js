@@ -60,7 +60,7 @@ module.exports = function(grunt) {
 
     async.forEach(_.keys(files), function(file, callback) {
         var params = {Bucket: bucket, Key: file, Body: grunt.file.read(files[file])};
-        s3.putObject(params, function(err, data) {
+        s3.putObject(params, function(err) {
           if (err) {
             throw err;
           } else {

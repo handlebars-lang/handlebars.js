@@ -1,5 +1,4 @@
-var _ = require('underscore'),
-    async = require('async'),
+var async = require('async'),
     fs = require('fs'),
     zlib = require('zlib');
 

@@ -1,6 +1,6 @@
 module.exports = {
   helpers: {
-    foo: function(options) {
+    foo: function() {
       return '';
     }
   },

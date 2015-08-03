@@ -1,23 +1,22 @@
 var _ = require('underscore'),
     runner = require('./util/template-runner'),
-    templates = require('./templates'),
 
     eco, dust, Handlebars, Mustache, eco;
 
 try {
-  dust = require("dustjs-linkedin");
+  dust = require('dustjs-linkedin');
 } catch (err) { /* NOP */ }
 
 try {
-  Mustache = require("mustache");
+  Mustache = require('mustache');
 } catch (err) { /* NOP */ }
 
 try {
-  eco = require("eco");
+  eco = require('eco');
 } catch (err) { /* NOP */ }
 
 function error() {
-  throw new Error("EWOT");
+  throw new Error('EWOT');
 }
 
 function makeSuite(bench, name, template, handlebarsOnly) {
@@ -34,19 +33,19 @@ function makeSuite(bench, name, template, handlebarsOnly) {
       mustacheOut;
 
   var handlebar = Handlebars.compile(template.handlebars, {data: false}),
-      compat =  Handlebars.compile(template.handlebars, {data: false, compat: true}),
+      compat = Handlebars.compile(template.handlebars, {data: false, compat: true}),
       options = {helpers: template.helpers};
-  _.each(template.partials && template.partials.handlebars, function(partial, name) {
+  _.each(template.partials && template.partials.handlebars, function(partial) {
     Handlebars.registerPartial(name, Handlebars.compile(partial, {data: false}));
   });
 
   handlebarsOut = handlebar(context, options);
-  bench("handlebars", function() {
+  bench('handlebars', function() {
     handlebar(context, options);
   });
 
   compatOut = compat(context, options);
-  bench("compat", function() {
+  bench('compat', function() {
     compat(context, options);
   });
 
@@ -61,8 +60,8 @@ function makeSuite(bench, name, template, handlebarsOnly) {
 
       dust.render(templateName, context, function(err, out) { dustOut = out; });
 
-      bench("dust", function() {
-        dust.render(templateName, context, function(err, out) { });
+      bench('dust', function() {
+        dust.render(templateName, context, function() {});
       });
     } else {
       bench('dust', error);
@@ -75,11 +74,11 @@ function makeSuite(bench, name, template, handlebarsOnly) {
 
       ecoOut = ecoTemplate(context);
 
-      bench("eco", function() {
+      bench('eco', function() {
         ecoTemplate(context);
       });
     } else {
-      bench("eco", error);
+      bench('eco', error);
     }
   }
 
@@ -90,11 +89,11 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     if (mustacheSource) {
       mustacheOut = Mustache.to_html(mustacheSource, context, mustachePartials);
 
-      bench("mustache", function() {
+      bench('mustache', function() {
         Mustache.to_html(mustacheSource, context, mustachePartials);
       });
     } else {
-      bench("mustache", error);
+      bench('mustache', error);
     }
   }
 
