@@ -196,4 +196,11 @@ describe('Regressions', function() {
 
     shouldCompileToWithPartials(root, [{}, helpers, partials], true, '<partial>');
   });
+
+  it('GH-1065: Sparse arrays', function() {
+    var array = [];
+    array[1] = 'foo';
+    array[3] = 'bar';
+    shouldCompileTo('{{#each array}}{{@index}}{{.}}{{/each}}', {array: array}, '1foo3bar');
+  });
 });
