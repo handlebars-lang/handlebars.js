@@ -196,5 +196,12 @@ describe('precompiler', function() {
         done(err);
       });
     });
+
+    it('should complete when no args are passed', function(done) {
+      Precompiler.loadTemplates({}, function(err, opts) {
+        equal(opts.templates.length, 0);
+        done(err);
+      });
+    });
   });
 });
