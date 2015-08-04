@@ -3,6 +3,8 @@ describe('ast', function() {
     return;
   }
 
+  var AST = Handlebars.AST;
+
   var LOCATION_INFO = {
     start: {
       line: 1,
@@ -23,7 +25,7 @@ describe('ast', function() {
 
   describe('MustacheStatement', function() {
     it('should store args', function() {
-      var mustache = new handlebarsEnv.AST.MustacheStatement({}, null, null, true, {}, LOCATION_INFO);
+      var mustache = new AST.MustacheStatement({}, null, null, true, {}, LOCATION_INFO);
       equals(mustache.type, 'MustacheStatement');
       equals(mustache.escaped, true);
       testLocationInfoStorage(mustache);
@@ -37,8 +39,8 @@ describe('ast', function() {
     });
 
     it('stores location info', function() {
-      var mustacheNode = new handlebarsEnv.AST.MustacheStatement([{ original: 'foo'}], null, null, false, {});
-      var block = new handlebarsEnv.AST.BlockStatement(
+      var mustacheNode = new AST.MustacheStatement([{ original: 'foo'}], null, null, false, {});
+      var block = new AST.BlockStatement(
             mustacheNode,
             null, null,
             {body: []},
@@ -52,75 +54,111 @@ describe('ast', function() {
   });
   describe('PathExpression', function() {
     it('stores location info', function() {
-      var idNode = new handlebarsEnv.AST.PathExpression(false, 0, [], 'foo', LOCATION_INFO);
+      var idNode = new AST.PathExpression(false, 0, [], 'foo', LOCATION_INFO);
       testLocationInfoStorage(idNode);
     });
   });
 
   describe('Hash', function() {
     it('stores location info', function() {
-      var hash = new handlebarsEnv.AST.Hash([], LOCATION_INFO);
+      var hash = new AST.Hash([], LOCATION_INFO);
       testLocationInfoStorage(hash);
     });
   });
 
   describe('ContentStatement', function() {
     it('stores location info', function() {
-      var content = new handlebarsEnv.AST.ContentStatement('HI', LOCATION_INFO);
+      var content = new AST.ContentStatement('HI', LOCATION_INFO);
       testLocationInfoStorage(content);
     });
   });
 
   describe('CommentStatement', function() {
     it('stores location info', function() {
-      var comment = new handlebarsEnv.AST.CommentStatement('HI', {}, LOCATION_INFO);
+      var comment = new AST.CommentStatement('HI', {}, LOCATION_INFO);
       testLocationInfoStorage(comment);
     });
   });
 
   describe('NumberLiteral', function() {
     it('stores location info', function() {
-      var integer = new handlebarsEnv.AST.NumberLiteral('6', LOCATION_INFO);
+      var integer = new AST.NumberLiteral('6', LOCATION_INFO);
       testLocationInfoStorage(integer);
     });
   });
 
   describe('StringLiteral', function() {
     it('stores location info', function() {
-      var string = new handlebarsEnv.AST.StringLiteral('6', LOCATION_INFO);
+      var string = new AST.StringLiteral('6', LOCATION_INFO);
       testLocationInfoStorage(string);
     });
   });
 
   describe('BooleanLiteral', function() {
     it('stores location info', function() {
-      var bool = new handlebarsEnv.AST.BooleanLiteral('true', LOCATION_INFO);
+      var bool = new AST.BooleanLiteral('true', LOCATION_INFO);
       testLocationInfoStorage(bool);
     });
   });
 
   describe('PartialStatement', function() {
     it('provides default params', function() {
-      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', undefined, {}, {}, LOCATION_INFO);
+      var pn = new AST.PartialStatement('so_partial', undefined, {}, {}, LOCATION_INFO);
       equals(pn.params.length, 0);
     });
     it('stores location info', function() {
-      var pn = new handlebarsEnv.AST.PartialStatement('so_partial', [], {}, {}, LOCATION_INFO);
+      var pn = new AST.PartialStatement('so_partial', [], {}, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
 
   describe('Program', function() {
     it('storing location info', function() {
-      var pn = new handlebarsEnv.AST.Program([], null, {}, LOCATION_INFO);
+      var pn = new AST.Program([], null, {}, LOCATION_INFO);
       testLocationInfoStorage(pn);
     });
   });
 
   describe('SubExpression', function() {
     it('provides default params', function() {
-      var pn = new handlebarsEnv.AST.SubExpression('path', undefined, {}, LOCATION_INFO);
+      var pn = new AST.SubExpression('path', undefined, {}, LOCATION_INFO);
       equals(pn.params.length, 0);
+    });
+  });
+
+  describe('helpers', function() {
+    describe('#helperExpression', function() {
+      it('should handle mustache statements', function() {
+        equals(AST.helpers.helperExpression(new AST.MustacheStatement('foo', [], undefined, false, {}, LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.MustacheStatement('foo', [1], undefined, false, {}, LOCATION_INFO)), true);
+        equals(AST.helpers.helperExpression(new AST.MustacheStatement('foo', [], {}, false, {}, LOCATION_INFO)), true);
+      });
+      it('should handle block statements', function() {
+        equals(AST.helpers.helperExpression(new AST.BlockStatement('foo', [], undefined, false, {}, LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.BlockStatement('foo', [1], undefined, false, {}, LOCATION_INFO)), true);
+        equals(AST.helpers.helperExpression(new AST.BlockStatement('foo', [], {}, false, {}, LOCATION_INFO)), true);
+      });
+      it('should handle subexpressions', function() {
+        equals(AST.helpers.helperExpression(new AST.SubExpression()), true);
+      });
+      it('should work with non-helper nodes', function() {
+        equals(AST.helpers.helperExpression(new AST.Program([], [], {}, LOCATION_INFO)), false);
+
+        equals(AST.helpers.helperExpression(new AST.PartialStatement()), false);
+        equals(AST.helpers.helperExpression(new AST.ContentStatement('a', LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.CommentStatement('a', {}, LOCATION_INFO)), false);
+
+        equals(AST.helpers.helperExpression(new AST.PathExpression(false, 0, ['a'], 'a', LOCATION_INFO)), false);
+
+        equals(AST.helpers.helperExpression(new AST.StringLiteral('a', LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.NumberLiteral(1, LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.BooleanLiteral(true, LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.UndefinedLiteral(LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.NullLiteral(LOCATION_INFO)), false);
+
+        equals(AST.helpers.helperExpression(new AST.Hash([], LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression(new AST.HashPair('foo', 'bar', LOCATION_INFO)), false);
+      });
     });
   });
 
