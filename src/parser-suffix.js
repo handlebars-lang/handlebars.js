@@ -1,2 +1,2 @@
 exports.__esModule = true;
-module.exports['default'] = handlebars;
+exports['default'] = handlebars;
