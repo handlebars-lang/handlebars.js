@@ -153,38 +153,48 @@ describe('precompiler', function() {
   });
 
   describe('#loadTemplates', function() {
-    it('should throw on missing template', function() {
-      shouldThrow(function() {
-        Precompiler.loadTemplates({templates: ['foo']});
-      }, Handlebars.Exception, 'Unable to open template file "foo"');
+    it('should throw on missing template', function(done) {
+      Precompiler.loadTemplates({files: ['foo']}, function(err) {
+        equal(err.message, 'Unable to open template file "foo"');
+        done();
+      });
     });
-    it('should enumerate directories by extension', function() {
-      var opts = {templates: [__dirname + '/artifacts'], extension: 'hbs'};
-      Precompiler.loadTemplates(opts);
-      equal(opts.templates.length, 1);
-      equal(opts.templates[0].name, 'example_2');
+    it('should enumerate directories by extension', function(done) {
+      Precompiler.loadTemplates({files: [__dirname + '/artifacts'], extension: 'hbs'}, function(err, opts) {
+        equal(opts.templates.length, 1);
+        equal(opts.templates[0].name, 'example_2');
+        done(err);
+      });
+    });
+    it('should enumerate all templates by extension', function(done) {
+      Precompiler.loadTemplates({files: [__dirname + '/artifacts'], extension: 'handlebars'}, function(err, opts) {
+        equal(opts.templates.length, 3);
+        equal(opts.templates[0].name, 'bom');
+        equal(opts.templates[1].name, 'empty');
+        equal(opts.templates[2].name, 'example_1');
+        done(err);
+      });
+    });
+    it('should handle regular expression characters in extensions', function(done) {
+      Precompiler.loadTemplates({files: [__dirname + '/artifacts'], extension: 'hb(s'}, function(err) {
+        // Success is not throwing
+        done(err);
+      });
+    });
+    it('should handle BOM', function(done) {
+      var opts = {files: [__dirname + '/artifacts/bom.handlebars'], extension: 'handlebars', bom: true};
+      Precompiler.loadTemplates(opts, function(err, opts) {
+        equal(opts.templates[0].source, 'a');
+        done(err);
+      });
+    });
 
-      opts = {templates: [__dirname + '/artifacts'], extension: 'handlebars'};
-      Precompiler.loadTemplates(opts);
-      equal(opts.templates.length, 3);
-      equal(opts.templates[0].name, 'bom');
-      equal(opts.templates[1].name, 'empty');
-      equal(opts.templates[2].name, 'example_1');
-    });
-    it('should handle regular expression characters in extensions', function() {
-      Precompiler.loadTemplates({templates: [__dirname + '/artifacts'], extension: 'hb(s'});
-      // Success is not throwing
-    });
-    it('should handle BOM', function() {
-      var opts = {templates: [__dirname + '/artifacts/bom.handlebars'], extension: 'handlebars', bom: true};
-      Precompiler.loadTemplates(opts);
-      equal(opts.templates[0].source, 'a');
-    });
-
-    it('should handle different root', function() {
-      var opts = {templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, root: 'foo/'};
-      Precompiler.loadTemplates(opts);
-      equal(opts.templates[0].name, __dirname + '/artifacts/empty');
+    it('should handle different root', function(done) {
+      var opts = {files: [__dirname + '/artifacts/empty.handlebars'], simple: true, root: 'foo/'};
+      Precompiler.loadTemplates(opts, function(err, opts) {
+        equal(opts.templates[0].name, __dirname + '/artifacts/empty');
+        done(err);
+      });
     });
   });
 });

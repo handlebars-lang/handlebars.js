@@ -100,14 +100,18 @@ var optimist = require('optimist')
 
 
 var argv = optimist.argv;
-argv.templates = argv._;
+argv.files = argv._;
 delete argv._;
 
 var Precompiler = require('../dist/cjs/precompiler');
-Precompiler.loadTemplates(argv);
+Precompiler.loadTemplates(argv, function(err, opts) {
+  if (err) {
+    throw err;
+  }
 
-if (argv.help || (!argv.templates.length && !argv.version)) {
-  optimist.showHelp();
-} else {
-  Precompiler.cli(argv);
-}
+  if (opts.help || (!opts.templates.length && !opts.version)) {
+    optimist.showHelp();
+  } else {
+    Precompiler.cli(opts);
+  }
+});

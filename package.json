@@ -21,6 +21,7 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
+    "async": "^1.4.0",
     "optimist": "^0.6.1",
     "source-map": "^0.1.40"
   },
