@@ -71,6 +71,11 @@ describe('precompiler', function() {
       Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars', __dirname + '/artifacts/empty.handlebars'], simple: true});
     }, Handlebars.Exception, 'Unable to output multiple templates in simple mode');
   });
+  it('should throw when missing name', function() {
+    shouldThrow(function() {
+      Precompiler.cli({templates: [{source: ''}], amd: true});
+    }, Handlebars.Exception, 'Name missing for template');
+  });
   it('should throw when combining simple and directories', function() {
     shouldThrow(function() {
       Precompiler.cli({hasDirectory: true, templates: [1], simple: true});
@@ -80,6 +85,11 @@ describe('precompiler', function() {
   it('should output simple templates', function() {
     Handlebars.precompile = function() { return 'simple'; };
     Precompiler.cli({templates: [emptyTemplate], simple: true});
+    equal(log, 'simple\n');
+  });
+  it('should default to simple templates', function() {
+    Handlebars.precompile = function() { return 'simple'; };
+    Precompiler.cli({templates: [{source: ''}]});
     equal(log, 'simple\n');
   });
   it('should output amd templates', function() {
@@ -194,6 +204,42 @@ describe('precompiler', function() {
       Precompiler.loadTemplates(opts, function(err, opts) {
         equal(opts.templates[0].name, __dirname + '/artifacts/empty');
         done(err);
+      });
+    });
+
+    it('should accept string inputs', function(done) {
+      var opts = {string: ''};
+      Precompiler.loadTemplates(opts, function(err, opts) {
+        equal(opts.templates[0].name, undefined);
+        equal(opts.templates[0].source, '');
+        done(err);
+      });
+    });
+    it('should accept string array inputs', function(done) {
+      var opts = {string: ['', 'bar'], name: ['beep', 'boop']};
+      Precompiler.loadTemplates(opts, function(err, opts) {
+        equal(opts.templates[0].name, 'beep');
+        equal(opts.templates[0].source, '');
+        equal(opts.templates[1].name, 'boop');
+        equal(opts.templates[1].source, 'bar');
+        done(err);
+      });
+    });
+    it('should accept stdin input', function(done) {
+      var stdin = require('mock-stdin').stdin();
+      Precompiler.loadTemplates({string: '-'}, function(err, opts) {
+        equal(opts.templates[0].source, 'foo');
+        done(err);
+      });
+      stdin.send('fo');
+      stdin.send('o');
+      stdin.end();
+    });
+    it('error on name missing', function(done) {
+      var opts = {string: ['', 'bar']};
+      Precompiler.loadTemplates(opts, function(err) {
+        equal(err.message, 'Number of names did not match the number of string inputs');
+        done();
       });
     });
 

@@ -54,6 +54,16 @@ var optimist = require('optimist')
         'description': 'Output template function only.',
         'alias': 'simple'
       },
+      'N': {
+        'type': 'string',
+        'description': 'Name of passed string templates. Optional if running in a simple mode. Required when operating on multiple templates.',
+        'alias': 'name'
+      },
+      'i': {
+        'type': 'string',
+        'description': 'Generates a template from the passed CLI argument.\n"-" is treated as a special value and causes stdin to be read for the template value.',
+        'alias': 'string'
+      },
       'r': {
         'type': 'string',
         'description': 'Template root. Base value that will be stripped from template names.',
@@ -92,6 +102,7 @@ var optimist = require('optimist')
       }
     })
 
+    .wrap(120)
     .check(function(argv) {
       if (argv.version) {
         return;
