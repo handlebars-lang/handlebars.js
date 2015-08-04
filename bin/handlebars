@@ -26,7 +26,7 @@ var optimist = require('optimist')
         'type': 'string',
         'description': 'Path to handlebar.js (only valid for amd-style)',
         'alias': 'handlebarPath',
-  	    'default': ''
+        'default': ''
       },
       'k': {
         'type': 'string',
@@ -59,12 +59,12 @@ var optimist = require('optimist')
         'description': 'Template root. Base value that will be stripped from template names.',
         'alias': 'root'
       },
-      'p' : {
+      'p': {
         'type': 'boolean',
         'description': 'Compiling a partial template',
         'alias': 'partial'
       },
-      'd' : {
+      'd': {
         'type': 'boolean',
         'description': 'Include data when compiling',
         'alias': 'data'
@@ -103,9 +103,11 @@ var argv = optimist.argv;
 argv.templates = argv._;
 delete argv._;
 
+var Precompiler = require('../dist/cjs/precompiler');
+Precompiler.loadTemplates(argv);
+
 if (argv.help || (!argv.templates.length && !argv.version)) {
   optimist.showHelp();
-  return;
+} else {
+  Precompiler.cli(argv);
 }
-
-return require('../dist/cjs/precompiler').cli(argv);

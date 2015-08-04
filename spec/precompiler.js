@@ -16,6 +16,12 @@ describe('precompiler', function() {
       precompile,
       minify,
 
+      emptyTemplate = {
+        path: __dirname + '/artifacts/empty.handlebars',
+        name: 'empty',
+        source: ''
+      },
+
       file,
       content,
       writeFileSync;
@@ -51,10 +57,9 @@ describe('precompiler', function() {
       Precompiler.cli({templates: []});
     }, Handlebars.Exception, 'Must define at least one template or directory.');
   });
-  it('should throw on missing template', function() {
-    shouldThrow(function() {
-      Precompiler.cli({templates: ['foo']});
-    }, Handlebars.Exception, 'Unable to open template file "foo"');
+  it('should handle empty/filtered directories', function() {
+    Precompiler.cli({hasDirectory: true, templates: []});
+    // Success is not throwing
   });
   it('should throw when combining simple and minimized', function() {
     shouldThrow(function() {
@@ -68,105 +73,118 @@ describe('precompiler', function() {
   });
   it('should throw when combining simple and directories', function() {
     shouldThrow(function() {
-      Precompiler.cli({templates: [__dirname], simple: true});
+      Precompiler.cli({hasDirectory: true, templates: [1], simple: true});
     }, Handlebars.Exception, 'Unable to output multiple templates in simple mode');
   });
-  it('should enumerate directories by extension', function() {
-    Precompiler.cli({templates: [__dirname + '/artifacts'], extension: 'hbs'});
-    equal(/'example_2'/.test(log), true);
-    log = '';
 
-    Precompiler.cli({templates: [__dirname + '/artifacts'], extension: 'handlebars'});
-    equal(/'empty'/.test(log), true);
-    equal(/'example_1'/.test(log), true);
-  });
-  it('should protect from regexp patterns', function() {
-    Precompiler.cli({templates: [__dirname + '/artifacts'], extension: 'hb(s'});
-    // Success is not throwing
-  });
   it('should output simple templates', function() {
     Handlebars.precompile = function() { return 'simple'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], simple: true});
     equal(log, 'simple\n');
   });
   it('should output amd templates', function() {
     Handlebars.precompile = function() { return 'amd'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], amd: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], amd: true});
     equal(/template\(amd\)/.test(log), true);
   });
   it('should output multiple amd', function() {
     Handlebars.precompile = function() { return 'amd'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts'], amd: true, extension: 'handlebars', namespace: 'foo'});
+    Precompiler.cli({templates: [emptyTemplate, emptyTemplate], amd: true, namespace: 'foo'});
     equal(/templates = foo = foo \|\|/.test(log), true);
     equal(/return templates/.test(log), true);
     equal(/template\(amd\)/.test(log), true);
   });
   it('should output amd partials', function() {
     Handlebars.precompile = function() { return 'amd'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], amd: true, partial: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], amd: true, partial: true});
     equal(/return Handlebars\.partials\['empty'\]/.test(log), true);
     equal(/template\(amd\)/.test(log), true);
   });
   it('should output multiple amd partials', function() {
     Handlebars.precompile = function() { return 'amd'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts'], amd: true, partial: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate, emptyTemplate], amd: true, partial: true});
     equal(/return Handlebars\.partials\[/.test(log), false);
     equal(/template\(amd\)/.test(log), true);
   });
   it('should output commonjs templates', function() {
     Handlebars.precompile = function() { return 'commonjs'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], commonjs: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], commonjs: true});
     equal(/template\(commonjs\)/.test(log), true);
   });
 
   it('should set data flag', function() {
     Handlebars.precompile = function(data, options) { equal(options.data, true); return 'simple'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', data: true});
+    Precompiler.cli({templates: [emptyTemplate], simple: true, data: true});
     equal(log, 'simple\n');
   });
 
   it('should set known helpers', function() {
     Handlebars.precompile = function(data, options) { equal(options.knownHelpers.foo, true); return 'simple'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', known: 'foo'});
-    equal(log, 'simple\n');
-  });
-
-  it('should handle different root', function() {
-    Handlebars.precompile = function() { return 'simple'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', root: 'foo/'});
+    Precompiler.cli({templates: [emptyTemplate], simple: true, known: 'foo'});
     equal(log, 'simple\n');
   });
   it('should output to file system', function() {
     Handlebars.precompile = function() { return 'simple'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, extension: 'handlebars', output: 'file!'});
+    Precompiler.cli({templates: [emptyTemplate], simple: true, output: 'file!'});
     equal(file, 'file!');
     equal(content, 'simple\n');
     equal(log, '');
-  });
-  it('should handle BOM', function() {
-    Handlebars.precompile = function(template) { return template === 'a' ? 'simple' : 'fail'; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/bom.handlebars'], simple: true, extension: 'handlebars', bom: true});
-    equal(log, 'simple\n');
   });
 
   it('should output minimized templates', function() {
     Handlebars.precompile = function() { return 'amd'; };
     uglify.minify = function() { return {code: 'min'}; };
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], min: true, extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], min: true});
     equal(log, 'min');
   });
 
   it('should output map', function() {
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], map: 'foo.js.map', extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], map: 'foo.js.map'});
 
     equal(file, 'foo.js.map');
     equal(/sourceMappingURL=/.test(log), true);
   });
 
   it('should output map', function() {
-    Precompiler.cli({templates: [__dirname + '/artifacts/empty.handlebars'], min: true, map: 'foo.js.map', extension: 'handlebars'});
+    Precompiler.cli({templates: [emptyTemplate], min: true, map: 'foo.js.map'});
 
     equal(file, 'foo.js.map');
     equal(/sourceMappingURL=/.test(log), true);
+  });
+
+  describe('#loadTemplates', function() {
+    it('should throw on missing template', function() {
+      shouldThrow(function() {
+        Precompiler.loadTemplates({templates: ['foo']});
+      }, Handlebars.Exception, 'Unable to open template file "foo"');
+    });
+    it('should enumerate directories by extension', function() {
+      var opts = {templates: [__dirname + '/artifacts'], extension: 'hbs'};
+      Precompiler.loadTemplates(opts);
+      equal(opts.templates.length, 1);
+      equal(opts.templates[0].name, 'example_2');
+
+      opts = {templates: [__dirname + '/artifacts'], extension: 'handlebars'};
+      Precompiler.loadTemplates(opts);
+      equal(opts.templates.length, 3);
+      equal(opts.templates[0].name, 'bom');
+      equal(opts.templates[1].name, 'empty');
+      equal(opts.templates[2].name, 'example_1');
+    });
+    it('should handle regular expression characters in extensions', function() {
+      Precompiler.loadTemplates({templates: [__dirname + '/artifacts'], extension: 'hb(s'});
+      // Success is not throwing
+    });
+    it('should handle BOM', function() {
+      var opts = {templates: [__dirname + '/artifacts/bom.handlebars'], extension: 'handlebars', bom: true};
+      Precompiler.loadTemplates(opts);
+      equal(opts.templates[0].source, 'a');
+    });
+
+    it('should handle different root', function() {
+      var opts = {templates: [__dirname + '/artifacts/empty.handlebars'], simple: true, root: 'foo/'};
+      Precompiler.loadTemplates(opts);
+      equal(opts.templates[0].name, __dirname + '/artifacts/empty');
+    });
   });
 });
