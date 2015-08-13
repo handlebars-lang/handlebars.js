@@ -14,20 +14,8 @@ Checkout the official Handlebars docs site at
 
 Installing
 ----------
-Installing Handlebars is easy. Simply download the package [from the official site](http://handlebarsjs.com/) or the [bower repository][bower-repo] and add it to your web pages (you should usually use the most recent version).
 
-For web browsers, a free CDN is available at [jsDelivr](http://www.jsdelivr.com/#!handlebarsjs).  Advanced usage, such as [version aliasing & concocting](https://github.com/jsdelivr/jsdelivr#usage), is available. 
-
-Alternatively, if you prefer having the latest version of handlebars from
-the 'master' branch, passing builds of the 'master' branch are automatically
-published to S3. You may download the latest passing master build by grabbing
-a `handlebars-latest.js` file from the [builds page][builds-page]. When the
-build is published, it is also available as a `handlebars-gitSHA.js` file on
-the builds page if you need a version to refer to others.
-`handlebars-runtime.js` builds are also available.
-
-**Note**: The S3 builds page is provided as a convenience for the community,
-but you should not use it for hosting Handlebars in production.
+See our [installation documentation](http://handlebarsjs.com/installation.html).
 
 Usage
 -----
@@ -172,6 +160,4 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
-[bower-repo]: https://github.com/components/handlebars.js
-[builds-page]: http://builds.handlebarsjs.com.s3.amazonaws.com/bucket-listing.html?sort=lastmod&sortdir=desc
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
