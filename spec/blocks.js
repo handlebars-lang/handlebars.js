@@ -125,6 +125,16 @@ describe('blocks', function() {
       shouldCompileTo('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
         'No people\n');
     });
+    it('block standalone else sections can be disabled', function() {
+      shouldCompileTo(
+        '{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n',
+        [{none: 'No people'}, {}, {}, {ignoreStandalone: true}],
+        '\nNo people\n\n');
+      shouldCompileTo(
+        '{{#none}}\n{{.}}\n{{^}}\nFail\n{{/none}}\n',
+        [{none: 'No people'}, {}, {}, {ignoreStandalone: true}],
+        '\nNo people\n\n');
+    });
     it('block standalone chained else sections', function() {
       shouldCompileTo('{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
         'No people\n');
