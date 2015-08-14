@@ -21,3 +21,6 @@ matrix:
 cache:
   directories:
   - node_modules
+
+git:
+  deoth: 100
