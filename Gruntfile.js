@@ -45,6 +45,7 @@ module.exports = function(grunt) {
 
     babel: {
       options: {
+        sourceMaps: 'inline',
         loose: ['es6.modules'],
         auxiliaryCommentBefore: 'istanbul ignore next'
       },
