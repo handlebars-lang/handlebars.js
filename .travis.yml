@@ -23,4 +23,4 @@ cache:
   - node_modules
 
 git:
-  deoth: 100
+  depth: 100
