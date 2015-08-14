@@ -80,6 +80,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                   return 'CLOSE_RAW_BLOCK';
                                  }
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
+<mu>"{{"{LEFT_STRIP}?"#>"        return 'OPEN_PARTIAL_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';
 <mu>"{{"{LEFT_STRIP}?"^"\s*{RIGHT_STRIP}?"}}"        this.popState(); return 'INVERSE';

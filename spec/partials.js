@@ -196,6 +196,67 @@ describe('partials', function() {
     handlebarsEnv.compile = compile;
   });
 
+  describe('partial blocks', function() {
+    it('should render partial block as default', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}success{{/dude}}',
+        [{}, {}, {}],
+        true,
+        'success');
+    });
+    it('should execute default block with proper context', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude context}}{{value}}{{/dude}}',
+        [{context: {value: 'success'}}, {}, {}],
+        true,
+        'success');
+    });
+    it('should propagate block parameters to default block', function() {
+      shouldCompileToWithPartials(
+        '{{#with context as |me|}}{{#> dude}}{{me.value}}{{/dude}}{{/with}}',
+        [{context: {value: 'success'}}, {}, {}],
+        true,
+        'success');
+    });
+
+    it('should not use partial block if partial exists', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}fail{{/dude}}',
+        [{}, {}, {dude: 'success'}],
+        true,
+        'success');
+    });
+
+    it('should render block from partial', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}success{{/dude}}',
+        [{}, {}, {dude: '{{> @partial-block }}'}],
+        true,
+        'success');
+    });
+    it('should render block from partial with context', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}{{value}}{{/dude}}',
+        [{context: {value: 'success'}}, {}, {dude: '{{#with context}}{{> @partial-block }}{{/with}}'}],
+        true,
+        'success');
+    });
+    it('should render block from partial with context', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}{{../context/value}}{{/dude}}',
+        [{context: {value: 'success'}}, {}, {dude: '{{#with context}}{{> @partial-block }}{{/with}}'}],
+        true,
+        'success');
+    });
+    it('should render block from partial with block params', function() {
+      shouldCompileToWithPartials(
+        '{{#with context as |me|}}{{#> dude}}{{me.value}}{{/dude}}{{/with}}',
+        [{context: {value: 'success'}}, {}, {dude: '{{> @partial-block }}'}],
+        true,
+        'success');
+    });
+  });
+
   it('should pass compiler flags', function() {
     if (Handlebars.compile) {
       var env = Handlebars.create();

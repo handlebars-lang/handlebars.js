@@ -83,7 +83,19 @@ interface PartialStatement <: Statement {
     name: PathExpression | SubExpression;
     params: [ Expression ];
     hash: Hash;
-    
+
+    indent: string;
+    strip: StripFlags | null;
+}
+
+interface PartialBlockStatement <: Statement {
+    type: "PartialBlockStatement";
+    name: PathExpression | SubExpression;
+    params: [ Expression ];
+    hash: Hash;
+
+    program: Program | null;
+
     indent: string;
     strip: StripFlags | null;
 }
