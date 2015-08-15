@@ -106,7 +106,7 @@ partialBlock
   : openPartialBlock program closeBlock -> yy.preparePartialBlock($1, $2, $3, @$)
   ;
 openPartialBlock
-  : OPEN_PARTIAL_BLOCK partialName param* hash? CLOSE -> { name: $2, params: $3, hash: $4, strip: yy.stripFlags($1, $5) }
+  : OPEN_PARTIAL_BLOCK partialName param* hash? CLOSE -> { path: $2, params: $3, hash: $4, strip: yy.stripFlags($1, $5) }
   ;
 
 param
