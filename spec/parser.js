@@ -228,7 +228,10 @@ describe('parser', function() {
 
   describe('externally compiled AST', function() {
     it('can pass through an already-compiled AST', function() {
-      equals(astFor(new Handlebars.AST.Program([new Handlebars.AST.ContentStatement('Hello')], null)), 'CONTENT[ \'Hello\' ]\n');
+      equals(astFor({
+        type: 'Program',
+        body: [ {type: 'ContentStatement', value: 'Hello'}]
+      }), 'CONTENT[ \'Hello\' ]\n');
     });
   });
 

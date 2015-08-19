@@ -18,12 +18,24 @@ statement
   | rawBlock -> $1
   | partial -> $1
   | content -> $1
-  | COMMENT -> new yy.CommentStatement(yy.stripComment($1), yy.stripFlags($1, $1), yy.locInfo(@$))
-  ;
+  | COMMENT {
+    $$ = {
+      type: 'CommentStatement',
+      value: yy.stripComment($1),
+      strip: yy.stripFlags($1, $1),
+      loc: yy.locInfo(@$)
+    };
+  };
 
 content
-  : CONTENT -> new yy.ContentStatement($1, yy.locInfo(@$))
-  ;
+  : CONTENT {
+    $$ = {
+      type: 'ContentStatement',
+      original: $1,
+      value: $1,
+      loc: yy.locInfo(@$)
+    };
+  };
 
 rawBlock
   : openRawBlock content+ END_RAW_BLOCK -> yy.prepareRawBlock($1, $2, $3, @$)
@@ -77,7 +89,17 @@ mustache
   ;
 
 partial
-  : OPEN_PARTIAL partialName param* hash? CLOSE -> new yy.PartialStatement($2, $3, $4, yy.stripFlags($1, $5), yy.locInfo(@$))
+  : OPEN_PARTIAL partialName param* hash? CLOSE {
+    $$ = {
+      type: 'PartialStatement',
+      name: $2,
+      params: $3,
+      hash: $4,
+      indent: '',
+      strip: yy.stripFlags($1, $5),
+      loc: yy.locInfo(@$)
+    };
+  }
   ;
 
 param
@@ -86,15 +108,22 @@ param
   ;
 
 sexpr
-  : OPEN_SEXPR helperName param* hash? CLOSE_SEXPR -> new yy.SubExpression($2, $3, $4, yy.locInfo(@$))
-  ;
+  : OPEN_SEXPR helperName param* hash? CLOSE_SEXPR {
+    $$ = {
+      type: 'SubExpression',
+      path: $2,
+      params: $3,
+      hash: $4,
+      loc: yy.locInfo(@$)
+    };
+  };
 
 hash
-  : hashSegment+ -> new yy.Hash($1, yy.locInfo(@$))
+  : hashSegment+ -> {type: 'Hash', pairs: $1, loc: yy.locInfo(@$)}
   ;
 
 hashSegment
-  : ID EQUALS param -> new yy.HashPair(yy.id($1), $3, yy.locInfo(@$))
+  : ID EQUALS param -> {type: 'HashPair', key: yy.id($1), value: $3, loc: yy.locInfo(@$)}
   ;
 
 blockParams
@@ -104,11 +133,11 @@ blockParams
 helperName
   : path -> $1
   | dataName -> $1
-  | STRING -> new yy.StringLiteral($1, yy.locInfo(@$))
-  | NUMBER -> new yy.NumberLiteral($1, yy.locInfo(@$))
-  | BOOLEAN -> new yy.BooleanLiteral($1, yy.locInfo(@$))
-  | UNDEFINED -> new yy.UndefinedLiteral(yy.locInfo(@$))
-  | NULL -> new yy.NullLiteral(yy.locInfo(@$))
+  | STRING -> {type: 'StringLiteral', value: $1, original: $1, loc: yy.locInfo(@$)}
+  | NUMBER -> {type: 'NumberLiteral', value: Number($1), original: Number($1), loc: yy.locInfo(@$)}
+  | BOOLEAN -> {type: 'BooleanLiteral', value: $1 === 'true', original: $1 === 'true', loc: yy.locInfo(@$)}
+  | UNDEFINED -> {type: 'UndefinedLiteral', original: undefined, value: undefined, loc: yy.locInfo(@$)}
+  | NULL -> {type: 'NullLiteral', original: null, value: null, loc: yy.locInfo(@$)}
   ;
 
 partialName

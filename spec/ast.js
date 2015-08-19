@@ -5,159 +5,46 @@ describe('ast', function() {
 
   var AST = Handlebars.AST;
 
-  var LOCATION_INFO = {
-    start: {
-      line: 1,
-      column: 1
-    },
-    end: {
-      line: 1,
-      column: 1
-    }
-  };
-
-  function testLocationInfoStorage(node) {
-    equals(node.loc.start.line, 1);
-    equals(node.loc.start.column, 1);
-    equals(node.loc.end.line, 1);
-    equals(node.loc.end.column, 1);
-  }
-
-  describe('MustacheStatement', function() {
-    it('should store args', function() {
-      var mustache = new AST.MustacheStatement({}, null, null, true, {}, LOCATION_INFO);
-      equals(mustache.type, 'MustacheStatement');
-      equals(mustache.escaped, true);
-      testLocationInfoStorage(mustache);
-    });
-  });
   describe('BlockStatement', function() {
     it('should throw on mustache mismatch', function() {
       shouldThrow(function() {
         handlebarsEnv.parse('\n  {{#foo}}{{/bar}}');
       }, Handlebars.Exception, "foo doesn't match bar - 2:5");
     });
-
-    it('stores location info', function() {
-      var mustacheNode = new AST.MustacheStatement([{ original: 'foo'}], null, null, false, {});
-      var block = new AST.BlockStatement(
-            mustacheNode,
-            null, null,
-            {body: []},
-            {body: []},
-            {},
-            {},
-            {},
-            LOCATION_INFO);
-      testLocationInfoStorage(block);
-    });
-  });
-  describe('PathExpression', function() {
-    it('stores location info', function() {
-      var idNode = new AST.PathExpression(false, 0, [], 'foo', LOCATION_INFO);
-      testLocationInfoStorage(idNode);
-    });
-  });
-
-  describe('Hash', function() {
-    it('stores location info', function() {
-      var hash = new AST.Hash([], LOCATION_INFO);
-      testLocationInfoStorage(hash);
-    });
-  });
-
-  describe('ContentStatement', function() {
-    it('stores location info', function() {
-      var content = new AST.ContentStatement('HI', LOCATION_INFO);
-      testLocationInfoStorage(content);
-    });
-  });
-
-  describe('CommentStatement', function() {
-    it('stores location info', function() {
-      var comment = new AST.CommentStatement('HI', {}, LOCATION_INFO);
-      testLocationInfoStorage(comment);
-    });
-  });
-
-  describe('NumberLiteral', function() {
-    it('stores location info', function() {
-      var integer = new AST.NumberLiteral('6', LOCATION_INFO);
-      testLocationInfoStorage(integer);
-    });
-  });
-
-  describe('StringLiteral', function() {
-    it('stores location info', function() {
-      var string = new AST.StringLiteral('6', LOCATION_INFO);
-      testLocationInfoStorage(string);
-    });
-  });
-
-  describe('BooleanLiteral', function() {
-    it('stores location info', function() {
-      var bool = new AST.BooleanLiteral('true', LOCATION_INFO);
-      testLocationInfoStorage(bool);
-    });
-  });
-
-  describe('PartialStatement', function() {
-    it('provides default params', function() {
-      var pn = new AST.PartialStatement('so_partial', undefined, {}, {}, LOCATION_INFO);
-      equals(pn.params.length, 0);
-    });
-    it('stores location info', function() {
-      var pn = new AST.PartialStatement('so_partial', [], {}, {}, LOCATION_INFO);
-      testLocationInfoStorage(pn);
-    });
-  });
-
-  describe('Program', function() {
-    it('storing location info', function() {
-      var pn = new AST.Program([], null, {}, LOCATION_INFO);
-      testLocationInfoStorage(pn);
-    });
-  });
-
-  describe('SubExpression', function() {
-    it('provides default params', function() {
-      var pn = new AST.SubExpression('path', undefined, {}, LOCATION_INFO);
-      equals(pn.params.length, 0);
-    });
   });
 
   describe('helpers', function() {
     describe('#helperExpression', function() {
       it('should handle mustache statements', function() {
-        equals(AST.helpers.helperExpression(new AST.MustacheStatement('foo', [], undefined, false, {}, LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.MustacheStatement('foo', [1], undefined, false, {}, LOCATION_INFO)), true);
-        equals(AST.helpers.helperExpression(new AST.MustacheStatement('foo', [], {}, false, {}, LOCATION_INFO)), true);
+        equals(AST.helpers.helperExpression({type: 'MustacheStatement', params: [], hash: undefined}), false);
+        equals(AST.helpers.helperExpression({type: 'MustacheStatement', params: [1], hash: undefined}), true);
+        equals(AST.helpers.helperExpression({type: 'MustacheStatement', params: [], hash: {}}), true);
       });
       it('should handle block statements', function() {
-        equals(AST.helpers.helperExpression(new AST.BlockStatement('foo', [], undefined, false, {}, LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.BlockStatement('foo', [1], undefined, false, {}, LOCATION_INFO)), true);
-        equals(AST.helpers.helperExpression(new AST.BlockStatement('foo', [], {}, false, {}, LOCATION_INFO)), true);
+        equals(AST.helpers.helperExpression({type: 'BlockStatement', params: [], hash: undefined}), false);
+        equals(AST.helpers.helperExpression({type: 'BlockStatement', params: [1], hash: undefined}), true);
+        equals(AST.helpers.helperExpression({type: 'BlockStatement', params: [], hash: {}}), true);
       });
       it('should handle subexpressions', function() {
-        equals(AST.helpers.helperExpression(new AST.SubExpression()), true);
+        equals(AST.helpers.helperExpression({type: 'SubExpression'}), true);
       });
       it('should work with non-helper nodes', function() {
-        equals(AST.helpers.helperExpression(new AST.Program([], [], {}, LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression({type: 'Program'}), false);
 
-        equals(AST.helpers.helperExpression(new AST.PartialStatement()), false);
-        equals(AST.helpers.helperExpression(new AST.ContentStatement('a', LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.CommentStatement('a', {}, LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression({type: 'PartialStatement'}), false);
+        equals(AST.helpers.helperExpression({type: 'ContentStatement'}), false);
+        equals(AST.helpers.helperExpression({type: 'CommentStatement'}), false);
 
-        equals(AST.helpers.helperExpression(new AST.PathExpression(false, 0, ['a'], 'a', LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression({type: 'PathExpression'}), false);
 
-        equals(AST.helpers.helperExpression(new AST.StringLiteral('a', LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.NumberLiteral(1, LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.BooleanLiteral(true, LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.UndefinedLiteral(LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.NullLiteral(LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression({type: 'StringLiteral'}), false);
+        equals(AST.helpers.helperExpression({type: 'NumberLiteral'}), false);
+        equals(AST.helpers.helperExpression({type: 'BooleanLiteral'}), false);
+        equals(AST.helpers.helperExpression({type: 'UndefinedLiteral'}), false);
+        equals(AST.helpers.helperExpression({type: 'NullLiteral'}), false);
 
-        equals(AST.helpers.helperExpression(new AST.Hash([], LOCATION_INFO)), false);
-        equals(AST.helpers.helperExpression(new AST.HashPair('foo', 'bar', LOCATION_INFO)), false);
+        equals(AST.helpers.helperExpression({type: 'Hash'}), false);
+        equals(AST.helpers.helperExpression({type: 'HashPair'}), false);
       });
     });
   });

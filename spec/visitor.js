@@ -49,7 +49,7 @@ describe('Visitor', function() {
 
         visitor.mutating = true;
         visitor.StringLiteral = function(string) {
-          return new Handlebars.AST.NumberLiteral(42, string.locInfo);
+          return {type: 'NumberLiteral', value: 42, loc: string.loc};
         };
 
         var ast = Handlebars.parse('{{foo foo="foo"}}');
@@ -109,7 +109,7 @@ describe('Visitor', function() {
 
         visitor.mutating = true;
         visitor.StringLiteral = function(string) {
-          return new Handlebars.AST.NumberLiteral(42, string.locInfo);
+          return {type: 'NumberLiteral', value: 42, loc: string.locInfo};
         };
 
         var ast = Handlebars.parse('{{foo "foo"}}');
