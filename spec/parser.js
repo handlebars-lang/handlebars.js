@@ -247,6 +247,20 @@ describe('parser', function() {
     });
   });
 
+  describe('directives', function() {
+    it('should parse block directives', function() {
+      equals(astFor('{{#* foo}}{{/foo}}'), 'DIRECTIVE BLOCK:\n  PATH:foo []\n  PROGRAM:\n');
+    });
+    it('should parse directives', function() {
+      equals(astFor('{{* foo}}'), '{{ DIRECTIVE PATH:foo [] }}\n');
+    });
+    it('should fail if directives have inverse', function() {
+      shouldThrow(function() {
+        astFor('{{#* foo}}{{^}}{{/foo}}');
+      }, Error, /Unexpected inverse/);
+    });
+  });
+
   it('GH1024 - should track program location properly', function() {
     var p = Handlebars.parse('\n'
       + '  {{#if foo}}\n'

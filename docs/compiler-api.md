@@ -120,6 +120,33 @@ interface CommentStatement <: Statement {
 }
 ```
 
+
+```java
+interface Decorator <: Statement {
+    type: "Decorator";
+
+    path: PathExpression | Literal;
+    params: [ Expression ];
+    hash: Hash;
+
+    strip: StripFlags | null;
+}
+
+interface DecoratorBlock <: Statement {
+    type: "DecoratorBlock";
+    path: PathExpression | Literal;
+    params: [ Expression ];
+    hash: Hash;
+
+    program: Program | null;
+
+    openStrip: StripFlags | null;
+    closeStrip: StripFlags | null;
+}
+```
+
+Decorator paths only utilize the `path.original` value and as a consequence do not support depthed evaluation.
+
 ### Expressions
 
 ```java

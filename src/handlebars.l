@@ -81,7 +81,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                  }
 <mu>"{{"{LEFT_STRIP}?">"         return 'OPEN_PARTIAL';
 <mu>"{{"{LEFT_STRIP}?"#>"        return 'OPEN_PARTIAL_BLOCK';
-<mu>"{{"{LEFT_STRIP}?"#"         return 'OPEN_BLOCK';
+<mu>"{{"{LEFT_STRIP}?"#""*"?     return 'OPEN_BLOCK';
 <mu>"{{"{LEFT_STRIP}?"/"         return 'OPEN_ENDBLOCK';
 <mu>"{{"{LEFT_STRIP}?"^"\s*{RIGHT_STRIP}?"}}"        this.popState(); return 'INVERSE';
 <mu>"{{"{LEFT_STRIP}?\s*"else"\s*{RIGHT_STRIP}?"}}"  this.popState(); return 'INVERSE';
@@ -98,7 +98,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
   this.popState();
   return 'COMMENT';
 }
-<mu>"{{"{LEFT_STRIP}?            return 'OPEN';
+<mu>"{{"{LEFT_STRIP}?"*"?        return 'OPEN';
 
 <mu>"="                          return 'EQUALS';
 <mu>".."                         return 'ID';

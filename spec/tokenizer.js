@@ -241,6 +241,15 @@ describe('Tokenizer', function() {
     shouldMatchTokens(result, ['OPEN_BLOCK', 'ID', 'CLOSE', 'CONTENT', 'OPEN_ENDBLOCK', 'ID', 'CLOSE']);
   });
 
+  it('tokenizes directives', function() {
+    shouldMatchTokens(
+        tokenize('{{#*foo}}content{{/foo}}'),
+        ['OPEN_BLOCK', 'ID', 'CLOSE', 'CONTENT', 'OPEN_ENDBLOCK', 'ID', 'CLOSE']);
+    shouldMatchTokens(
+        tokenize('{{*foo}}'),
+        ['OPEN', 'ID', 'CLOSE']);
+  });
+
   it('tokenizes inverse sections as "INVERSE"', function() {
     shouldMatchTokens(tokenize('{{^}}'), ['INVERSE']);
     shouldMatchTokens(tokenize('{{else}}'), ['INVERSE']);

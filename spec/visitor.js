@@ -9,6 +9,8 @@ describe('Visitor', function() {
     var visitor = new Handlebars.Visitor();
     visitor.accept(Handlebars.parse('{{foo}}{{#foo (bar 1 "1" true undefined null) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'));
     visitor.accept(Handlebars.parse('{{#> bar }} {{/bar}}'));
+    visitor.accept(Handlebars.parse('{{#* bar }} {{/bar}}'));
+    visitor.accept(Handlebars.parse('{{* bar }}'));
   });
 
   it('should traverse to stubs', function() {
