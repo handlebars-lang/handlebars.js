@@ -45,7 +45,7 @@
     "no-extra-boolean-cast": 2,
     "no-extra-parens": 0,
     "no-extra-semi": 2,
-    "no-func-assign": 2,
+    "no-func-assign": 0,
 
     // Stylistic... might consider disallowing in the future
     "no-inner-declarations": 0,

@@ -276,7 +276,7 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 
   - `parent` is the existing code in the path resolution
   - `name` is the current path component
-  - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, or `partial`.
+  - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, `decorator`, or `partial`.
 
   Note that this does not impact dynamic partials, which implementors need to be aware of. Overriding `VM.resolvePartial` may be required to support dynamic cases.
 
