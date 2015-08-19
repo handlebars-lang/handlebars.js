@@ -166,4 +166,44 @@ describe('blocks', function() {
       shouldCompileTo(string, [hash, undefined, undefined, true], 'Goodbye cruel ');
     });
   });
+
+  describe('decorators', function() {
+    describe('registration', function() {
+      it('unregisters', function() {
+        handlebarsEnv.decorators = {};
+
+        handlebarsEnv.registerDecorator('foo', function() {
+          return 'fail';
+        });
+
+        equals(!!handlebarsEnv.decorators.foo, true);
+        handlebarsEnv.unregisterDecorator('foo');
+        equals(handlebarsEnv.decorators.foo, undefined);
+      });
+
+      it('allows multiple globals', function() {
+        handlebarsEnv.decorators = {};
+
+        handlebarsEnv.registerDecorator({
+          foo: function() {},
+          bar: function() {}
+        });
+
+        equals(!!handlebarsEnv.decorators.foo, true);
+        equals(!!handlebarsEnv.decorators.bar, true);
+        handlebarsEnv.unregisterDecorator('foo');
+        handlebarsEnv.unregisterDecorator('bar');
+        equals(handlebarsEnv.decorators.foo, undefined);
+        equals(handlebarsEnv.decorators.bar, undefined);
+      });
+      it('fails with multiple and args', function() {
+        shouldThrow(function() {
+          handlebarsEnv.registerDecorator({
+            world: function() { return 'world!'; },
+            testHelper: function() { return 'found it!'; }
+          }, {});
+        }, Error, 'Arg not supported with multiple decorators');
+      });
+    });
+  });
 });
