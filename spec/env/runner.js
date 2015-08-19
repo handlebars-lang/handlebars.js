@@ -13,9 +13,9 @@ var files = fs.readdirSync(testDir)
       .filter(function(name) { return (/.*\.js$/).test(name); })
       .map(function(name) { return testDir + '/' + name; });
 
-run('./node', function() {
+run('./runtime', function() {
   run('./browser', function() {
-    run('./runtime', function() {
+    run('./node', function() {
       /*eslint-disable no-process-exit */
       process.exit(errors);
       /*eslint-enable no-process-exit */
