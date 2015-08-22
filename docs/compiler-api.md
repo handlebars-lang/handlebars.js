@@ -97,7 +97,8 @@ interface PartialBlockStatement <: Statement {
     program: Program | null;
 
     indent: string;
-    strip: StripFlags | null;
+    openStrip: StripFlags | null;
+    closeStrip: StripFlags | null;
 }
 ```
 
