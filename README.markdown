@@ -141,6 +141,7 @@ Handlebars in the Wild
   Handlebars.js with [jQuery](http://jquery.com/).
 * [Lumbar](http://walmartlabs.github.io/lumbar) provides easy module-based template management for
   handlebars projects.
+* [Marionette.Handlebars](https://github.com/hashchange/marionette.handlebars) adds support for Handlebars and Mustache templates to Marionette.
 * [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey,
   supports Handlebars.js as one of its template plugins.
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main
