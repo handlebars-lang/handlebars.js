@@ -214,6 +214,10 @@ describe('Tokenizer', function() {
     shouldMatchTokens(result, ['OPEN_PARTIAL', 'ID', 'SEP', 'ID', 'SEP', 'ID', 'CLOSE']);
   });
 
+  it('tokenizes partial block declarations', function() {
+    var result = tokenize('{{#> foo}}');
+    shouldMatchTokens(result, ['OPEN_PARTIAL_BLOCK', 'ID', 'CLOSE']);
+  });
   it('tokenizes a comment as "COMMENT"', function() {
     var result = tokenize('foo {{! this is a comment }} bar {{ baz }}');
     shouldMatchTokens(result, ['CONTENT', 'COMMENT', 'CONTENT', 'OPEN', 'ID', 'CLOSE']);

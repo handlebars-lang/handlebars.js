@@ -113,6 +113,18 @@ describe('parser', function() {
     equals(astFor('{{> shared/partial?.bar}}'), '{{> PARTIAL:shared/partial?.bar }}\n');
   });
 
+  it('parsers partial blocks', function() {
+    equals(astFor('{{#> foo}}bar{{/foo}}'), '{{> PARTIAL BLOCK:foo PROGRAM:\n  CONTENT[ \'bar\' ]\n }}\n');
+  });
+  it('should handle parser block mismatch', function() {
+    shouldThrow(function() {
+      astFor('{{#> goodbyes}}{{/hellos}}');
+    }, Error, (/goodbyes doesn't match hellos/));
+  });
+  it('parsers partial blocks with arguments', function() {
+    equals(astFor('{{#> foo context hash=value}}bar{{/foo}}'), '{{> PARTIAL BLOCK:foo PATH:context HASH{hash=PATH:value} PROGRAM:\n  CONTENT[ \'bar\' ]\n }}\n');
+  });
+
   it('parses a comment', function() {
     equals(astFor('{{! this is a comment }}'), "{{! ' this is a comment ' }}\n");
   });
