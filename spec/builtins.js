@@ -225,6 +225,16 @@ describe('builtin helpers', function() {
                 'each with array function argument ignores the contents when empty');
     });
 
+    it('each object when last key is an empty string', function() {
+      var string = '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!';
+      var hash = {goodbyes: {'a': {text: 'goodbye'}, b: {text: 'Goodbye'}, '': {text: 'GOODBYE'}}, world: 'world'};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!', 'Empty string key is not skipped');
+    });
+
     it('data passed to helpers', function() {
       var string = '{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}';
       var hash = {letters: ['a', 'b', 'c']};
