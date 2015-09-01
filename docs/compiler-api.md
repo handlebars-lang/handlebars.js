@@ -120,6 +120,33 @@ interface CommentStatement <: Statement {
 }
 ```
 
+
+```java
+interface Decorator <: Statement {
+    type: "Decorator";
+
+    path: PathExpression | Literal;
+    params: [ Expression ];
+    hash: Hash;
+
+    strip: StripFlags | null;
+}
+
+interface DecoratorBlock <: Statement {
+    type: "DecoratorBlock";
+    path: PathExpression | Literal;
+    params: [ Expression ];
+    hash: Hash;
+
+    program: Program | null;
+
+    openStrip: StripFlags | null;
+    closeStrip: StripFlags | null;
+}
+```
+
+Decorator paths only utilize the `path.original` value and as a consequence do not support depthed evaluation.
+
 ### Expressions
 
 ```java
@@ -249,7 +276,7 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 
   - `parent` is the existing code in the path resolution
   - `name` is the current path component
-  - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, or `partial`.
+  - `type` is the type of name being evaluated. May be one of `context`, `data`, `helper`, `decorator`, or `partial`.
 
   Note that this does not impact dynamic partials, which implementors need to be aware of. Overriding `VM.resolvePartial` may be required to support dynamic cases.
 

@@ -166,4 +166,182 @@ describe('blocks', function() {
       shouldCompileTo(string, [hash, undefined, undefined, true], 'Goodbye cruel ');
     });
   });
+
+  describe('decorators', function() {
+    it('should apply mustache decorators', function() {
+      var helpers = {
+        helper: function(options) {
+          return options.fn.run;
+        }
+      };
+      var decorators = {
+        decorator: function(fn) {
+          fn.run = 'success';
+          return fn;
+        }
+      };
+      shouldCompileTo(
+          '{{#helper}}{{*decorator}}{{/helper}}',
+          {hash: {}, helpers: helpers, decorators: decorators},
+          'success');
+    });
+    it('should apply allow undefined return', function() {
+      var helpers = {
+        helper: function(options) {
+          return options.fn() + options.fn.run;
+        }
+      };
+      var decorators = {
+        decorator: function(fn) {
+          fn.run = 'cess';
+        }
+      };
+      shouldCompileTo(
+          '{{#helper}}{{*decorator}}suc{{/helper}}',
+          {hash: {}, helpers: helpers, decorators: decorators},
+          'success');
+    });
+
+    it('should apply block decorators', function() {
+      var helpers = {
+        helper: function(options) {
+          return options.fn.run;
+        }
+      };
+      var decorators = {
+        decorator: function(fn, props, container, options) {
+          fn.run = options.fn();
+          return fn;
+        }
+      };
+      shouldCompileTo(
+          '{{#helper}}{{#*decorator}}success{{/decorator}}{{/helper}}',
+          {hash: {}, helpers: helpers, decorators: decorators},
+          'success');
+    });
+    it('should support nested decorators', function() {
+      var helpers = {
+        helper: function(options) {
+          return options.fn.run;
+        }
+      };
+      var decorators = {
+        decorator: function(fn, props, container, options) {
+          fn.run = options.fn.nested + options.fn();
+          return fn;
+        },
+        nested: function(fn, props, container, options) {
+          props.nested = options.fn();
+        }
+      };
+      shouldCompileTo(
+          '{{#helper}}{{#*decorator}}{{#*nested}}suc{{/nested}}cess{{/decorator}}{{/helper}}',
+          {hash: {}, helpers: helpers, decorators: decorators},
+          'success');
+    });
+
+    it('should apply multiple decorators', function() {
+      var helpers = {
+        helper: function(options) {
+          return options.fn.run;
+        }
+      };
+      var decorators = {
+        decorator: function(fn, props, container, options) {
+          fn.run = (fn.run || '') + options.fn();
+          return fn;
+        }
+      };
+      shouldCompileTo(
+          '{{#helper}}{{#*decorator}}suc{{/decorator}}{{#*decorator}}cess{{/decorator}}{{/helper}}',
+          {hash: {}, helpers: helpers, decorators: decorators},
+          'success');
+    });
+
+    it('should access parent variables', function() {
+      var helpers = {
+        helper: function(options) {
+          return options.fn.run;
+        }
+      };
+      var decorators = {
+        decorator: function(fn, props, container, options) {
+          fn.run = options.args;
+          return fn;
+        }
+      };
+      shouldCompileTo(
+          '{{#helper}}{{*decorator foo}}{{/helper}}',
+          {hash: {'foo': 'success'}, helpers: helpers, decorators: decorators},
+          'success');
+    });
+    it('should work with root program', function() {
+      var run;
+      var decorators = {
+        decorator: function(fn, props, container, options) {
+          equals(options.args[0], 'success');
+          run = true;
+          return fn;
+        }
+      };
+      shouldCompileTo(
+          '{{*decorator "success"}}',
+          {hash: {'foo': 'success'}, decorators: decorators},
+          '');
+      equals(run, true);
+    });
+    it('should fail when accessing variables from root', function() {
+      var run;
+      var decorators = {
+        decorator: function(fn, props, container, options) {
+          equals(options.args[0], undefined);
+          run = true;
+          return fn;
+        }
+      };
+      shouldCompileTo(
+          '{{*decorator foo}}',
+          {hash: {'foo': 'fail'}, decorators: decorators},
+          '');
+      equals(run, true);
+    });
+
+    describe('registration', function() {
+      it('unregisters', function() {
+        handlebarsEnv.decorators = {};
+
+        handlebarsEnv.registerDecorator('foo', function() {
+          return 'fail';
+        });
+
+        equals(!!handlebarsEnv.decorators.foo, true);
+        handlebarsEnv.unregisterDecorator('foo');
+        equals(handlebarsEnv.decorators.foo, undefined);
+      });
+
+      it('allows multiple globals', function() {
+        handlebarsEnv.decorators = {};
+
+        handlebarsEnv.registerDecorator({
+          foo: function() {},
+          bar: function() {}
+        });
+
+        equals(!!handlebarsEnv.decorators.foo, true);
+        equals(!!handlebarsEnv.decorators.bar, true);
+        handlebarsEnv.unregisterDecorator('foo');
+        handlebarsEnv.unregisterDecorator('bar');
+        equals(handlebarsEnv.decorators.foo, undefined);
+        equals(handlebarsEnv.decorators.bar, undefined);
+      });
+      it('fails with multiple and args', function() {
+        shouldThrow(function() {
+          handlebarsEnv.registerDecorator({
+            world: function() { return 'world!'; },
+            testHelper: function() { return 'found it!'; }
+          }, {});
+        }, Error, 'Arg not supported with multiple decorators');
+      });
+    });
+  });
 });

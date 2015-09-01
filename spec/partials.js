@@ -257,6 +257,45 @@ describe('partials', function() {
     });
   });
 
+  describe('inline partials', function() {
+    it('should define inline partials for template', function() {
+      shouldCompileTo('{{#*inline "myPartial"}}success{{/inline}}{{> myPartial}}', {}, 'success');
+    });
+    it('should overwrite multiple partials in the same template', function() {
+      shouldCompileTo('{{#*inline "myPartial"}}fail{{/inline}}{{#*inline "myPartial"}}success{{/inline}}{{> myPartial}}', {}, 'success');
+    });
+    it('should define inline partials for block', function() {
+      shouldCompileTo('{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{> myPartial}}{{/with}}', {}, 'success');
+      shouldThrow(function() {
+        shouldCompileTo('{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{/with}}{{> myPartial}}', {}, 'success');
+      }, Error, /myPartial could not/);
+    });
+    it('should override global partials', function() {
+      shouldCompileTo('{{#*inline "myPartial"}}success{{/inline}}{{> myPartial}}', {hash: {}, partials: {myPartial: function() { return 'fail'; }}}, 'success');
+    });
+    it('should override template partials', function() {
+      shouldCompileTo('{{#*inline "myPartial"}}fail{{/inline}}{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{> myPartial}}{{/with}}', {}, 'success');
+    });
+    it('should override partials down the entire stack', function() {
+      shouldCompileTo('{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{#with .}}{{#with .}}{{> myPartial}}{{/with}}{{/with}}{{/with}}', {}, 'success');
+    });
+
+    it('should define inline partials for partial call', function() {
+      shouldCompileToWithPartials(
+        '{{#*inline "myPartial"}}success{{/inline}}{{> dude}}',
+        [{}, {}, {dude: '{{> myPartial }}'}],
+        true,
+        'success');
+    });
+    it('should define inline partials in partial block call', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}{{#*inline "myPartial"}}success{{/inline}}{{/dude}}',
+        [{}, {}, {dude: '{{> myPartial }}'}],
+        true,
+        'success');
+    });
+  });
+
   it('should pass compiler flags', function() {
     if (Handlebars.compile) {
       var env = Handlebars.create();

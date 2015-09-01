@@ -14,19 +14,19 @@ describe('runtime', function() {
     it('should throw on version mismatch', function() {
       shouldThrow(function() {
         Handlebars.template({
-          main: true,
+          main: {},
           compiler: [Handlebars.COMPILER_REVISION + 1]
         });
       }, Error, /Template was precompiled with a newer version of Handlebars than the current runtime/);
       shouldThrow(function() {
         Handlebars.template({
-          main: true,
+          main: {},
           compiler: [Handlebars.COMPILER_REVISION - 1]
         });
       }, Error, /Template was precompiled with an older version of Handlebars than the current runtime/);
       shouldThrow(function() {
         Handlebars.template({
-          main: true
+          main: {}
         });
       }, Error, /Template was precompiled with an older version of Handlebars than the current runtime/);
     });
