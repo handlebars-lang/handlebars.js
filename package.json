@@ -46,7 +46,7 @@
     "grunt-contrib-requirejs": "0.x",
     "grunt-contrib-uglify": "0.x",
     "grunt-contrib-watch": "0.x",
-    "grunt-eslint": "^11.0.0",
+    "grunt-eslint": "^17.1.0",
     "grunt-saucelabs": "8.x",
     "grunt-webpack": "^1.0.8",
     "istanbul": "^0.3.0",

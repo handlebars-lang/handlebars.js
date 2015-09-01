@@ -16,9 +16,9 @@ describe('javascript-compiler api', function() {
       handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function(parent, name) {
         return parent + '.bar_' + name;
       };
-      /*eslint-disable camelcase */
+      /* eslint-disable camelcase */
       shouldCompileTo('{{foo}}', { bar_foo: 'food' }, 'food');
-      /*eslint-enable camelcase */
+      /* eslint-enable camelcase */
     });
 
     // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases

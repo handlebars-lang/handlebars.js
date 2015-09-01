@@ -257,7 +257,7 @@ describe('builtin helpers', function() {
   });
 
   describe('#log', function() {
-    /*eslint-disable no-console */
+    /* eslint-disable no-console */
     if (typeof console === 'undefined') {
       return;
     }
@@ -408,7 +408,7 @@ describe('builtin helpers', function() {
       shouldCompileTo(string, hash, '');
       equals(true, called);
     });
-    /*eslint-enable no-console */
+    /* eslint-enable no-console */
   });
 
 

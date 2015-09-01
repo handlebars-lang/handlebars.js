@@ -1,7 +1,7 @@
 var _ = require('underscore'),
     runner = require('./util/template-runner'),
 
-    eco, dust, Handlebars, Mustache, eco;
+    eco, dust, Handlebars, Mustache;
 
 try {
   dust = require('dustjs-linkedin');

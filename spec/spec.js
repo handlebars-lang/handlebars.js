@@ -34,9 +34,9 @@ describe('spec', function() {
       var data = _.clone(test.data);
       if (data.lambda) {
         // Blergh
-        /*eslint-disable no-eval */
+        /* eslint-disable no-eval */
         data.lambda = eval('(' + data.lambda.js + ')');
-        /*eslint-enable no-eval */
+        /* eslint-enable no-eval */
       }
       it(name + ' - ' + test.name, function() {
         if (test.partials) {

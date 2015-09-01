@@ -40,7 +40,7 @@
     "no-dupe-keys": 2,
     "no-duplicate-case": 2,
     "no-empty": 2,
-    "no-empty-class": 2,
+    "no-empty-character-class": 2,
     "no-ex-assign": 2,
     "no-extra-boolean-cast": 2,
     "no-extra-parens": 0,
@@ -55,7 +55,7 @@
     "no-negated-in-lhs": 2,
     "no-obj-calls": 2,
     "no-regex-spaces": 2,
-    "no-reserved-keys": 2,    // Important for IE
+    "quote-props": [2, "as-needed", {"keywords": true}],
     "no-sparse-arrays": 0,
 
     // Optimizer and coverage will handle/highlight this and can be useful for debugging
@@ -175,7 +175,7 @@
     "no-ternary": 0,
     "no-trailing-spaces": 2,
     "no-underscore-dangle": 0,
-    "no-wrap-func": 2,
+    "no-extra-parens": [2, "functions"],
     "one-var": 0,
     "operator-assignment": 0,
     "padded-blocks": 0,
@@ -192,7 +192,7 @@
     "space-infix-ops": 2,
     "space-return-throw-case": 2,
     "space-unary-ops": 2,
-    "spaced-line-comment": 2,
+    "spaced-comment": [2, "always", {"markers": [","]}],
     "wrap-regex": 1,
 
     "no-var": 1

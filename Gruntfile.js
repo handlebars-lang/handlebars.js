@@ -1,4 +1,4 @@
-/*eslint-disable no-process-env */
+/* eslint-disable no-process-env */
 module.exports = function(grunt) {
 
   grunt.initConfig({
