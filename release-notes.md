@@ -2,7 +2,50 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.0...master)
+
+## v4.0.0 - September 1st, 2015
+- [#1082](https://github.com/wycats/handlebars.js/pull/1082) - Decorators and Inline Partials ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#1076](https://github.com/wycats/handlebars.js/pull/1076) - Implement partial blocks ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#1087](https://github.com/wycats/handlebars.js/pull/1087) - Fix #each when last object entry has empty key ([@denniskuczynski](https://api.github.com/users/denniskuczynski))
+- [#1084](https://github.com/wycats/handlebars.js/pull/1084) - Bump uglify version to fix vulnerability ([@John-Steidley](https://api.github.com/users/John-Steidley))
+- [#1068](https://github.com/wycats/handlebars.js/pull/1068) - Fix typo ([@0xack13](https://api.github.com/users/0xack13))
+- [#1060](https://github.com/wycats/handlebars.js/pull/1060) - #1056 Fixed grammar for nested raw blocks ([@ericbn](https://api.github.com/users/ericbn))
+- [#1052](https://github.com/wycats/handlebars.js/pull/1052) - Updated year in License ([@maqnouch](https://api.github.com/users/maqnouch))
+- [#1037](https://github.com/wycats/handlebars.js/pull/1037) - Fix minor typos in README ([@tomxtobin](https://api.github.com/users/tomxtobin))
+- [#1032](https://github.com/wycats/handlebars.js/issues/1032) - Is it possible to render a partial without the parent scope? ([@aputinski](https://api.github.com/users/aputinski))
+- [#1019](https://github.com/wycats/handlebars.js/pull/1019) - Fixes typo in tests ([@aymerick](https://api.github.com/users/aymerick))
+- [#1016](https://github.com/wycats/handlebars.js/issues/1016) - Version mis-match ([@mayankdedhia](https://api.github.com/users/mayankdedhia))
+- [#1023](https://github.com/wycats/handlebars.js/issues/1023) - is it possible for nested custom helpers to communicate between each other?
+- [#893](https://github.com/wycats/handlebars.js/issues/893) - [Proposal] Section blocks.
+- [#792](https://github.com/wycats/handlebars.js/issues/792) - feature request: inline partial definitions
+- [#583](https://github.com/wycats/handlebars.js/issues/583) - Parent path continues to drill down depth with multiple conditionals
+- [#404](https://github.com/wycats/handlebars.js/issues/404) - Add named child helpers that can be referenced by block helpers
+- Escape = in HTML content - [83b8e84](https://github.com/wycats/handlebars.js/commit/83b8e84)
+- Drop AST constructors in favor of JSON - [95d84ba](https://github.com/wycats/handlebars.js/commit/95d84ba)
+- Pass container rather than exec as context - [9a2d1d6](https://github.com/wycats/handlebars.js/commit/9a2d1d6)
+- Add ignoreStandalone compiler option - [ea3a5a1](https://github.com/wycats/handlebars.js/commit/ea3a5a1)
+- Ignore empty when iterating on sparse arrays - [06d515a](https://github.com/wycats/handlebars.js/commit/06d515a)
+- Add support for string and stdin precompilation - [0de8dac](https://github.com/wycats/handlebars.js/commit/0de8dac)
+- Simplify object assignment generation logic - [77e6bfc](https://github.com/wycats/handlebars.js/commit/77e6bfc)
+- Bulletproof AST.helpers.helperExpression - [93b0760](https://github.com/wycats/handlebars.js/commit/93b0760)
+- Always return string responses - [8e868ab](https://github.com/wycats/handlebars.js/commit/8e868ab)
+- Pass undefined fields to helpers in strict mode - [5d4b8da](https://github.com/wycats/handlebars.js/commit/5d4b8da)
+- Avoid depth creation when context remains the same - [279e038](https://github.com/wycats/handlebars.js/commit/279e038)
+- Improve logging API - [9a49d35](https://github.com/wycats/handlebars.js/commit/9a49d35)
+- Fix with operator in no @data mode - [231a8d7](https://github.com/wycats/handlebars.js/commit/231a8d7)
+- Allow empty key name in each iteration - [1bb640b](https://github.com/wycats/handlebars.js/commit/1bb640b)
+- Add with block parameter support - [2a85106](https://github.com/wycats/handlebars.js/commit/2a85106)
+- Fix escaping of non-javascript identifiers - [410141c](https://github.com/wycats/handlebars.js/commit/410141c)
+- Fix location information for programs - [93faffa](https://github.com/wycats/handlebars.js/commit/93faffa)
+
+Compatibility notes:
+- Depthed paths are now conditional pushed on to the stack. If the helper uses the same context, then a new stack is not created. This leads to behavior the better matches expectations for helpers like `if` that do not seem to alter the context. Any instances of `../` in templates will need to be checked for the correct behavior under 4.0.0. In general templates will either reduce the number of `../` instances or leave them as is. See [#1028](https://github.com/wycats/handlebars.js/issues/1028).
+- The `=` character is now HTML escaped. This closes a potential exploit case when using unquoted attributes, i.e. `<div foo={{bar}}>`. In general it's recommended that attributes always be quoted when their values are generated from a mustache to avoid any potential exploit surfaces.
+- AST constructors have been dropped in favor of plain old javascript objects
+- The runtime version has been increased. Precompiled templates will need to use runtime of at least 4.0.0.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.3...v4.0.0)
 
 ## v3.0.3 - April 28th, 2015
 - [#1004](https://github.com/wycats/handlebars.js/issues/1004) - Latest version breaks with RequireJS (global is undefined) ([@boskee](https://api.github.com/users/boskee))
