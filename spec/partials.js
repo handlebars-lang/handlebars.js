@@ -41,6 +41,21 @@ describe('partials', function() {
                     'Partials can be passed a context');
   });
 
+  it('partials with no context', function() {
+    var partial = '{{name}} ({{url}}) ';
+    var hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+    shouldCompileToWithPartials(
+        'Dudes: {{#dudes}}{{>dude}}{{/dudes}}',
+        [hash, {}, {dude: partial}, {explicitPartialContext: true}],
+        true,
+        'Dudes:  ()  () ');
+    shouldCompileToWithPartials(
+        'Dudes: {{#dudes}}{{>dude name="foo"}}{{/dudes}}',
+        [hash, {}, {dude: partial}, {explicitPartialContext: true}],
+        true,
+        'Dudes: foo () foo () ');
+  });
+
   it('partials with string context', function() {
     var string = 'Dudes: {{>dude "dudes"}}';
     var partial = '{{.}}';
