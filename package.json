@@ -29,7 +29,7 @@
     "uglify-js": "~2.4"
   },
   "devDependencies": {
-    "async": "^0.9.0",
+    "async": "^1.4.2",
     "aws-sdk": "~1.5.0",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
@@ -51,7 +51,6 @@
     "grunt-webpack": "^1.0.8",
     "istanbul": "^0.3.0",
     "jison": "~0.3.0",
-    "keen.io": "0.0.3",
     "mocha": "~1.20.0",
     "mock-stdin": "^0.3.0",
     "mustache": "0.x",
