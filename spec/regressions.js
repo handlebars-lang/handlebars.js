@@ -203,4 +203,13 @@ describe('Regressions', function() {
     array[3] = 'bar';
     shouldCompileTo('{{#each array}}{{@index}}{{.}}{{/each}}', {array: array}, '1foo3bar');
   });
+
+  it('should support multiple levels of inline partials', function() {
+    var string = '{{#> layout}}{{#*inline "subcontent"}}subcontent{{/inline}}{{/layout}}';
+    var partials = {
+      doctype: 'doctype{{> content}}',
+      layout: '{{#> doctype}}{{#*inline "content"}}layout{{> subcontent}}{{/inline}}{{/doctype}}'
+    };
+    shouldCompileToWithPartials(string, [{}, {}, partials], true, 'doctypelayoutsubcontent');
+  });
 });
