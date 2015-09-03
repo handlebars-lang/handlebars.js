@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.1...master)
+
+## v4.0.1 - September 2nd, 2015
+- Fix failure when using decorators in partials - 05b82a2
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.0...v4.0.1)
 
 ## v4.0.0 - September 1st, 2015
 - [#1082](https://github.com/wycats/handlebars.js/pull/1082) - Decorators and Inline Partials ([@kpdecker](https://api.github.com/users/kpdecker))
