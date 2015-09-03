@@ -29,7 +29,6 @@
     "uglify-js": "~2.4"
   },
   "devDependencies": {
-    "async": "^1.4.2",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
