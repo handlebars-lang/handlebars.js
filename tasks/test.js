@@ -32,7 +32,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test:cov', function() {
     var done = this.async();
 
-    var runner = childProcess.fork('node_modules/.bin/istanbul', ['cover', '--', './spec/env/runner.js'], {stdio: 'inherit'});
+    var runner = childProcess.fork('node_modules/.bin/istanbul', ['cover', '--source-map', '--', './spec/env/runner.js'], {stdio: 'inherit'});
     runner.on('close', function(code) {
       if (code != 0) {
         grunt.fatal(code + ' tests failed');
