@@ -50,7 +50,7 @@
 - Fix location information for programs - [93faffa](https://github.com/wycats/handlebars.js/commit/93faffa)
 
 Compatibility notes:
-- Depthed paths are now conditional pushed on to the stack. If the helper uses the same context, then a new stack is not created. This leads to behavior the better matches expectations for helpers like `if` that do not seem to alter the context. Any instances of `../` in templates will need to be checked for the correct behavior under 4.0.0. In general templates will either reduce the number of `../` instances or leave them as is. See [#1028](https://github.com/wycats/handlebars.js/issues/1028).
+- Depthed paths are now conditionally pushed on to the stack. If the helper uses the same context, then a new stack is not created. This leads to behavior that better matches expectations for helpers like `if` that do not seem to alter the context. Any instances of `../` in templates will need to be checked for the correct behavior under 4.0.0. In general templates will either reduce the number of `../` instances or leave them as is. See [#1028](https://github.com/wycats/handlebars.js/issues/1028).
 - The `=` character is now HTML escaped. This closes a potential exploit case when using unquoted attributes, i.e. `<div foo={{bar}}>`. In general it's recommended that attributes always be quoted when their values are generated from a mustache to avoid any potential exploit surfaces.
 - AST constructors have been dropped in favor of plain old javascript objects
 - The runtime version has been increased. Precompiled templates will need to use runtime of at least 4.0.0.
