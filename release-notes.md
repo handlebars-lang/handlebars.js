@@ -2,7 +2,12 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.2...master)
+
+## v4.0.2 - September 4th, 2015
+- [#1089](https://github.com/wycats/handlebars.js/issues/1089) - "Failover content" not working in multiple levels of inline partials ([@michaellopez](https://api.github.com/users/michaellopez))
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.1...v4.0.2)
 
 ## v4.0.1 - September 2nd, 2015
 - Fix failure when using decorators in partials - 05b82a2
