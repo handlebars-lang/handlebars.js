@@ -212,4 +212,12 @@ describe('Regressions', function() {
     };
     shouldCompileToWithPartials(string, [{}, {}, partials], true, 'doctypelayoutsubcontent');
   });
+  it('GH-1089: should support failover content in multiple levels of inline partials', function() {
+    var string = '{{#> layout}}{{/layout}}';
+    var partials = {
+      doctype: 'doctype{{> content}}',
+      layout: '{{#> doctype}}{{#*inline "content"}}layout{{#> subcontent}}subcontent{{/subcontent}}{{/inline}}{{/doctype}}'
+    };
+    shouldCompileToWithPartials(string, [{}, {}, partials], true, 'doctypelayoutsubcontent');
+  });
 });
