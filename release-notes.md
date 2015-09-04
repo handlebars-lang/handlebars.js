@@ -238,7 +238,7 @@ Compatibility notes:
   - INTEGER -> NUMBER
   - Additional PartialNode hash parameter
   - New RawBlockNode type
-- Data frames now have a `_parent` field. This is internal but is enumerable for performance/compatability reasons.
+- Data frames now have a `_parent` field. This is internal but is enumerable for performance/compatibility reasons.
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.3.0...v2.0.0-alpha.1)
 
