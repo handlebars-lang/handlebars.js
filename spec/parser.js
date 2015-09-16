@@ -39,6 +39,12 @@ describe('parser', function() {
   it('parses mustaches with - in a path', function() {
     equals(astFor('{{foo-bar}}'), '{{ PATH:foo-bar [] }}\n');
   });
+  it('parses mustaches with escaped [] in a path', function() {
+    equals(astFor('{{[foo[\\]]}}'), '{{ PATH:foo[] [] }}\n');
+  });
+  it('parses escaped \\\\ in path', function() {
+    equals(astFor('{{[foo\\\\]}}'), '{{ PATH:foo\\ [] }}\n');
+  });
 
   it('parses mustaches with parameters', function() {
     equals(astFor('{{foo bar}}'), '{{ PATH:foo [PATH:bar] }}\n');

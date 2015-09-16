@@ -146,6 +146,11 @@ describe('Tokenizer', function() {
     shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE', 'OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
   });
 
+  it('allows escaped literals in []', function() {
+    var result = tokenize('{{foo.[bar\\]]}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
+  });
+
   it('tokenizes {{.}} as OPEN ID CLOSE', function() {
     var result = tokenize('{{.}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE']);
