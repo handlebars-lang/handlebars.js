@@ -239,4 +239,12 @@ describe('Regressions', function() {
     };
     shouldCompileToWithPartials(string, [{}, {}, partials], true, 'doctypelayoutsubcontent');
   });
+  it('GH-1099: should support greater than 3 nested levels of inline partials', function() {
+    var string = '{{#> layout}}Outer{{/layout}}';
+    var partials = {
+      layout: '{{#> inner}}Inner{{/inner}}{{> @partial-block }}',
+      inner: ''
+    };
+    shouldCompileToWithPartials(string, [{}, {}, partials], true, 'Outer');
+  });
 });
