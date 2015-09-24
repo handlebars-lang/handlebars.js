@@ -61,12 +61,12 @@ global.shouldThrow = function(callback, type, msg) {
   try {
     callback();
     failed = true;
-  } catch (err) {
-    if (type && !(err instanceof type)) {
-      throw new AssertError('Type failure: ' + err);
+  } catch (caught) {
+    if (type && !(caught instanceof type)) {
+      throw new AssertError('Type failure: ' + caught);
     }
-    if (msg && !(msg.test ? msg.test(err.message) : msg === err.message)) {
-      throw new AssertError('Throw mismatch: Expected ' + err.message + ' to match ' + msg + '\n\n' + err.stack, shouldThrow);
+    if (msg && !(msg.test ? msg.test(caught.message) : msg === caught.message)) {
+      throw new AssertError('Throw mismatch: Expected ' + caught.message + ' to match ' + msg + '\n\n' + caught.stack, shouldThrow);
     }
   }
   if (failed) {

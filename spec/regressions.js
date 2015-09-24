@@ -215,7 +215,8 @@ describe('Regressions', function() {
             return 'found';
           }
         }
-        return 'not';
+        // And to make IE happy, check for the known string as length is not enumerated.
+        return (this == 'bat' ? 'found' : 'not');
       }
     };
 
