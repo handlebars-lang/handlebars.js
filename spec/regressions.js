@@ -204,6 +204,24 @@ describe('Regressions', function() {
     shouldCompileTo('{{#each array}}{{@index}}{{.}}{{/each}}', {array: array}, '1foo3bar');
   });
 
+  it('GH-1093: Undefined helper context', function() {
+    var obj = {foo: undefined, bar: 'bat'};
+    var helpers = {
+      helper: function() {
+        // It's valid to execute a block against an undefined context, but
+        // helpers can not do so, so we expect to have an empty object here;
+        for (var name in this) {
+          if (this.hasOwnProperty(name)) {
+            return 'found';
+          }
+        }
+        return 'not';
+      }
+    };
+
+    shouldCompileTo('{{#each obj}}{{{helper}}}{{.}}{{/each}}', [{obj: obj}, helpers], 'notfoundbat');
+  });
+
   it('should support multiple levels of inline partials', function() {
     var string = '{{#> layout}}{{#*inline "subcontent"}}subcontent{{/inline}}{{/layout}}';
     var partials = {
