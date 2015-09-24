@@ -2,7 +2,20 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.3...master)
+
+## v4.0.3 - September 23rd, 2015
+- [#1099](https://github.com/wycats/handlebars.js/issues/1099) - @partial-block is overridden ([@btmorex](https://api.github.com/users/btmorex))
+- [#1093](https://github.com/wycats/handlebars.js/issues/1093) - #each skips iteration on undefined values ([@florianpilz](https://api.github.com/users/florianpilz))
+- [#1092](https://github.com/wycats/handlebars.js/issues/1092) - Square braces in key name ([@distantnative](https://api.github.com/users/distantnative))
+- [#1091](https://github.com/wycats/handlebars.js/pull/1091) - fix typo in release notes ([@nikolas](https://api.github.com/users/nikolas))
+- [#1090](https://github.com/wycats/handlebars.js/pull/1090) - grammar fixes in 4.0.0 release notes ([@nikolas](https://api.github.com/users/nikolas))
+
+Compatibility notes:
+- `each` iteration with `undefined` values has been restored to the 3.0 behaviors. Helper calls with undefined context values will now execute against an arbitrary empty object to avoid executing against global object in non-strict mode.
+- `]` can now be included in `[]` wrapped identifiers by escaping with `\`. Any `[]` identifiers that include `\` will now have to properly escape these values.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.2...v4.0.3)
 
 ## v4.0.2 - September 4th, 2015
 - [#1089](https://github.com/wycats/handlebars.js/issues/1089) - "Failover content" not working in multiple levels of inline partials ([@michaellopez](https://api.github.com/users/michaellopez))
