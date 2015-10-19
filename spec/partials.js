@@ -103,7 +103,7 @@ describe('partials', function() {
     shouldThrow(function() {
       var undef;
       handlebarsEnv.registerPartial('undefined_test', undef);
-    }, Handlebars.Exception, 'Attempting to register a partial as undefined');
+    }, Handlebars.Exception, 'Attempting to register a partial called "undefined_test" as undefined');
   });
 
   it('rendering template partial in vm mode throws an exception', function() {
