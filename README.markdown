@@ -149,6 +149,7 @@ Handlebars in the Wild
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
 * [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
 * [DOMBars](https://github.com/blakeembrey/dombars) is a DOM-based templating engine built on the Handlebars parser and runtime
+* [promised-handlebars](https://github.com/nknapp/promised-handlebars) is a wrapper for Handlebars that allows helpers to return Promises.
 
 External Resources
 ------------------
