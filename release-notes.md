@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.4...master)
+
+## v4.0.4 - October 29th, 2015
+- [#1121](https://github.com/wycats/handlebars.js/pull/1121) - Include partial name in 'undefined partial' exception message ([@shinypb](https://api.github.com/users/shinypb))
+- [#1125](https://github.com/wycats/handlebars.js/pull/1125) - Add promised-handlebars to "in-the-wild"-list ([@nknapp](https://api.github.com/users/nknapp))
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.3...v4.0.4)
 
 ## v4.0.3 - September 23rd, 2015
 - [#1099](https://github.com/wycats/handlebars.js/issues/1099) - @partial-block is overridden ([@btmorex](https://api.github.com/users/btmorex))
