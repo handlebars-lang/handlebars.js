@@ -235,4 +235,29 @@ describe('subexpressions', function() {
       shouldCompileTo(string, [context, helpers], 'LOLLOL!');
     });
   });
+
+  it('subexpression with splat', function() {
+    var string = '{{component greeting=(translate **translateOptions)}}';
+    var context = {
+      translateOptions: {lang: 'esp', key: 'greeting'}
+    };
+
+    var helpers = {
+      component: function(options) {
+        return options.hash.greeting + ' Guybrush!';
+      },
+      translate: function(options) {
+        var hash = options.hash;
+        var dictionary = {
+          'esp': {greeting: 'Hola'}
+        };
+
+        return dictionary[hash.lang][hash.key];
+      }
+    };
+
+    shouldCompileTo(string, [context, helpers], 'Hola Guybrush!');
+
+  });
+
 });

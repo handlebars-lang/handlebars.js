@@ -93,6 +93,12 @@ describe('parser', function() {
     equals(astFor('{{foo omg bar=baz bat=\"bam\" baz=false}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=BOOLEAN{false}} }}\n');
   });
 
+  it('parses splat', function() {
+    equals(astFor('{{foo **bar}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:bar}} }}\n');
+    equals(astFor('{{foo ** bar}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:bar}} }}\n');
+    equals(astFor('{{foo **bar baz=bat}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:bar}, baz=PATH:bat} }}\n');
+  });
+
   it('parses contents followed by a mustache', function() {
     equals(astFor('foo bar {{baz}}'), 'CONTENT[ \'foo bar \' ]\n{{ PATH:baz [] }}\n');
   });
@@ -215,6 +221,10 @@ describe('parser', function() {
     shouldThrow(function() {
       astFor('{{{{goodbyes}}}} {{{{/hellos}}}}');
     }, Error, /goodbyes doesn't match hellos/);
+
+    shouldThrow(function() {
+      astFor('{{foo **}}');
+    }, Error, /Parse error on line 1/);
   });
 
   it('should handle invalid paths', function() {

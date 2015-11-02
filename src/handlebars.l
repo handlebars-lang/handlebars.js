@@ -12,7 +12,7 @@ function strip(start, end) {
 LEFT_STRIP    "~"
 RIGHT_STRIP   "~"
 
-LOOKAHEAD           [=~}\s\/.)|]
+LOOKAHEAD           [=~}\s\/.)|*]
 LITERAL_LOOKAHEAD   [~}\s)]
 
 /*
@@ -119,7 +119,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 <mu>"|"                          return 'CLOSE_BLOCK_PARAMS';
 
 <mu>{ID}                         return 'ID';
-
+<mu>"**"                         return 'SPLAT'
 <mu>'['('\\]'|[^\]])*']'         yytext = yytext.replace(/\\([\\\]])/g,'$1'); return 'ID';
 <mu>.                            return 'INVALID';
 
