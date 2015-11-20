@@ -125,7 +125,7 @@ module.exports = function(grunt) {
       options: {
         mangle: true,
         compress: true,
-        preserveComments: 'some'
+        preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
       },
       dist: {
         files: [{
