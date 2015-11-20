@@ -26,7 +26,7 @@
     "source-map": "^0.4.4"
   },
   "optionalDependencies": {
-    "uglify-js": "~2.6"
+    "uglify-js": "^2.6"
   },
   "devDependencies": {
     "aws-sdk": "^2.1.49",
