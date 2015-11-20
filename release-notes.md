@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.4...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.5...master)
+
+## v4.0.5 - November 19th, 2015
+- [#1132](https://github.com/wycats/handlebars.js/pull/1132) - Update uglify-js to avoid vulnerability ([@plynchnlm](https://api.github.com/users/plynchnlm))
+- [#1129](https://github.com/wycats/handlebars.js/issues/1129) - Minified lib returns an empty string ([@bricss](https://api.github.com/users/bricss))
+- Return current handlebars instance from noConflict - 685cf92
+- Add webpack to dev dependency to support npm 3 - 7a6c228
+- Further relax uglify dependency - 0a3b3c2
+- Include tests for minimized artifacts - c21118d
+- Fix lint errors under latest eslint - 9f59de9
+- Add print-script helper script - 98a6717
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.4...v4.0.5)
 
 ## v4.0.4 - October 29th, 2015
 - [#1121](https://github.com/wycats/handlebars.js/pull/1121) - Include partial name in 'undefined partial' exception message ([@shinypb](https://api.github.com/users/shinypb))
