@@ -192,8 +192,8 @@ describe('subexpressions', function() {
     });
   });
 
-  it('subexpression with splat', function() {
-    var string = '{{component greeting=(translate **translateOptions)}}';
+  it('subexpression with hash splat', function() {
+    var string = '{{component greeting=(translate ...=translateOptions)}}';
     var context = {
       translateOptions: {lang: 'esp', key: 'greeting'}
     };
@@ -213,7 +213,43 @@ describe('subexpressions', function() {
     };
 
     shouldCompileTo(string, [context, helpers], 'Hola Guybrush!');
-
   });
 
+  it('subexpression with hash splat', function() {
+    var string = '{{foo ...=(bar ...=baz)}}';
+    var context = {
+      baz: { a: 123, b: 456 }
+    };
+
+    var helpers = {
+      bar: function(options) {
+        return options.hash;
+      },
+      foo: function(options) {
+        var hash = options.hash;
+        return hash.a + hash.b;
+      }
+    };
+
+    shouldCompileTo(string, [context, helpers], '579');
+  });
+
+  it('subexpression with mixed splats', function() {
+    var string = '{{foo ...(bar ...=baz)}}';
+    var context = {
+      baz: { a: 123, b: 456 }
+    };
+
+    var helpers = {
+      bar: function(options) {
+        var hash = options.hash;
+        return [ hash.a, hash.b ];
+      },
+      foo: function(a, b) {
+        return a + b;
+      }
+    };
+
+    shouldCompileTo(string, [context, helpers], '579');
+  });
 });

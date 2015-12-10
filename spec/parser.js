@@ -94,9 +94,10 @@ describe('parser', function() {
   });
 
   it('parses splat', function() {
-    equals(astFor('{{foo **bar}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:bar}} }}\n');
-    equals(astFor('{{foo ** bar}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:bar}} }}\n');
-    equals(astFor('{{foo **bar baz=bat}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:bar}, baz=PATH:bat} }}\n');
+    equals(astFor('{{foo ...arr}}'), '{{ PATH:foo [SPLAT{PATH:arr}] }}\n');
+    equals(astFor('{{foo ...=obj}}'), '{{ PATH:foo [] HASH{SPLAT{PATH:obj}} }}\n');
+    equals(astFor('{{foo ...arr ...=obj}}'), '{{ PATH:foo [SPLAT{PATH:arr}] HASH{SPLAT{PATH:obj}} }}\n');
+    equals(astFor('{{foo foo ...arr bar ...=obj baz=obj2}}'), '{{ PATH:foo [PATH:foo, SPLAT{PATH:arr}, PATH:bar] HASH{SPLAT{PATH:obj}, baz=PATH:obj2} }}\n');
   });
 
   it('parses contents followed by a mustache', function() {
@@ -223,7 +224,11 @@ describe('parser', function() {
     }, Error, /goodbyes doesn't match hellos/);
 
     shouldThrow(function() {
-      astFor('{{foo **}}');
+      astFor('{{foo ...}}');
+    }, Error, /Parse error on line 1/);
+
+    shouldThrow(function() {
+      astFor('{{foo ...=lol ...baz}}');
     }, Error, /Parse error on line 1/);
   });
 

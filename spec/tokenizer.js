@@ -1,7 +1,5 @@
 function shouldMatchTokens(result, tokens) {
-  for (var index = 0; index < result.length; index++) {
-    equals(result[index].name, tokens[index]);
-  }
+  equals(result.map(function(r) { return r.name; }).toString(), tokens.toString());
 }
 function shouldBeToken(result, name, text) {
   equals(result.name, name);
@@ -97,7 +95,7 @@ describe('Tokenizer', function() {
 
   it('supports escaped mustaches after escaped escape characters', function() {
     var result = tokenize('{{foo}} \\\\{{bar}} \\{{baz}}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT', 'CONTENT']);
+    shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE', 'CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT', 'CONTENT']);
 
     shouldBeToken(result[3], 'CONTENT', ' \\');
     shouldBeToken(result[4], 'OPEN', '{{');
@@ -377,11 +375,17 @@ describe('Tokenizer', function() {
   });
 
   it('tokenizes splat', function() {
-    var result = tokenize('{{foo **bar}}');
+    var result = tokenize('{{foo ...bar}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'ID', 'CLOSE']);
 
-    result = tokenize('{{foo ** bar}}');
-    shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'ID', 'CLOSE']);
+    result = tokenize('{{foo ...=bar}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'EQUALS', 'ID', 'CLOSE']);
+
+    result = tokenize('{{foo ...bar ...bar ...=bar}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'ID', 'SPLAT', 'ID', 'SPLAT', 'EQUALS', 'ID', 'CLOSE']);
+
+    result = tokenize('{{foo ...=bar ...=foo}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'EQUALS', 'ID', 'SPLAT', 'EQUALS', 'ID', 'CLOSE']);
   });
 
   it('tokenizes special @ identifiers', function() {

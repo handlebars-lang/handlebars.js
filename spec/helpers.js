@@ -738,10 +738,9 @@ describe('helpers', function() {
     });
   });
 
-  describe('splat operators', function() {
-
-    it('basic splat test', function() {
-      var string = '{{hello  **splat }}';
+  describe('hash splat operators', function() {
+    it('basic hash splat', function() {
+      var string = '{{hello ...=splat }}';
       var hash = {splat: {firstName: 'Guybrush', lastName: 'Threepwood'}};
       var helpers = {
         hello: function(options) {
@@ -753,16 +752,8 @@ describe('helpers', function() {
       shouldCompileTo(string, [hash, helpers], 'Hi, my name is Guybrush Threepwood');
     });
 
-    it('fails with multiple splats', function() {
-      var string = '{{foo **bar **baz}}';
-      shouldThrow(function() {
-        CompilerContext.compile(string);
-      }, Error);
-
-    });
-
-    it('splat shadowing', function() {
-      var string = '{{helper **splat occupation="pirate" }}';
+    it('hash splat shadowing', function() {
+      var string = '{{helper ...=splat occupation="pirate" }}';
       var hash = {splat: {occupation: 'cannonball'}};
       var helpers = {
         helper: function(options) {
@@ -774,8 +765,8 @@ describe('helpers', function() {
       shouldCompileTo(string, [hash, helpers], 'I want to be a pirate!');
     });
 
-    it('splat test', function() {
-      var template = CompilerContext.compile('{{helper **foo.splat character=character }}');
+    it('hash splat with nested value', function() {
+      var template = CompilerContext.compile('{{helper ...=foo.splat character=character }}');
 
       var helpers = {
         helper: function(options) {
@@ -789,8 +780,22 @@ describe('helpers', function() {
       equals(result, 'Guybrush and the 3 headed monkey on Dinky Island', 'Splat test');
     });
 
-    it('splat with function', function() {
-      var template = CompilerContext.compile('{{helper **foo character=character }}');
+    it('multiple hash splats', function() {
+      var string = '{{hello  ...=splat0 middleName="Wallace" ...=splat1}}';
+      var hash = {splat0: {firstName: 'Guybrush', middleName: '__', lastName: '__'},
+                  splat1: {foo: '__', lastName: 'Threepwood'}};
+      var helpers = {
+        hello: function(options) {
+          var hash = options.hash;
+          return 'Hi, my name is ' + hash.firstName + ' ' + hash.middleName + ' ' + hash.lastName;
+        }
+      };
+
+      shouldCompileTo(string, [hash, helpers], 'Hi, my name is Guybrush Wallace Threepwood');
+    });
+
+    it('hash splat with function', function() {
+      var template = CompilerContext.compile('{{helper ...=foo character=character }}');
 
       var helpers = {
         helper: function(options) {
@@ -814,5 +819,63 @@ describe('helpers', function() {
       equals(result, 'Guybrush and the 3 headed monkey on DINKY Island', 'Splat function test');
     });
 
+    it('hash splat following hash pairs', function() {
+      var string = '{{hello firstName="Alex" middleName="Wallace" ...=splat }}';
+      var hash = {splat: {firstName: 'Guybrush', lastName: 'Threepwood'}};
+      var helpers = {
+        hello: function(options) {
+          var hash = options.hash;
+          return 'Hi, my name is ' + hash.firstName + ' ' + hash.middleName + ' ' + hash.lastName;
+        }
+      };
+
+      shouldCompileTo(string, [hash, helpers], 'Hi, my name is Guybrush Wallace Threepwood');
+    });
+
+    it('basic param splat', function() {
+      var string = '{{hello ...names}}';
+      var data = {names: ['Borflex', 'Snaggletooth']};
+      var helpers = {
+        hello: function(firstName, lastName) {
+          return 'Hi, my name is ' + firstName + ' ' + lastName;
+        }
+      };
+
+      shouldCompileTo(string, [data, helpers], 'Hi, my name is Borflex Snaggletooth');
+    });
+
+    function join() {
+      var args = [].slice.call(arguments);
+      args.pop();
+      return args.join('-');
+    }
+
+    it('multiple param splats', function() {
+      var string = '{{join ...foo ...bar}}';
+      var data = {foo: ['a', 'b'], bar: ['c', 'd']};
+      var helpers = { join: join };
+      shouldCompileTo(string, [data, helpers], 'a-b-c-d');
+    });
+
+    it('param splats mixed with normal params, start with splat', function() {
+      var string = '{{join ...foo bar ...baz woot}}';
+      var data = {foo: ['a', 'b'], bar: 'c', baz: ['d', 'e'], woot: 'f'};
+      var helpers = { join: join };
+      shouldCompileTo(string, [data, helpers], 'a-b-c-d-e-f');
+    });
+
+    it('param splats mixed with normal params, start with normal param', function() {
+      var string = '{{join aaa ...foo bar ...baz woot}}';
+      var data = {aaa: 'z', foo: ['a', 'b'], bar: 'c', baz: ['d', 'e'], woot: 'f'};
+      var helpers = { join: join };
+      shouldCompileTo(string, [data, helpers], 'z-a-b-c-d-e-f');
+    });
+
+    it('param splats mixed with literals, start with normal param', function() {
+      var string = '{{join "WOOP" aaa "THERE" ...foo "IT" bar "IS" ...baz woot}}';
+      var data = {aaa: 'z', foo: ['a', 'b'], bar: 'c', baz: ['d', 'e'], woot: 'f'};
+      var helpers = { join: join };
+      shouldCompileTo(string, [data, helpers], 'WOOP-z-THERE-a-b-IT-c-IS-d-e-f');
+    });
   });
 });

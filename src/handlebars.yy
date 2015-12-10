@@ -110,10 +110,14 @@ openPartialBlock
   : OPEN_PARTIAL_BLOCK partialName param* hash? CLOSE -> { path: $2, params: $3, hash: $4, strip: yy.stripFlags($1, $5) }
   ;
 
+
 param
   : helperName -> $1
+  | SPLAT helperName { $2.splat = $1; $$ = $2; }
   | sexpr -> $1
+  | SPLAT sexpr { $2.splat = $1; $$ = $2; }
   ;
+
 
 sexpr
   : OPEN_SEXPR helperName param* hash? CLOSE_SEXPR {
@@ -132,7 +136,7 @@ hash
 
 hashSegment
   : ID EQUALS param -> {type: 'HashPair', key: yy.id($1), value: $3, loc: yy.locInfo(@$)}
-  | SPLAT param -> {type: 'Splat', value: $2, loc: yy.locInfo(@$)}  
+  | SPLAT EQUALS param -> {type: 'Splat', value: $3, loc: yy.locInfo(@$)}
   ;
 
 blockParams
