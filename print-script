@@ -16,7 +16,6 @@ var template = Handlebars.precompile(script, {
       assumeObjects: true,
       compat: false,
       strict: true,
-      trackIds: true,
       knownHelpersOnly: false
     });
 
