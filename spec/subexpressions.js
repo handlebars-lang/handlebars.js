@@ -162,50 +162,6 @@ describe('subexpressions', function() {
     shouldCompileTo(string, [context, helpers], '<input aria-label="Name" placeholder="Example User" />');
   });
 
-  it('in string params mode,', function() {
-    var template = CompilerContext.compile('{{snog (blorg foo x=y) yeah a=b}}', {stringParams: true});
-
-    var helpers = {
-      snog: function(a, b, options) {
-        equals(a, 'foo');
-        equals(options.types.length, 2, 'string params for outer helper processed correctly');
-        equals(options.types[0], 'SubExpression', 'string params for outer helper processed correctly');
-        equals(options.types[1], 'PathExpression', 'string params for outer helper processed correctly');
-        return a + b;
-      },
-
-      blorg: function(a, options) {
-        equals(options.types.length, 1, 'string params for inner helper processed correctly');
-        equals(options.types[0], 'PathExpression', 'string params for inner helper processed correctly');
-        return a;
-      }
-    };
-
-    var result = template({
-      foo: {},
-      yeah: {}
-    }, {helpers: helpers});
-
-    equals(result, 'fooyeah');
-  });
-
-  it('as hashes in string params mode', function() {
-    var template = CompilerContext.compile('{{blog fun=(bork)}}', {stringParams: true});
-
-    var helpers = {
-      blog: function(options) {
-        equals(options.hashTypes.fun, 'SubExpression');
-        return 'val is ' + options.hash.fun;
-      },
-      bork: function() {
-        return 'BORK';
-      }
-    };
-
-    var result = template({}, {helpers: helpers});
-    equals(result, 'val is BORK');
-  });
-
   it('subexpression functions on the context', function() {
     var string = '{{foo (bar)}}!';
     var context = {
