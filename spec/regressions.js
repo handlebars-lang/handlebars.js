@@ -260,14 +260,12 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileTo(`
-      {{#each array}}
-       1. IF: {{#if true}}{{../name}}-{{../../name}}-{{../../../name}}{{/if}}
-       2. MYIF: {{#myif true}}{{../name}}={{../../name}}={{../../../name}}{{/myif}}
-      {{/each}}
-      `, [obj, helpers], `
-       1. IF: John--
-       2. MYIF: John==
-      `);
+    shouldCompileTo(
+      '{{#each array}}\n'
+      + ' 1. IF: {{#if true}}{{../name}}-{{../../name}}-{{../../../name}}{{/if}}\n'
+      + ' 2. MYIF: {{#myif true}}{{../name}}={{../../name}}={{../../../name}}{{/myif}}\n'
+      + '{{/each}}', [obj, helpers],
+      ' 1. IF: John--\n'
+      + ' 2. MYIF: John==\n');
   });
 });
