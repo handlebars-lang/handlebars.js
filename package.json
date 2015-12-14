@@ -42,7 +42,6 @@
     "grunt-contrib-concat": "0.x",
     "grunt-contrib-connect": "0.x",
     "grunt-contrib-copy": "0.x",
-    "grunt-contrib-requirejs": "0.x",
     "grunt-contrib-uglify": "0.x",
     "grunt-contrib-watch": "0.x",
     "grunt-eslint": "^17.1.0",
@@ -68,7 +67,7 @@
   "jspm": {
     "main": "handlebars",
     "directories": {
-      "lib": "dist/amd"
+      "lib": "dist/cjs"
     },
     "buildConfig": {
       "minify": true
