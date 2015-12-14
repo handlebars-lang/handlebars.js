@@ -42,6 +42,25 @@ The `grunt dev` implements watching for tests and allows for in browser testing 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
 
+##Running Tests
+
+To run tests locally, first install all dependencies.
+```sh
+npm install
+```
+
+Clone the mustache specs into the spec/mustache folder.
+```sh
+cd spec
+rm -r mustache
+git clone https://github.com/mustache/spec.git mustache
+```
+
+From the root directory, run the tests.
+```sh
+npm test
+```
+
 ## Ember testing
 
 The current ember distribution should be tested as part of the handlebars release process. This requires building the `handlebars-source` gem locally and then executing the ember test script.
