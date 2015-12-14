@@ -125,7 +125,7 @@ module.exports = function(grunt) {
       options: {
         mangle: true,
         compress: true,
-        preserveComments: 'some'
+        preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
       },
       dist: {
         files: [{
@@ -166,11 +166,10 @@ module.exports = function(grunt) {
           browsers: [
             {browserName: 'chrome'},
             {browserName: 'firefox', platform: 'Linux'},
-            {browserName: 'safari', version: 7, platform: 'OS X 10.9'},
-            {browserName: 'safari', version: 6, platform: 'OS X 10.8'},
+            {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
+            {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
             {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
-            {browserName: 'internet explorer', version: 10, platform: 'Windows 8'},
-            {browserName: 'internet explorer', version: 9, platform: 'Windows 7'}
+            {browserName: 'internet explorer', version: 10, platform: 'Windows 8'}
           ]
         }
       },
@@ -211,7 +210,7 @@ module.exports = function(grunt) {
   this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');

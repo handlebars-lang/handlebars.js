@@ -7,19 +7,35 @@ var errors = 0,
     testDir = path.dirname(__dirname),
     grep = process.argv[2];
 
+// Lazy hack, but whatever
+if (grep === '--min') {
+  global.minimizedTest = true;
+  grep = undefined;
+}
+
 var files = fs.readdirSync(testDir)
       .filter(function(name) { return (/.*\.js$/).test(name); })
       .map(function(name) { return testDir + '/' + name; });
 
-run('./runtime', function() {
-  run('./browser', function() {
-    run('./node', function() {
+if (global.minimizedTest) {
+  run('./runtime', function() {
+    run('./browser', function() {
       /* eslint-disable no-process-exit */
       process.exit(errors);
       /* eslint-enable no-process-exit */
     });
   });
-});
+} else {
+  run('./runtime', function() {
+    run('./browser', function() {
+      run('./node', function() {
+        /* eslint-disable no-process-exit */
+        process.exit(errors);
+        /* eslint-enable no-process-exit */
+      });
+    });
+  });
+}
 
 
 function run(env, callback) {

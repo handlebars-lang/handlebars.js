@@ -4,7 +4,12 @@ var fs = require('fs'),
     vm = require('vm');
 
 global.Handlebars = 'no-conflict';
-vm.runInThisContext(fs.readFileSync(__dirname + '/../../dist/handlebars.runtime.js'), 'dist/handlebars.runtime.js');
+
+var filename = 'dist/handlebars.runtime.js';
+if (global.minimizedTest) {
+  filename = 'dist/handlebars.runtime.min.js';
+}
+vm.runInThisContext(fs.readFileSync(__dirname + '/../../' + filename), filename);
 
 var parse = require('../../dist/cjs/handlebars/compiler/base').parse;
 var compiler = require('../../dist/cjs/handlebars/compiler/compiler');

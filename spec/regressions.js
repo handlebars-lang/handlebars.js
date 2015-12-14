@@ -247,4 +247,25 @@ describe('Regressions', function() {
     };
     shouldCompileToWithPartials(string, [{}, {}, partials], true, 'Outer');
   });
+
+  it('GH-1135 : Context handling within each iteration', function() {
+    var obj = {array: [1], name: 'John'};
+    var helpers = {
+      myif: function(conditional, options) {
+        if (conditional) {
+            return options.fn(this);
+        } else {
+            return options.inverse(this);
+        }
+      }
+    };
+
+    shouldCompileTo(
+      '{{#each array}}\n'
+      + ' 1. IF: {{#if true}}{{../name}}-{{../../name}}-{{../../../name}}{{/if}}\n'
+      + ' 2. MYIF: {{#myif true}}{{../name}}={{../../name}}={{../../../name}}{{/myif}}\n'
+      + '{{/each}}', [obj, helpers],
+      ' 1. IF: John--\n'
+      + ' 2. MYIF: John==\n');
+  });
 });

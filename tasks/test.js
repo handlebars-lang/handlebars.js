@@ -40,6 +40,17 @@ module.exports = function(grunt) {
       done();
     });
   });
+  grunt.registerTask('test:min', function() {
+    var done = this.async();
+
+    var runner = childProcess.fork('./spec/env/runner', ['--min'], {stdio: 'inherit'});
+    runner.on('close', function(code) {
+      if (code != 0) {
+        grunt.fatal(code + ' tests failed');
+      }
+      done();
+    });
+  });
 
   grunt.registerTask('test:check-cov', function() {
     var done = this.async();
