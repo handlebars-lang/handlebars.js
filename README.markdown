@@ -114,6 +114,25 @@ Known Issues
 
 See [FAQ.md](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
 
+Running Tests
+---------
+
+To run tests locally, first install all dependencies.
+```
+npm install
+```
+
+Clone the mustache specs into the spec/mustache folder.
+```
+cd spec
+rm -r mustache
+git clone https://github.com/mustache/spec.git mustache
+```
+
+From the root directory, run the tests.
+```
+npm test
+```
 
 Handlebars in the Wild
 ----------------------
