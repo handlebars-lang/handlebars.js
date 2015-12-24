@@ -45,9 +45,6 @@ module.exports = function(grunt) {
         auxiliaryCommentBefore: 'istanbul ignore next'
       },
       cjs: {
-        options: {
-          modules: 'common'
-        },
         files: [{
           cwd: 'lib/',
           expand: true,
@@ -59,12 +56,6 @@ module.exports = function(grunt) {
     webpack: {
       options: {
         context: __dirname,
-        module: {
-          loaders: [
-            // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next' }
-          ]
-        },
         output: {
           path: 'dist/',
           library: 'Handlebars',
@@ -72,13 +63,13 @@ module.exports = function(grunt) {
         }
       },
       handlebars: {
-        entry: './lib/handlebars.js',
+        entry: './dist/cjs/handlebars.js',
         output: {
           filename: 'handlebars.js'
         }
       },
       runtime: {
-        entry: './lib/handlebars.runtime.js',
+        entry: './dist/cjs/handlebars.runtime.js',
         output: {
           filename: 'handlebars.runtime.js'
         }
