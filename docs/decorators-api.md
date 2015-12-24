@@ -2,9 +2,9 @@
 
 Decorators allow for blocks to be annotated with metadata or wrapped in functionality prior to execution of the block. This may be used to communicate with the containing helper or to setup a particular state in the system prior to running the block.
 
-Decorators are registered through similar methods as helpers, `registerDecorators` and `unregisterDecorators`. These can then be referenced via the friendly name in the template using the `{{* decorator}}` and `{{#* decorator}}{/decorator}}` syntaxes. These syntaxs are derivitives of the normal mustache syntax and as such have all of the same argument and whitespace behaviors.
+Decorators are registered through similar methods as helpers, `registerDecorators` and `unregisterDecorators`. These can then be referenced via the friendly name in the template using the `{{* decorator}}` and `{{#* decorator}}{/decorator}}` syntaxes. These syntaxes are derivatives of the normal mustache syntax and as such have all of the same argument and whitespace behaviors.
 
-Decorators are executed when the block program is instantiated and are passed `(program, props, container, context, data, blockParams, depths)`
+Decorators are executed when the block program is instantiated and are passed `(program, props, container, context, data, blockParams, depths)`.
 
 - `program`: The block to wrap
 - `props`: Object used to set metadata on the final function. Any values set on this object will be set on the function, regardless of if the original function is replaced or not. Metadata should be applied using this object as values applied to `program` may be masked by subsequent decorators that may wrap `program`.
