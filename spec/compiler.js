@@ -48,16 +48,25 @@ describe('compiler', function() {
     it('can pass through an empty string', function() {
       equal(Handlebars.compile('')(), '');
     });
+
+    it('throws on desupported options', function() {
+      shouldThrow(function() {
+        Handlebars.compile('Dudes', {trackIds: true});
+      }, Error, 'TrackIds and stringParams are no longer supported. See Github #1145');
+      shouldThrow(function() {
+        Handlebars.compile('Dudes', {stringParams: true});
+      }, Error, 'TrackIds and stringParams are no longer supported. See Github #1145');
+    });
   });
 
   describe('#precompile', function() {
     it('should fail with invalid input', function() {
       shouldThrow(function() {
         Handlebars.precompile(null);
-      }, Error, 'You must pass a string or Handlebars AST to Handlebars.precompile. You passed null');
+      }, Error, 'You must pass a string or Handlebars AST to Handlebars.compile. You passed null');
       shouldThrow(function() {
         Handlebars.precompile({});
-      }, Error, 'You must pass a string or Handlebars AST to Handlebars.precompile. You passed [object Object]');
+      }, Error, 'You must pass a string or Handlebars AST to Handlebars.compile. You passed [object Object]');
     });
 
     it('can utilize AST instance', function() {
