@@ -30,11 +30,6 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/'}
         ]
       },
-      cdnjs: {
-        files: [
-          {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/cdnjs'}
-        ]
-      },
       components: {
         files: [
           {expand: true, cwd: 'components/', src: ['**'], dest: 'dist/components'},
@@ -179,7 +174,7 @@ module.exports = function(grunt) {
   this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['eslint', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['eslint', 'uglify', 'test:min', 'copy:dist', 'copy:components']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
