@@ -163,7 +163,7 @@ module.exports = function(grunt) {
         },
 
         files: ['src/*', 'lib/**/*.js', 'spec/**/*.js'],
-        tasks: ['build', 'amd', 'tests', 'test']
+        tasks: ['build', 'tests', 'test']
       }
     }
   });
