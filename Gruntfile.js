@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       dist: {
         options: {
           processContent: function(content) {
-            return grunt.template.process('/*!\n\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n@license\n*/\n')
+            return grunt.template.process('/**!\n\n @license\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n')
                 + content;
           }
         },
