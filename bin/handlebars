@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var optimist = require('optimist')
+var yargs = require('yargs')
     .usage('Precompile handlebar templates.\nUsage: $0 [template|directory]...', {
       'f': {
         'type': 'string',
@@ -110,7 +110,7 @@ var optimist = require('optimist')
     });
 
 
-var argv = optimist.argv;
+var argv = yargs.argv;
 argv.files = argv._;
 delete argv._;
 
@@ -121,7 +121,7 @@ Precompiler.loadTemplates(argv, function(err, opts) {
   }
 
   if (opts.help || (!opts.templates.length && !opts.version)) {
-    optimist.showHelp();
+    yargs.showHelp();
   } else {
     Precompiler.cli(opts);
   }
