@@ -268,4 +268,13 @@ describe('Regressions', function() {
       ' 1. IF: John--\n'
       + ' 2. MYIF: John==\n');
   });
+
+  it('GH-1186: Support block params for existing programs', function() {
+    var string =
+        '{{#*inline "test"}}{{> @partial-block }}{{/inline}}'
+      + '{{#>test }}{{#each listOne as |item|}}{{ item }}{{/each}}{{/test}}'
+      + '{{#>test }}{{#each listTwo as |item|}}{{ item }}{{/each}}{{/test}}';
+
+    shouldCompileTo(string, { listOne: ['a'], listTwo: ['b']}, 'ab', '');
+  });
 });
