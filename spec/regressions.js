@@ -277,4 +277,15 @@ describe('Regressions', function() {
 
     shouldCompileTo(string, { listOne: ['a'], listTwo: ['b']}, 'ab', '');
   });
+
+  it('should allow hash with protected array names', function() {
+    var obj = {array: [1], name: 'John'};
+    var helpers = {
+      helpa: function(options) {
+        return options.hash.length;
+      }
+    };
+
+    shouldCompileTo('{{helpa length="foo"}}', [obj, helpers], 'foo');
+  });
 });
