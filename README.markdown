@@ -121,6 +121,7 @@ Handlebars in the Wild
 * [Assemble](http://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert)
   and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
   as its template engine.
+* [Cory](https://github.com/leo/cory), by [@leo](https://github.com/leo), is another tiny static site generator
 * [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
 * [dashbars](https://github.com/pismute/dashbars) A modern helper library for Handlebars.js.
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
