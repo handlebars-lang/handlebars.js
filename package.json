@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "async": "^1.4.0",
-    "optimist": "^0.6.1",
-    "source-map": "^0.4.4"
+    "source-map": "^0.4.4",
+    "yargs": "^3.32.0"
   },
   "optionalDependencies": {
     "uglify-js": "^2.6"
