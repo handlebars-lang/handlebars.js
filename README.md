@@ -121,7 +121,7 @@ Handlebars in the Wild
 * [Assemble](http://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert)
   and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
   as its template engine.
-* [Cory](https://github.com/leo/cory), by [@leo](https://github.com/leo), is another tiny static site generator
+* [Cory](https://github.com/leo/cory): A tiny static site generator written in pure JavaScript
 * [CoSchedule](http://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js
 * [dashbars](https://github.com/pismute/dashbars) A modern helper library for Handlebars.js.
 * [Ember.js](http://www.emberjs.com) makes Handlebars.js the primary way to
@@ -143,13 +143,13 @@ Handlebars in the Wild
 * [Lumbar](http://walmartlabs.github.io/lumbar) provides easy module-based template management for
   handlebars projects.
 * [Marionette.Handlebars](https://github.com/hashchange/marionette.handlebars) adds support for Handlebars and Mustache templates to Marionette.
+* [Muffin](http://muffin.cafe): A new kind of CMS based on Ember.js, Node.js and MongoDB.
 * [sammy.js](http://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey,
   supports Handlebars.js as one of its template plugins.
 * [SproutCore](http://www.sproutcore.com) uses Handlebars.js as its main
   templating engine, extending it with automatic data binding support.
 * [YUI](http://yuilibrary.com/yui/docs/handlebars/) implements a port of handlebars
 * [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
-* [DOMBars](https://github.com/blakeembrey/dombars) is a DOM-based templating engine built on the Handlebars parser and runtime **DEPRECATED**
 * [promised-handlebars](https://github.com/nknapp/promised-handlebars) is a wrapper for Handlebars that allows helpers to return Promises.
 
 External Resources

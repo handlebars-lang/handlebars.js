@@ -199,7 +199,7 @@ Compatibility notes:
 - `false` values are now printed to output rather than silently dropped
 - Lines containing only block statements and whitespace are now removed. This matches the Mustache spec but may cause issues with code that expects whitespace to exist but would not otherwise.
 - Partials that are standalone will now indent their rendered content
-- `AST.ProgramNode`'s signature has changed. 
+- `AST.ProgramNode`'s signature has changed.
 - Numerious methods/features removed from psuedo-API classes
   - `JavaScriptCompiler.register`
   - `JavaScriptCompiler.replaceStack` no longer supports non-inline replace
@@ -356,11 +356,11 @@ Compatibility notes:
 
 
 Compatibility notes:
-- The project now includes separate artifacts for AMD, CommonJS, and global objects. 
+- The project now includes separate artifacts for AMD, CommonJS, and global objects.
   - AMD: Users may load the bundled `handlebars.amd.js` or `handlebars.runtime.amd.js` files or load individual modules directly. AMD users should also note that the handlebars object is exposed via the `default` field on the imported object. This [gist](https://gist.github.com/wycats/7417be0dc361a69d5916) provides some discussion of possible compatibility shims.
   - CommonJS/Node: Node loading occurs as normal via `require`
   - Globals: The `handlebars.js` and `handlebars.runtime.js` files should behave in the same manner as the v1.0.12 / 1.0.0 release.
-- Build artifacts have been removed from the repository. [npm][npm], [components/handlebars.js][components], [cdnjs][cdnjs], or the [builds page][builds-page] should now be used as the source of built artifacts. 
+- Build artifacts have been removed from the repository. [npm][npm], [components/handlebars.js][components], [cdnjs][cdnjs], or the [builds page][builds-page] should now be used as the source of built artifacts.
 - Context-stored helpers are now always passed the `options` hash. Previously no-argument helpers did not have this argument.
 
 
