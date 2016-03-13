@@ -10,6 +10,15 @@
     "template",
     "html"
   ],
+  "files": [
+    "bin",
+    "docs",
+    "lib",
+    "print-script",
+    "RELEASE-NOTES.md",
+    "runtime.js",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/wycats/handlebars.js.git"
