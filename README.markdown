@@ -151,6 +151,7 @@ Handlebars in the Wild
 * [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
 * [DOMBars](https://github.com/blakeembrey/dombars) is a DOM-based templating engine built on the Handlebars parser and runtime **DEPRECATED**
 * [promised-handlebars](https://github.com/nknapp/promised-handlebars) is a wrapper for Handlebars that allows helpers to return Promises.
+* [just-handlebars-helpers](https://github.com/leapfrogtechnology/just-handlebars-helpers) A fully tested lightweight package with common Handlebars helpers.
 
 External Resources
 ------------------
