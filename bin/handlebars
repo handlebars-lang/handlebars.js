@@ -102,12 +102,7 @@ var yargs = require('yargs')
       }
     })
 
-    .wrap(120)
-    .check(function(argv) {
-      if (argv.version) {
-        return;
-      }
-    });
+    .wrap(120);
 
 
 var argv = yargs.argv;
