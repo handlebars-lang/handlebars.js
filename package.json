@@ -48,7 +48,7 @@
     "grunt-saucelabs": "8.x",
     "grunt-webpack": "^1.0.8",
     "istanbul": "github:kpdecker/istanbul",
-    "jison": "^0.4.17",
+    "jison": "0.4.16",
     "mocha": "~1.20.0",
     "mock-stdin": "^0.3.0",
     "mustache": "^2.1.3",
