@@ -66,7 +66,7 @@ interface MustacheStatement <: Statement {
 
 interface BlockStatement <: Statement {
     type: "BlockStatement";
-    path: PathExpression;
+    path: PathExpression | Literal;
     params: [ Expression ];
     hash: Hash;
 
