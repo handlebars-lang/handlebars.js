@@ -270,6 +270,20 @@ describe('partials', function() {
         true,
         'success');
     });
+    it('should render nested partial blocks', function() {
+      shouldCompileToWithPartials(
+        '.template-start.{{#> outer}}{{value}}{{/outer}}.template-end.',
+        [
+          {value: 'success'},
+          {},
+          {
+            outer: '.outer-start.{{#> nested}}.outer-partial-block-start.{{> @partial-block}}.outer-partial-block-end.{{/nested}}.outer-end.',
+            nested: '.nested-start.{{> @partial-block}}.nested-end.'
+          }
+        ],
+        true,
+        '.template-start..outer-start..nested-start..outer-partial-block-start.success.outer-partial-block-end..nested-end..outer-end..template-end.');
+    });
   });
 
   describe('inline partials', function() {
