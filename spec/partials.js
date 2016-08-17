@@ -272,17 +272,17 @@ describe('partials', function() {
     });
     it('should render nested partial blocks', function() {
       shouldCompileToWithPartials(
-        '.template-start.{{#> outer}}{{value}}{{/outer}}.template-end.',
+        '<template>{{#> outer}}{{value}}{{/outer}}</template>',
         [
           {value: 'success'},
           {},
           {
-            outer: '.outer-start.{{#> nested}}.outer-partial-block-start.{{> @partial-block}}.outer-partial-block-end.{{/nested}}.outer-end.',
-            nested: '.nested-start.{{> @partial-block}}.nested-end.'
+            outer: '<outer>{{#> nested}}<outer-block>{{> @partial-block}}</outer-block>{{/nested}}</outer>',
+            nested: '<nested>{{> @partial-block}}</nested>'
           }
         ],
         true,
-        '.template-start..outer-start..nested-start..outer-partial-block-start.success.outer-partial-block-end..nested-end..outer-end..template-end.');
+        '<template><outer><nested><outer-block>success</outer-block></nested></outer></template>');
     });
   });
 
