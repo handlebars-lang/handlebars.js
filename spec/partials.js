@@ -323,6 +323,15 @@ describe('partials', function() {
         true,
         'success');
     });
+    it('should render nested inline partials', function() {
+      shouldCompileToWithPartials(
+        '{{#*inline "outer"}}{{#>inner}}<outer-block>{{>@partial-block}}</outer-block>{{/inner}}{{/inline}}' +
+        '{{#*inline "inner"}}<inner>{{>@partial-block}}</inner>{{/inline}}' +
+        '{{#>outer}}{{value}}{{/outer}}',
+        [{value: 'success'}, {}, {}],
+        true,
+        '<inner><outer-block>success</outer-block></inner>');
+    });
   });
 
   it('should pass compiler flags', function() {
