@@ -270,6 +270,20 @@ describe('partials', function() {
         true,
         'success');
     });
+    it('should render nested partial blocks', function() {
+      shouldCompileToWithPartials(
+        '<template>{{#> outer}}{{value}}{{/outer}}</template>',
+        [
+          {value: 'success'},
+          {},
+          {
+            outer: '<outer>{{#> nested}}<outer-block>{{> @partial-block}}</outer-block>{{/nested}}</outer>',
+            nested: '<nested>{{> @partial-block}}</nested>'
+          }
+        ],
+        true,
+        '<template><outer><nested><outer-block>success</outer-block></nested></outer></template>');
+    });
   });
 
   describe('inline partials', function() {
@@ -308,6 +322,15 @@ describe('partials', function() {
         [{}, {}, {dude: '{{> myPartial }}'}],
         true,
         'success');
+    });
+    it('should render nested inline partials', function() {
+      shouldCompileToWithPartials(
+        '{{#*inline "outer"}}{{#>inner}}<outer-block>{{>@partial-block}}</outer-block>{{/inner}}{{/inline}}' +
+        '{{#*inline "inner"}}<inner>{{>@partial-block}}</inner>{{/inline}}' +
+        '{{#>outer}}{{value}}{{/outer}}',
+        [{value: 'success'}, {}, {}],
+        true,
+        '<inner><outer-block>success</outer-block></inner>');
     });
   });
 
