@@ -181,7 +181,7 @@
     "semi": 2,
     "semi-spacing": [2, {"before": false, "after": true}],
     "sort-vars": 0,
-    "space-after-keywords": [2, "always"],
+    "keyword-spacing": 0,
     "space-before-blocks": [2, "always"],
     "space-before-function-paren": [2, {"anonymous": "never", "named": "never"}],
     "space-in-brackets": 0,
