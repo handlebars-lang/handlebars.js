@@ -13,6 +13,7 @@ env:
   - secure: Nm4AgSfsgNB21kgKrF9Tl7qVZU8YYREhouQunFracTcZZh2NZ2XH5aHuSiXCj88B13Cr/jGbJKsZ4T3QS3wWYtz6lkyVOx3H3iI+TMtqhD9RM3a7A4O+4vVN8IioB2YjhEu0OKjwgX5gp+0uF+pLEi7Hpj6fupD3AbbL5uYcKg8=
 matrix:
   include:
+  - node_js: '6'
   - node_js: '5'
     env:
     - PUBLISH=true
