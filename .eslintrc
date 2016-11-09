@@ -54,7 +54,7 @@
     "no-negated-in-lhs": 2,
     "no-obj-calls": 2,
     "no-regex-spaces": 2,
-    "quote-props": [2, "as-needed", {"keywords": true}],
+    "quote-props": [2, "as-needed", {"keywords": true, "unnecessary": false}],
     "no-sparse-arrays": 0,
 
     // Optimizer and coverage will handle/highlight this and can be useful for debugging
