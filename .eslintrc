@@ -192,5 +192,8 @@
     "wrap-regex": 1,
 
     "no-var": 1
+  },
+  "parserOptions": {
+    "sourceType": "module"
   }
 }
