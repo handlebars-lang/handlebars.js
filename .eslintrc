@@ -43,7 +43,6 @@
     "no-empty-character-class": 2,
     "no-ex-assign": 2,
     "no-extra-boolean-cast": 2,
-    "no-extra-parens": 0,
     "no-extra-semi": 2,
     "no-func-assign": 0,
 
@@ -179,7 +178,6 @@
     "one-var": 0,
     "operator-assignment": 0,
     "padded-blocks": 0,
-    "quote-props": 0,
     "quotes": [2, "single", "avoid-escape"],
     "semi": 2,
     "semi-spacing": [2, {"before": false, "after": true}],
