@@ -41,6 +41,7 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMaps: 'inline',
+        plugins: [['transform-es2015-modules-commonjs', {'loose': true}]],
         auxiliaryCommentBefore: 'istanbul ignore next'
       },
       cjs: {
