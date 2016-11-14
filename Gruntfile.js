@@ -22,8 +22,9 @@ module.exports = function(grunt) {
       dist: {
         options: {
           processContent: function(content) {
-            return grunt.template.process('/**!\n\n @license\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n')
-                + content;
+            return grunt.template.process('/**!\n\n @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt Expat\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n')
+                + content
+		+ '\n// @license-end\n';
           }
         },
         files: [
