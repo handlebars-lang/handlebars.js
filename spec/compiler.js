@@ -54,6 +54,15 @@ describe('compiler', function() {
       }
     });
 
+    it('should include the location as enumerable property', function() {
+      try {
+        Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
+        equal(true, false, 'Statement must throw exception. This line should not be executed.');
+      } catch (err) {
+        equal(err.propertyIsEnumerable('column'), true, 'Checking error column');
+      }
+    });
+
     it('can utilize AST instance', function() {
       equal(Handlebars.compile({
         type: 'Program',
