@@ -19,17 +19,6 @@ module.exports = function(grunt) {
     clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js'],
 
     copy: {
-      dist: {
-        options: {
-          processContent: function(content) {
-            return grunt.template.process('/**!\n\n @license\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n')
-                + content;
-          }
-        },
-        files: [
-          {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/'}
-        ]
-      },
       cdnjs: {
         files: [
           {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/cdnjs'}
@@ -124,6 +113,7 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         mangle: true,
+        banner: '/**!\n\n @license\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n',
         compress: true,
         preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
       },
@@ -210,7 +200,7 @@ module.exports = function(grunt) {
   this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
