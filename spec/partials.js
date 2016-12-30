@@ -249,6 +249,13 @@ describe('partials', function() {
         true,
         'success');
     });
+    it('should be able to render the partial-block twice', function() {
+      shouldCompileToWithPartials(
+          '{{#> dude}}success{{/dude}}',
+          [{}, {}, {dude: '{{> @partial-block }} {{> @partial-block }}'}],
+          true,
+          'success success');
+    });
     it('should render block from partial with context', function() {
       shouldCompileToWithPartials(
         '{{#> dude}}{{value}}{{/dude}}',
