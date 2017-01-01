@@ -249,7 +249,7 @@ describe('partials', function() {
         true,
         'success');
     });
-    it('should be able to render block from partial twice', function() {
+    it('should be able to render the partial-block twice', function() {
       shouldCompileToWithPartials(
           '{{#> dude}}success{{/dude}}',
           [{}, {}, {dude: '{{> @partial-block }} {{> @partial-block }}'}],
