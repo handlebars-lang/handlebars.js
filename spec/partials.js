@@ -263,6 +263,32 @@ describe('partials', function() {
         true,
         'success');
     });
+    it('should allow the #each-helper to be used along with partial-blocks', function() {
+      shouldCompileToWithPartials(
+        '<template>{{#> list value}}value = {{.}}{{/list}}</template>',
+        [
+          {value: ['a', 'b', 'c']},
+          {},
+          {
+            list: '<list>{{#each .}}<item>{{> @partial-block}}</item>{{/each}}</list>'
+          }
+        ],
+        true,
+        '<template><list><item>value = a</item><item>value = b</item><item>value = c</item></list></template>');
+    });
+    it('should render block from partial with context (twice)', function() {
+      shouldCompileToWithPartials(
+          '{{#> dude}}{{value}}{{/dude}}',
+          [
+            {context: {value: 'success'}},
+            {},
+            {
+              dude: '{{#with context}}{{> @partial-block }} {{> @partial-block }}{{/with}}'
+            }
+          ],
+          true,
+          'success success');
+    });
     it('should render block from partial with context', function() {
       shouldCompileToWithPartials(
         '{{#> dude}}{{../context/value}}{{/dude}}',
@@ -290,6 +316,50 @@ describe('partials', function() {
         ],
         true,
         '<template><outer><nested><outer-block>success</outer-block></nested></outer></template>');
+    });
+    it('should render nested partial blocks at different nesting levels', function() {
+      shouldCompileToWithPartials(
+        '<template>{{#> outer}}{{value}}{{/outer}}</template>',
+        [
+          {value: 'success'},
+          {},
+          {
+            outer: '<outer>{{#> nested}}<outer-block>{{> @partial-block}}</outer-block>{{/nested}}{{> @partial-block}}</outer>',
+            nested: '<nested>{{> @partial-block}}</nested>'
+          }
+        ],
+        true,
+        '<template><outer><nested><outer-block>success</outer-block></nested>success</outer></template>');
+    });
+    it('should render nested partial blocks at different nesting levels (twice)', function() {
+      shouldCompileToWithPartials(
+        '<template>{{#> outer}}{{value}}{{/outer}}</template>',
+        [
+          {value: 'success'},
+          {},
+          {
+            outer: '<outer>{{#> nested}}<outer-block>{{> @partial-block}} {{> @partial-block}}</outer-block>{{/nested}}{{> @partial-block}}+{{> @partial-block}}</outer>',
+            nested: '<nested>{{> @partial-block}}</nested>'
+          }
+        ],
+        true,
+        '<template><outer><nested><outer-block>success success</outer-block></nested>success+success</outer></template>');
+    });
+    it('should render nested partial blocks (twice at each level)', function() {
+      shouldCompileToWithPartials(
+        '<template>{{#> outer}}{{value}}{{/outer}}</template>',
+        [
+          {value: 'success'},
+          {},
+          {
+            outer: '<outer>{{#> nested}}<outer-block>{{> @partial-block}} {{> @partial-block}}</outer-block>{{/nested}}</outer>',
+            nested: '<nested>{{> @partial-block}}{{> @partial-block}}</nested>'
+          }
+        ],
+        true,
+        '<template><outer>' +
+        '<nested><outer-block>success success</outer-block><outer-block>success success</outer-block></nested>' +
+        '</outer></template>');
     });
   });
 
