@@ -409,6 +409,24 @@ describe('partials', function() {
         true,
         '<inner><outer-block>success</outer-block></inner>');
     });
+    it('should render nested inline partials with partial-blocks on different nesting levels', function() {
+      shouldCompileToWithPartials(
+        '{{#*inline "outer"}}{{#>inner}}<outer-block>{{>@partial-block}}</outer-block>{{/inner}}{{>@partial-block}}{{/inline}}' +
+        '{{#*inline "inner"}}<inner>{{>@partial-block}}</inner>{{/inline}}' +
+        '{{#>outer}}{{value}}{{/outer}}',
+        [{value: 'success'}, {}, {}],
+        true,
+        '<inner><outer-block>success</outer-block></inner>success');
+    });
+    it('should render nested inline partials (twice at each level)', function() {
+      shouldCompileToWithPartials(
+        '{{#*inline "outer"}}{{#>inner}}<outer-block>{{>@partial-block}} {{>@partial-block}}</outer-block>{{/inner}}{{/inline}}' +
+        '{{#*inline "inner"}}<inner>{{>@partial-block}}{{>@partial-block}}</inner>{{/inline}}' +
+        '{{#>outer}}{{value}}{{/outer}}',
+        [{value: 'success'}, {}, {}],
+        true,
+        '<inner><outer-block>success success</outer-block><outer-block>success success</outer-block></inner>');
+    });
   });
 
   it('should pass compiler flags', function() {
