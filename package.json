@@ -44,7 +44,7 @@
     "grunt-contrib-copy": "0.x",
     "grunt-contrib-uglify": "0.x",
     "grunt-contrib-watch": "0.x",
-    "grunt-eslint": "^17.1.0",
+    "grunt-eslint": "19.0.x",
     "grunt-saucelabs": "8.x",
     "grunt-webpack": "^1.0.8",
     "istanbul": "kpdecker/istanbul",
