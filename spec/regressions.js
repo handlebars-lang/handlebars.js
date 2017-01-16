@@ -288,4 +288,11 @@ describe('Regressions', function() {
 
     shouldCompileTo('{{helpa length="foo"}}', [obj, helpers], 'foo');
   });
+
+  it('GH-1227: Array of undefineds', function() {
+    var array = [undefined, undefined];
+    shouldCompileTo('foo{{#each array}}{{@index}}{{.}}{{/each}}bar', {array: array}, 'foobar');
+    var array2 = new Array(2);
+    shouldCompileTo('foo{{#each array}}{{@index}}{{.}}{{/each}}bar', {array: array2}, 'foobar');
+  });
 });
