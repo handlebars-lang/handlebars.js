@@ -162,6 +162,18 @@ describe('precompiler', function() {
     equal(log.match(/sourceMappingURL=/g).length, 1);
   });
 
+  it('should inline map', function() {
+    Precompiler.cli({templates: [emptyTemplate], inlineMap: true});
+
+    equal(log.match(/sourceMappingURL=data:application\/json;charset=utf-8;base64,/g).length, 1);
+  });
+
+  it('should inline map', function() {
+    Precompiler.cli({templates: [emptyTemplate], min: true, inlineMap: true});
+
+    equal(log.match(/sourceMappingURL=data:application\/json;charset=utf-8;base64,/g).length, 1);
+  });
+
   describe('#loadTemplates', function() {
     it('should throw on missing template', function(done) {
       Precompiler.loadTemplates({files: ['foo']}, function(err) {
