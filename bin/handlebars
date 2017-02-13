@@ -11,6 +11,10 @@ var yargs = require('yargs')
         'type': 'string',
         'description': 'Source Map File'
       },
+      'inline-map': {
+        'type': 'boolean',
+        'description': 'Inline Source Map'
+      },
       'a': {
         'type': 'boolean',
         'description': 'Exports amd style (require.js)',

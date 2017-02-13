@@ -152,14 +152,26 @@ describe('precompiler', function() {
     Precompiler.cli({templates: [emptyTemplate], map: 'foo.js.map'});
 
     equal(file, 'foo.js.map');
-    equal(/sourceMappingURL=/.test(log), true);
+    equal(log.match(/sourceMappingURL=/g).length, 1);
   });
 
   it('should output map', function() {
     Precompiler.cli({templates: [emptyTemplate], min: true, map: 'foo.js.map'});
 
     equal(file, 'foo.js.map');
-    equal(/sourceMappingURL=/.test(log), true);
+    equal(log.match(/sourceMappingURL=/g).length, 1);
+  });
+
+  it('should inline map', function() {
+    Precompiler.cli({templates: [emptyTemplate], inlineMap: true});
+
+    equal(log.match(/sourceMappingURL=data:application\/json;charset=utf-8;base64,/g).length, 1);
+  });
+
+  it('should inline map', function() {
+    Precompiler.cli({templates: [emptyTemplate], min: true, inlineMap: true});
+
+    equal(log.match(/sourceMappingURL=data:application\/json;charset=utf-8;base64,/g).length, 1);
   });
 
   describe('#loadTemplates', function() {
