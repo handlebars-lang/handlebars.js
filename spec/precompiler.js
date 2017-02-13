@@ -152,14 +152,14 @@ describe('precompiler', function() {
     Precompiler.cli({templates: [emptyTemplate], map: 'foo.js.map'});
 
     equal(file, 'foo.js.map');
-    equal(/sourceMappingURL=/.test(log), true);
+    equal(log.match(/sourceMappingURL=/g).length, 1);
   });
 
   it('should output map', function() {
     Precompiler.cli({templates: [emptyTemplate], min: true, map: 'foo.js.map'});
 
     equal(file, 'foo.js.map');
-    equal(/sourceMappingURL=/.test(log), true);
+    equal(log.match(/sourceMappingURL=/g).length, 1);
   });
 
   describe('#loadTemplates', function() {
