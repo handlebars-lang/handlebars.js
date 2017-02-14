@@ -2,7 +2,28 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.5...master)
+[Commits](https://github.com/lawnsea/handlebars.js/compare/v4.0.6...master)
+
+## v4.0.6 - November 12th, 2016
+- [#1243](https://github.com/wycats/handlebars.js/pull/1243) - Walk up data frames for nested @partial-block ([@lawnsea](https://github.com/lawnsea))
+- [#1210](https://github.com/wycats/handlebars.js/pull/1210) - Add a new lightweight package based on handlebars in the README ([@kabirbaidhya](https://github.com/kabirbaidhya))
+- [#1187](https://github.com/wycats/handlebars.js/pull/1187) - Ensure that existing blockParams and depths are respected on dupe programs ([@charleso](https://github.com/charleso))
+- [#1191](https://github.com/wycats/handlebars.js/pull/1191) - Added cory ([@leo](https://github.com/leo))
+- [#1177](https://github.com/wycats/handlebars.js/pull/1177) - Preserve License info in Closure Compiler ([@gennadiylitvinyuk](https://github.com/gennadiylitvinyuk))
+- [#1171](https://github.com/wycats/handlebars.js/pull/1171) - Contributing doc fix: failing thats -> failing tests ([@paulfalgout](https://github.com/paulfalgout))
+- [#1166](https://github.com/wycats/handlebars.js/pull/1166) - Update license date ([@timwangdev](https://github.com/timwangdev))
+-  Update jsfiddle to point to latest - 959ee55 (originally dfc7554 by [@kpdecker](https://github.com/kpdecker))
+- [#1163](https://github.com/wycats/handlebars.js/pull/1163) - Fix typos on decorators-api.md. ([@adjohnson916](https://github.com/adjohnson916))
+- Drop extra Error params - 8c19874 (originally 63fdb92 by [@kpdecker](https://github.com/kpdecker))
+- [#1153](https://github.com/wycats/handlebars.js/pull/1153) - Add documentation for running tests to contributing.md ([@ryanmurakami](https://github.com/ryanmurakami))
+- Avoid error in older browsers in test - 400916c (originally a6121ca by [@kpdecker](https://github.com/kpdecker))
+- Update target browser test versions - fee2334 (originally 871c32a by [@kpdecker](https://github.com/kpdecker))
+- Exclude coverage check in exception conditional - 32d6363 (originally 326734b by [@kpdecker](https://github.com/kpdecker))
+- Fix throw when creating exception object in Safari - 20c965c (originally 2ea6119 by [@kpdecker](https://github.com/kpdecker))
+- Update build for modern node versions - 6c9f98c (originally 8289c0b by [@kpdecker](https://github.com/kpdecker))
+- [#1135](https://github.com/wycats/handlebars.js/issues/1135) - Relax depth check for context push - c393c81 (originally 25458fd by [@kpdecker](https://github.com/kpdecker))
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.5...v4.0.6)
 
 ## v4.0.5 - November 19th, 2015
 - [#1132](https://github.com/wycats/handlebars.js/pull/1132) - Update uglify-js to avoid vulnerability ([@plynchnlm](https://api.github.com/users/plynchnlm))

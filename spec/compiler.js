@@ -38,6 +38,31 @@ describe('compiler', function() {
       }, Error, 'You must pass a string or Handlebars AST to Handlebars.compile. You passed [object Object]');
     });
 
+    it('should include the location in the error (row and column)', function() {
+      try {
+        Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
+        equal(true, false, 'Statement must throw exception. This line should not be executed.');
+      } catch (err) {
+        equal(err.message, 'if doesn\'t match def - 2:5', 'Checking error message');
+        if (Object.getOwnPropertyDescriptor(err, 'column').writable) {
+          // In Safari 8, the column-property is read-only. This means that even if it is set with defineProperty,
+          // its value won't change (https://github.com/jquery/esprima/issues/1290#issuecomment-132455482)
+          // Since this was neither working in Handlebars 3 nor in 4.0.5, we only check the column for other browsers.
+          equal(err.column, 5, 'Checking error column');
+        }
+        equal(err.lineNumber, 2, 'Checking error row');
+      }
+    });
+
+    it('should include the location as enumerable property', function() {
+      try {
+        Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
+        equal(true, false, 'Statement must throw exception. This line should not be executed.');
+      } catch (err) {
+        equal(err.propertyIsEnumerable('column'), true, 'Checking error column');
+      }
+    });
+
     it('can utilize AST instance', function() {
       equal(Handlebars.compile({
         type: 'Program',
