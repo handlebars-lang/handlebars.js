@@ -1,2 +1,2 @@
 instrumentation:
-    excludes: ['**/spec/**']
+    excludes: ['**/spec/**', '**/handlebars/compiler/parser.js']
