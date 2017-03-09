@@ -277,4 +277,9 @@ describe('Regressions', function() {
 
     shouldCompileTo(string, { listOne: ['a'], listTwo: ['b']}, 'ab', '');
   });
+
+  it('GH-1319: "unless" breaks when "each" value equals "null"', function() {
+    var string = '{{#each list}}{{#unless ./prop}}parent={{../value}} {{/unless}}{{/each}}';
+    shouldCompileTo(string, { value: 'parent', list: [ null, 'a'] }, 'parent=parent parent=parent ', '');
+  });
 });
