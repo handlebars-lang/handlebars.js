@@ -4,10 +4,8 @@
 Handlebars.js
 =============
 
-Handlebars.js is an extension to the [Mustache templating
-language](http://mustache.github.com/) created by Chris Wanstrath.
-Handlebars.js and Mustache are both logicless templating languages that
-keep the view and the code separated like we all know they should be.
+Handlebars provides the power necessary to let you build **semantic templates** effectively with no frustration.
+Handlebars is largely compatible with Mustache templates. In most cases it is possible to swap out Mustache with Handlebars and continue using your current templates.
 
 Checkout the official Handlebars docs site at
 [http://www.handlebarsjs.com](http://www.handlebarsjs.com) and the live demo at [http://tryhandlebarsjs.com/](http://tryhandlebarsjs.com/).
