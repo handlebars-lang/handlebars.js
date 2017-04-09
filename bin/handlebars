@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var optimist = require('optimist')
+var yargs = require('yargs')
     .usage('Precompile handlebar templates.\nUsage: $0 [template|directory]...', {
       'f': {
         'type': 'string',
@@ -61,7 +61,7 @@ var optimist = require('optimist')
       },
       'i': {
         'type': 'string',
-        'description': 'Generates a template from the passed CLI argument.\n'-' is treated as a special value and causes stdin to be read for the template value.',
+        'description': 'Generates a template from the passed CLI argument.\n"-" is treated as a special value and causes stdin to be read for the template value.',
         'alias': 'string'
       },
       'r': {
@@ -107,15 +107,10 @@ var optimist = require('optimist')
       }
     })
 
-    .wrap(120)
-    .check(function(argv) {
-      if (argv.version) {
-        return;
-      }
-    });
+    .wrap(120);
 
 
-var argv = optimist.argv;
+var argv = yargs.argv;
 argv.files = argv._;
 delete argv._;
 
@@ -127,7 +122,7 @@ function precompile(mArgv) {
     }
 
     if (opts.help || (!opts.templates.length && !opts.version)) {
-      optimist.showHelp();
+      yargs.showHelp();
     } else {
       Precompiler.cli(opts);
     }
