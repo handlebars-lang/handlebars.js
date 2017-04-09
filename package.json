@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "async": "^1.4.0",
+    "chokidar": "^1.6.1",
+    "colors": "^1.1.2",
     "source-map": "^0.4.4",
     "yargs": "^3.32.0"
   },

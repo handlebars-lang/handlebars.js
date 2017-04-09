@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var yargs = require('yargs')
+var optimist = require('optimist')
     .usage('Precompile handlebar templates.\nUsage: $0 [template|directory]...', {
       'f': {
         'type': 'string',
@@ -61,7 +61,7 @@ var yargs = require('yargs')
       },
       'i': {
         'type': 'string',
-        'description': 'Generates a template from the passed CLI argument.\n"-" is treated as a special value and causes stdin to be read for the template value.',
+        'description': 'Generates a template from the passed CLI argument.\n'-' is treated as a special value and causes stdin to be read for the template value.',
         'alias': 'string'
       },
       'r': {
@@ -95,6 +95,11 @@ var yargs = require('yargs')
         'description': 'Prints the current compiler version',
         'alias': 'version'
       },
+      'w': {
+        'type': 'boolean',
+        'description': 'Watch the input file(s)/dir(s) and perform precompilation on changes.',
+        'alias': 'watch'
+      },
 
       'help': {
         'type': 'boolean',
@@ -102,22 +107,91 @@ var yargs = require('yargs')
       }
     })
 
-    .wrap(120);
+    .wrap(120)
+    .check(function(argv) {
+      if (argv.version) {
+        return;
+      }
+    });
 
 
-var argv = yargs.argv;
+var argv = optimist.argv;
 argv.files = argv._;
 delete argv._;
 
 var Precompiler = require('../dist/cjs/precompiler');
-Precompiler.loadTemplates(argv, function(err, opts) {
-  if (err) {
-    throw err;
-  }
+function precompile(mArgv) {
+  Precompiler.loadTemplates(mArgv ? mArgv : argv, function(err, opts) {
+    if (err) {
+      throw err;
+    }
 
-  if (opts.help || (!opts.templates.length && !opts.version)) {
-    yargs.showHelp();
-  } else {
-    Precompiler.cli(opts);
+    if (opts.help || (!opts.templates.length && !opts.version)) {
+      optimist.showHelp();
+    } else {
+      Precompiler.cli(opts);
+    }
+  });
+}
+
+const c = require('colors');
+const files = argv.files;
+const log = console.log;
+let firstTime = true;
+if (files.length && argv.w) {
+  const chokidar = require('chokidar');
+  const DS = '/'; // require('path').sep;
+  const G = '**/*.';
+  const ext = argv.e ? argv.e : 'handlebars';
+  const toWatch = [];
+  files.forEach((i, x, a) => {
+      if ( !i.endsWith(ext) ) { // is dir
+          const glob = i.endsWith(DS) ? G : `${DS}${G}`;
+          toWatch.push(i + glob + ext);
+      } else {
+          toWatch.push(i);
+      }
+  });
+  const watcher = chokidar.watch(toWatch, {ignored: /[\/\\]\./, persistent: true});
+  
+  watcher
+      .on('ready', function () {
+        firstTime = false;
+        precompile();
+        log( c.magenta.bold('Initial output file:', c.white.bgMagenta(argv.f), 'is created.') );
+        log( c.blue.bold('Watching', c.white.bgBlue(files.join('  &  ')), 'for changes...') );
+      })
+      .on('add', path => {
+        log( c.green.bold('File added:'), path );
+		precompile();
+        msg();
+      })
+      .on('addDir', path => {
+        log( c.black.bgGreen('Folder added:'), path );
+		precompile();
+        msg();
+      })
+      .on('unlink', path => {
+        log( c.red.bold('File removed:'), path );
+		precompile();
+        msg();
+      })
+      .on('unlinkDir', path => {
+        log( c.white.bgRed('Folder removed:'), path );
+        precompile();
+        msg();
+      })
+      .on('change', path => {
+        log( c.cyan.bold('File changed:'), path );
+        precompile();
+        msg();
+      });
+} else {
+  precompile();
+}
+
+function msg() {
+  if (!firstTime) {
+    log( c.yellow.bold('Output file:', c.white.bold.bgMagenta(argv.f), 'was recreated.') );
   }
-});
+}
