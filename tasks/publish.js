@@ -15,14 +15,22 @@ module.exports = function(grunt) {
       git.commitInfo(function(err, info) {
         grunt.log.writeln('tag: ' + info.tagName);
 
+        var files = [];
+
+        // Publish the master as "latest" and with the commit-id
         if (info.isMaster) {
+          files.push('-latest');
+          files.push('-' + info.head);
+        }
+
+        // Publish tags by their tag-name
+        if (info.tagName && semver.valid(info.tagName)) {
+          files.push('-' + info.tagName);
+        }
+
+        if (files.length > 0) {
           initSDK();
-
-          var files = ['-latest', '-' + info.head];
-          if (info.tagName && semver.valid(info.tagName)) {
-            files.push('-' + info.tagName);
-          }
-
+          grunt.log.writeln('publishing files: ' + JSON.stringify(files));
           publish(fileMap(files), done);
         } else {
           // Silently ignore for branches

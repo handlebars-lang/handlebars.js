@@ -293,4 +293,13 @@ describe('Regressions', function() {
     var string = '{{#each list}}{{#unless ./prop}}parent={{../value}} {{/unless}}{{/each}}';
     shouldCompileTo(string, { value: 'parent', list: [ null, 'a'] }, 'parent=parent parent=parent ', '');
   });
+
+  it('GH-1341: 4.0.7 release breaks {{#if @partial-block}} usage', function() {
+    var string = 'template {{>partial}} template';
+    var partials = {
+      partialWithBlock: '{{#if @partial-block}} block {{> @partial-block}} block {{/if}}',
+      partial: '{{#> partialWithBlock}} partial {{/partialWithBlock}}'
+    };
+    shouldCompileToWithPartials(string, [{}, {}, partials], true, 'template  block  partial  block  template');
+  });
 });
