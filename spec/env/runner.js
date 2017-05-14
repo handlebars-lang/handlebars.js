@@ -15,7 +15,7 @@ if (grep === '--min') {
 
 var files = fs.readdirSync(testDir)
       .filter(function(name) { return (/.*\.js$/).test(name); })
-      .map(function(name) { return testDir + '/' + name; });
+      .map(function(name) { return testDir + path.sep + name; });
 
 if (global.minimizedTest) {
   run('./runtime', function() {
