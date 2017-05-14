@@ -11,7 +11,7 @@ var files = [ testDir + '/basic.js' ];
 
 var files = fs.readdirSync(testDir)
       .filter(function(name) { return (/.*\.js$/).test(name); })
-      .map(function(name) { return testDir + '/' + name; });
+      .map(function(name) { return testDir + path.sep + name; });
 
 run('./node', function() {
   run('./browser', function() {
