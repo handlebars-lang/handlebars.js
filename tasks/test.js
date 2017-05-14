@@ -6,9 +6,15 @@ module.exports = function(grunt) {
   grunt.registerTask('test:bin', function() {
     var done = this.async();
 
+    var cmd = './bin/handlebars';
+    var args = [ '-a', 'spec/artifacts/empty.handlebars' ];
+
     // On Windows, the executable handlebars.js file cannot be run directly
-    var prefix = os.type().match(/^Windows/) ? process.argv[0] : '';
-    childProcess.exec(prefix + ' ./bin/handlebars -a spec/artifacts/empty.handlebars', function(err, stdout) {
+    if (os.platform() === 'win32') {
+      args.unshift(cmd);
+      cmd = process.argv[0];
+    }
+    childProcess.execFile(cmd, args, function(err, stdout) {
       if (err) {
         throw err;
       }
