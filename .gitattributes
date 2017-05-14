@@ -1,1 +1,5 @@
+# Handlebars templates in test cases
 *.handlebars text eol=lf
+
+# Lexer files
+*.l text eol=lf
