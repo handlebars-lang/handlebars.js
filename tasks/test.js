@@ -1,11 +1,14 @@
 var childProcess = require('child_process'),
-    fs = require('fs');
+    fs = require('fs'),
+    os = require('os');
 
 module.exports = function(grunt) {
   grunt.registerTask('test:bin', function() {
     var done = this.async();
 
-    childProcess.exec('node ./bin/handlebars -a spec/artifacts/empty.handlebars', function(err, stdout) {
+    // On Windows, the executable handlebars.js file cannot be run directly
+    var prefix = os.type().match(/^Windows/) ? process.argv[0] : '';
+    childProcess.exec(prefix + ' ./bin/handlebars -a spec/artifacts/empty.handlebars', function(err, stdout) {
       if (err) {
         throw err;
       }
