@@ -73,6 +73,18 @@ describe('compiler', function() {
     it('can pass through an empty string', function() {
       equal(Handlebars.compile('')(), '');
     });
+
+    it('should not modify the options.data property(GH-1327)', function() {
+      var options = {data: [{a: 'foo'}, {a: 'bar'}]};
+      Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
+      equal(JSON.stringify(options, 0, 2), JSON.stringify({data: [{a: 'foo'}, {a: 'bar'}]}, 0, 2));
+    });
+
+    it('should not modify the options.knownHelpers property(GH-1327)', function() {
+      var options = {knownHelpers: {}};
+      Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
+      equal(JSON.stringify(options, 0, 2), JSON.stringify({knownHelpers: {}}, 0, 2));
+    });
   });
 
   describe('#precompile', function() {
