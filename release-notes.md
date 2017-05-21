@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.9...master)
+[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.10...master)
+
+## v4.0.10 - May 21st, 2017
+- Fix regression in 4.0.9: Replace "Object.assign" (not support in IE) by "util/extend" - 0e953d1
+
+
+
+[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.9...v4.0.10)
 
 ## v4.0.9 - May 21st, 2017
 
