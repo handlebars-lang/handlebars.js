@@ -2,7 +2,31 @@
 
 ## Development
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.8...master)
+[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.10...master)
+
+## v4.0.10 - May 21st, 2017
+- Fix regression in 4.0.9: Replace "Object.assign" (not support in IE) by "util/extend" - 0e953d1
+
+
+
+[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.9...v4.0.10)
+
+## v4.0.9 - May 21st, 2017
+
+- [#1327](https://github.com/wycats/handlebars.js/issues/1327) Handlebars.compile() does not modify "options" anymore
+- pending [#1331](https://github.com/wycats/handlebars.js/issues/1331) Attempts to build Handlebars in a Windows environment
+  - Fix build in windows - cc554a5
+  - Ensure LF line-edings in handlebars-template fixtures (*.hbs) - ed879a6
+  - Run integration test with `node handlebars -a ...` on Windows - 2e21e2b
+  - Ensure LF line-edings in lexer-files (*.l) - bdfdbea
+  - Force LF line-endings for spec/artifacts - b50ef03
+  - Use istanbul/lib/cli.js instead of node_modules/.bin/istanbul - 6e6269f
+- TravisCI: Publish valid semver tags independently of the branch - 7378f85
+
+Compatibility notes:
+- No compatibility issues are expected.
+
+[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.8...v4.0.9)
 
 ## v4.0.8 - May 2nd, 2017
 - [#1341](https://github.com/wycats/handlebars.js/issues/1341) [#1342](https://github.com/wycats/handlebars.js/issues/1342) Allow partial-blocks to be executed without "options" ([@nknapp](https://github.com/nknapp)) - a00c598
