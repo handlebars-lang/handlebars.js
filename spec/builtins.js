@@ -48,6 +48,14 @@ describe('builtin helpers', function() {
       var string = '{{#with person}}{{first}} {{last}}{{/with}}';
       shouldCompileTo(string, {person: function() { return {first: 'Alan', last: 'Johnson'}; }}, 'Alan Johnson');
     });
+    it('with with async function argument', function() {
+      var string = '{{#with person}}{{first}} {{last}}{{/with}}';
+      shouldCompileTo(string, {person: function(fn) { return fn({first: 'Alan', last: 'Johnson'}); }}, 'Alan Johnson');
+    });
+    it('with with async function argument and parameters', function() {
+      var string = '{{#with person first="Alan" last="Johnson"}}{{first}} {{last}}{{/with}}';
+      shouldCompileTo(string, {person: function(fn, hash) { return fn(hash); }}, 'Alan Johnson');
+    });
     it('with with else', function() {
       var string = '{{#with person}}Person is present{{else}}Person is not present{{/with}}';
       shouldCompileTo(string, {}, 'Person is not present');
