@@ -1,4 +1,10 @@
 describe('blocks', function() {
+  it('string', function() {
+    var string = '{{#goodbye}}{{goodbye}}{{/goodbye}} {{#world}}{{world}}{{/world}}';
+    var hash = {goodbye: 'Goodbye', world: 'Complex World'};
+    shouldCompileTo(string, hash, 'Goodbye Complex World');
+  });
+
   it('array', function() {
     var string = '{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!';
     var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
