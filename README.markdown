@@ -117,6 +117,7 @@ See [FAQ.md](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for kno
 Handlebars in the Wild
 ----------------------
 
+* [Meteor] (https://www.meteor.com) ships with a variant of Handlebars.js named [Spacebars] (https://github.com/meteor/meteor/blob/devel/packages/spacebars/README.md).
 * [Assemble](http://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert)
   and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js
   as its template engine.
