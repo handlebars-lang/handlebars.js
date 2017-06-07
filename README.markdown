@@ -162,6 +162,6 @@ Have a project using Handlebars? Send us a [pull request][pull-request]!
 
 License
 -------
-Handlebars.js is released under the MIT license.
+Handlebars.js is released under the [MIT License (Expat)](https://tldrlegal.com/l/mit).
 
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
