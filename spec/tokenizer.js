@@ -376,6 +376,14 @@ describe('Tokenizer', function() {
     shouldBeToken(result[2], 'ID', 'omg');
   });
 
+  it('tokenizes splat', function() {
+    var result = tokenize('{{foo **bar}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'ID', 'CLOSE']);
+
+    result = tokenize('{{foo ** bar}}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'SPLAT', 'ID', 'CLOSE']);
+  });
+
   it('tokenizes special @ identifiers', function() {
     var result = tokenize('{{ @foo }}');
     shouldMatchTokens(result, ['OPEN', 'DATA', 'ID', 'CLOSE']);

@@ -89,6 +89,7 @@ mustache
   | OPEN_UNESCAPED helperName param* hash? CLOSE_UNESCAPED -> yy.prepareMustache($2, $3, $4, $1, yy.stripFlags($1, $5), @$)
   ;
 
+
 partial
   : OPEN_PARTIAL partialName param* hash? CLOSE {
     $$ = {
@@ -131,6 +132,7 @@ hash
 
 hashSegment
   : ID EQUALS param -> {type: 'HashPair', key: yy.id($1), value: $3, loc: yy.locInfo(@$)}
+  | SPLAT param -> {type: 'Splat', value: $2, loc: yy.locInfo(@$)}  
   ;
 
 blockParams

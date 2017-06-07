@@ -737,4 +737,82 @@ describe('helpers', function() {
       shouldCompileTo('{{#if bar}}{{else goodbyes as |value|}}{{value}}{{/if}}{{value}}', [hash, helpers], '1foo');
     });
   });
+
+  describe('splat operators', function() {
+
+    it('basic splat test', function() {
+      var string = '{{hello  **splat }}';
+      var hash = {splat: {firstName: 'Guybrush', lastName: 'Threepwood'}};
+      var helpers = {
+        hello: function(options) {
+          var hash = options.hash;
+          return 'Hi, my name is ' + hash.firstName + ' ' + hash.lastName;
+        }
+      };
+
+      shouldCompileTo(string, [hash, helpers], 'Hi, my name is Guybrush Threepwood');
+    });
+
+    it('fails with multiple splats', function() {
+      var string = '{{foo **bar **baz}}';
+      shouldThrow(function() {
+        CompilerContext.compile(string);
+      }, Error);
+
+    });
+
+    it('splat shadowing', function() {
+      var string = '{{helper **splat occupation="pirate" }}';
+      var hash = {splat: {occupation: 'cannonball'}};
+      var helpers = {
+        helper: function(options) {
+          var hash = options.hash;
+          return 'I want to be a ' + hash.occupation + '!';
+        }
+      };
+
+      shouldCompileTo(string, [hash, helpers], 'I want to be a pirate!');
+    });
+
+    it('splat test', function() {
+      var template = CompilerContext.compile('{{helper **foo.splat character=character }}');
+
+      var helpers = {
+        helper: function(options) {
+          return options.hash.character + ' and the ' + options.hash.numberOfHeads + ' monkey on ' + options.hash.island + ' Island';
+        }
+      };
+
+      var context = {foo: { splat: {numberOfHeads: '3 headed', island: 'Dinky'}}, character: 'Guybrush'};
+
+      var result = template(context, {helpers: helpers});
+      equals(result, 'Guybrush and the 3 headed monkey on Dinky Island', 'Splat test');
+    });
+
+    it('splat with function', function() {
+      var template = CompilerContext.compile('{{helper **foo character=character }}');
+
+      var helpers = {
+        helper: function(options) {
+          var hash = options.hash;
+          return hash.character + ' and the ' + hash.numberOfHeads + ' monkey on ' + hash.format(hash.island) + ' Island';
+        }
+      };
+
+      var context = {
+        foo: {
+          numberOfHeads: '3 headed',
+          island: 'Dinky',
+          format: function(str) {
+            return str.toUpperCase();
+          }
+        },
+        character: 'Guybrush'
+      };
+
+      var result = template(context, {helpers: helpers});
+      equals(result, 'Guybrush and the 3 headed monkey on DINKY Island', 'Splat function test');
+    });
+
+  });
 });
