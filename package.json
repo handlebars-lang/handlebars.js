@@ -20,6 +20,7 @@
   "engines": {
     "node": ">=0.4.7"
   },
+  "browser": "dist/handlebars.js",
   "dependencies": {
     "async": "^1.4.0",
     "source-map": "^0.4.4",
