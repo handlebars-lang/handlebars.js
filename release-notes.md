@@ -2,14 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.10...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.10...master)
 
 ## v4.0.10 - May 21st, 2017
 - Fix regression in 4.0.9: Replace "Object.assign" (not support in IE) by "util/extend" - 0e953d1
 
 
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.9...v4.0.10)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.9...v4.0.10)
 
 ## v4.0.9 - May 21st, 2017
 
@@ -26,7 +26,7 @@
 Compatibility notes:
 - No compatibility issues are expected.
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.8...v4.0.9)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.8...v4.0.9)
 
 ## v4.0.8 - May 2nd, 2017
 - [#1341](https://github.com/wycats/handlebars.js/issues/1341) [#1342](https://github.com/wycats/handlebars.js/issues/1342) Allow partial-blocks to be executed without "options" ([@nknapp](https://github.com/nknapp)) - a00c598
@@ -34,7 +34,7 @@ Compatibility notes:
 Compatibility notes:
 - No breaking changes
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.7...v4.0.8)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.7...v4.0.8)
 
 ## v4.0.7 - April 29th, 2017
 - [#1319](https://github.com/wycats/handlebars.js/issues/1319): Fix context-stack when calling block-helpers on null values ([@nknapp](https://github.com/nknapp)) - c8f4b57
