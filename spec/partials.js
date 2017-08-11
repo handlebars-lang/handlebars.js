@@ -7,6 +7,16 @@ describe('partials', function() {
     shouldCompileToWithPartials(string, [hash, {}, {dude: partial},, false], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
   });
 
+  it('require a matching close', function() {
+      var string = 'Dudes: {{#dudes}}{{> dude}}{{/}}';
+      var partial = '{{name}} ({{url}}) ';
+      var hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+
+      shouldThrow(function() {
+        shouldCompileToWithPartials(string, [hash, {}, {dude: partial}], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
+      }, Error, 'dudes doesn\'t match undefined - 1:10');
+    });
+
   it('dynamic partials', function() {
     var string = 'Dudes: {{#dudes}}{{> (partial)}}{{/dudes}}';
     var partial = '{{name}} ({{url}}) ';
@@ -19,6 +29,20 @@ describe('partials', function() {
     shouldCompileToWithPartials(string, [hash, helpers, {dude: partial}], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
     shouldCompileToWithPartials(string, [hash, helpers, {dude: partial},, false], true, 'Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
   });
+
+  it('dynamic partials with failover', function() {
+    var string = 'Dudes: {{#dudes}}{{#> (partial)}}Anonymous {{/}}{{/dudes}}';
+    var partial = '{{name}} ({{url}}) ';
+    var hash = {dudes: [{name: 'Yehuda', url: 'http://yehuda'}, {name: 'Alan', url: 'http://alan'}]};
+    var helpers = {
+      partial: function() {
+        return 'missing';
+      }
+    };
+    shouldCompileToWithPartials(string, [hash, helpers, {dude: partial}], true, 'Dudes: Anonymous Anonymous ');
+    shouldCompileToWithPartials(string, [hash, helpers, {dude: partial},, false], true, 'Dudes: Anonymous Anonymous ');
+  });
+
   it('failing dynamic partials', function() {
     var string = 'Dudes: {{#dudes}}{{> (partial)}}{{/dudes}}';
     var partial = '{{name}} ({{url}}) ';

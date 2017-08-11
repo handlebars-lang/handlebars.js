@@ -79,7 +79,7 @@ inverseChain
   ;
 
 closeBlock
-  : OPEN_ENDBLOCK helperName CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
+  : OPEN_ENDBLOCK helperName? CLOSE -> {path: $2, strip: yy.stripFlags($1, $3)}
   ;
 
 mustache
