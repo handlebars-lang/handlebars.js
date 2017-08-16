@@ -42,7 +42,7 @@ The `grunt dev` implements watching for tests and allows for in browser testing 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
 
-##Running Tests
+## Running Tests
 
 To run tests locally, first install all dependencies.
 ```sh
