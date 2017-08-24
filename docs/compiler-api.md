@@ -300,7 +300,7 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 
 This example changes all lookups of properties are performed by a helper (`lookupLowerCase`) which looks for `test` if `{{Test}}` occurs in the template. This is just to illustrate how compiler behavior can be change.
 
-There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/85/) if you want to play around with it.
+There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/162/) if you want to play around with it.
 
 
 ```javascript
@@ -308,6 +308,9 @@ function MyCompiler() {
   Handlebars.JavaScriptCompiler.apply(this, arguments);
 }
 MyCompiler.prototype = new Handlebars.JavaScriptCompiler();
+
+// Use this compile to compile BlockStatment-Blocks
+MyCompiler.prototype.compiler = MyCompiler
 
 MyCompiler.prototype.nameLookup = function(parent, name, type) {
   if (type === 'context') {
@@ -324,8 +327,12 @@ env.registerHelper('lookupLowerCase', function(parent, name) {
 
 env.JavaScriptCompiler = MyCompiler;
 
-var template = env.compile('{{#each Test}}{{.}} {{/each}}');
+var template = env.compile('{{#each Test}} ({{Value}}) {{/each}}');
 console.log(template({
-  test: [ "a","b","c"]
+  test: [ 
+    {value: 'a'},
+    {value: 'b'},
+    {value: 'c'}
+    ]
 }));
 ```
