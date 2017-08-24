@@ -66,7 +66,7 @@ interface MustacheStatement <: Statement {
 
 interface BlockStatement <: Statement {
     type: "BlockStatement";
-    path: PathExpression;
+    path: PathExpression | Literal;
     params: [ Expression ];
     hash: Hash;
 
@@ -296,21 +296,43 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 - `initializeBuffer()`
     Allows for buffers other than the default string buffer to be used. Generally needs to be paired with a custom `appendToBuffer` implementation.
 
+### Example for the compiler api.
+
+This example changes all lookups of properties are performed by a helper (`lookupLowerCase`) which looks for `test` if `{{Test}}` occurs in the template. This is just to illustrate how compiler behavior can be change.
+
+There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/162/) if you want to play around with it.
+
+
 ```javascript
 function MyCompiler() {
   Handlebars.JavaScriptCompiler.apply(this, arguments);
 }
-MyCompiler.prototype = Object.create(Handlebars.JavaScriptCompiler);
+MyCompiler.prototype = new Handlebars.JavaScriptCompiler();
 
-MyCompiler.nameLookup = function(parent, name, type) {
-  if (type === 'partial') {
-    return 'MyPartialList[' + JSON.stringify(name) ']';
+// Use this compile to compile BlockStatment-Blocks
+MyCompiler.prototype.compiler = MyCompiler
+
+MyCompiler.prototype.nameLookup = function(parent, name, type) {
+  if (type === 'context') {
+    return this.source.functionCall('helpers.lookupLowerCase', '', [parent, JSON.stringify(name)])
   } else {
     return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(this, parent, name, type);
   }
-};
+}
 
 var env = Handlebars.create();
+env.registerHelper('lookupLowerCase', function(parent, name) {
+  return parent[name.toLowerCase()]
+})
+
 env.JavaScriptCompiler = MyCompiler;
-env.compile('my template');
+
+var template = env.compile('{{#each Test}} ({{Value}}) {{/each}}');
+console.log(template({
+  test: [ 
+    {value: 'a'},
+    {value: 'b'},
+    {value: 'c'}
+    ]
+}));
 ```
