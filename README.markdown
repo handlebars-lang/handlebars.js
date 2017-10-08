@@ -1,6 +1,7 @@
 [![Travis Build Status](https://img.shields.io/travis/wycats/handlebars.js/master.svg)](https://travis-ci.org/wycats/handlebars.js)
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/wycats/handlebars.js?branch=master&svg=true)](https://ci.appveyor.com/project/wycats/handlebars-js)
 [![Selenium Test Status](https://saucelabs.com/buildstatus/handlebars)](https://saucelabs.com/u/handlebars)
+[![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
 
 Handlebars.js
 =============
