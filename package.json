@@ -23,9 +23,7 @@
   "dependencies": {
     "async": "^1.4.0",
     "optimist": "^0.6.1",
-    "source-map": "^0.4.4"
-  },
-  "optionalDependencies": {
+    "source-map": "^0.4.4",
     "uglify-js": "^2.6"
   },
   "devDependencies": {
