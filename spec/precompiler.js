@@ -12,6 +12,8 @@ describe('precompiler', function() {
 
   var log,
       logFunction,
+      errorLog,
+      errorLogFunction,
 
       precompile,
       minify,
@@ -26,16 +28,51 @@ describe('precompiler', function() {
       content,
       writeFileSync;
 
+  /**
+   * Mock the Module.prototype.require-function such that an error is thrown, when "uglify-js" is loaded.
+   *
+   * The function cleans up its mess when "callback" is finished
+   *
+   * @param {Error} loadError the error that should be thrown if uglify is loaded
+   * @param {function} callback a callback-function to run when the mock is active.
+   */
+  function mockRequireUglify(loadError, callback) {
+    var Module = require('module');
+    var _resolveFilename = Module._resolveFilename;
+    delete require.cache[require.resolve('uglify-js')];
+    delete require.cache[require.resolve('../dist/cjs/precompiler')];
+    Module._resolveFilename = function(request, mod) {
+      if (request === 'uglify-js') {
+        throw loadError;
+      }
+      return _resolveFilename.call(this, request, mod);
+    };
+    try {
+      callback();
+    } finally {
+      Module._resolveFilename = _resolveFilename;
+      delete require.cache[require.resolve('uglify-js')];
+      delete require.cache[require.resolve('../dist/cjs/precompiler')];
+    }
+  }
+
   beforeEach(function() {
     precompile = Handlebars.precompile;
     minify = uglify.minify;
     writeFileSync = fs.writeFileSync;
 
+    // Mock stdout and stderr
     logFunction = console.log;
     log = '';
     console.log = function() {
       log += Array.prototype.join.call(arguments, '');
     };
+    errorLogFunction = console.error;
+    errorLog = '';
+    console.error = function() {
+      errorLog += Array.prototype.join.call(arguments, '');
+    };
+
     fs.writeFileSync = function(_file, _content) {
       file = _file;
       content = _content;
@@ -46,6 +83,7 @@ describe('precompiler', function() {
     uglify.minify = minify;
     fs.writeFileSync = writeFileSync;
     console.log = logFunction;
+    console.error = errorLogFunction;
   });
 
   it('should output version', function() {
@@ -146,6 +184,29 @@ describe('precompiler', function() {
     uglify.minify = function() { return {code: 'min'}; };
     Precompiler.cli({templates: [emptyTemplate], min: true});
     equal(log, 'min');
+  });
+
+  it('should omit minimization gracefully, if uglify-js is missing', function() {
+    var error = new Error("Cannot find module 'uglify-js'");
+    error.code = 'MODULE_NOT_FOUND';
+    mockRequireUglify(error, function() {
+      var Precompiler = require('../dist/cjs/precompiler');
+      Handlebars.precompile = function() { return 'amd'; };
+      Precompiler.cli({templates: [emptyTemplate], min: true});
+      equal(/template\(amd\)/.test(log), true);
+      equal(/\n/.test(log), true);
+      equal(/Code minimization is disabled/.test(errorLog), true);
+    });
+  });
+
+  it('should fail on errors (other than missing module) while loading uglify-js', function() {
+    mockRequireUglify(new Error('Mock Error'), function() {
+      shouldThrow(function() {
+        var Precompiler = require('../dist/cjs/precompiler');
+        Handlebars.precompile = function() { return 'amd'; };
+        Precompiler.cli({templates: [emptyTemplate], min: true});
+      }, Error, 'Mock Error');
+    });
   });
 
   it('should output map', function() {
