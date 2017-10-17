@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.10...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.11...master)
+
+## v4.0.11 - October 17th, 2017
+- [#1391](https://github.com/wycats/handlebars.js/issues/1391) - `uglify-js` is unconditionally imported, but only listed as optional dependency ([@Turbo87](https://api.github.com/users/Turbo87))
+- [#1233](https://github.com/wycats/handlebars.js/issues/1233) - Unable to build under windows - error at test:bin task ([@blikblum](https://api.github.com/users/blikblum))
+- Update (C) year in the LICENSE file - 21386b6
+
+Compatibility notes:
+- This is a bugfix release. There are no breaking change and no new features.
+
+[Commits](https://github.com/nknapp/handlebars.js/compare/v4.0.10...v4.0.11)
 
 ## v4.0.10 - May 21st, 2017
 - Fix regression in 4.0.9: Replace "Object.assign" (not support in IE) by "util/extend" - 0e953d1
