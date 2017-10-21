@@ -282,13 +282,13 @@ describe('Tokenizer', function() {
   });
 
   it('tokenizes mustaches with String params as "OPEN ID ID STRING CLOSE"', function() {
-    var result = tokenize('{{ foo bar \"baz\" }}');
+    var result = tokenize('{{ foo bar "baz" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[3], 'STRING', 'baz');
   });
 
   it('tokenizes mustaches with String params using single quotes as "OPEN ID ID STRING CLOSE"', function() {
-    var result = tokenize("{{ foo bar \'baz\' }}");
+    var result = tokenize("{{ foo bar 'baz' }}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[3], 'STRING', 'baz');
   });
@@ -365,13 +365,13 @@ describe('Tokenizer', function() {
     result = tokenize('{{ foo bar\n  baz=bat }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'ID', 'CLOSE']);
 
-    result = tokenize('{{ foo bar baz=\"bat\" }}');
+    result = tokenize('{{ foo bar baz="bat" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'STRING', 'CLOSE']);
 
-    result = tokenize('{{ foo bar baz=\"bat\" bam=wot }}');
+    result = tokenize('{{ foo bar baz="bat" bam=wot }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'STRING', 'ID', 'EQUALS', 'ID', 'CLOSE']);
 
-    result = tokenize('{{foo omg bar=baz bat=\"bam\"}}');
+    result = tokenize('{{foo omg bar=baz bat="bam"}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'EQUALS', 'ID', 'ID', 'EQUALS', 'STRING', 'CLOSE']);
     shouldBeToken(result[2], 'ID', 'omg');
   });

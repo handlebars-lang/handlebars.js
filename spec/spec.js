@@ -25,8 +25,8 @@ describe('spec', function() {
           // We nest the entire response from partials, not just the literals
           || (name === 'partials.json' && test.name === 'Standalone Indentation')
 
-          || (/\{\{\=/).test(test.template)
-          || _.any(test.partials, function(partial) { return (/\{\{\=/).test(partial); })) {
+          || (/\{\{=/).test(test.template)
+          || _.any(test.partials, function(partial) { return (/\{\{=/).test(partial); })) {
         it.skip(name + ' - ' + test.name);
         return;
       }
