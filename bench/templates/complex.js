@@ -5,7 +5,7 @@ module.exports = {
     header: function() {
       return 'Colors';
     },
-    hasItems: true,   // To make things fairer in mustache land due to no `{{if}}` construct on arrays
+    hasItems: true, // To make things fairer in mustache land due to no `{{if}}` construct on arrays
     items: [
       {name: 'red', current: true, url: '#Red'},
       {name: 'green', current: false, url: '#Green'},
