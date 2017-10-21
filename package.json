@@ -21,9 +21,9 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
-    "async": "^1.4.0",
+    "async": "^2.5.0",
     "optimist": "^0.6.1",
-    "source-map": "^0.4.4"
+    "source-map": "^0.6.1"
   },
   "optionalDependencies": {
     "uglify-js": "^2.6"
