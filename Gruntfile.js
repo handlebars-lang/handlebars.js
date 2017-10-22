@@ -1,4 +1,6 @@
 /* eslint-disable no-process-env */
+const path = require('path');
+
 module.exports = function(grunt) {
 
   grunt.initConfig({
@@ -83,7 +85,7 @@ module.exports = function(grunt) {
           ]
         },
         output: {
-          path: 'dist/',
+          path: path.resolve(__dirname, 'dist'),
           library: 'Handlebars',
           libraryTarget: 'umd'
         }
