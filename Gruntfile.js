@@ -91,7 +91,16 @@ module.exports = function(grunt) {
         module: {
           loaders: [
             // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next' }
+            {
+              test: /\.jsx?$/,
+              exclude: /node_modules/,
+              use: {
+                loader: 'babel-loader',
+                options: {
+                  presets: babelPreset()
+                }
+              }
+            }
           ]
         },
         output: {

@@ -31,7 +31,7 @@
   "devDependencies": {
     "aws-sdk": "^2.1.49",
     "babel-core": "^6.26.0",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "babel-runtime": "^6.26.0",
     "benchmark": "~1.0",
