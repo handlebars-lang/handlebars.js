@@ -113,7 +113,7 @@ describe('helpers', function() {
       { 'name': 'Yehuda', 'id': 2 }
     ]};
 
-    shouldCompileTo(source, [data, {link: link}], '<ul><li><a href=\"/people/1\">Alan</a></li><li><a href=\"/people/2\">Yehuda</a></li></ul>');
+    shouldCompileTo(source, [data, {link: link}], '<ul><li><a href="/people/1">Alan</a></li><li><a href="/people/2">Yehuda</a></li></ul>');
   });
 
   it('block helper for undefined value', function() {

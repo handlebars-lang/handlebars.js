@@ -21,12 +21,12 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
-    "async": "^1.4.0",
-    "source-map": "^0.4.4",
+    "async": "^2.5.0",
+    "source-map": "^0.6.1",
     "yargs": "^3.32.0"
   },
   "optionalDependencies": {
-    "uglify-js": "^2.6"
+    "uglify-js": "^3.1.4"
   },
   "devDependencies": {
     "aws-sdk": "^2.1.49",
@@ -44,7 +44,7 @@
     "grunt-contrib-copy": "0.x",
     "grunt-contrib-uglify": "0.x",
     "grunt-contrib-watch": "0.x",
-    "grunt-eslint": "19.0.x",
+    "grunt-eslint": "^20.1.0",
     "grunt-saucelabs": "8.x",
     "grunt-webpack": "^1.0.8",
     "istanbul": "kpdecker/istanbul",

@@ -51,7 +51,7 @@ describe('parser', function() {
   });
 
   it('parses mustaches with string parameters', function() {
-    equals(astFor('{{foo bar \"baz\" }}'), '{{ PATH:foo [PATH:bar, "baz"] }}\n');
+    equals(astFor('{{foo bar "baz" }}'), '{{ PATH:foo [PATH:bar, "baz"] }}\n');
   });
 
   it('parses mustaches with NUMBER parameters', function() {
@@ -87,10 +87,10 @@ describe('parser', function() {
 
     equals(astFor("{{foo bat='bam'}}"), '{{ PATH:foo [] HASH{bat="bam"} }}\n');
 
-    equals(astFor('{{foo omg bar=baz bat=\"bam\"}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam"} }}\n');
-    equals(astFor('{{foo omg bar=baz bat=\"bam\" baz=1}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=NUMBER{1}} }}\n');
-    equals(astFor('{{foo omg bar=baz bat=\"bam\" baz=true}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=BOOLEAN{true}} }}\n');
-    equals(astFor('{{foo omg bar=baz bat=\"bam\" baz=false}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=BOOLEAN{false}} }}\n');
+    equals(astFor('{{foo omg bar=baz bat="bam"}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam"} }}\n');
+    equals(astFor('{{foo omg bar=baz bat="bam" baz=1}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=NUMBER{1}} }}\n');
+    equals(astFor('{{foo omg bar=baz bat="bam" baz=true}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=BOOLEAN{true}} }}\n');
+    equals(astFor('{{foo omg bar=baz bat="bam" baz=false}}'), '{{ PATH:foo [PATH:omg] HASH{bar=PATH:baz, bat="bam", baz=BOOLEAN{false}} }}\n');
   });
 
   it('parses contents followed by a mustache', function() {
@@ -136,7 +136,7 @@ describe('parser', function() {
   });
 
   it('parses a multi-line comment', function() {
-    equals(astFor('{{!\nthis is a multi-line comment\n}}'), "{{! \'\nthis is a multi-line comment\n\' }}\n");
+    equals(astFor('{{!\nthis is a multi-line comment\n}}'), "{{! '\nthis is a multi-line comment\n' }}\n");
   });
 
   it('parses an inverse section', function() {

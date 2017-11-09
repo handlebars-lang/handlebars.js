@@ -22,7 +22,7 @@ module.exports = {
     "templateStrings": true
   },
   "rules": {
-    // overrides eslint:recommended defaults   
+    // overrides eslint:recommended defaults
     "no-sparse-arrays": "off",
     "no-func-assign": "off",
     "no-console": "warn",
