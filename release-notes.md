@@ -5,8 +5,8 @@
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.11...master)
 
 ## v4.0.11 - October 17th, 2017
-- [#1391](https://github.com/wycats/handlebars.js/issues/1391) - `uglify-js` is unconditionally imported, but only listed as optional dependency ([@Turbo87](https://api.github.com/users/Turbo87))
-- [#1233](https://github.com/wycats/handlebars.js/issues/1233) - Unable to build under windows - error at test:bin task ([@blikblum](https://api.github.com/users/blikblum))
+- [#1391](https://github.com/wycats/handlebars.js/issues/1391) - `uglify-js` is unconditionally imported, but only listed as optional dependency ([@Turbo87](https://github.com/Turbo87))
+- [#1233](https://github.com/wycats/handlebars.js/issues/1233) - Unable to build under windows - error at test:bin task ([@blikblum](https://github.com/blikblum))
 - Update (C) year in the LICENSE file - 21386b6
 
 Compatibility notes:
@@ -80,8 +80,8 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.5...v4.0.6)
 
 ## v4.0.5 - November 19th, 2015
-- [#1132](https://github.com/wycats/handlebars.js/pull/1132) - Update uglify-js to avoid vulnerability ([@plynchnlm](https://api.github.com/users/plynchnlm))
-- [#1129](https://github.com/wycats/handlebars.js/issues/1129) - Minified lib returns an empty string ([@bricss](https://api.github.com/users/bricss))
+- [#1132](https://github.com/wycats/handlebars.js/pull/1132) - Update uglify-js to avoid vulnerability ([@plynchnlm](https://github.com/plynchnlm))
+- [#1129](https://github.com/wycats/handlebars.js/issues/1129) - Minified lib returns an empty string ([@bricss](https://github.com/bricss))
 - Return current handlebars instance from noConflict - 685cf92
 - Add webpack to dev dependency to support npm 3 - 7a6c228
 - Further relax uglify dependency - 0a3b3c2
@@ -92,17 +92,17 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.4...v4.0.5)
 
 ## v4.0.4 - October 29th, 2015
-- [#1121](https://github.com/wycats/handlebars.js/pull/1121) - Include partial name in 'undefined partial' exception message ([@shinypb](https://api.github.com/users/shinypb))
-- [#1125](https://github.com/wycats/handlebars.js/pull/1125) - Add promised-handlebars to "in-the-wild"-list ([@nknapp](https://api.github.com/users/nknapp))
+- [#1121](https://github.com/wycats/handlebars.js/pull/1121) - Include partial name in 'undefined partial' exception message ([@shinypb](https://github.com/shinypb))
+- [#1125](https://github.com/wycats/handlebars.js/pull/1125) - Add promised-handlebars to "in-the-wild"-list ([@nknapp](https://github.com/nknapp))
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.3...v4.0.4)
 
 ## v4.0.3 - September 23rd, 2015
-- [#1099](https://github.com/wycats/handlebars.js/issues/1099) - @partial-block is overridden ([@btmorex](https://api.github.com/users/btmorex))
-- [#1093](https://github.com/wycats/handlebars.js/issues/1093) - #each skips iteration on undefined values ([@florianpilz](https://api.github.com/users/florianpilz))
-- [#1092](https://github.com/wycats/handlebars.js/issues/1092) - Square braces in key name ([@distantnative](https://api.github.com/users/distantnative))
-- [#1091](https://github.com/wycats/handlebars.js/pull/1091) - fix typo in release notes ([@nikolas](https://api.github.com/users/nikolas))
-- [#1090](https://github.com/wycats/handlebars.js/pull/1090) - grammar fixes in 4.0.0 release notes ([@nikolas](https://api.github.com/users/nikolas))
+- [#1099](https://github.com/wycats/handlebars.js/issues/1099) - @partial-block is overridden ([@btmorex](https://github.com/btmorex))
+- [#1093](https://github.com/wycats/handlebars.js/issues/1093) - #each skips iteration on undefined values ([@florianpilz](https://github.com/florianpilz))
+- [#1092](https://github.com/wycats/handlebars.js/issues/1092) - Square braces in key name ([@distantnative](https://github.com/distantnative))
+- [#1091](https://github.com/wycats/handlebars.js/pull/1091) - fix typo in release notes ([@nikolas](https://github.com/nikolas))
+- [#1090](https://github.com/wycats/handlebars.js/pull/1090) - grammar fixes in 4.0.0 release notes ([@nikolas](https://github.com/nikolas))
 
 Compatibility notes:
 - `each` iteration with `undefined` values has been restored to the 3.0 behaviors. Helper calls with undefined context values will now execute against an arbitrary empty object to avoid executing against global object in non-strict mode.
@@ -111,7 +111,7 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.2...v4.0.3)
 
 ## v4.0.2 - September 4th, 2015
-- [#1089](https://github.com/wycats/handlebars.js/issues/1089) - "Failover content" not working in multiple levels of inline partials ([@michaellopez](https://api.github.com/users/michaellopez))
+- [#1089](https://github.com/wycats/handlebars.js/issues/1089) - "Failover content" not working in multiple levels of inline partials ([@michaellopez](https://github.com/michaellopez))
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.1...v4.0.2)
 
@@ -121,17 +121,17 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.0.0...v4.0.1)
 
 ## v4.0.0 - September 1st, 2015
-- [#1082](https://github.com/wycats/handlebars.js/pull/1082) - Decorators and Inline Partials ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#1076](https://github.com/wycats/handlebars.js/pull/1076) - Implement partial blocks ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#1087](https://github.com/wycats/handlebars.js/pull/1087) - Fix #each when last object entry has empty key ([@denniskuczynski](https://api.github.com/users/denniskuczynski))
-- [#1084](https://github.com/wycats/handlebars.js/pull/1084) - Bump uglify version to fix vulnerability ([@John-Steidley](https://api.github.com/users/John-Steidley))
-- [#1068](https://github.com/wycats/handlebars.js/pull/1068) - Fix typo ([@0xack13](https://api.github.com/users/0xack13))
-- [#1060](https://github.com/wycats/handlebars.js/pull/1060) - #1056 Fixed grammar for nested raw blocks ([@ericbn](https://api.github.com/users/ericbn))
-- [#1052](https://github.com/wycats/handlebars.js/pull/1052) - Updated year in License ([@maqnouch](https://api.github.com/users/maqnouch))
-- [#1037](https://github.com/wycats/handlebars.js/pull/1037) - Fix minor typos in README ([@tomxtobin](https://api.github.com/users/tomxtobin))
-- [#1032](https://github.com/wycats/handlebars.js/issues/1032) - Is it possible to render a partial without the parent scope? ([@aputinski](https://api.github.com/users/aputinski))
-- [#1019](https://github.com/wycats/handlebars.js/pull/1019) - Fixes typo in tests ([@aymerick](https://api.github.com/users/aymerick))
-- [#1016](https://github.com/wycats/handlebars.js/issues/1016) - Version mis-match ([@mayankdedhia](https://api.github.com/users/mayankdedhia))
+- [#1082](https://github.com/wycats/handlebars.js/pull/1082) - Decorators and Inline Partials ([@kpdecker](https://github.com/kpdecker))
+- [#1076](https://github.com/wycats/handlebars.js/pull/1076) - Implement partial blocks ([@kpdecker](https://github.com/kpdecker))
+- [#1087](https://github.com/wycats/handlebars.js/pull/1087) - Fix #each when last object entry has empty key ([@denniskuczynski](https://github.com/denniskuczynski))
+- [#1084](https://github.com/wycats/handlebars.js/pull/1084) - Bump uglify version to fix vulnerability ([@John-Steidley](https://github.com/John-Steidley))
+- [#1068](https://github.com/wycats/handlebars.js/pull/1068) - Fix typo ([@0xack13](https://github.com/0xack13))
+- [#1060](https://github.com/wycats/handlebars.js/pull/1060) - #1056 Fixed grammar for nested raw blocks ([@ericbn](https://github.com/ericbn))
+- [#1052](https://github.com/wycats/handlebars.js/pull/1052) - Updated year in License ([@maqnouch](https://github.com/maqnouch))
+- [#1037](https://github.com/wycats/handlebars.js/pull/1037) - Fix minor typos in README ([@tomxtobin](https://github.com/tomxtobin))
+- [#1032](https://github.com/wycats/handlebars.js/issues/1032) - Is it possible to render a partial without the parent scope? ([@aputinski](https://github.com/aputinski))
+- [#1019](https://github.com/wycats/handlebars.js/pull/1019) - Fixes typo in tests ([@aymerick](https://github.com/aymerick))
+- [#1016](https://github.com/wycats/handlebars.js/issues/1016) - Version mis-match ([@mayankdedhia](https://github.com/mayankdedhia))
 - [#1023](https://github.com/wycats/handlebars.js/issues/1023) - is it possible for nested custom helpers to communicate between each other?
 - [#893](https://github.com/wycats/handlebars.js/issues/893) - [Proposal] Section blocks.
 - [#792](https://github.com/wycats/handlebars.js/issues/792) - feature request: inline partial definitions
@@ -164,55 +164,55 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v3.0.3...v4.0.0)
 
 ## v3.0.3 - April 28th, 2015
-- [#1004](https://github.com/wycats/handlebars.js/issues/1004) - Latest version breaks with RequireJS (global is undefined) ([@boskee](https://api.github.com/users/boskee))
+- [#1004](https://github.com/wycats/handlebars.js/issues/1004) - Latest version breaks with RequireJS (global is undefined) ([@boskee](https://github.com/boskee))
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v3.0.2...v3.0.3)
 
 ## v3.0.2 - April 20th, 2015
-- [#998](https://github.com/wycats/handlebars.js/pull/998) - Add full support for es6 ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#994](https://github.com/wycats/handlebars.js/issues/994) - Access Handlebars.Visitor in browser ([@tamlyn](https://api.github.com/users/tamlyn))
-- [#990](https://github.com/wycats/handlebars.js/issues/990) - Allow passing null/undefined literals subexpressions ([@blimmer](https://api.github.com/users/blimmer))
-- [#989](https://github.com/wycats/handlebars.js/issues/989) - Source-map error with requirejs ([@SteppeEagle](https://api.github.com/users/SteppeEagle))
-- [#967](https://github.com/wycats/handlebars.js/issues/967) - can't access "this" property  ([@75lb](https://api.github.com/users/75lb))
+- [#998](https://github.com/wycats/handlebars.js/pull/998) - Add full support for es6 ([@kpdecker](https://github.com/kpdecker))
+- [#994](https://github.com/wycats/handlebars.js/issues/994) - Access Handlebars.Visitor in browser ([@tamlyn](https://github.com/tamlyn))
+- [#990](https://github.com/wycats/handlebars.js/issues/990) - Allow passing null/undefined literals subexpressions ([@blimmer](https://github.com/blimmer))
+- [#989](https://github.com/wycats/handlebars.js/issues/989) - Source-map error with requirejs ([@SteppeEagle](https://github.com/SteppeEagle))
+- [#967](https://github.com/wycats/handlebars.js/issues/967) - can't access "this" property  ([@75lb](https://github.com/75lb))
 - Use captureStackTrace for error handler - a009a97
 - Ignore branches tested without coverage monitoring - 37a664b
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v3.0.1...v3.0.2)
 
 ## v3.0.1 - March 24th, 2015
-- [#984](https://github.com/wycats/handlebars.js/pull/984) - Adding documentation for passing arguments into partials ([@johneke](https://api.github.com/users/johneke))
-- [#973](https://github.com/wycats/handlebars.js/issues/973) - version 3 is slower than version 2 ([@elover](https://api.github.com/users/elover))
-- [#966](https://github.com/wycats/handlebars.js/issues/966) - "handlebars --version" does not work with v3.0.0 ([@abloomston](https://api.github.com/users/abloomston))
-- [#964](https://github.com/wycats/handlebars.js/pull/964) - default is a reserved word ([@grassick](https://api.github.com/users/grassick))
-- [#962](https://github.com/wycats/handlebars.js/pull/962) - Add dashbars' link on README. ([@pismute](https://api.github.com/users/pismute))
+- [#984](https://github.com/wycats/handlebars.js/pull/984) - Adding documentation for passing arguments into partials ([@johneke](https://github.com/johneke))
+- [#973](https://github.com/wycats/handlebars.js/issues/973) - version 3 is slower than version 2 ([@elover](https://github.com/elover))
+- [#966](https://github.com/wycats/handlebars.js/issues/966) - "handlebars --version" does not work with v3.0.0 ([@abloomston](https://github.com/abloomston))
+- [#964](https://github.com/wycats/handlebars.js/pull/964) - default is a reserved word ([@grassick](https://github.com/grassick))
+- [#962](https://github.com/wycats/handlebars.js/pull/962) - Add dashbars' link on README. ([@pismute](https://github.com/pismute))
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v3.0.0...v3.0.1)
 
 ## v3.0.0 - February 10th, 2015
-- [#941](https://github.com/wycats/handlebars.js/pull/941) - Add support for dynamic partial names ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#940](https://github.com/wycats/handlebars.js/pull/940) - Add missing reserved words so compiler knows to use array syntax: ([@mattflaschen](https://api.github.com/users/mattflaschen))
-- [#938](https://github.com/wycats/handlebars.js/pull/938) - Fix example using #with helper ([@diwo](https://api.github.com/users/diwo))
-- [#930](https://github.com/wycats/handlebars.js/pull/930) - Add parent tracking and mutation to AST visitors ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#926](https://github.com/wycats/handlebars.js/issues/926) - Depthed lookups fail when program duplicator runs ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#918](https://github.com/wycats/handlebars.js/pull/918) - Add instructions for 'spec/mustache' to CONTRIBUTING.md, fix a few typos ([@oneeman](https://api.github.com/users/oneeman))
-- [#915](https://github.com/wycats/handlebars.js/pull/915) - Ast update ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#910](https://github.com/wycats/handlebars.js/issues/910) - Different behavior of {{@last}} when {{#each}} in {{#each}} ([@zordius](https://api.github.com/users/zordius))
-- [#907](https://github.com/wycats/handlebars.js/issues/907) - Implement named helper variable references ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#906](https://github.com/wycats/handlebars.js/pull/906) - Add parser support for block params ([@mmun](https://api.github.com/users/mmun))
-- [#903](https://github.com/wycats/handlebars.js/issues/903) - Only provide aliases for multiple use calls ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#902](https://github.com/wycats/handlebars.js/pull/902) - Generate Source Maps ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#901](https://github.com/wycats/handlebars.js/issues/901) - Still escapes with noEscape enabled on isolated Handlebars environment ([@zedknight](https://api.github.com/users/zedknight))
-- [#896](https://github.com/wycats/handlebars.js/pull/896) - Simplify BlockNode by removing intermediate MustacheNode ([@mmun](https://api.github.com/users/mmun))
-- [#892](https://github.com/wycats/handlebars.js/pull/892) - Implement parser for else chaining of helpers ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#889](https://github.com/wycats/handlebars.js/issues/889) - Consider extensible parser API ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#887](https://github.com/wycats/handlebars.js/issues/887) - Handlebars.noConflict() option? ([@bradvogel](https://api.github.com/users/bradvogel))
-- [#886](https://github.com/wycats/handlebars.js/issues/886) - Add SafeString to context (or use duck-typing) ([@dominicbarnes](https://api.github.com/users/dominicbarnes))
-- [#870](https://github.com/wycats/handlebars.js/pull/870) - Registering undefined partial throws exception. ([@max-b](https://api.github.com/users/max-b))
-- [#866](https://github.com/wycats/handlebars.js/issues/866) - comments don't respect whitespace control ([@75lb](https://api.github.com/users/75lb))
-- [#863](https://github.com/wycats/handlebars.js/pull/863) - + jsDelivr CDN info ([@tomByrer](https://api.github.com/users/tomByrer))
-- [#858](https://github.com/wycats/handlebars.js/issues/858) - Disable new default auto-indent at included partials ([@majodev](https://api.github.com/users/majodev))
-- [#856](https://github.com/wycats/handlebars.js/pull/856) - jspm compatibility ([@MajorBreakfast](https://api.github.com/users/MajorBreakfast))
-- [#805](https://github.com/wycats/handlebars.js/issues/805) - Request: "strict" lookups ([@nzakas](https://api.github.com/users/nzakas))
+- [#941](https://github.com/wycats/handlebars.js/pull/941) - Add support for dynamic partial names ([@kpdecker](https://github.com/kpdecker))
+- [#940](https://github.com/wycats/handlebars.js/pull/940) - Add missing reserved words so compiler knows to use array syntax: ([@mattflaschen](https://github.com/mattflaschen))
+- [#938](https://github.com/wycats/handlebars.js/pull/938) - Fix example using #with helper ([@diwo](https://github.com/diwo))
+- [#930](https://github.com/wycats/handlebars.js/pull/930) - Add parent tracking and mutation to AST visitors ([@kpdecker](https://github.com/kpdecker))
+- [#926](https://github.com/wycats/handlebars.js/issues/926) - Depthed lookups fail when program duplicator runs ([@kpdecker](https://github.com/kpdecker))
+- [#918](https://github.com/wycats/handlebars.js/pull/918) - Add instructions for 'spec/mustache' to CONTRIBUTING.md, fix a few typos ([@oneeman](https://github.com/oneeman))
+- [#915](https://github.com/wycats/handlebars.js/pull/915) - Ast update ([@kpdecker](https://github.com/kpdecker))
+- [#910](https://github.com/wycats/handlebars.js/issues/910) - Different behavior of {{@last}} when {{#each}} in {{#each}} ([@zordius](https://github.com/zordius))
+- [#907](https://github.com/wycats/handlebars.js/issues/907) - Implement named helper variable references ([@kpdecker](https://github.com/kpdecker))
+- [#906](https://github.com/wycats/handlebars.js/pull/906) - Add parser support for block params ([@mmun](https://github.com/mmun))
+- [#903](https://github.com/wycats/handlebars.js/issues/903) - Only provide aliases for multiple use calls ([@kpdecker](https://github.com/kpdecker))
+- [#902](https://github.com/wycats/handlebars.js/pull/902) - Generate Source Maps ([@kpdecker](https://github.com/kpdecker))
+- [#901](https://github.com/wycats/handlebars.js/issues/901) - Still escapes with noEscape enabled on isolated Handlebars environment ([@zedknight](https://github.com/zedknight))
+- [#896](https://github.com/wycats/handlebars.js/pull/896) - Simplify BlockNode by removing intermediate MustacheNode ([@mmun](https://github.com/mmun))
+- [#892](https://github.com/wycats/handlebars.js/pull/892) - Implement parser for else chaining of helpers ([@kpdecker](https://github.com/kpdecker))
+- [#889](https://github.com/wycats/handlebars.js/issues/889) - Consider extensible parser API ([@kpdecker](https://github.com/kpdecker))
+- [#887](https://github.com/wycats/handlebars.js/issues/887) - Handlebars.noConflict() option? ([@bradvogel](https://github.com/bradvogel))
+- [#886](https://github.com/wycats/handlebars.js/issues/886) - Add SafeString to context (or use duck-typing) ([@dominicbarnes](https://github.com/dominicbarnes))
+- [#870](https://github.com/wycats/handlebars.js/pull/870) - Registering undefined partial throws exception. ([@max-b](https://github.com/max-b))
+- [#866](https://github.com/wycats/handlebars.js/issues/866) - comments don't respect whitespace control ([@75lb](https://github.com/75lb))
+- [#863](https://github.com/wycats/handlebars.js/pull/863) - + jsDelivr CDN info ([@tomByrer](https://github.com/tomByrer))
+- [#858](https://github.com/wycats/handlebars.js/issues/858) - Disable new default auto-indent at included partials ([@majodev](https://github.com/majodev))
+- [#856](https://github.com/wycats/handlebars.js/pull/856) - jspm compatibility ([@MajorBreakfast](https://github.com/MajorBreakfast))
+- [#805](https://github.com/wycats/handlebars.js/issues/805) - Request: "strict" lookups ([@nzakas](https://github.com/nzakas))
 
 - Export the default object for handlebars/runtime - 5594416
 - Lookup partials when undefined - 617dd57
@@ -246,21 +246,21 @@ New Features:
 [Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-beta.1...v2.0.0)
 
 ## v2.0.0-beta.1 - August 26th, 2014
-- [#787](https://github.com/wycats/handlebars.js/pull/787) - Remove whitespace surrounding standalone statements ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#827](https://github.com/wycats/handlebars.js/issues/827) - Render false literal as “false” ([@scoot557](https://api.github.com/users/scoot557))
-- [#767](https://github.com/wycats/handlebars.js/issues/767) - Subexpressions bug with hash and context ([@evensoul](https://api.github.com/users/evensoul))
+- [#787](https://github.com/wycats/handlebars.js/pull/787) - Remove whitespace surrounding standalone statements ([@kpdecker](https://github.com/kpdecker))
+- [#827](https://github.com/wycats/handlebars.js/issues/827) - Render false literal as “false” ([@scoot557](https://github.com/scoot557))
+- [#767](https://github.com/wycats/handlebars.js/issues/767) - Subexpressions bug with hash and context ([@evensoul](https://github.com/evensoul))
 - Changes to 0/undefined handling
-  - [#731](https://github.com/wycats/handlebars.js/pull/731) - Strange behavior for {{#foo}} {{bar}} {{/foo}} when foo is 0 ([@kpdecker](https://api.github.com/users/kpdecker))
-  - [#820](https://github.com/wycats/handlebars.js/issues/820) - strange behavior for {{foo.bar}} when foo is 0 or null or false ([@zordius](https://api.github.com/users/zordius))
-  - [#837](https://github.com/wycats/handlebars.js/issues/837) - Strange input for custom helper ( foo.bar == false when foo is undefined ) ([@zordius](https://api.github.com/users/zordius))
-- [#819](https://github.com/wycats/handlebars.js/pull/819) - Implement recursive field lookup ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#764](https://github.com/wycats/handlebars.js/issues/764) - This reference not working for helpers ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#773](https://github.com/wycats/handlebars.js/issues/773) - Implicit parameters in {{#each}} introduces a peculiarity in helpers calling convention  ([@Bertrand](https://api.github.com/users/Bertrand))
-- [#783](https://github.com/wycats/handlebars.js/issues/783) - helperMissing and consistency for different expression types ([@ErisDS](https://api.github.com/users/ErisDS))
-- [#795](https://github.com/wycats/handlebars.js/pull/795) - Turn the precompile script into a wrapper around a module. ([@jwietelmann](https://api.github.com/users/jwietelmann))
-- [#823](https://github.com/wycats/handlebars.js/pull/823) - Support inverse sections on the with helper ([@dan-manges](https://api.github.com/users/dan-manges))
-- [#834](https://github.com/wycats/handlebars.js/pull/834) - Refactor blocks, programs and inverses ([@mmun](https://api.github.com/users/mmun))
-- [#852](https://github.com/wycats/handlebars.js/issues/852) - {{foo~}} space control behavior is different from older version ([@zordius](https://api.github.com/users/zordius))
+  - [#731](https://github.com/wycats/handlebars.js/pull/731) - Strange behavior for {{#foo}} {{bar}} {{/foo}} when foo is 0 ([@kpdecker](https://github.com/kpdecker))
+  - [#820](https://github.com/wycats/handlebars.js/issues/820) - strange behavior for {{foo.bar}} when foo is 0 or null or false ([@zordius](https://github.com/zordius))
+  - [#837](https://github.com/wycats/handlebars.js/issues/837) - Strange input for custom helper ( foo.bar == false when foo is undefined ) ([@zordius](https://github.com/zordius))
+- [#819](https://github.com/wycats/handlebars.js/pull/819) - Implement recursive field lookup ([@kpdecker](https://github.com/kpdecker))
+- [#764](https://github.com/wycats/handlebars.js/issues/764) - This reference not working for helpers ([@kpdecker](https://github.com/kpdecker))
+- [#773](https://github.com/wycats/handlebars.js/issues/773) - Implicit parameters in {{#each}} introduces a peculiarity in helpers calling convention  ([@Bertrand](https://github.com/Bertrand))
+- [#783](https://github.com/wycats/handlebars.js/issues/783) - helperMissing and consistency for different expression types ([@ErisDS](https://github.com/ErisDS))
+- [#795](https://github.com/wycats/handlebars.js/pull/795) - Turn the precompile script into a wrapper around a module. ([@jwietelmann](https://github.com/jwietelmann))
+- [#823](https://github.com/wycats/handlebars.js/pull/823) - Support inverse sections on the with helper ([@dan-manges](https://github.com/dan-manges))
+- [#834](https://github.com/wycats/handlebars.js/pull/834) - Refactor blocks, programs and inverses ([@mmun](https://github.com/mmun))
+- [#852](https://github.com/wycats/handlebars.js/issues/852) - {{foo~}} space control behavior is different from older version ([@zordius](https://github.com/zordius))
 - [#835](https://github.com/wycats/handlebars.js/issues/835) - Templates overwritten if file is loaded twice
 
 - Expose escapeExpression on the root object - 980c38c
@@ -294,18 +294,18 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.4)
 
 ## v2.0.0-alpha.3 - May 19th, 2014
-- [#797](https://github.com/wycats/handlebars.js/pull/797) - Pass full helper ID to helperMissing when options are provided ([@tomdale](https://api.github.com/users/tomdale))
-- [#793](https://github.com/wycats/handlebars.js/pull/793) - Ensure isHelper is coerced to a boolean ([@mmun](https://api.github.com/users/mmun))
+- [#797](https://github.com/wycats/handlebars.js/pull/797) - Pass full helper ID to helperMissing when options are provided ([@tomdale](https://github.com/tomdale))
+- [#793](https://github.com/wycats/handlebars.js/pull/793) - Ensure isHelper is coerced to a boolean ([@mmun](https://github.com/mmun))
 - Refactor template init logic - 085e5e1
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.2...v2.0.0-alpha.3)
 
 ## v2.0.0-alpha.2 - March 6th, 2014
-- [#756](https://github.com/wycats/handlebars.js/pull/756) - fix bug in IE<=8 (no Array::map), closes #751 ([@jenseng](https://api.github.com/users/jenseng))
-- [#749](https://github.com/wycats/handlebars.js/pull/749) - properly handle multiple subexpressions in the same hash, fixes #748 ([@jenseng](https://api.github.com/users/jenseng))
-- [#743](https://github.com/wycats/handlebars.js/issues/743) - subexpression confusion/problem? ([@waynedpj](https://api.github.com/users/waynedpj))
-- [#746](https://github.com/wycats/handlebars.js/issues/746) - [CLI] support `handlebars --version` ([@apfelbox](https://api.github.com/users/apfelbox))
-- [#747](https://github.com/wycats/handlebars.js/pull/747) - updated grunt-saucelabs, failing tests revealed ([@Jonahss](https://api.github.com/users/Jonahss))
+- [#756](https://github.com/wycats/handlebars.js/pull/756) - fix bug in IE<=8 (no Array::map), closes #751 ([@jenseng](https://github.com/jenseng))
+- [#749](https://github.com/wycats/handlebars.js/pull/749) - properly handle multiple subexpressions in the same hash, fixes #748 ([@jenseng](https://github.com/jenseng))
+- [#743](https://github.com/wycats/handlebars.js/issues/743) - subexpression confusion/problem? ([@waynedpj](https://github.com/waynedpj))
+- [#746](https://github.com/wycats/handlebars.js/issues/746) - [CLI] support `handlebars --version` ([@apfelbox](https://github.com/apfelbox))
+- [#747](https://github.com/wycats/handlebars.js/pull/747) - updated grunt-saucelabs, failing tests revealed ([@Jonahss](https://github.com/Jonahss))
 - Make JSON a requirement for the compiler. - 058c0fb
 - Temporarily kill the AWS publish CI step - 8347ee2
 
@@ -315,26 +315,26 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v2.0.0-alpha.1...v2.0.0-alpha.2)
 
 ## v2.0.0-alpha.1 - February 10th, 2014
-- [#182](https://github.com/wycats/handlebars.js/pull/182) - Allow passing hash parameters to partials ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#392](https://github.com/wycats/handlebars.js/pull/392) - Access to root context in partials and helpers ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#472](https://github.com/wycats/handlebars.js/issues/472) - Helpers cannot have decimal parameters ([@kayleg](https://api.github.com/users/kayleg))
-- [#569](https://github.com/wycats/handlebars.js/pull/569) - Unable to lookup array values using @index ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#491](https://github.com/wycats/handlebars.js/pull/491) - For nested helpers: get the @ variables of the outer helper from the inner one ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#669](https://github.com/wycats/handlebars.js/issues/669) - Ability to unregister a helper ([@dbachrach](https://api.github.com/users/dbachrach))
-- [#730](https://github.com/wycats/handlebars.js/pull/730) - Raw block helpers ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#634](https://github.com/wycats/handlebars.js/pull/634) - It would be great to have the helper name passed to `blockHelperMissing` ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#729](https://github.com/wycats/handlebars.js/pull/729) - Convert template spec to object literal ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#182](https://github.com/wycats/handlebars.js/pull/182) - Allow passing hash parameters to partials ([@kpdecker](https://github.com/kpdecker))
+- [#392](https://github.com/wycats/handlebars.js/pull/392) - Access to root context in partials and helpers ([@kpdecker](https://github.com/kpdecker))
+- [#472](https://github.com/wycats/handlebars.js/issues/472) - Helpers cannot have decimal parameters ([@kayleg](https://github.com/kayleg))
+- [#569](https://github.com/wycats/handlebars.js/pull/569) - Unable to lookup array values using @index ([@kpdecker](https://github.com/kpdecker))
+- [#491](https://github.com/wycats/handlebars.js/pull/491) - For nested helpers: get the @ variables of the outer helper from the inner one ([@kpdecker](https://github.com/kpdecker))
+- [#669](https://github.com/wycats/handlebars.js/issues/669) - Ability to unregister a helper ([@dbachrach](https://github.com/dbachrach))
+- [#730](https://github.com/wycats/handlebars.js/pull/730) - Raw block helpers ([@kpdecker](https://github.com/kpdecker))
+- [#634](https://github.com/wycats/handlebars.js/pull/634) - It would be great to have the helper name passed to `blockHelperMissing` ([@kpdecker](https://github.com/kpdecker))
+- [#729](https://github.com/wycats/handlebars.js/pull/729) - Convert template spec to object literal ([@kpdecker](https://github.com/kpdecker))
 
-- [#658](https://github.com/wycats/handlebars.js/issues/658) - Depthed helpers do not work after an upgrade from 1.0.0 ([@xibxor](https://api.github.com/users/xibxor))
-- [#671](https://github.com/wycats/handlebars.js/issues/671) - Crashes on no-parameter {{#each}} ([@stepancheg](https://api.github.com/users/stepancheg))
-- [#689](https://github.com/wycats/handlebars.js/issues/689) - broken template precompilation ([@AAS](https://api.github.com/users/AAS))
-- [#698](https://github.com/wycats/handlebars.js/pull/698) - Fix parser generation under windows ([@osiris43](https://api.github.com/users/osiris43))
-- [#699](https://github.com/wycats/handlebars.js/issues/699) - @DATA not compiles to invalid JS in stringParams mode ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#705](https://github.com/wycats/handlebars.js/issues/705) - 1.3.0 can not be wrapped in an IIFE ([@craigteegarden](https://api.github.com/users/craigteegarden))
-- [#706](https://github.com/wycats/handlebars.js/pull/706) - README: Use with helper instead of relying on blockHelperMissing ([@scottgonzalez](https://api.github.com/users/scottgonzalez))
+- [#658](https://github.com/wycats/handlebars.js/issues/658) - Depthed helpers do not work after an upgrade from 1.0.0 ([@xibxor](https://github.com/xibxor))
+- [#671](https://github.com/wycats/handlebars.js/issues/671) - Crashes on no-parameter {{#each}} ([@stepancheg](https://github.com/stepancheg))
+- [#689](https://github.com/wycats/handlebars.js/issues/689) - broken template precompilation ([@AAS](https://github.com/AAS))
+- [#698](https://github.com/wycats/handlebars.js/pull/698) - Fix parser generation under windows ([@osiris43](https://github.com/osiris43))
+- [#699](https://github.com/wycats/handlebars.js/issues/699) - @DATA not compiles to invalid JS in stringParams mode ([@kpdecker](https://github.com/kpdecker))
+- [#705](https://github.com/wycats/handlebars.js/issues/705) - 1.3.0 can not be wrapped in an IIFE ([@craigteegarden](https://github.com/craigteegarden))
+- [#706](https://github.com/wycats/handlebars.js/pull/706) - README: Use with helper instead of relying on blockHelperMissing ([@scottgonzalez](https://github.com/scottgonzalez))
 
-- [#700](https://github.com/wycats/handlebars.js/pull/700) - Remove redundant conditions ([@blakeembrey](https://api.github.com/users/blakeembrey))
-- [#704](https://github.com/wycats/handlebars.js/pull/704) - JavaScript Compiler Cleanup ([@blakeembrey](https://api.github.com/users/blakeembrey))
+- [#700](https://github.com/wycats/handlebars.js/pull/700) - Remove redundant conditions ([@blakeembrey](https://github.com/blakeembrey))
+- [#704](https://github.com/wycats/handlebars.js/pull/704) - JavaScript Compiler Cleanup ([@blakeembrey](https://github.com/blakeembrey))
 
 Compatibility notes:
 - `helperMissing` helper no longer has the indexed name argument. Helper name is now available via `options.name`.
@@ -349,12 +349,12 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.3.0...v2.0.0-alpha.1)
 
 ## v1.3.0 - January 1st, 2014
-- [#690](https://github.com/wycats/handlebars.js/pull/690) - Added support for subexpressions ([@machty](https://api.github.com/users/machty))
-- [#696](https://github.com/wycats/handlebars.js/pull/696) - Fix for reserved keyword "default" ([@nateirwin](https://api.github.com/users/nateirwin))
-- [#692](https://github.com/wycats/handlebars.js/pull/692) - add line numbers to nodes when parsing ([@fivetanley](https://api.github.com/users/fivetanley))
-- [#695](https://github.com/wycats/handlebars.js/pull/695) - Pull options out from param setup to allow easier extension ([@blakeembrey](https://api.github.com/users/blakeembrey))
-- [#694](https://github.com/wycats/handlebars.js/pull/694) - Make the environment reusable ([@blakeembrey](https://api.github.com/users/blakeembrey))
-- [#636](https://github.com/wycats/handlebars.js/issues/636) - Print line and column of errors ([@sgronblo](https://api.github.com/users/sgronblo))
+- [#690](https://github.com/wycats/handlebars.js/pull/690) - Added support for subexpressions ([@machty](https://github.com/machty))
+- [#696](https://github.com/wycats/handlebars.js/pull/696) - Fix for reserved keyword "default" ([@nateirwin](https://github.com/nateirwin))
+- [#692](https://github.com/wycats/handlebars.js/pull/692) - add line numbers to nodes when parsing ([@fivetanley](https://github.com/fivetanley))
+- [#695](https://github.com/wycats/handlebars.js/pull/695) - Pull options out from param setup to allow easier extension ([@blakeembrey](https://github.com/blakeembrey))
+- [#694](https://github.com/wycats/handlebars.js/pull/694) - Make the environment reusable ([@blakeembrey](https://github.com/blakeembrey))
+- [#636](https://github.com/wycats/handlebars.js/issues/636) - Print line and column of errors ([@sgronblo](https://github.com/sgronblo))
 - Use literal for data lookup - c1a93d3
 - Add stack handling sanity checks - cd885bf
 - Fix stack id "leak" on replaceStack - ddfe457
@@ -363,25 +363,25 @@ Compatibility notes:
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.2.1...v1.3.0)
 
 ## v1.2.1 - December 26th, 2013
-- [#684](https://github.com/wycats/handlebars.js/pull/684) - Allow any number of trailing characters for valid JavaScript variable ([@blakeembrey](https://api.github.com/users/blakeembrey))
-- [#686](https://github.com/wycats/handlebars.js/pull/686) - Falsy AMD module names in version 1.2.0 ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#684](https://github.com/wycats/handlebars.js/pull/684) - Allow any number of trailing characters for valid JavaScript variable ([@blakeembrey](https://github.com/blakeembrey))
+- [#686](https://github.com/wycats/handlebars.js/pull/686) - Falsy AMD module names in version 1.2.0 ([@kpdecker](https://github.com/kpdecker))
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v1.2.0...v1.2.1)
 
 ## v1.2.0 - December 23rd, 2013
-- [#675](https://github.com/wycats/handlebars.js/issues/675) - Cannot compile empty template for partial ([@erwinw](https://api.github.com/users/erwinw))
-- [#677](https://github.com/wycats/handlebars.js/issues/677) - Triple brace statements fail under IE ([@hamzaCM](https://api.github.com/users/hamzaCM))
-- [#655](https://github.com/wycats/handlebars.js/issues/655) - Loading Handlebars using bower ([@niki4810](https://api.github.com/users/niki4810))
-- [#657](https://github.com/wycats/handlebars.js/pull/657) - Fixes issue where cli compiles non handlebars templates ([@chrishoage](https://api.github.com/users/chrishoage))
-- [#681](https://github.com/wycats/handlebars.js/pull/681) - Adds in-browser testing and Saucelabs CI ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#661](https://github.com/wycats/handlebars.js/pull/661) - Add @first and @index to #each object iteration ([@cgp](https://api.github.com/users/cgp))
-- [#650](https://github.com/wycats/handlebars.js/pull/650) - Handlebars is MIT-licensed ([@thomasboyt](https://api.github.com/users/thomasboyt))
-- [#641](https://github.com/wycats/handlebars.js/pull/641) - Document ember testing process ([@kpdecker](https://api.github.com/users/kpdecker))
+- [#675](https://github.com/wycats/handlebars.js/issues/675) - Cannot compile empty template for partial ([@erwinw](https://github.com/erwinw))
+- [#677](https://github.com/wycats/handlebars.js/issues/677) - Triple brace statements fail under IE ([@hamzaCM](https://github.com/hamzaCM))
+- [#655](https://github.com/wycats/handlebars.js/issues/655) - Loading Handlebars using bower ([@niki4810](https://github.com/niki4810))
+- [#657](https://github.com/wycats/handlebars.js/pull/657) - Fixes issue where cli compiles non handlebars templates ([@chrishoage](https://github.com/chrishoage))
+- [#681](https://github.com/wycats/handlebars.js/pull/681) - Adds in-browser testing and Saucelabs CI ([@kpdecker](https://github.com/kpdecker))
+- [#661](https://github.com/wycats/handlebars.js/pull/661) - Add @first and @index to #each object iteration ([@cgp](https://github.com/cgp))
+- [#650](https://github.com/wycats/handlebars.js/pull/650) - Handlebars is MIT-licensed ([@thomasboyt](https://github.com/thomasboyt))
+- [#641](https://github.com/wycats/handlebars.js/pull/641) - Document ember testing process ([@kpdecker](https://github.com/kpdecker))
 - [#662](https://github.com/wycats/handlebars.js/issues/662) - handlebars-source 1.1.2 is missing from RubyGems.
-- [#656](https://github.com/wycats/handlebars.js/issues/656) - Expose COMPILER_REVISION checks as a hook ([@machty](https://api.github.com/users/machty))
-- [#668](https://github.com/wycats/handlebars.js/issues/668) - Consider publishing handlebars-runtime as a separate module on npm ([@dlmanning](https://api.github.com/users/dlmanning))
-- [#679](https://github.com/wycats/handlebars.js/issues/679) - Unable to override invokePartial ([@mattbrailsford](https://api.github.com/users/mattbrailsford))
-- [#646](https://github.com/wycats/handlebars.js/pull/646) - Fix "\\{{" immediately following "\{{" ([@dmarcotte](https://api.github.com/users/dmarcotte))
+- [#656](https://github.com/wycats/handlebars.js/issues/656) - Expose COMPILER_REVISION checks as a hook ([@machty](https://github.com/machty))
+- [#668](https://github.com/wycats/handlebars.js/issues/668) - Consider publishing handlebars-runtime as a separate module on npm ([@dlmanning](https://github.com/dlmanning))
+- [#679](https://github.com/wycats/handlebars.js/issues/679) - Unable to override invokePartial ([@mattbrailsford](https://github.com/mattbrailsford))
+- [#646](https://github.com/wycats/handlebars.js/pull/646) - Fix "\\{{" immediately following "\{{" ([@dmarcotte](https://github.com/dmarcotte))
 - Allow extend to work with non-prototyped objects - eb53f2e
 - Add JavascriptCompiler public API tests - 1a751b2
 - Add AST test coverage for more complex paths - ddea5be
@@ -396,8 +396,8 @@ Compatibility notes:
 
 ## v1.1.2 - November 5th, 2013
 
-- [#645](https://github.com/wycats/handlebars.js/issues/645) - 1.1.1 fails under IE8 ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#644](https://github.com/wycats/handlebars.js/issues/644) - Using precompiled templates (AMD mode) with handlebars.runtime 1.1.1 ([@fddima](https://api.github.com/users/fddima))
+- [#645](https://github.com/wycats/handlebars.js/issues/645) - 1.1.1 fails under IE8 ([@kpdecker](https://github.com/kpdecker))
+- [#644](https://github.com/wycats/handlebars.js/issues/644) - Using precompiled templates (AMD mode) with handlebars.runtime 1.1.1 ([@fddima](https://github.com/fddima))
 
 - Add simple binary utility tests - 96a45a4
 - Fix empty string compilation - eea708a
@@ -414,13 +414,13 @@ Compatibility notes:
 
 ## v1.1.0 - November 3rd, 2013
 
-- [#628](https://github.com/wycats/handlebars.js/pull/628) - Convert code to ES6 modules ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#336](https://github.com/wycats/handlebars.js/pull/336) - Add whitespace control syntax ([@kpdecker](https://api.github.com/users/kpdecker))
-- [#535](https://github.com/wycats/handlebars.js/pull/535) - Fix for probable JIT error under Safari ([@sorentwo](https://api.github.com/users/sorentwo))
-- [#483](https://github.com/wycats/handlebars.js/issues/483) - Add first and last @ vars to each helper ([@denniskuczynski](https://api.github.com/users/denniskuczynski))
-- [#557](https://github.com/wycats/handlebars.js/pull/557) - `\\{{foo}}` escaping only works in some situations ([@dmarcotte](https://api.github.com/users/dmarcotte))
-- [#552](https://github.com/wycats/handlebars.js/pull/552) - Added BOM removal flag. ([@blessenm](https://api.github.com/users/blessenm))
-- [#543](https://github.com/wycats/handlebars.js/pull/543) - publish passing master builds to s3 ([@fivetanley](https://api.github.com/users/fivetanley))
+- [#628](https://github.com/wycats/handlebars.js/pull/628) - Convert code to ES6 modules ([@kpdecker](https://github.com/kpdecker))
+- [#336](https://github.com/wycats/handlebars.js/pull/336) - Add whitespace control syntax ([@kpdecker](https://github.com/kpdecker))
+- [#535](https://github.com/wycats/handlebars.js/pull/535) - Fix for probable JIT error under Safari ([@sorentwo](https://github.com/sorentwo))
+- [#483](https://github.com/wycats/handlebars.js/issues/483) - Add first and last @ vars to each helper ([@denniskuczynski](https://github.com/denniskuczynski))
+- [#557](https://github.com/wycats/handlebars.js/pull/557) - `\\{{foo}}` escaping only works in some situations ([@dmarcotte](https://github.com/dmarcotte))
+- [#552](https://github.com/wycats/handlebars.js/pull/552) - Added BOM removal flag. ([@blessenm](https://github.com/blessenm))
+- [#543](https://github.com/wycats/handlebars.js/pull/543) - publish passing master builds to s3 ([@fivetanley](https://github.com/fivetanley))
 
 - [#608](https://github.com/wycats/handlebars.js/issues/608) - Add `includeZero` flag to `if` conditional
 - [#498](https://github.com/wycats/handlebars.js/issues/498) - `Handlebars.compile` fails on empty string although a single blank works fine
