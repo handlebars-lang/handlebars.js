@@ -1,5 +1,7 @@
 .DS_Store
 .gitignore
+.idea/*
+.istanbul.yml
 .rvmrc
 .eslintrc
 .travis.yml
@@ -11,6 +13,7 @@ Gruntfile.js
 *.gemspec
 *.nuspec
 *.log
+appveyor.yml
 bench/*
 configurations/*
 components/*
