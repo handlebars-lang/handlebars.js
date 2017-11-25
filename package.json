@@ -73,5 +73,15 @@
     "buildConfig": {
       "minify": true
     }
-  }
+  },
+  "files": [
+    "bin",
+    "dist/*.js",
+    "dist/amd/**/*.js",
+    "dist/cjs/**/*.js",
+    "lib",
+    "print-script",
+    "release-notes.md",
+    "runtime.js"
+  ]
 }
