@@ -1,0 +1,19 @@
+{
+  "version": "4.0.11",
+  "license": "MIT",
+  "jspm": {
+    "main": "handlebars",
+    "shim": {
+      "handlebars": {
+        "exports": "Handlebars"
+      }
+    },
+    "files": [
+      "handlebars.js",
+      "handlebars.runtime.js"
+    ],
+    "buildConfig": {
+      "minify": true
+    }
+  }
+}
