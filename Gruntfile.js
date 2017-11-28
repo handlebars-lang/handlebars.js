@@ -210,7 +210,12 @@ module.exports = function(grunt) {
   this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('npmignore', function() {
+    grunt.file.write('dist/components/.npmignore', '*');
+    grunt.file.write('dist/cdnjs/.npmignore', '*');
+  });
+
+  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:dist', 'npmignore', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');

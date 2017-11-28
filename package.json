@@ -76,9 +76,7 @@
   },
   "files": [
     "bin",
-    "dist/*.js",
-    "dist/amd/**/*.js",
-    "dist/cjs/**/*.js",
+    "dist",
     "lib",
     "print-script",
     "release-notes.md",
