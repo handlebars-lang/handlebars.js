@@ -115,6 +115,67 @@ describe('builtin helpers', function() {
       shouldCompileTo(string, {goodbyes: {}, world: 'world'}, 'cruel world!');
     });
 
+    it('each with an object and @key/@value', function() {
+      var string = '{{#each goodbyes}}{{@key}}. {{@value.text}}! {{/each}}cruel {{world}}!';
+
+      function Clazz() {
+        this['<b>#1</b>'] = {text: 'goodbye'};
+        this[2] = {text: 'GOODBYE'};
+      }
+      Clazz.prototype.foo = 'fail';
+      var hash = {goodbyes: new Clazz(), world: 'world'};
+
+      // Object property iteration order is undefined according to ECMA spec,
+      // so we need to check both possible orders
+      // @see http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
+      var actual = compileWithPartials(string, hash);
+      var expected1 = '&lt;b&gt;#1&lt;/b&gt;. goodbye! 2. GOODBYE! cruel world!';
+      var expected2 = '2. GOODBYE! &lt;b&gt;#1&lt;/b&gt;. goodbye! cruel world!';
+
+      equals(actual === expected1 || actual === expected2, true, 'each with object argument iterates over the contents when not empty');
+      shouldCompileTo(string, {goodbyes: {}, world: 'world'}, 'cruel world!');
+    });
+
+    it('each with an object and @key/@value that has key/value properties itself', function() {
+      var string = '{{#each goodbyes}}{{@key}}. [{{@value.key}}] {{@value.value}}! {{/each}}cruel {{world}}!';
+
+      function Clazz() {
+        this['<b>#1</b>'] = {value: 'goodbye', key: 'html'};
+        this[2] = {value: 'GOODBYE', key: 'number'};
+      }
+      Clazz.prototype.foo = 'fail';
+      var hash = {goodbyes: new Clazz(), world: 'world'};
+
+      // Object property iteration order is undefined according to ECMA spec,
+      // so we need to check both possible orders
+      // @see http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
+      var actual = compileWithPartials(string, hash);
+      var expected1 = '&lt;b&gt;#1&lt;/b&gt;. [html] goodbye! 2. [number] GOODBYE! cruel world!';
+      var expected2 = '2. [number] GOODBYE! &lt;b&gt;#1&lt;/b&gt;. [html] goodbye! cruel world!';
+      equals(actual === expected1 || actual === expected2, true, 'each with object argument iterates over the contents when not empty');
+      shouldCompileTo(string, {goodbyes: {}, world: 'world'}, 'cruel world!');
+    });
+
+    it('each with @key', function() {
+      var string = '{{#each goodbyes}}{{@key}}. {{text}}! {{/each}}cruel {{world}}!';
+      var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!', 'The @key variable is used');
+    });
+
+    it('each with @key/@value', function() {
+      var string = '{{#each goodbyes}}{{@key}}. {{@value.text}}! {{/each}}cruel {{world}}!';
+      var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
+
+      var template = CompilerContext.compile(string);
+      var result = template(hash);
+
+      equal(result, '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!', 'The @key/@value variables are used');
+    });
+
     it('each with @index', function() {
       var string = '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!';
       var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
