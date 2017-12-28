@@ -28,6 +28,9 @@ the template into a function. The generated function takes a context
 argument, which will be used to render the template.
 
 ```js
+
+const Handlebars = require('handlebars');
+
 var source = "<p>Hello, my name is {{name}}. I am from {{hometown}}. I have " +
              "{{kids.length}} kids:</p>" +
              "<ul>{{#kids}}<li>{{name}} is {{age}}</li>{{/kids}}</ul>";
