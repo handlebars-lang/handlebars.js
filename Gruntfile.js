@@ -1,3 +1,5 @@
+const path = require('path');
+
 /* eslint-disable no-process-env */
 module.exports = function(grunt) {
 
@@ -46,12 +48,16 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMaps: 'inline',
-        loose: ['es6.modules'],
+        presets: [
+          ['env', { loose: true }]
+        ],
         auxiliaryCommentBefore: 'istanbul ignore next'
       },
       amd: {
         options: {
-          modules: 'amd'
+          presets: [
+            ['env', { modules: 'amd' }]
+          ]
         },
         files: [{
           expand: true,
@@ -63,7 +69,9 @@ module.exports = function(grunt) {
 
       cjs: {
         options: {
-          modules: 'common'
+          presets: [
+            ['env', { modules: 'commonjs' }]
+          ]
         },
         files: [{
           cwd: 'lib/',
@@ -73,19 +81,17 @@ module.exports = function(grunt) {
         }]
       }
     },
+
     webpack: {
       options: {
         context: __dirname,
-        module: {
-          loaders: [
-            // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next' }
-          ]
-        },
         output: {
-          path: 'dist/',
+          path: path.join(__dirname, 'dist'),
           library: 'Handlebars',
           libraryTarget: 'umd'
+        },
+        module: {
+          noParse: [ /parser\.js$/ ]
         }
       },
       handlebars: {
