@@ -32,6 +32,7 @@
     "aws-sdk": "^2.1.49",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.6.1",
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",

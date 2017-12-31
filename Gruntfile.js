@@ -51,6 +51,9 @@ module.exports = function(grunt) {
         presets: [
           ['env', { loose: true }]
         ],
+        plugins: [
+          'add-module-exports'
+        ],
         auxiliaryCommentBefore: 'istanbul ignore next'
       },
       amd: {
