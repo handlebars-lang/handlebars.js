@@ -31,6 +31,7 @@
   "devDependencies": {
     "aws-sdk": "^2.1.49",
     "babel-core": "^6.26.0",
+    "babel-istanbul": "^0.12.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-env": "^1.6.1",
@@ -51,7 +52,6 @@
     "grunt-eslint": "^20.1.0",
     "grunt-saucelabs": "8.x",
     "grunt-webpack": "^3.0.2",
-    "istanbul": "^0.3.0",
     "jison": "~0.3.0",
     "mocha": "~1.20.0",
     "mock-stdin": "^0.3.0",

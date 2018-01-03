@@ -42,7 +42,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test:cov', function() {
     var done = this.async();
 
-    var runner = childProcess.fork('node_modules/istanbul/lib/cli.js', ['cover', '--source-map', '--', './spec/env/runner.js'], {stdio: 'inherit'});
+    var runner = childProcess.fork('node_modules/babel-istanbul/lib/cli.js', ['cover', '--source-map', '--', './spec/env/runner.js'], {stdio: 'inherit'});
     runner.on('close', function(code) {
       if (code != 0) {
         grunt.fatal(code + ' tests failed');
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test:check-cov', function() {
     var done = this.async();
 
-    var runner = childProcess.fork('node_modules/istanbul/lib/cli.js', ['check-coverage', '--statements', '100', '--functions', '100', '--branches', '100', '--lines 100'], {stdio: 'inherit'});
+    var runner = childProcess.fork('node_modules/babel-istanbul/lib/cli.js', ['check-coverage', '--statements', '100', '--functions', '100', '--branches', '100', '--lines 100'], {stdio: 'inherit'});
     runner.on('close', function(code) {
       if (code != 0) {
         grunt.fatal('Coverage check failed: ' + code);
