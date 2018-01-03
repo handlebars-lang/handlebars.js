@@ -24,7 +24,7 @@ var optimist = require('optimist')
       },
       'h': {
         'type': 'string',
-        'description': 'Path to handlebar.js (only valid for amd-style)',
+        'description': 'Path to Handlebars module (only valid for amd-style)',
         'alias': 'handlebarPath',
         'default': ''
       },
@@ -94,6 +94,12 @@ var optimist = require('optimist')
         'type': 'boolean',
         'description': 'Prints the current compiler version',
         'alias': 'version'
+      },
+      'runtime': {
+        'type': 'string',
+        'description': 'Path to the handlebars runtime from the module folder, used with -h --handlebarPath (only valid for amd-style)',
+        'alias': 'runtimeModuleName',
+        'default': 'handlebars.runtime'
       },
 
       'help': {
