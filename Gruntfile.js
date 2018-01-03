@@ -48,9 +48,6 @@ module.exports = function(grunt) {
     babel: {
       options: {
         sourceMaps: 'inline',
-        presets: [
-          ['env', { loose: true }]
-        ],
         plugins: [
           'add-module-exports'
         ],
@@ -59,7 +56,7 @@ module.exports = function(grunt) {
       amd: {
         options: {
           presets: [
-            ['env', { modules: 'amd' }]
+            ['env', { modules: 'amd', loose: true }]
           ]
         },
         files: [{
@@ -73,7 +70,7 @@ module.exports = function(grunt) {
       cjs: {
         options: {
           presets: [
-            ['env', { modules: 'commonjs' }]
+            ['env', { modules: 'commonjs', loose: true }]
           ]
         },
         files: [{
@@ -98,13 +95,13 @@ module.exports = function(grunt) {
         }
       },
       handlebars: {
-        entry: './lib/handlebars.js',
+        entry: './dist/cjs/handlebars.js',
         output: {
           filename: 'handlebars.js'
         }
       },
       runtime: {
-        entry: './lib/handlebars.runtime.js',
+        entry: './dist/cjs/handlebars.runtime.js',
         output: {
           filename: 'handlebars.runtime.js'
         }
