@@ -1,4 +1,4 @@
-var async = require('async'),
+var async = require('neo-async'),
     git = require('./util/git'),
     semver = require('semver');
 

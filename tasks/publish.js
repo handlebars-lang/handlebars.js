@@ -1,5 +1,5 @@
 var _ = require('underscore'),
-    async = require('async'),
+    async = require('neo-async'),
     AWS = require('aws-sdk'),
     git = require('./util/git'),
     semver = require('semver');

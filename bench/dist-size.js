@@ -1,4 +1,4 @@
-var async = require('async'),
+var async = require('neo-async'),
     fs = require('fs'),
     zlib = require('zlib');
 
