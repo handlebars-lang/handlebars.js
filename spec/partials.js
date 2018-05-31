@@ -263,6 +263,15 @@ describe('partials', function() {
         true,
         'success');
     });
+
+    it('should be able to access the @data frame from a partial-block', function() {
+      shouldCompileToWithPartials(
+        '{{#> dude}}in-block: {{@root/value}}{{/dude}}',
+        [{value: 'success'}, {}, {dude: '<code>before-block: {{@root/value}} {{>   @partial-block }}</code>'}],
+        true,
+        '<code>before-block: success in-block: success</code>');
+    });
+
     it('should allow the #each-helper to be used along with partial-blocks', function() {
       shouldCompileToWithPartials(
         '<template>{{#> list value}}value = {{.}}{{/list}}</template>',

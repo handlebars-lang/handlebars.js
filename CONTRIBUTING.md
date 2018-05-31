@@ -10,6 +10,12 @@ Pull requests containing only failing tests demonstrating the issue are welcomed
 
 Documentation issues on the handlebarsjs.com site should be reported on [handlebars-site](https://github.com/wycats/handlebars-site).
 
+## Branches
+
+* The branch `4.x` contains the currently released version. Bugfixes should be made in this branch.
+* The branch `master` contains the next version. A release date is not yet specified. Maintainers
+  should merge the branch `4.x` into the master branch regularly.
+
 ## Pull Requests
 
 We also accept [pull requests][pull-request]!
