@@ -1,3 +1,5 @@
+var global = (function() { return this; }());
+
 var AssertError;
 if (Error.captureStackTrace) {
   AssertError = function AssertError(message, caller) {

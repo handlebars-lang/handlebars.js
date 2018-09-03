@@ -312,10 +312,14 @@ describe('builtin helpers', function() {
       console.info = function(info) {
         equals('whee', info);
         called = true;
+        console.info = $info;
+        console.log = $log;
       };
       console.log = function(log) {
         equals('whee', log);
         called = true;
+        console.info = $info;
+        console.log = $log;
       };
 
       shouldCompileTo(string, hash, '');
@@ -329,6 +333,7 @@ describe('builtin helpers', function() {
       console.error = function(log) {
         equals('whee', log);
         called = true;
+        console.error = $error;
       };
 
       shouldCompileTo(string, [hash,,,, {level: '03'}], '');
@@ -343,6 +348,7 @@ describe('builtin helpers', function() {
       console.log = function(log) {
         equals('whee', log);
         called = true;
+        console.log = $log;
       };
 
       shouldCompileTo(string, [hash,,,, {level: '03'}], '');
@@ -385,9 +391,9 @@ describe('builtin helpers', function() {
       var hash = { blah: 'whee' };
       var called = false;
 
-      console.info = console.log = console.error = console.debug = function(log) {
-        equals('whee', log);
+      console.info = console.log = console.error = console.debug = function() {
         called = true;
+        console.info = console.log = console.error = console.debug = $log;
       };
 
       shouldCompileTo(string, hash, '');
@@ -403,6 +409,7 @@ describe('builtin helpers', function() {
         equals('foo', log2);
         equals(1, log3);
         called = true;
+        console.log = $log;
       };
 
       shouldCompileTo(string, hash, '');
