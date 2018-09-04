@@ -2,7 +2,36 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.11...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.12...master)
+
+## v4.0.12 - September 4th, 2018
+New features:
+
+- none
+
+Various dependency updates
+
+- [#1464](https://github.com/wycats/handlebars.js/pull/1464) - Bump versions of grunt-plugins to 1.x
+- [#1398](https://github.com/wycats/handlebars.js/pull/1398) - Chore: updated various dev dependencies
+- upgrade uglify-js - d3d3942
+- Update grunt-eslint to 20.1.0 - 7729aa9
+- Update dependencies "async" to 2.5.0 and "source-map" to 0.6.1 (73d5637)
+
+Bugfixes:
+
+- [components/handlebars.js#24](https://github.com/components/handlebars.js#24) Add package.json to components shim
+- Updated `source-map`-package should work better with `rollup`[#1463](https://github.com/wycats/handlebars.js/issues/1463)
+
+Removed obsolete code:
+
+- unnecessary check - 0ddff8b
+- Use `files` field - 69c6ca5
+- Update jsfiddle to 4.0.11 - 8947dd0
+
+Compatibility notes:
+- No compatibility issues are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.11...v4.0.12)
 
 ## v4.0.11 - October 17th, 2017
 - [#1391](https://github.com/wycats/handlebars.js/issues/1391) - `uglify-js` is unconditionally imported, but only listed as optional dependency ([@Turbo87](https://github.com/Turbo87))
