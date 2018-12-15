@@ -87,6 +87,14 @@ npm test
 
 Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
 
+Before starting the release, make sure that the `yo`, `generator-release` and `grunt` are installed globally.
+The last release was successfully performed with `yo@2.0.5`, `generator-release@2.6.1` and `grunt@1.0.3` and `node@8.12.0`.
+If the latest versions of the tools don't work you may want to revert to those versions.
+
+```bash
+npm install -g yo generator-release grunt
+```
+
 A full release may be completed with the following:
 
 ```
