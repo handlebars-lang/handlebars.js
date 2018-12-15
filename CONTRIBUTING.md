@@ -81,7 +81,9 @@ npm link handlebars
 npm test
 ```
 
-## Releasing
+## Releasing the latest version
+
+*When releasing a previous version of Handlebars, please look into the CONTRIBUNG.md in the corresponding branch.*
 
 Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
 
@@ -97,7 +99,15 @@ gem build handlebars-source.gemspec
 gem push handlebars-source-*.gem
 ```
 
-After this point the handlebars site needs to be updated to point to the new version numbers. The jsfiddle link should be updated to point to the most recent distribution for all instances in our documentation.
+After the release, you should check that all places have really been updated. Especially verify that the `latest`-tags
+in those places still point to the latest version
+
+* [The npm-package](https://www.npmjs.com/package/handlebars) (check latest-tag)
+* [The bower package](https://github.com/components/handlebars.js) (check the package.json)
+* [The AWS S3 Bucket](http://builds.handlebarsjs.com.s3.amazonaws.com/) (check latest-tag)
+* [RubyGems](https://rubygems.org/gems/handlebars-source)
+
+When everything is OK, the handlebars site needs to be updated to point to the new version numbers. The jsfiddle link should be updated to point to the most recent distribution for all instances in our documentation.
 
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
