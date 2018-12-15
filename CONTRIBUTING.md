@@ -6,9 +6,17 @@ Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md)
 
 Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]! In general we are going to ask for an example of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle [template][jsfiddle] to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here)
 
-Pull requests containing only failing thats demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
+Pull requests containing only failing tests demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
 Documentation issues on the handlebarsjs.com site should be reported on [handlebars-site](https://github.com/wycats/handlebars-site).
+
+## Branches
+
+* The branch `4.x` contains the currently released version. Bugfixes should be made in this branch.
+* The branch `master` contains the next version. A release date is not yet specified. Maintainers
+  should merge the branch `4.x` into the master branch regularly.
+* The branch `3.x` contains the previous release. Relevant bugfixes may be cherry-picked into this
+  branch from the `4.x` branch. There should be no merges anymore between this branch and `4.x` or `master`.
 
 ## Pull Requests
 
@@ -41,6 +49,25 @@ The `grunt dev` implements watching for tests and allows for in browser testing 
 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
+
+## Running Tests
+
+To run tests locally, first install all dependencies.
+```sh
+npm install
+```
+
+Clone the mustache specs into the spec/mustache folder.
+```sh
+cd spec
+rm -r mustache
+git clone https://github.com/mustache/spec.git mustache
+```
+
+From the root directory, run the tests.
+```sh
+npm test
+```
 
 ## Ember testing
 
