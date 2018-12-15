@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.4...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.5...master)
+
+## v3.0.5 - December 15th, 2018
+- chore: use node 10.x in travis-build - 4ed0a62
+
+Compatibility notes:
+- no breaking changes
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.4...v3.0.5)
 
 ## v3.0.4 - December 15th, 2018
 - Further relax uglify dependency - 4cd5305
