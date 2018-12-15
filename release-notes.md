@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.4...master)
+
+## v3.0.4 - December 15th, 2018
+- Further relax uglify dependency - 4cd5305
+- Update uglify-js to avoid vulnerability - d97c2e6
+- Escape = in HTML content - 1c863e3
+
+Compatibility notes:
+- No breaking changes
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.3...v3.0.4)
 
 ## v3.0.3 - April 28th, 2015
 - [#1004](https://github.com/wycats/handlebars.js/issues/1004) - Latest version breaks with RequireJS (global is undefined) ([@boskee](https://api.github.com/users/boskee))
