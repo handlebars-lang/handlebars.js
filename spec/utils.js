@@ -18,7 +18,9 @@ describe('utils', function() {
   describe('#escapeExpression', function() {
     it('shouhld escape html', function() {
       equals(Handlebars.Utils.escapeExpression('foo<&"\'>'), 'foo&lt;&amp;&quot;&#x27;&gt;');
-      equals(Handlebars.Utils.escapeExpression('foo='), 'foo&#x3D;');
+    });
+    it('should not escape the equals-sign in 3.x (#1489)', function() {
+      equals(Handlebars.Utils.escapeExpression('foo='), 'foo=');
     });
     it('should not escape SafeString', function() {
       var string = new Handlebars.SafeString('foo<&"\'>');
