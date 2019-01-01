@@ -51,7 +51,7 @@
     "istanbul": "^0.3.0",
     "jison": "~0.3.0",
     "keen.io": "0.0.3",
-    "mocha": "~1.20.0",
+    "mocha": "~1.21.5",
     "mustache": "0.x",
     "semver": "^4.0.0",
     "underscore": "^1.5.1",

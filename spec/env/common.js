@@ -1,3 +1,21 @@
+var global = (function() { return this; }());
+
+var AssertError;
+if (Error.captureStackTrace) {
+  AssertError = function AssertError(message, caller) {
+    Error.prototype.constructor.call(this, message);
+    this.message = message;
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, caller || AssertError);
+    }
+  };
+
+  AssertError.prototype = new Error();
+} else {
+  AssertError = Error;
+}
+
 global.shouldCompileTo = function(string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };

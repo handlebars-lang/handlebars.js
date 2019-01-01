@@ -27,6 +27,7 @@ run('./node', function() {
 function run(env, callback) {
   var mocha = new Mocha();
   mocha.ui('bdd');
+  mocha.reporter('dot');
   mocha.files = files.slice();
   if (grep) {
     mocha.grep(grep);
