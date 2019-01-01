@@ -20,6 +20,7 @@ module.exports = function(grunt) {
     async.each([
         ['lib/handlebars/base.js', /var VERSION = ['"](.*)['"];/, 'var VERSION = "' + version + '";'],
         ['components/bower.json', /"version":.*/, '"version": "' + version + '",'],
+        ['components/package.json', /"version":.*/, '"version": "' + version + '",'],
         ['components/handlebars.js.nuspec', /<version>.*<\/version>/, '<version>' + version + '</version>']
       ],
       function(args, callback) {
