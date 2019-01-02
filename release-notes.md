@@ -2,7 +2,27 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.5...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.6...master)
+
+## v3.0.6 - January 2nd, 2019
+Chore:
+- prevent tagging 3.x versions as "latest" in npm - df403ed, [#1486](https://github.com/wycats/handlebars.js/issues/1486)
+- ignore idea config - af919d2
+- fix travis build - 9283205
+- update components/handlebars package.json on release - 9679fe6
+- add active NodeJS versions to travis - d207ad0
+
+Fix: 
+- No longer escape "=" in HTML content - 6e9dbac, [#1489](https://github.com/wycats/handlebars.js/issues/1489)
+- gracefully handle read-only "column"-property of the Error class (required in Safari 9+) - 725986d
+
+
+Compatibility notes:
+- Compatibility to 3.0.5 is broken due to reverting to *not* escaping "=" in HTML,
+  but compatibility to 3.0.3 is restored.
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.5...v3.0.6)
 
 ## v3.0.5 - December 15th, 2018
 - chore: use node 10.x in travis-build - 4ed0a62
