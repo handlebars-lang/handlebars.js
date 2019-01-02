@@ -1,6 +1,6 @@
 {
   "name": "handlebars",
-  "version": "4.0.12",
+  "version": "5.0.0-alpha.1",
   "main": "handlebars.js",
   "license": "MIT",
   "dependencies": {}
