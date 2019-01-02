@@ -59,6 +59,7 @@
     "webpack-dev-server": "^1.12.1"
   },
   "main": "lib/index.js",
+  "types": "lib/handlebars.d.ts",
   "bin": {
     "handlebars": "bin/handlebars"
   },
