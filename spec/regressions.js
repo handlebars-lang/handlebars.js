@@ -291,4 +291,14 @@ describe('Regressions', function() {
     };
     shouldCompileToWithPartials(string, [{}, {}, partials], true, 'template  block  partial  block  template');
   });
+  it('should allow hash with protected array names', function() {
+    var obj = {array: [1], name: 'John'};
+    var helpers = {
+      helpa: function(options) {
+        return options.hash.length;
+      }
+    };
+
+    shouldCompileTo('{{helpa length="foo"}}', [obj, helpers], 'foo');
+  });
 });
