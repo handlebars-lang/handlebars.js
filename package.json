@@ -46,7 +46,7 @@
     "grunt-contrib-uglify": "^1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^20.1.0",
-    "grunt-saucelabs": "8.x",
+    "grunt-saucelabs": "9.x",
     "grunt-webpack": "^1.0.8",
     "istanbul": "kpdecker/istanbul",
     "jison": "0.4.16",

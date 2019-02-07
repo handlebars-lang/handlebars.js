@@ -2,7 +2,44 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.12...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.0...master)
+
+## v4.1.0 - February 7th, 2019
+New Features
+
+- import TypeScript typings - 27ac1ee
+
+Security fixes:
+
+- disallow access to the constructor in templates to prevent RCE - 42841c4, #1495
+
+Housekeeping
+
+- chore: fix components/handlebars package.json and auto-update on release - bacd473
+- chore: Use node 10 to build handlebars - 78dd89c
+- chore/doc: Add more release docs - 6b87c21
+
+Compatibility notes:
+
+Access to class constructors (i.e. `({}).constructor`) is now prohibited to prevent
+Remote Code Execution. This means that following construct will no work anymore:
+
+```
+class SomeClass {
+}
+
+SomeClass.staticProperty = 'static'
+
+var template = Handlebars.compile('{{constructor.staticProperty}}');
+document.getElementById('output').innerHTML = template(new SomeClass());
+// expected: 'static', but now this is empty.
+```
+
+This kind of access is not the intended use of Handlebars and leads to the vulnerability described in #1495. We will **not** increase the major version, because such use is not intended or documented, and because of the potential impact of the issue (we fear that most people won't use a new major version and the issue may not be resolved on many systems).
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.12...v4.1.0)
 
 ## v4.0.12 - September 4th, 2018
 New features:
