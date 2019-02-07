@@ -10,3 +10,5 @@ node_modules
 *.sublime-workspace
 npm-debug.log
 sauce_connect.log*
+.idea
+yarn-error.log
