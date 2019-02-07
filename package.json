@@ -10,6 +10,9 @@
     "template",
     "html"
   ],
+  "publishConfig": {
+    "tag": "4.0-patch"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wycats/handlebars.js.git"
