@@ -12,7 +12,8 @@ module.exports = function(grunt) {
         'bench/**/*.js',
         'tasks/**/*.js',
         'lib/**/!(*.min|parser).js',
-        'spec/**/!(*.amd|json2|require).js'
+        'spec/**/!(*.amd|json2|require).js',
+        'multi-nodejs-test/*.js'
       ]
     },
 
