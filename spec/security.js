@@ -11,11 +11,16 @@ describe('security issues', function() {
         });
 
         it('should allow prototype properties that are not constructors', function() {
-            class TestClass {
-                get abc() {
+            function TestClass() {
+            }
+
+            Object.defineProperty(TestClass.prototype, 'abc', {
+                get: function() {
                     return 'xyz';
                 }
-            }
+
+            });
+
             shouldCompileTo('{{#with this as |obj|}}{{obj.abc}}{{/with}}',
                 new TestClass(), 'xyz');
         });
