@@ -16,6 +16,20 @@ Compatibility notes:
 - This is a bugfix release. There are no breaking change and no new features.
 
 
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.1...v4.1.1)
+
+## v4.1.1 - March 16th, 2019
+Bugfixes:
+- fix: add "runtime.d.ts" to allow "require('handlebars/runtime')" in TypeScript - 5cedd62
+
+Refactorings:
+- replace "async" with "neo-async" - 048f2ce
+- use "substring"-function instead of "substr" - 445ae12
+
+Compatibility notes:
+- This is a bugfix release. There are no breaking change and no new features.
+
+
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.1.0...v4.1.1)
 
 ## v4.1.0 - February 7th, 2019
