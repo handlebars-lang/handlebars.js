@@ -96,7 +96,7 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         mangle: true,
-        compress: true,
+        compress: {},
         preserveComments: 'some'
       },
       dist: {
@@ -169,10 +169,12 @@ module.exports = function(grunt) {
 
   // Build a new version of the library
   this.registerTask('build', "Builds a distributable version of the current project", [
+                    'clean',
+                    'jshint',
                     'parser',
                     'node',
-                    'globals',
-                    'jshint']);
+                    'globals'
+                  ]);
 
   this.registerTask('amd', ['packager:amd', 'requirejs']);
   this.registerTask('node', ['packager:cjs']);
