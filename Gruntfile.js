@@ -187,6 +187,14 @@ module.exports = function(grunt) {
       }
     },
 
+    bgShell: {
+      checkTypes: {
+        cmd: 'npm run checkTypes',
+        bg: false,
+        fail: true
+      }
+    },
+
     watch: {
       scripts: {
         options: {
@@ -202,6 +210,7 @@ module.exports = function(grunt) {
   // Build a new version of the library
   this.registerTask('build', 'Builds a distributable version of the current project', [
                     'eslint',
+                    'bgShell:checkTypes',
                     'parser',
                     'node',
                     'globals']);
@@ -222,6 +231,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-bg-shell');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-webpack');
