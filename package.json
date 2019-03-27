@@ -33,10 +33,12 @@
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
+    "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
     "grunt": "^1.0.3",
     "grunt-babel": "^5.0.0",
+    "grunt-bg-shell": "^2.3.3",
     "grunt-cli": "^1",
     "grunt-contrib-clean": "^1",
     "grunt-contrib-concat": "^1",
@@ -59,11 +61,12 @@
     "webpack-dev-server": "^1.12.1"
   },
   "main": "lib/index.js",
-  "types": "lib/handlebars.d.ts",
+  "types": "types/index.d.ts",
   "bin": {
     "handlebars": "bin/handlebars"
   },
   "scripts": {
+    "checkTypes": "dtslint types",
     "test": "grunt"
   },
   "jspm": {
@@ -83,6 +86,7 @@
     "lib",
     "print-script",
     "release-notes.md",
-    "runtime.js"
+    "runtime.js",
+    "types/*.d.ts"
   ]
 }
