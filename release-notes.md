@@ -355,7 +355,7 @@ Compatibility notes:
 - Lines containing only block statements and whitespace are now removed. This matches the Mustache spec but may cause issues with code that expects whitespace to exist but would not otherwise.
 - Partials that are standalone will now indent their rendered content
 - `AST.ProgramNode`'s signature has changed. 
-- Numerious methods/features removed from psuedo-API classes
+- Numerious methods/features removed from pseudo-API classes
   - `JavaScriptCompiler.register`
   - `JavaScriptCompiler.replaceStack` no longer supports non-inline replace
   - `Compiler.disassemble`
@@ -546,7 +546,7 @@ Compatibility notes:
 ## v1.0.11 / 1.0.0-rc4 - May 13 2013
 
 - [#458](https://github.com/wycats/handlebars.js/issues/458) - Fix `./foo` syntax ([@jpfiset](https://github.com/jpfiset))
-- [#460](https://github.com/wycats/handlebars.js/issues/460) - Allow `:` in unescaped identifers ([@jpfiset](https://github.com/jpfiset))
+- [#460](https://github.com/wycats/handlebars.js/issues/460) - Allow `:` in unescaped identifiers ([@jpfiset](https://github.com/jpfiset))
 - [#471](https://github.com/wycats/handlebars.js/issues/471) - Create release notes (These!)
 - [#456](https://github.com/wycats/handlebars.js/issues/456) - Allow escaping of `\\`
 - [#211](https://github.com/wycats/handlebars.js/issues/211) - Fix exception in `escapeExpression`
