@@ -112,4 +112,4 @@ When everything is OK, the handlebars site needs to be updated to point to the n
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
 [issue]: https://github.com/wycats/handlebars.js/issues/new
-[jsfiddle]: https://jsfiddle.net/9D88g/180/
+[jsfiddle]: https://jsfiddle.net/08v3cbg4/
