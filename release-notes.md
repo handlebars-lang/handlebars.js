@@ -2,7 +2,28 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2...master)
+
+## v4.1.2 - April 13th, 2019
+Chore/Test:
+- [#1515](https://github.com/wycats/handlebars.js/pull/1515) - Port over linting and test for typings ([@zimmi88](https://api.github.com/users/zimmi88))
+- chore: add missing typescript dependency, add package-lock.json - 594f1e3
+- test: remove safari from saucelabs - 871accc
+
+Bugfixes: 
+- fix: prevent RCE through the "lookup"-helper - cd38583
+
+Compatibility notes:
+
+Access to the constructor of a class thought `{{lookup obj "constructor" }}` is now prohibited. This closes 
+a leak that only half closed in versions 4.0.13 and 4.1.0, but it is a slight incompatibility.
+
+This kind of access is not the intended use of Handlebars and leads to the vulnerability described
+in #1495. We will **not** increase the major version, because such use is not intended or documented, 
+and because of the potential impact of the issue (we fear that most people won't use a new major version
+and the issue may not be resolved on many systems). 
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.1...v4.1.2)
 
 ## v4.1.1 - March 16th, 2019
 Bugfixes:
