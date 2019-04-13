@@ -8,8 +8,9 @@
  *   - Sergei Dorogin <https://github.com/evil-shrike>
  *   - webbiesdk <https://github.com/webbiesdk>
  * For full history prior to their migration to handlebars.js, please see:
- * https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/handlebars
+ * https://github.com/DefinitelyTyped/DefinitelyTyped/commits/1ce60bdc07f10e0b076778c6c953271c072bc894/types/handlebars/index.d.ts
  */
+// TypeScript Version: 2.3
 
 declare namespace Handlebars {
   export interface TemplateDelegate<T = any> {

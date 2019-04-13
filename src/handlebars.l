@@ -4,7 +4,7 @@
 %{
 
 function strip(start, end) {
-  return yytext = yytext.substr(start, yyleng-end);
+  return yytext = yytext.substring(start, yyleng - end + start);
 }
 
 %}
@@ -59,7 +59,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                   if (this.conditionStack[this.conditionStack.length-1] === 'raw') {
                                     return 'CONTENT';
                                   } else {
-                                    yytext = yytext.substr(5, yyleng-9);
+                                    strip(5, 9);
                                     return 'END_RAW_BLOCK';
                                   }
                                  }

@@ -12,7 +12,8 @@ module.exports = function(grunt) {
         'bench/**/*.js',
         'tasks/**/*.js',
         'lib/**/!(*.min|parser).js',
-        'spec/**/!(*.amd|json2|require).js'
+        'spec/**/!(*.amd|json2|require).js',
+        'multi-nodejs-test/*.js'
       ]
     },
 
@@ -122,8 +123,8 @@ module.exports = function(grunt) {
           browsers: [
             {browserName: 'chrome'},
             {browserName: 'firefox', platform: 'Linux'},
-            {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
-            {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
+            // {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
+            // {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
             {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
             {browserName: 'internet explorer', version: 10, platform: 'Windows 8'}
           ]
@@ -143,6 +144,14 @@ module.exports = function(grunt) {
       }
     },
 
+    bgShell: {
+      checkTypes: {
+        cmd: 'npm run checkTypes',
+        bg: false,
+        fail: true
+      }
+    },
+
     watch: {
       scripts: {
         options: {
@@ -158,6 +167,7 @@ module.exports = function(grunt) {
   // Build a new version of the library
   this.registerTask('build', 'Builds a distributable version of the current project', [
                     'eslint',
+                    'bgShell:checkTypes',
                     'parser',
                     'node',
                     'globals']);
@@ -176,6 +186,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-bg-shell');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-saucelabs');
   grunt.loadNpmTasks('grunt-webpack');
@@ -183,7 +194,7 @@ module.exports = function(grunt) {
   grunt.task.loadTasks('tasks');
 
   grunt.registerTask('bench', ['metrics']);
-  grunt.registerTask('sauce', [] /* process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : [] */);
+  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
 
   grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'sauce', 'metrics', 'publish:latest'] : ['default']);
 
