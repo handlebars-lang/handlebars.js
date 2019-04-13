@@ -2,7 +2,27 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.13...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.14...master)
+
+## v4.0.14 - April 13th, 2019
+Chore/Test:
+- test: remove safari from saucelabs - 871accc
+
+Bugfixes: 
+- fix: prevent RCE through the "lookup"-helper - cd38583
+
+Compatibility notes:
+
+Access to the constructor of a class thought `{{lookup obj "constructor" }}` is now prohibited. This closes 
+a leak that only half closed in versions 4.0.13 and 4.1.0, but it is a slight incompatibility.
+
+This kind of access is not the intended use of Handlebars and leads to the vulnerability described
+in #1495. We will **not** increase the major version, because such use is not intended or documented, 
+and because of the potential impact of the issue (we fear that most people won't use a new major version
+and the issue may not be resolved on many systems). 
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.13...v4.0.14)
 
 ## v4.0.13 - February 7th, 2019
 New Features
