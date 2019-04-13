@@ -167,8 +167,8 @@ module.exports = function(grunt) {
           browsers: [
             {browserName: 'chrome'},
             {browserName: 'firefox', platform: 'Linux'},
-            {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
-            {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
+            // {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
+            // {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
             {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
             {browserName: 'internet explorer', version: 10, platform: 'Windows 8'}
           ]
