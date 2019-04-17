@@ -122,6 +122,16 @@ describe('basic context', function() {
           'escaping should properly handle amperstands');
   });
 
+  it('escaping with escapeExpressions override', function() {
+    global.handlebarsEnv.escapeExpression = s => s.replace('&', 'AND');
+    shouldCompileTo('{{awesome}}', {awesome: 'x&y'}, 'xANDy', 'text is escaped using the custom escapeExpression function');
+  });
+
+  it('falls back to the default escapeExpressions', function() {
+    global.handlebarsEnv.escapeExpression = null;
+    shouldCompileTo('{{awesome}}', {awesome: 'x&y'}, 'x&amp;y', 'text is escaped using the standard escapeExpression function');
+  });
+
   it("functions returning safestrings shouldn't be escaped", function() {
     var hash = {awesome: function() { return new Handlebars.SafeString('&\'\\<>'); }};
     shouldCompileTo('{{awesome}}', hash, '&\'\\<>',
