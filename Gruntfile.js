@@ -177,8 +177,7 @@ module.exports = function(grunt) {
           detailedError: true,
           concurrency: 2,
           browsers: [
-            {browserName: 'chrome'},
-            {browserName: 'internet explorer', version: 10, platform: 'Windows 8'}
+            {browserName: 'chrome'}
           ]
         }
       }
@@ -226,7 +225,9 @@ module.exports = function(grunt) {
   grunt.task.loadTasks('tasks');
 
   grunt.registerTask('bench', ['metrics']);
-  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
+  // TODO: remove this comment when saucelabs is working again
+  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests' /*, 'connect' , 'saucelabs-mocha' */ ] : []);
+
 
   grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'sauce', 'metrics', 'publish:latest'] : ['default']);
 
