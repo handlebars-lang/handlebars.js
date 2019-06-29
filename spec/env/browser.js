@@ -4,7 +4,13 @@ var fs = require('fs'),
     vm = require('vm');
 
 global.Handlebars = 'no-conflict';
-vm.runInThisContext(fs.readFileSync(__dirname + '/../../dist/handlebars.js'), 'dist/handlebars.js');
+
+var filename = 'dist/handlebars.js';
+if (global.minimizedTest) {
+  filename = 'dist/handlebars.min.js';
+}
+var distHandlebars = fs.readFileSync(require.resolve(`../../${filename}`), 'utf-8');
+vm.runInThisContext(distHandlebars, filename);
 
 global.CompilerContext = {
   browser: true,
