@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "async": "^0.9.0",
-    "aws-sdk": "~1.5.0",
+    "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
@@ -49,7 +49,7 @@
     "grunt-contrib-uglify": "0.x",
     "grunt-contrib-watch": "0.x",
     "grunt-eslint": "^11.0.0",
-    "grunt-saucelabs": "8.x",
+    "grunt-saucelabs": "9.x",
     "grunt-webpack": "^1.0.8",
     "istanbul": "^0.3.0",
     "jison": "~0.3.0",
