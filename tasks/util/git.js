@@ -86,7 +86,7 @@ module.exports = {
     });
   },
   tagName: function(callback) {
-    childProcess.exec('git describe --tags', {}, function(err, stdout) {
+    childProcess.exec('git describe --tags --always', {}, function(err, stdout) {
       if (err) {
         throw new Error('git.tagName: ' + err.message);
       }
