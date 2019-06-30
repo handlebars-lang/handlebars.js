@@ -2,7 +2,50 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.6...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.7...master)
+
+## v3.0.7 - June 30th, 2019
+Security fixes:
+
+- [#1532](https://github.com/wycats/handlebars.js/pull/1532) - Backport security fixes to 3.x branch ([@mattolson](https://api.github.com/users/mattolson))
+
+Housekeeping
+
+- disable saucelabs-tests since the tunnel is not working - 95f33b1
+- update grunt-saucelabs and aws dependency - 09aaa56
+- fix package.json of components/handlebars.js repo - 7cf753b
+- Fix Travis by updating git tag retrieval - 7c3944015d30a4348ae66ec1736b752cd864d5c1
+- Use istanbul/lib/cli.js instead of node_modules/.bin/istanbul - 7820b207e123babd0bda0b4871790f2ea6b36b01
+
+Tests:
+
+- test: run appveyor tests in Node 10 - 420ac171a01b8777ebce0a777221754fcc72a5a8
+- Fix build on Windows - 47adcda48530ab1504b8019fe17eaedd4f4c943f
+
+
+Compatibility notes:
+
+Access to class constructors (i.e. `({}).constructor`) is now prohibited to prevent
+Remote Code Execution. This means that following construct will no work anymore:
+
+```
+class SomeClass {
+}
+
+SomeClass.staticProperty = 'static'
+
+var template = Handlebars.compile('{{constructor.staticProperty}}');
+document.getElementById('output').innerHTML = template(new SomeClass());
+// expected: 'static', but now this is empty.
+```
+
+This kind of access is not the intended use of Handlebars and leads to the vulnerability described in #1495. We will **not** increase the major version, because such use is not intended or documented, and because of the potential impact of the issue (we fear that most people won't use a new major version and the issue may not be resolved on many systems).
+
+
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.6...v3.0.7)
 
 ## v3.0.6 - January 2nd, 2019
 Chore:
