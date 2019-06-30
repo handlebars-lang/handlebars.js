@@ -225,7 +225,7 @@ module.exports = function(grunt) {
   grunt.task.loadTasks('tasks');
 
   grunt.registerTask('bench', ['metrics']);
-  // TODO: remove this comment when saucelabs is working again
+  // remove this comment when saucelabs is working again
   grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests' /*, 'connect' , 'saucelabs-mocha' */ ] : []);
 
 
