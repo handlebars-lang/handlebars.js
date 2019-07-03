@@ -90,6 +90,16 @@ const parsedTmpl = Handlebars.parse('<p>Hello, my name is {{name}}.</p>', {
 
 const parsedTmplWithoutOptions = Handlebars.parse('<p>Hello, my name is {{name}}.</p>');
 
+// Custom partial resolution.
+const originalResolvePartial = Handlebars.VM.resolvePartial;
+Handlebars.VM.resolvePartial = <T>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: RuntimeOptions): HandlebarsTemplateDelegate<T> => {
+  const name = options.name;
+  // transform name.
+  options.name = name;
+  return originalResolvePartial(partial, context, options);
+}
+
+
 // #1544, allow custom helpers in knownHelpers
 Handlebars.compile('test', {
   knownHelpers: {

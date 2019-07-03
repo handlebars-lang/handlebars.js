@@ -7,6 +7,7 @@
  *   - Raanan Weber <https://github.com/RaananW>
  *   - Sergei Dorogin <https://github.com/evil-shrike>
  *   - webbiesdk <https://github.com/webbiesdk>
+ *   - Andrew Leedham <https://github.com/AndrewLeedham>
  * For full history prior to their migration to handlebars.js, please see:
  * https://github.com/DefinitelyTyped/DefinitelyTyped/commits/1ce60bdc07f10e0b076778c6c953271c072bc894/types/handlebars/index.d.ts
  */
@@ -20,6 +21,7 @@ declare namespace Handlebars {
   export type Template<T = any> = TemplateDelegate<T>|string;
 
   export interface RuntimeOptions {
+      name?: string;
       partial?: boolean;
       depths?: any[];
       helpers?: { [name: string]: Function };
@@ -147,6 +149,13 @@ declare namespace Handlebars {
       NullLiteral(): void;
       Hash(hash: hbs.AST.Hash): void;
   }
+
+  export namespace VM {
+    /**
+     * @deprecated
+     */
+    export function resolvePartial<T = any>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: RuntimeOptions): HandlebarsTemplateDelegate<T>;
+  }
 }
 
 /**
@@ -222,6 +231,8 @@ interface Logger {
 
   log(level: number, obj: string): void;
 }
+
+type CompilerInfo = [number/* revision */, string /* versions */];
 
 declare namespace hbs {
   namespace AST {
