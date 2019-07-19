@@ -1,5 +1,5 @@
 var _ = require('underscore'),
-    async = require('async'),
+    async = require('neo-async'),
     metrics = require('../bench');
 
 module.exports = function(grunt) {

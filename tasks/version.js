@@ -1,4 +1,4 @@
-var async = require('async'),
+var async = require('neo-async'),
     git = require('./util/git'),
     semver = require('semver');
 
@@ -20,6 +20,7 @@ module.exports = function(grunt) {
     async.each([
         ['lib/handlebars/base.js', (/const VERSION = ['"](.*)['"];/), 'const VERSION = \'' + version + '\';'],
         ['components/bower.json', (/"version":.*/), '"version": "' + version + '",'],
+        ['components/package.json', /"version":.*/, '"version": "' + version + '",'],
         ['components/handlebars.js.nuspec', (/<version>.*<\/version>/), '<version>' + version + '</version>']
       ],
       function(args, callback) {

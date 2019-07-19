@@ -1,5 +1,5 @@
 var _ = require('underscore'),
-    async = require('async'),
+    async = require('neo-async'),
     AWS = require('aws-sdk'),
     git = require('./util/git'),
     semver = require('semver');
@@ -66,7 +66,7 @@ module.exports = function(grunt) {
     var s3 = new AWS.S3(),
         bucket = process.env.S3_BUCKET_NAME;
 
-    async.forEach(_.keys(files), function(file, callback) {
+    async.each(_.keys(files), function(file, callback) {
         var params = {Bucket: bucket, Key: file, Body: grunt.file.read(files[file])};
         s3.putObject(params, function(err) {
           if (err) {
