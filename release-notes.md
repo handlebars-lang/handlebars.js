@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2-0...master)
+
+## v4.1.2-0 - August 25th, 2019
+[#1540](https://github.com/wycats/handlebars.js/pull/1540) - added browser to package.json, resolves #1102 ([@ouijan](https://api.github.com/users/ouijan))
+
+Compatibility notes:
+- We are not sure if imports via webpack are still working, which is why this release is a pre-release
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2...v4.1.2-0)
 
 ## v4.1.2 - April 13th, 2019
 Chore/Test:
