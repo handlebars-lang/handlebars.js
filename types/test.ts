@@ -76,7 +76,7 @@ Handlebars.registerHelper('list', (context, options: Handlebars.HelperOptions) =
   }
   return ret + "</ul>";
 });
-template6([{url:"", title:""}])
+template6([{url:"", title:""}]);
 
 
 const escapedExpression = Handlebars.Utils.escapeExpression('<script>alert(\'xss\');</script>');
@@ -89,3 +89,11 @@ const parsedTmpl = Handlebars.parse('<p>Hello, my name is {{name}}.</p>', {
 });
 
 const parsedTmplWithoutOptions = Handlebars.parse('<p>Hello, my name is {{name}}.</p>');
+
+// #1544, allow custom helpers in knownHelpers
+Handlebars.compile('test', {
+  knownHelpers: {
+    each: true,
+    customHelper: true
+  }
+});

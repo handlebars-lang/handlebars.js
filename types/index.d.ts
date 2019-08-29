@@ -173,16 +173,7 @@ type RuntimeOptions = Handlebars.RuntimeOptions;
 interface CompileOptions {
   data?: boolean;
   compat?: boolean;
-  knownHelpers?: {
-      helperMissing?: boolean;
-      blockHelperMissing?: boolean;
-      each?: boolean;
-      if?: boolean;
-      unless?: boolean;
-      with?: boolean;
-      log?: boolean;
-      lookup?: boolean;
-  };
+  knownHelpers?: KnownHelpers;
   knownHelpersOnly?: boolean;
   noEscape?: boolean;
   strict?: boolean;
@@ -191,6 +182,22 @@ interface CompileOptions {
   ignoreStandalone?: boolean;
   explicitPartialContext?: boolean;
 }
+
+type KnownHelpers = {
+  [name in BuiltinHelperName | CustomHelperName]: boolean;
+};
+
+type BuiltinHelperName =
+  "helperMissing"|
+  "blockHelperMissing"|
+  "each"|
+  "if"|
+  "unless"|
+  "with"|
+  "log"|
+  "lookup";
+
+type CustomHelperName = string;
 
 interface PrecompileOptions extends CompileOptions {
   srcName?: string;
