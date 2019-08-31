@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
+
 for i in */test.sh ; do
   (
     echo "----------------------------------------"
