@@ -17,7 +17,7 @@ module.exports = function(grunt) {
       ]
     },
 
-    clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js'],
+    clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js', 'integration-testing/**/node_modules'],
 
     copy: {
       dist: {
@@ -192,7 +192,13 @@ module.exports = function(grunt) {
         cmd: 'npm run checkTypes',
         bg: false,
         fail: true
+      },
+      integrationTests: {
+        cmd: './integration-testing/run-integration-tests.sh',
+        bg: false,
+        fail: true
       }
+
     },
 
     watch: {
@@ -241,8 +247,9 @@ module.exports = function(grunt) {
   grunt.registerTask('bench', ['metrics']);
   grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
 
-  grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'sauce', 'metrics', 'publish:latest'] : ['default']);
+  grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'bgShell:integrationTests', 'sauce', 'metrics', 'publish:latest'] : ['default']);
 
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
+  grunt.registerTask('integration-tests', ['default', 'bgShell:integrationTests']);
 };

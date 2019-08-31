@@ -3,7 +3,6 @@ before_install:
 - npm install -g grunt-cli
 script:
 - grunt --stack travis
-- integration-testing/run-integration-tests.sh
 email:
   on_failure: change
   on_success: never
