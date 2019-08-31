@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         'tasks/**/*.js',
         'lib/**/!(*.min|parser).js',
         'spec/**/!(*.amd|json2|require).js',
-        'multi-nodejs-test/*.js'
+        'integration-testing/**/*.js'
       ]
     },
 
