@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd "$( dirname "$( readlink -f "$0" )" )"
+cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
+# shellcheck disable=SC1090
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # This script tests with precompiler and the built distribution with multiple NodeJS version.
@@ -13,9 +14,13 @@ cd "$( dirname "$( readlink -f "$0" )" )"
 
 # A list of NodeJS versions is expected as cli-args
 echo "Handlebars should be able to run in various versions of NodeJS"
-for i in "$@" ; do
+for i in  0.10 0.12 4 5 6 7 8 9 10 11 ; do
+    rm target node_modules package-lock.json -rf
+    mkdir target
     nvm install "$i"
-    nvm exec "$i" node ./run-handlebars.js >/dev/null || exit 1
-    nvm exec "$i" node ../bin/handlebars template.txt.hbs >/dev/null || exit 1
+    nvm exec "$i" npm install
+    nvm exec "$i" npm run test || exit 1
+    nvm exec "$i" npm run test-precompile || exit 1
+
     echo Success
 done

@@ -7,6 +7,8 @@
  *   - Raanan Weber <https://github.com/RaananW>
  *   - Sergei Dorogin <https://github.com/evil-shrike>
  *   - webbiesdk <https://github.com/webbiesdk>
+ *   - Andrew Leedham <https://github.com/AndrewLeedham>
+ *   - Nils Knappmeier <https://github.com/nknapp>
  * For full history prior to their migration to handlebars.js, please see:
  * https://github.com/DefinitelyTyped/DefinitelyTyped/commits/1ce60bdc07f10e0b076778c6c953271c072bc894/types/handlebars/index.d.ts
  */
@@ -147,6 +149,22 @@ declare namespace Handlebars {
       NullLiteral(): void;
       Hash(hash: hbs.AST.Hash): void;
   }
+
+
+  export interface ResolvePartialOptions {
+    name: string;
+    helpers?: { [name: string]: Function };
+    partials?: { [name: string]: HandlebarsTemplateDelegate };
+    decorators?: { [name: string]: Function };
+    data?: any;
+  }
+
+  export namespace VM {
+    /**
+     * @deprecated
+     */
+    export function resolvePartial<T = any>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: ResolvePartialOptions): HandlebarsTemplateDelegate<T>;
+  }
 }
 
 /**
@@ -173,16 +191,7 @@ type RuntimeOptions = Handlebars.RuntimeOptions;
 interface CompileOptions {
   data?: boolean;
   compat?: boolean;
-  knownHelpers?: {
-      helperMissing?: boolean;
-      blockHelperMissing?: boolean;
-      each?: boolean;
-      if?: boolean;
-      unless?: boolean;
-      with?: boolean;
-      log?: boolean;
-      lookup?: boolean;
-  };
+  knownHelpers?: KnownHelpers;
   knownHelpersOnly?: boolean;
   noEscape?: boolean;
   strict?: boolean;
@@ -191,6 +200,22 @@ interface CompileOptions {
   ignoreStandalone?: boolean;
   explicitPartialContext?: boolean;
 }
+
+type KnownHelpers = {
+  [name in BuiltinHelperName | CustomHelperName]: boolean;
+};
+
+type BuiltinHelperName =
+  "helperMissing"|
+  "blockHelperMissing"|
+  "each"|
+  "if"|
+  "unless"|
+  "with"|
+  "log"|
+  "lookup";
+
+type CustomHelperName = string;
 
 interface PrecompileOptions extends CompileOptions {
   srcName?: string;
@@ -215,6 +240,8 @@ interface Logger {
 
   log(level: number, obj: string): void;
 }
+
+type CompilerInfo = [number/* revision */, string /* versions */];
 
 declare namespace hbs {
   namespace AST {

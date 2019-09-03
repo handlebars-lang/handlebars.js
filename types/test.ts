@@ -76,7 +76,7 @@ Handlebars.registerHelper('list', (context, options: Handlebars.HelperOptions) =
   }
   return ret + "</ul>";
 });
-template6([{url:"", title:""}])
+template6([{url:"", title:""}]);
 
 
 const escapedExpression = Handlebars.Utils.escapeExpression('<script>alert(\'xss\');</script>');
@@ -89,3 +89,21 @@ const parsedTmpl = Handlebars.parse('<p>Hello, my name is {{name}}.</p>', {
 });
 
 const parsedTmplWithoutOptions = Handlebars.parse('<p>Hello, my name is {{name}}.</p>');
+
+// Custom partial resolution.
+const originalResolvePartial = Handlebars.VM.resolvePartial;
+Handlebars.VM.resolvePartial = <T>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: Handlebars.ResolvePartialOptions): HandlebarsTemplateDelegate<T> => {
+  const name = options.name.replace(/my/,'your');
+  // transform name.
+  options.name = name;
+  return originalResolvePartial(partial, context, options);
+}
+
+
+// #1544, allow custom helpers in knownHelpers
+Handlebars.compile('test', {
+  knownHelpers: {
+    each: true,
+    customHelper: true
+  }
+});

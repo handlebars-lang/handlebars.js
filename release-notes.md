@@ -2,7 +2,37 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.0...master)
+
+## v4.2.0 - September 3rd, 2019
+Chore/Test:
+- Use custom `grunt-saucelab` with current sauce-connect proxy - f119497
+- Add framework for various integration tests - f9cce4d
+- Add integration test for webpack - a57b682
+
+
+Bugfixes:
+- [#1544](https://github.com/wycats/handlebars.js/issues/1544) - Typescript types: `knownHelpers` doesnt allow for custom helpers ([@NickCis](https://api.github.com/users/NickCis))
+- [#1534](https://github.com/wycats/handlebars.js/pull/1534) - Add typings for "Handlebars.VM.resolvePartial ([@AndrewLeedham](https://api.github.com/users/AndrewLeedham))
+
+Features:
+- [#1540](https://github.com/wycats/handlebars.js/pull/1540) - added "browser"-property to package.json, resolves #1102 ([@ouijan](https://api.github.com/users/ouijan))
+
+Compatibility notes:
+- The new "browser"-property should not break anything, but you can never be sure. The integration test for webpack 
+  shows that it works, but if it doesn't please open an issue.
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2-0...v4.2.0)
+
+## v4.1.2-0 - August 25th, 2019
+[#1540](https://github.com/wycats/handlebars.js/pull/1540) - added browser to package.json, resolves #1102 ([@ouijan](https://api.github.com/users/ouijan))
+
+Compatibility notes:
+- We are not sure if imports via webpack are still working, which is why this release is a pre-release
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.1.2...v4.1.2-0)
 
 ## v4.1.2 - April 13th, 2019
 Chore/Test:

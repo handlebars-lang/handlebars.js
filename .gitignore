@@ -12,3 +12,4 @@ npm-debug.log
 sauce_connect.log*
 .idea
 yarn-error.log
+/handlebars-release.tgz
