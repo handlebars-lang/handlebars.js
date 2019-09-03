@@ -5,15 +5,15 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     eslint: {
-      options: {
-      },
       files: [
         '*.js',
         'bench/**/*.js',
         'tasks/**/*.js',
         'lib/**/!(*.min|parser).js',
         'spec/**/!(*.amd|json2|require).js',
-        'integration-testing/**/*.js'
+        'integration-testing/multi-nodejs-test/*.js',
+        'integration-testing/webpack-test/*.js',
+        'integration-testing/webpack-test/src/*.js'
       ]
     },
 
