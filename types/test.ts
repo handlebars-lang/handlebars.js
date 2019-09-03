@@ -92,8 +92,8 @@ const parsedTmplWithoutOptions = Handlebars.parse('<p>Hello, my name is {{name}}
 
 // Custom partial resolution.
 const originalResolvePartial = Handlebars.VM.resolvePartial;
-Handlebars.VM.resolvePartial = <T>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: RuntimeOptions): HandlebarsTemplateDelegate<T> => {
-  const name = options.name;
+Handlebars.VM.resolvePartial = <T>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: Handlebars.ResolvePartialOptions): HandlebarsTemplateDelegate<T> => {
+  const name = options.name.replace(/my/,'your');
   // transform name.
   options.name = name;
   return originalResolvePartial(partial, context, options);
