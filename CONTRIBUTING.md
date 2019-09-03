@@ -4,7 +4,10 @@
 
 Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
 
-Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]! In general we are going to ask for an example of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle [template][jsfiddle] to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here)
+Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]! 
+
+
+In general we are going to ask for an **example** of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle **[template][jsfiddle]** to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here).
 
 Pull requests containing only failing tests demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
@@ -15,6 +18,8 @@ Documentation issues on the handlebarsjs.com site should be reported on [handleb
 * The branch `4.x` contains the currently released version. Bugfixes should be made in this branch.
 * The branch `master` contains the next version. A release date is not yet specified. Maintainers
   should merge the branch `4.x` into the master branch regularly.
+* The branch `3.x` comtains the legacy version `3.x`. Bugfixes are applied seperately (if needed). The branch will not 
+  be merged with any of the other branches.
 
 ## Pull Requests
 
@@ -112,4 +117,4 @@ When everything is OK, the handlebars site needs to be updated to point to the n
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
 [issue]: https://github.com/wycats/handlebars.js/issues/new
-[jsfiddle]: https://jsfiddle.net/08v3cbg4/
+[jsfiddle]: https://jsfiddle.net/0L92ufpv/
