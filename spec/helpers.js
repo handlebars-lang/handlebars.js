@@ -767,13 +767,13 @@ describe('helpers', function() {
     });
   });
 
-  describe.only('built-in helpers malformed arguments ', function() {
+  describe('built-in helpers malformed arguments ', function() {
     it('if helper - too few arguments', function() {
       var template = CompilerContext.compile('{{#if}}{{/if}}');
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'hash' of undefined/);
+        }, undefined, /#if requires exactly one argument/);
     });
 
     it('if helper - too many arguments, string', function() {
@@ -781,7 +781,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'includeZero' of undefined/);
+        }, undefined, /#if requires exactly one argument/);
     });
 
     it('if helper - too many arguments, undefined', function() {
@@ -789,7 +789,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'hash' of undefined/);
+        }, undefined, /#if requires exactly one argument/);
     });
 
     it('if helper - too many arguments, null', function() {
@@ -797,7 +797,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'hash' of null/);
+        }, undefined, /#if requires exactly one argument/);
     });
 
     it('unless helper - too few arguments', function() {
@@ -805,7 +805,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'inverse' of undefined/);
+        }, undefined, /#unless requires exactly one argument/);
     });
 
     it('unless helper - too many arguments', function() {
@@ -813,7 +813,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'inverse' of null/);
+        }, undefined, /#unless requires exactly one argument/);
     });
 
     it('with helper - too few arguments', function() {
@@ -821,7 +821,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /Cannot read property 'fn' of undefined/);
+        }, undefined, /#with requires exactly one argument/);
     });
 
     it('with helper - too many arguments', function() {
@@ -829,7 +829,7 @@ describe('helpers', function() {
         shouldThrow(function() {
 
             template({});
-        }, undefined, /options.inverse is not a function/);
+        }, undefined, /#with requires exactly one argument/);
     });
   });
 });
