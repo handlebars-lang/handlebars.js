@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    "@roundingwellos/babel-plugin-handlebars-inline-precompile"
+   // "istanbul"
+  ],
+  "presets": [
+    [
+      "@babel/preset-env"
+    ]
+  ]
+}
