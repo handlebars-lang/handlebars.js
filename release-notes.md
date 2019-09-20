@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...master)
+
+## v4.2.1 - September 20th, 2019
+Bugfixes: 
+
+- The "browser" property in the package.json has been updated to use the common-js builds instead of the minified UMD - c55a7be, #1553
+
+Compatibility notes:
+- No compatibility issues should arise
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.0...v4.2.1)
 
 ## v4.2.0 - September 3rd, 2019
 Chore/Test:
