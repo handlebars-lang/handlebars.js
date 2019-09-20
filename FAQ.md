@@ -31,7 +31,7 @@
 
 ## Why are my precompiled scripts throwing exceptions?
 
-  When using the precompiler, it's important that a supporting version of the Handlebars runtime be loaded on the target page. In version ##x there were rudimentary checks to compare the version but these did not always work. This is fixed under 2.x but the version checking does not work between these two versions. If you see unexpected errors such as `undefined is not a function` or similar, please verify that the same version is being used for both the precompiler and the client. This can be checked via:
+  When using the precompiler, it's important that a supporting version of the Handlebars runtime be loaded on the target page. In version 1.x there were rudimentary checks to compare the version but these did not always work. This is fixed under 2.x but the version checking does not work between these two versions. If you see unexpected errors such as `undefined is not a function` or similar, please verify that the same version is being used for both the precompiler and the client. This can be checked via:
 
   ```sh
   handlebars --version
