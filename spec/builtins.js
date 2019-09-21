@@ -265,10 +265,13 @@ describe('builtin helpers', function() {
             yield {text: 'GOODBYE'};
           }
         };
+        var goodbyesEmpty = {
+          * [global.Symbol.iterator]() {}
+        };
         var hash = {goodbyes: goodbyes, world: 'world'};
         shouldCompileTo(string, hash, 'goodbye! Goodbye! GOODBYE! cruel world!',
           'each with array argument iterates over the contents when not empty');
-        shouldCompileTo(string, {goodbyes: [], world: 'world'}, 'cruel world!',
+        shouldCompileTo(string, {goodbyes: goodbyesEmpty, world: 'world'}, 'cruel world!',
           'each with array argument ignores the contents when empty');
       });
     }
