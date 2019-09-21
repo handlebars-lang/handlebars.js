@@ -254,6 +254,24 @@ describe('builtin helpers', function() {
         template({});
       }, handlebarsEnv.Exception, 'Must pass iterator to #each');
     });
+
+    if (global.Symbol) {
+      it('each on iterable', function() {
+        var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
+        var goodbyes = {
+          * [global.Symbol.iterator]() {
+            yield {text: 'goodbye'};
+            yield {text: 'Goodbye'};
+            yield {text: 'GOODBYE'};
+          }
+        };
+        var hash = {goodbyes: goodbyes, world: 'world'};
+        shouldCompileTo(string, hash, 'goodbye! Goodbye! GOODBYE! cruel world!',
+          'each with array argument iterates over the contents when not empty');
+        shouldCompileTo(string, {goodbyes: [], world: 'world'}, 'cruel world!',
+          'each with array argument ignores the contents when empty');
+      });
+    }
   });
 
   describe('#log', function() {
