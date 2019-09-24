@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.1...master)
+
+## v4.3.1 - September 25th, 2019
+Fixes:
+
+- do not break on precompiled templates from Handlebars >=4.0.0 <4.3.0 - 1266838, #1561
+- Ensure allowCallsToHelperMissing runtime option is optional in typings - 93444c5, 64ecb9e, #1560
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.0...v4.3.1)
 
 ## v4.3.0 - September 24th, 2019
 Fixes:
