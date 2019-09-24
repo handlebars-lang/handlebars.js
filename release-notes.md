@@ -2,7 +2,43 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.0...master)
+
+## v4.3.0 - September 24th, 2019
+Fixes:
+
+- Security: Disallow calling "helperMissing" and "blockHelperMissing" directly - 2078c72
+- Disallow calling "helperMissing" and "blockHelperMissing" directly - 2078c72
+
+Features:
+
+- Add new runtime option `allowCallsToHelperMissing` to allow calling `blockHelperMissing` and `helperMissing`.
+
+Breaking changes:
+
+Compatibility notes:
+- Compiler revision increased - 06b7224
+  - This means that template compiled with versions prior to 4.3.0 will not work with runtimes >= 4.3.0
+    The increase was done because the "helperMissing" and "blockHelperMissing" are now moved from the helpers
+    to the internal "container.hooks" object, so old templates will not be able to call them anymore. We suggest
+    that you always recompile your templates with the latest compiler in your build pipelines.
+
+- Disallow calling "helperMissing" and "blockHelperMissing" directly - 2078c72
+  - Calling "helperMissing" and "blockHelperMissing" directly from a template (like in `{{blockHelperMissing}}` was 
+    never intended and was part of the exploits that have been revealed early in 2019 
+    (see https://github.com/wycats/handlebars.js/issues/1495). *It is also part of a new exploit that 
+    is not captured by the earlier fix.* In order to harden Handlebars against such exploits, calling thos helpers 
+    is now not possible anymore. *Overriding* those helpers is still possible.
+  - If you really need this behavior, you can set the runtime option `allowCallsToHelperMissing` to `true` and the
+    calls will again be possible
+
+Both bullet points imly that Handlebars is not 100% percent compatible to 4.2.0, despite the minor version bump.
+
+We consider it more important to resolve a major security issue than to maintain 100% compatibility.
+
+    
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...v4.3.0)
 
 ## v4.2.1 - September 20th, 2019
 Bugfixes: 
