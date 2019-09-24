@@ -21,7 +21,7 @@ describe('runtime', function() {
       shouldThrow(function() {
         Handlebars.template({
           main: {},
-          compiler: [Handlebars.COMPILER_REVISION - 1]
+          compiler: [Handlebars.LAST_COMPATIBLE_COMPILER_REVISION - 1]
         });
       }, Error, /Template was precompiled with an older version of Handlebars than the current runtime/);
       shouldThrow(function() {
