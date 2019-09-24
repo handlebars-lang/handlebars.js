@@ -97,7 +97,7 @@ Handlebars.VM.resolvePartial = <T>(partial: HandlebarsTemplateDelegate<T> | unde
   // transform name.
   options.name = name;
   return originalResolvePartial(partial, context, options);
-}
+};
 
 
 // #1544, allow custom helpers in knownHelpers
@@ -107,3 +107,5 @@ Handlebars.compile('test', {
     customHelper: true
   }
 });
+
+Handlebars.compile('test')({},{allowCallsToHelperMissing: true});

@@ -29,6 +29,7 @@ declare namespace Handlebars {
       decorators?: { [name: string]: Function };
       data?: any;
       blockParams?: any[];
+      allowCallsToHelperMissing: boolean;
   }
 
   export interface HelperOptions {

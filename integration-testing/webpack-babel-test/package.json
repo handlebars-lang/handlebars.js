@@ -1,0 +1,24 @@
+{
+  "name": "webpack-babel-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@roundingwellos/babel-plugin-handlebars-inline-precompile": "^3.0.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-istanbul": "^5.2.0",
+    "handlebars": "file:../..",
+    "handlebars-loader": "^1.7.1",
+    "nyc": "^14.1.1",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  }
+}

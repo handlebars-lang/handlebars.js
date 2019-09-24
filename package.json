@@ -64,8 +64,8 @@
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "browser": {
-    ".": "./dist/handlebars.min.js",
-    "./runtime": "./dist/handlebars.runtime.min.js"
+    ".": "./dist/cjs/handlebars.js",
+    "./runtime": "./dist/cjs/handlebars.runtime.js"
   },
   "bin": {
     "handlebars": "bin/handlebars"

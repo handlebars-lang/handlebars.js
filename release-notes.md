@@ -2,7 +2,53 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.0...master)
+
+## v4.3.0 - September 24th, 2019
+Fixes:
+
+- Security: Disallow calling "helperMissing" and "blockHelperMissing" directly - 2078c72
+- Disallow calling "helperMissing" and "blockHelperMissing" directly - 2078c72
+
+Features:
+
+- Add new runtime option `allowCallsToHelperMissing` to allow calling `blockHelperMissing` and `helperMissing`.
+
+Breaking changes:
+
+Compatibility notes:
+- Compiler revision increased - 06b7224
+  - This means that template compiled with versions prior to 4.3.0 will not work with runtimes >= 4.3.0
+    The increase was done because the "helperMissing" and "blockHelperMissing" are now moved from the helpers
+    to the internal "container.hooks" object, so old templates will not be able to call them anymore. We suggest
+    that you always recompile your templates with the latest compiler in your build pipelines.
+
+- Disallow calling "helperMissing" and "blockHelperMissing" directly - 2078c72
+  - Calling "helperMissing" and "blockHelperMissing" directly from a template (like in `{{blockHelperMissing}}` was 
+    never intended and was part of the exploits that have been revealed early in 2019 
+    (see https://github.com/wycats/handlebars.js/issues/1495). *It is also part of a new exploit that 
+    is not captured by the earlier fix.* In order to harden Handlebars against such exploits, calling thos helpers 
+    is now not possible anymore. *Overriding* those helpers is still possible.
+  - If you really need this behavior, you can set the runtime option `allowCallsToHelperMissing` to `true` and the
+    calls will again be possible
+
+Both bullet points imly that Handlebars is not 100% percent compatible to 4.2.0, despite the minor version bump.
+
+We consider it more important to resolve a major security issue than to maintain 100% compatibility.
+
+    
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...v4.3.0)
+
+## v4.2.1 - September 20th, 2019
+Bugfixes: 
+
+- The "browser" property in the package.json has been updated to use the common-js builds instead of the minified UMD - c55a7be, #1553
+
+Compatibility notes:
+- No compatibility issues should arise
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.0...v4.2.1)
 
 ## v4.2.0 - September 3rd, 2019
 Chore/Test:
@@ -406,7 +452,7 @@ Compatibility notes:
 - Lines containing only block statements and whitespace are now removed. This matches the Mustache spec but may cause issues with code that expects whitespace to exist but would not otherwise.
 - Partials that are standalone will now indent their rendered content
 - `AST.ProgramNode`'s signature has changed. 
-- Numerious methods/features removed from psuedo-API classes
+- Numerious methods/features removed from pseudo-API classes
   - `JavaScriptCompiler.register`
   - `JavaScriptCompiler.replaceStack` no longer supports non-inline replace
   - `Compiler.disassemble`
@@ -597,7 +643,7 @@ Compatibility notes:
 ## v1.0.11 / 1.0.0-rc4 - May 13 2013
 
 - [#458](https://github.com/wycats/handlebars.js/issues/458) - Fix `./foo` syntax ([@jpfiset](https://github.com/jpfiset))
-- [#460](https://github.com/wycats/handlebars.js/issues/460) - Allow `:` in unescaped identifers ([@jpfiset](https://github.com/jpfiset))
+- [#460](https://github.com/wycats/handlebars.js/issues/460) - Allow `:` in unescaped identifiers ([@jpfiset](https://github.com/jpfiset))
 - [#471](https://github.com/wycats/handlebars.js/issues/471) - Create release notes (These!)
 - [#456](https://github.com/wycats/handlebars.js/issues/456) - Allow escaping of `\\`
 - [#211](https://github.com/wycats/handlebars.js/issues/211) - Fix exception in `escapeExpression`
