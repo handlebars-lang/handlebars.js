@@ -109,3 +109,5 @@ Handlebars.compile('test', {
 });
 
 Handlebars.compile('test')({},{allowCallsToHelperMissing: true});
+
+Handlebars.compile('test')({},{});
