@@ -308,7 +308,7 @@ describe('Regressions', function() {
     it('should call "helperMissing" if a helper is missing', function() {
       var newHandlebarsInstance = Handlebars.create();
 
-      shouldThrow(() => {
+      shouldThrow(function() {
         registerTemplate(newHandlebarsInstance);
         newHandlebarsInstance.templates['test.hbs']({});
       }, Handlebars.Exception, 'Missing helper: "loud"');
