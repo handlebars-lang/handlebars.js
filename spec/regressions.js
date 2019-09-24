@@ -301,7 +301,7 @@ describe('Regressions', function() {
       newHandlebarsInstance.registerHelper('loud', function(value) {
         return value.toUpperCase();
       });
-      let result = newHandlebarsInstance.templates['test.hbs']({name: 'yehuda'});
+      var result = newHandlebarsInstance.templates['test.hbs']({name: 'yehuda'});
       equals(result.trim(), 'YEHUDA');
     });
 
