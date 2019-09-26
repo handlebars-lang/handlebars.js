@@ -33,7 +33,7 @@ describe('security issues', function() {
         });
     });
 
-    describe('GH-xxxx: Prevent explicit call of helperMissing-helpers', function() {
+    describe('GH-1558: Prevent explicit call of helperMissing-helpers', function() {
         if (!Handlebars.compile) {
             return;
         }
@@ -86,6 +86,16 @@ describe('security issues', function() {
                     var template = Handlebars.compile('{{#blockHelperMissing true}}sdads{{/blockHelperMissing}}');
                     template({}, {allowCallsToHelperMissing: true});
             });
+        });
+    });
+
+    describe('GH-1563', function() {
+        it('should not allow to access constructor after overriding via __defineGetter__', function() {
+            shouldCompileTo('{{__defineGetter__ "undefined" valueOf }}' +
+                '{{#with __lookupGetter__ }}' +
+                '{{__defineGetter__ "propertyIsEnumerable" (this.bind (this.bind 1)) }}' +
+                '{{constructor.name}}' +
+                '{{/with}}', {}, '');
         });
     });
 });
