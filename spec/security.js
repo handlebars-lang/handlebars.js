@@ -91,6 +91,9 @@ describe('security issues', function() {
 
     describe('GH-1563', function() {
         it('should not allow to access constructor after overriding via __defineGetter__', function() {
+            if (({}).__defineGetter__ == null || ({}).__lookupGetter__ == null) {
+                return; // Browser does not support this exploit anyway
+            }
             shouldCompileTo('{{__defineGetter__ "undefined" valueOf }}' +
                 '{{#with __lookupGetter__ }}' +
                 '{{__defineGetter__ "propertyIsEnumerable" (this.bind (this.bind 1)) }}' +
