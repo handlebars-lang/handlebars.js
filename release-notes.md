@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.3...master)
+
+## v4.3.3 - September 27th, 2019
+ - fix test case for browsers that do not support __defineGetter__ - 8742bde
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.2...v4.3.3)
 
 ## v4.3.2 - September 26th, 2019
 - Use Object.prototype.propertyIsEnumerable to check for constructors - 213c0bb, #1563
