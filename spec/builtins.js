@@ -255,19 +255,29 @@ describe('builtin helpers', function() {
       }, handlebarsEnv.Exception, 'Must pass iterator to #each');
     });
 
-    if (global.Symbol) {
+    if (global.Symbol && global.Symbol.iterator) {
       it('each on iterable', function() {
-        var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
-        var goodbyes = {
-          * [global.Symbol.iterator]() {
-            yield {text: 'goodbye'};
-            yield {text: 'Goodbye'};
-            yield {text: 'GOODBYE'};
+        function Iterator(arr) {
+          this.arr = arr;
+          this.index = 0;
+        }
+        Iterator.prototype.next = function() {
+          var value = this.arr[this.index];
+          var done = this.index === this.arr.length;
+          if (!done) {
+            this.index++;
           }
+          return { value: value, done: done };
         };
-        var goodbyesEmpty = {
-          * [global.Symbol.iterator]() {}
+        function Iterable(arr) {
+          this.arr = arr;
+        }
+        Iterable.prototype[global.Symbol.iterator] = function() {
+          return new Iterator(this.arr);
         };
+        var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
+        var goodbyes = new Iterable([{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}]);
+        var goodbyesEmpty = new Iterable([]);
         var hash = {goodbyes: goodbyes, world: 'world'};
         shouldCompileTo(string, hash, 'goodbye! Goodbye! GOODBYE! cruel world!',
           'each with array argument iterates over the contents when not empty');
