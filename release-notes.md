@@ -2,7 +2,15 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.4...master)
+
+## v4.3.4 - September 28th, 2019
+- fix: harden "propertyIsEnumerable"-check - ff4d827
+
+Compatibility notes:
+- No incompatibilities are known.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.3...v4.3.4)
 
 ## v4.3.3 - September 27th, 2019
  - fix test case for browsers that do not support __defineGetter__ - 8742bde
