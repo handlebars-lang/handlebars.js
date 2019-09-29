@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.4...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.0...master)
+
+## v4.4.0 - September 29th, 2019
+- Added support for iterable objects in {{#each}} helper (#1557) - cf7545e
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.4...v4.4.0)
 
 ## v4.3.4 - September 28th, 2019
 - fix: harden "propertyIsEnumerable"-check - ff4d827
