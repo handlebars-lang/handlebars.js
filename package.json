@@ -29,6 +29,7 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
+    "@knappi/grunt-saucelabs": "^9.0.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
@@ -48,7 +49,6 @@
     "grunt-contrib-uglify": "^1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^20.1.0",
-    "grunt-saucelabs": "github:nknapp/grunt-saucelabs",
     "grunt-webpack": "^1.0.8",
     "istanbul": "^0.3.0",
     "jison": "~0.3.0",
