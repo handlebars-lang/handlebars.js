@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.2...master)
+
+## v4.2.2 - October 2nd, 2019
+- [#1562](https://github.com/wycats/handlebars.js/issues/1562) - Error message for syntax error missing location in 4.2.1+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...v4.2.2)
 
 ## v4.2.1 - September 20th, 2019
 Bugfixes: 
