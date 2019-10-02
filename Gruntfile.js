@@ -239,7 +239,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-bg-shell');
   grunt.loadNpmTasks('grunt-eslint');
-  grunt.loadNpmTasks('grunt-saucelabs');
+  grunt.loadNpmTasks('@knappi/grunt-saucelabs');
   grunt.loadNpmTasks('grunt-webpack');
 
   grunt.task.loadTasks('tasks');
