@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.2...master)
+
+## v4.4.2 - October 2nd, 2019
+- chore: fix grunt-saucelabs dependency - b7eada0
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.1...v4.4.2)
 
 ## v4.4.1 - October 2nd, 2019
 - [#1562](https://github.com/wycats/handlebars.js/issues/1562) - Error message for syntax error missing location in 4.2.1+
