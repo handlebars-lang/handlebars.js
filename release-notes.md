@@ -2,7 +2,13 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.4...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.5...master)
+
+## v4.3.5 - October 2nd, 2019
+- [#1562](https://github.com/wycats/handlebars.js/issues/1562) - Error message for syntax error missing location in 4.2.1+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.4...v4.3.5)
 
 ## v4.3.4 - September 28th, 2019
 - fix: harden "propertyIsEnumerable"-check - ff4d827
