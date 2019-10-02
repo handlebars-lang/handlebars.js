@@ -2,7 +2,14 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.1...master)
+
+## v4.4.1 - October 2nd, 2019
+- [#1562](https://github.com/wycats/handlebars.js/issues/1562) - Error message for syntax error missing location in 4.2.1+
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.0...v4.4.1)
 
 ## v4.4.0 - September 29th, 2019
 - Added support for iterable objects in {{#each}} helper (#1557) - cf7545e
