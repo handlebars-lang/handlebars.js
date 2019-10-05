@@ -155,6 +155,7 @@ Handlebars in the Wild
 * [just-handlebars-helpers](https://github.com/leapfrogtechnology/just-handlebars-helpers) A fully tested lightweight package with common Handlebars helpers.
 * [incremental-bars](https://github.com/atomictag/incremental-bars) adds support for [incremental-dom](https://github.com/google/incremental-dom) as template target to Handlebars.
 * [apiDoc](https://github.com/apidoc/apidoc) apiDoc uses handlebars as parsing engine for api documentation view generation.
+* [handlebars-wax](https://github.com/shannonmoeller/handlebars-wax) The missing Handlebars API. Effortless registration of data, partials, helpers, and decorators using file-system globs, modules, and plain-old JavaScript objects.
 
 External Resources
 ------------------
