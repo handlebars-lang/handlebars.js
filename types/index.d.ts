@@ -328,6 +328,7 @@ declare namespace hbs {
       interface Expression extends Node {}
 
       interface SubExpression extends Expression {
+          type: 'SubExpression';
           path: PathExpression;
           params: Expression[];
           hash: Hash;
@@ -360,15 +361,21 @@ declare namespace hbs {
           original: number;
       }
 
-      interface UndefinedLiteral extends Literal {}
+      interface UndefinedLiteral extends Literal {
+          type: 'UndefinedLiteral';
+	  }
 
-      interface NullLiteral extends Literal {}
+      interface NullLiteral extends Literal {
+          type: 'NullLiteral';
+	  }
 
       interface Hash extends Node {
+          type: 'Hash';
           pairs: HashPair[];
       }
 
       interface HashPair extends Node {
+          type: 'HashPair';
           key: string;
           value: Expression;
       }
