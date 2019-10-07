@@ -270,6 +270,7 @@ declare namespace hbs {
       interface Statement extends Node {}
 
       interface MustacheStatement extends Statement {
+          type: 'MustacheStatement';
           path: PathExpression | Literal;
           params: Expression[];
           hash: Hash;
@@ -280,6 +281,7 @@ declare namespace hbs {
       interface Decorator extends MustacheStatement { }
 
       interface BlockStatement extends Statement {
+          type: 'BlockStatement';
           path: PathExpression;
           params: Expression[];
           hash: Hash;
@@ -293,6 +295,7 @@ declare namespace hbs {
       interface DecoratorBlock extends BlockStatement { }
 
       interface PartialStatement extends Statement {
+          type: 'PartialStatement';
           name: PathExpression | SubExpression;
           params: Expression[];
           hash: Hash;
@@ -301,6 +304,7 @@ declare namespace hbs {
       }
 
       interface PartialBlockStatement extends Statement {
+          type: 'PartialBlockStatement';
           name: PathExpression | SubExpression;
           params: Expression[];
           hash: Hash;
@@ -310,11 +314,13 @@ declare namespace hbs {
       }
 
       interface ContentStatement extends Statement {
+          type: 'ContentStatement';
           value: string;
           original: StripFlags;
       }
 
       interface CommentStatement extends Statement {
+          type: 'CommentStatement';
           value: string;
           strip: StripFlags;
       }
@@ -322,12 +328,14 @@ declare namespace hbs {
       interface Expression extends Node {}
 
       interface SubExpression extends Expression {
+          type: 'SubExpression';
           path: PathExpression;
           params: Expression[];
           hash: Hash;
       }
 
       interface PathExpression extends Expression {
+          type: 'PathExpression';
           data: boolean;
           depth: number;
           parts: string[];
@@ -336,29 +344,38 @@ declare namespace hbs {
 
       interface Literal extends Expression {}
       interface StringLiteral extends Literal {
+          type: 'StringLiteral';
           value: string;
           original: string;
       }
 
       interface BooleanLiteral extends Literal {
+          type: 'BooleanLiteral';
           value: boolean;
           original: boolean;
       }
 
       interface NumberLiteral extends Literal {
+          type: 'NumberLiteral';
           value: number;
           original: number;
       }
 
-      interface UndefinedLiteral extends Literal {}
+      interface UndefinedLiteral extends Literal {
+          type: 'UndefinedLiteral';
+	  }
 
-      interface NullLiteral extends Literal {}
+      interface NullLiteral extends Literal {
+          type: 'NullLiteral';
+	  }
 
       interface Hash extends Node {
+          type: 'Hash';
           pairs: HashPair[];
       }
 
       interface HashPair extends Node {
+          type: 'HashPair';
           key: string;
           value: Expression;
       }
