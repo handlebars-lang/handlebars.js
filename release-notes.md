@@ -2,7 +2,17 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.3...master)
+
+## v4.4.3 - October 8th, 2019
+Bugfixes
+
+Typings:
+- add missing type fields to AST typings and add tests for them - 0440af2
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.2...v4.4.3)
 
 ## v4.4.2 - October 2nd, 2019
 - chore: fix grunt-saucelabs dependency - b7eada0
