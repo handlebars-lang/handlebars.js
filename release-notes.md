@@ -2,7 +2,68 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.3...master)
+
+## v4.4.3 - October 8th, 2019
+Bugfixes
+
+Typings:
+- add missing type fields to AST typings and add tests for them - 0440af2
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.2...v4.4.3)
+
+## v4.4.2 - October 2nd, 2019
+- chore: fix grunt-saucelabs dependency - b7eada0
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.1...v4.4.2)
+
+## v4.4.1 - October 2nd, 2019
+- [#1562](https://github.com/wycats/handlebars.js/issues/1562) - Error message for syntax error missing location in 4.2.1+
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.0...v4.4.1)
+
+## v4.4.0 - September 29th, 2019
+- Added support for iterable objects in {{#each}} helper (#1557) - cf7545e
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.4...v4.4.0)
+
+## v4.3.4 - September 28th, 2019
+- fix: harden "propertyIsEnumerable"-check - ff4d827
+
+Compatibility notes:
+- No incompatibilities are known.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.3...v4.3.4)
+
+## v4.3.3 - September 27th, 2019
+ - fix test case for browsers that do not support __defineGetter__ - 8742bde
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.2...v4.3.3)
+
+## v4.3.2 - September 26th, 2019
+- Use Object.prototype.propertyIsEnumerable to check for constructors - 213c0bb, #1563
+
+Compatibility notes:
+- There are no breaking changes
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.1...v4.3.2)
+
+## v4.3.1 - September 25th, 2019
+Fixes:
+
+- do not break on precompiled templates from Handlebars >=4.0.0 <4.3.0 - 1266838, #1561
+- Ensure allowCallsToHelperMissing runtime option is optional in typings - 93444c5, 64ecb9e, #1560
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.3.0...v4.3.1)
 
 ## v4.3.0 - September 24th, 2019
 Fixes:

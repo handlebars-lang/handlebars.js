@@ -95,6 +95,7 @@ Handlebars utilizes the [release yeoman generator][generator-release] to perform
 A full release may be completed with the following:
 
 ```
+npm ci
 yo release
 npm publish
 yo release:publish components handlebars.js dist/components/
@@ -109,7 +110,7 @@ in those places still point to the latest version
 
 * [The npm-package](https://www.npmjs.com/package/handlebars) (check latest-tag)
 * [The bower package](https://github.com/components/handlebars.js) (check the package.json)
-* [The AWS S3 Bucket](http://builds.handlebarsjs.com.s3.amazonaws.com/) (check latest-tag)
+* [The AWS S3 Bucket](https://s3.amazonaws.com/builds.handlebarsjs.com) (check latest-tag)
 * [RubyGems](https://rubygems.org/gems/handlebars-source)
 
 When everything is OK, the handlebars site needs to be updated to point to the new version numbers. The jsfiddle link should be updated to point to the most recent distribution for all instances in our documentation.

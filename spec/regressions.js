@@ -302,4 +302,36 @@ describe('Regressions', function() {
     };
     shouldCompileToWithPartials(string, [{}, {}, partials], true, 'template  block  partial  block  template');
   });
+
+  describe('GH-1561: 4.3.x should still work with precompiled templates from 4.0.0 <= x < 4.3.0', function() {
+
+    it('should compile and execute templates', function() {
+      var newHandlebarsInstance = Handlebars.create();
+
+      registerTemplate(newHandlebarsInstance);
+      newHandlebarsInstance.registerHelper('loud', function(value) {
+        return value.toUpperCase();
+      });
+      var result = newHandlebarsInstance.templates['test.hbs']({name: 'yehuda'});
+      equals(result.trim(), 'YEHUDA');
+    });
+
+    it('should call "helperMissing" if a helper is missing', function() {
+      var newHandlebarsInstance = Handlebars.create();
+
+      shouldThrow(function() {
+        registerTemplate(newHandlebarsInstance);
+        newHandlebarsInstance.templates['test.hbs']({});
+      }, Handlebars.Exception, 'Missing helper: "loud"');
+    });
+
+    // This is a only slightly modified precompiled templated from compiled with 4.2.1
+    function registerTemplate(Handlebars) {
+      var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+      templates['test.hbs'] = template({'compiler': [7, '>= 4.0.0'], 'main': function(container, depth0, helpers, partials, data) {
+          return container.escapeExpression((helpers.loud || (depth0 && depth0.loud) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}), (depth0 != null ? depth0.name : depth0), {'name': 'loud', 'hash': {}, 'data': data}))
+              + '\n\n';
+        }, 'useData': true});
+    }
+  });
 });
