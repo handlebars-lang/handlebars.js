@@ -110,6 +110,12 @@ Upgrading
 
 See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
+If you are using Handlebars in production, please regularly look for issues labeled 
+[possibly breaking](https://github.com/wycats/handlebars.js/issues?q=is%3Aopen+is%3Aissue+label%3A%22possibly+breaking%22).
+If this label is applied to an issue, it means that the requested change is probably not a breaking change,
+but since Handlebars is widely in use by a lot of people, chances are always there that it breaks somebodies build.
+
+
 Known Issues
 ------------
 
