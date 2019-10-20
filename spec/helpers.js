@@ -53,7 +53,7 @@ describe('helpers', function() {
 
     it('helper for nested raw block throw exception when with missing closing braces', function() {
       var string = '{{{{a}}}} {{{{/a';
-      shouldThrow(() => {
+      shouldThrow(function() {
         Handlebars.compile(string)();
       });
     });
