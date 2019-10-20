@@ -441,4 +441,9 @@ describe('Tokenizer', function() {
     result = tokenize('{{else foo as |bar baz|}}');
     shouldMatchTokens(result, ['OPEN_INVERSE_CHAIN', 'ID', 'OPEN_BLOCK_PARAMS', 'ID', 'ID', 'CLOSE_BLOCK_PARAMS', 'CLOSE']);
   });
+
+  it('tokenizes raw blocks', function() {
+    var result = tokenize('{{{{a}}}} abc {{{{/a}}}} aaa {{{{a}}}} abc {{{{/a}}}}');
+    shouldMatchTokens(result, ['OPEN_RAW_BLOCK', 'ID', 'CLOSE_RAW_BLOCK', 'CONTENT', 'END_RAW_BLOCK', 'CONTENT', 'OPEN_RAW_BLOCK', 'ID', 'CLOSE_RAW_BLOCK', 'CONTENT', 'END_RAW_BLOCK']);
+  });
 });
