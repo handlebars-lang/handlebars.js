@@ -39,7 +39,7 @@ content
   };
 
 rawBlock
-  : openRawBlock content+ END_RAW_BLOCK -> yy.prepareRawBlock($1, $2, $3, @$)
+  : openRawBlock content* END_RAW_BLOCK -> yy.prepareRawBlock($1, $2, $3, @$)
   ;
 
 openRawBlock
