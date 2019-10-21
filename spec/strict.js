@@ -95,6 +95,25 @@ describe('strict', function() {
       };
       equals(template({}, {helpers: helpers}), 'success');
     });
+
+    it('should show error location on missing property lookup', function() {
+      shouldThrow(function() {
+        var template = CompilerContext.compile('\n\n\n   {{hello}}', {strict: true});
+        template({});
+      }, Exception, '"hello" not defined in [object Object] - 4:5');
+    });
+
+    it('should error contains correct location properties on missing property lookup', function() {
+      try {
+        var template = CompilerContext.compile('\n\n\n   {{hello}}', {strict: true});
+        template({});
+      } catch (error) {
+        equals(error.lineNumber, 4);
+        equals(error.endLineNumber, 4);
+        equals(error.column, 5);
+        equals(error.endColumn, 10);
+      }
+    });
   });
 
   describe('assume objects', function() {

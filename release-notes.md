@@ -2,7 +2,28 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.5...master)
+
+## v4.4.5 - October 20th, 2019
+Bugfixes: 
+
+- Contents of raw-blocks must be matched with non-eager regex-matching - 8d5530e, #1579
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.4...v4.4.5)
+
+## v4.4.4 - October 20th, 2019
+Bugfixes:
+- fix: prevent zero length tokens in raw-blocks (#1577, #1578) - f1752fe
+
+Chore: 
+- chore: link to s3 bucket with https, add "npm ci" to build instructions - 0b593bf
+
+Compatibility notes:
+- no compatibility issues are expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.3...v4.4.4)
 
 ## v4.4.3 - October 8th, 2019
 Bugfixes
