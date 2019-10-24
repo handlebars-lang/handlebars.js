@@ -86,8 +86,15 @@ declare namespace Handlebars {
 
   export function noConflict(): typeof Handlebars;
 
+  export interface ExceptionNode {
+      loc?: {
+        start: { line: any; column: any; };
+        end: { line: any; column: any; };
+      }
+  }
+
   export class Exception {
-      constructor(message: string);
+      constructor(message: string, node?: ExceptionNode);
       description: string;
       fileName: string;
       lineNumber?: string;
