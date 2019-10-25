@@ -47,8 +47,8 @@ declare namespace Handlebars {
   }
 
   export interface ParseOptions {
-      srcName?: string,
-      ignoreStandalone?: boolean
+      srcName?: string;
+      ignoreStandalone?: boolean;
   }
 
   export function registerHelper(name: string, fn: HelperDelegate): void;
@@ -69,6 +69,7 @@ declare namespace Handlebars {
   export function Exception(message: string): void;
   export function log(level: number, obj: any): void;
   export function parse(input: string, options?: ParseOptions): hbs.AST.Program;
+  export function parseWithoutProcessing(input: string, options?: ParseOptions): hbs.AST.Program;
   export function compile<T = any>(input: any, options?: CompileOptions): HandlebarsTemplateDelegate<T>;
   export function precompile(input: any, options?: PrecompileOptions): TemplateSpecification;
   export function template<T = any>(precompilation: TemplateSpecification): HandlebarsTemplateDelegate<T>;

@@ -193,3 +193,11 @@ switch(allthings.type) {
   default:
     break;
 }
+
+function testParseWithoutProcessing() {
+  const parsedTemplate: hbs.AST.Program = Handlebars.parseWithoutProcessing('<p>Hello, my name is {{name}}.</p>', {
+    srcName: "/foo/bar/baz.hbs",
+  });
+
+  const parsedTemplateWithoutOptions: hbs.AST.Program = Handlebars.parseWithoutProcessing('<p>Hello, my name is {{name}}.</p>');
+}
