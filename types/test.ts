@@ -214,6 +214,7 @@ try {
   // Catch exception here.
 }
 
+// Test exception constructor with message and node.
 try {
   const node: Handlebars.ExceptionNode = {
     loc: {
