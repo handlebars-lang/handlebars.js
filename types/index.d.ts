@@ -97,8 +97,8 @@ declare namespace Handlebars {
       constructor(message: string, node?: ExceptionNode);
       description: string;
       fileName: string;
-      lineNumber?: string;
-      endLineNumber?: string;
+      lineNumber?: any;
+      endLineNumber?: any;
       message: string;
       name: string;
       number: number;
