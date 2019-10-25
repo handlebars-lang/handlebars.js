@@ -217,8 +217,8 @@ try {
 try {
   const node: Handlebars.ExceptionNode = {
     loc: {
-      start: {line: 1, column: 5},
-      end: {line: 10, column: 2}
+      start: { line: 1, column: 5 },
+      end: { line: 10, column: 2 }
     }
   };
 
