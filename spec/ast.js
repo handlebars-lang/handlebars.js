@@ -123,12 +123,94 @@ describe('ast', function() {
      });
   });
 
+  describe('whitespace control', function() {
+    describe('parse', function() {
+      it('mustache', function() {
+        let ast = Handlebars.parse('  {{~comment~}} ');
+
+        equals(ast.body[0].value, '');
+        equals(ast.body[2].value, '');
+      });
+
+      it('block statements', function() {
+        var ast = Handlebars.parse(' {{# comment~}} \nfoo\n {{~/comment}}');
+
+        equals(ast.body[0].value, '');
+        equals(ast.body[1].program.body[0].value, 'foo');
+      });
+    });
+
+    describe('parseWithoutProcessing', function() {
+      it('mustache', function() {
+        let ast = Handlebars.parseWithoutProcessing('  {{~comment~}} ');
+
+        equals(ast.body[0].value, '  ');
+        equals(ast.body[2].value, ' ');
+      });
+
+      it('block statements', function() {
+        var ast = Handlebars.parseWithoutProcessing(' {{# comment~}} \nfoo\n {{~/comment}}');
+
+        equals(ast.body[0].value, ' ');
+        equals(ast.body[1].program.body[0].value, ' \nfoo\n ');
+      });
+    });
+  });
+
   describe('standalone flags', function() {
     describe('mustache', function() {
       it('does not mark mustaches as standalone', function() {
         var ast = Handlebars.parse('  {{comment}} ');
         equals(!!ast.body[0].value, true);
         equals(!!ast.body[2].value, true);
+      });
+    });
+    describe('blocks - parseWithoutProcessing', function() {
+      it('block mustaches', function() {
+        var ast = Handlebars.parseWithoutProcessing(' {{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} '),
+          block = ast.body[1];
+
+        equals(ast.body[0].value, ' ');
+
+        equals(block.program.body[0].value, ' \nfoo\n ');
+        equals(block.inverse.body[0].value, ' \n  bar \n  ');
+
+        equals(ast.body[2].value, ' ');
+      });
+      it('initial block mustaches', function() {
+        var ast = Handlebars.parseWithoutProcessing('{{# comment}} \nfoo\n {{/comment}}'),
+          block = ast.body[0];
+
+        equals(block.program.body[0].value, ' \nfoo\n ');
+      });
+      it('mustaches with children', function() {
+        var ast = Handlebars.parseWithoutProcessing('{{# comment}} \n{{foo}}\n {{/comment}}'),
+          block = ast.body[0];
+
+        equals(block.program.body[0].value, ' \n');
+        equals(block.program.body[1].path.original, 'foo');
+        equals(block.program.body[2].value, '\n ');
+      });
+      it('nested block mustaches', function() {
+        var ast = Handlebars.parseWithoutProcessing('{{#foo}} \n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} \n{{/foo}}'),
+          body = ast.body[0].program.body,
+          block = body[1];
+
+        equals(body[0].value, ' \n');
+
+        equals(block.program.body[0].value, ' \nfoo\n ');
+        equals(block.inverse.body[0].value, ' \n  bar \n  ');
+      });
+      it('column 0 block mustaches', function() {
+        var ast = Handlebars.parseWithoutProcessing('test\n{{# comment}} \nfoo\n {{else}} \n  bar \n  {{/comment}} '),
+            block = ast.body[1];
+
+        equals(ast.body[0].omit, undefined);
+
+        equals(block.program.body[0].value, ' \nfoo\n ');
+        equals(block.inverse.body[0].value, ' \n  bar \n  ');
+
+        equals(ast.body[2].value, ' ');
       });
     });
     describe('blocks', function() {
@@ -204,6 +286,18 @@ describe('ast', function() {
         equals(ast.body[2].value, '');
       });
     });
+    describe('partials - parseWithoutProcessing', function() {
+      it('simple partial', function() {
+        var ast = Handlebars.parseWithoutProcessing('{{> partial }} ');
+        equals(ast.body[1].value, ' ');
+      });
+      it('indented partial', function() {
+        var ast = Handlebars.parseWithoutProcessing('  {{> partial }} ');
+        equals(ast.body[0].value, '  ');
+        equals(ast.body[1].indent, '');
+        equals(ast.body[2].value, ' ');
+      });
+    });
     describe('partials', function() {
       it('marks partial as standalone', function() {
         var ast = Handlebars.parse('{{> partial }} ');
@@ -221,6 +315,17 @@ describe('ast', function() {
 
         ast = Handlebars.parse('{{> partial }}a');
         equals(ast.body[1].omit, undefined);
+      });
+    });
+    describe('comments - parseWithoutProcessing', function() {
+      it('simple comment', function() {
+        var ast = Handlebars.parseWithoutProcessing('{{! comment }} ');
+        equals(ast.body[1].value, ' ');
+      });
+      it('indented comment', function() {
+        var ast = Handlebars.parseWithoutProcessing('  {{! comment }} ');
+        equals(ast.body[0].value, '  ');
+        equals(ast.body[2].value, ' ');
       });
     });
     describe('comments', function() {
