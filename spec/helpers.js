@@ -766,4 +766,70 @@ describe('helpers', function() {
       shouldCompileTo('{{#if bar}}{{else goodbyes as |value|}}{{value}}{{/if}}{{value}}', [hash, helpers], '1foo');
     });
   });
+
+  describe('built-in helpers malformed arguments ', function() {
+    it('if helper - too few arguments', function() {
+      var template = CompilerContext.compile('{{#if}}{{/if}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#if requires exactly one argument/);
+    });
+
+    it('if helper - too many arguments, string', function() {
+      var template = CompilerContext.compile('{{#if test "string"}}{{/if}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#if requires exactly one argument/);
+    });
+
+    it('if helper - too many arguments, undefined', function() {
+      var template = CompilerContext.compile('{{#if test undefined}}{{/if}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#if requires exactly one argument/);
+    });
+
+    it('if helper - too many arguments, null', function() {
+      var template = CompilerContext.compile('{{#if test null}}{{/if}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#if requires exactly one argument/);
+    });
+
+    it('unless helper - too few arguments', function() {
+      var template = CompilerContext.compile('{{#unless}}{{/unless}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#unless requires exactly one argument/);
+    });
+
+    it('unless helper - too many arguments', function() {
+      var template = CompilerContext.compile('{{#unless test null}}{{/unless}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#unless requires exactly one argument/);
+    });
+
+    it('with helper - too few arguments', function() {
+      var template = CompilerContext.compile('{{#with}}{{/with}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#with requires exactly one argument/);
+    });
+
+    it('with helper - too many arguments', function() {
+      var template = CompilerContext.compile('{{#with test "string"}}{{/with}}');
+        shouldThrow(function() {
+
+            template({});
+        }, undefined, /#with requires exactly one argument/);
+    });
+  });
 });
