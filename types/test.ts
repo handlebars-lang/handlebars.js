@@ -220,7 +220,7 @@ function testExceptionTypings() {
 
 function testExceptionWithNodeTypings() {
   // Test exception constructor with both arguments.
-  const exception = new Handlebars.Exception('Just a test message.', {
+  const exception: Handlebars.Exception = new Handlebars.Exception('Just a test message.', {
     type: 'MustacheStatement',
     loc: {
       source: 'source',
