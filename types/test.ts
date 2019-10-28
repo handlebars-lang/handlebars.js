@@ -203,42 +203,40 @@ function testParseWithoutProcessing() {
 }
 
 function testExceptionTypings() {
-  // Test exception constructor with just message.
-  try {
-    const exp = new Handlebars.Exception('Just a test message.');
-  
-    // Assert
-    exp.message === 'Just a test message.' ? 'Passed': 'Failed';
-  
-    throw exp;
-  } catch(e) {
-    // Catch exception here.
-  }
-  
-  // Test exception constructor with message and node.
-  try {
-    const node: Handlebars.ExceptionNode = {
-      loc: {
-        start: { line: 1, column: 5 },
-        end: { line: 10, column: 2 }
-      }
-    };
-  
-    const exp = new Handlebars.Exception('Just a test message.', node);
-  
-    // Assert
-    exp.message === 'Just a test message.' ? 'Passed': 'Failed';
-    exp.lineNumber === 1 ? 'Passed': 'Failed';
-    exp.column === 5 ? 'Passed': 'Failed';
-    exp.endLineNumber === 10 ? 'Passed': 'Failed';
-    exp.endColumn === 2 ? 'Passed': 'Failed';
-    exp.description; // Could be a string value.
-    exp.name; // Could be a string value. 
-    exp.fileName; // Could be a string value. 
-    exp.stack; // Could be a string value if not undefined.
-    
-    throw exp;
-  } catch(e) {
-    // Catch exception here.
-  }
+  // Test exception constructor with a single argument - message.
+  let exception: Handlebars.Exception = new Handlebars.Exception('message');
+
+  // Fields
+  let message: string = exception.message;
+  let lineNumber: number = exception.lineNumber;
+  let column: number = exception.column;
+  let endLineNumber: number = exception.endLineNumber;
+  let endColumn: number = exception.endColumn;
+  let description = exception.description;
+  let name: string = exception.name;
+  let fileName: string = exception.fileName;
+  let stack: string | undefined = exception.stack;
+}
+
+function testExceptionWithNodeTypings() {
+  // Test exception constructor with both arguments.
+  const exception = new Handlebars.Exception('Just a test message.', {
+    type: 'MustacheStatement',
+    loc: {
+      source: 'source',
+      start: { line: 1, column: 5 },
+      end: { line: 10, column: 2 }
+    }
+  });
+
+  // Fields
+  let message: string = exception.message;
+  let lineNumber: number = exception.lineNumber;
+  let column: number = exception.column;
+  let endLineNumber: number = exception.endLineNumber;
+  let endColumn: number = exception.endColumn;
+  let description = exception.description;
+  let name: string = exception.name;
+  let fileName: string = exception.fileName;
+  let stack: string | undefined = exception.stack;
 }
