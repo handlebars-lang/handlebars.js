@@ -2,7 +2,25 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.5...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.0...master)
+
+## v4.5.0 - October 28th, 2019
+Features / Improvements
+- Add method Handlebars.parseWithoutProcessing (#1584) - 62ed3c2
+- add guard to if & unless helpers (#1549)
+- show source location for the strict lookup exceptions - feb60f8
+
+Bugfixes:
+- Use objects for hash value tracking - 7fcf9d2
+
+Chore:
+- Resolve deprecation warning message from eslint while running eslint (#1586) - 7052e88
+- chore: add eslint-plugin-compat and eslint-plugin-es5 - 088e618
+
+Compatibility notes:
+- No compatibility issues are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.4.5...v4.5.0)
 
 ## v4.4.5 - October 20th, 2019
 Bugfixes: 
