@@ -110,6 +110,7 @@ module.exports = {
   },
   "parserOptions": {
     "sourceType": "module",
+    "ecmaVersion": 6,
     "ecmaFeatures": {
       // Enabling features that can be implemented without polyfills. Want to avoid polyfills at this time.
       "arrowFunctions": true,
