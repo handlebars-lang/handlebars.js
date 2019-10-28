@@ -202,41 +202,43 @@ function testParseWithoutProcessing() {
   const parsedTemplateWithoutOptions: hbs.AST.Program = Handlebars.parseWithoutProcessing('<p>Hello, my name is {{name}}.</p>');
 }
 
-// Test exception constructor with just message.
-try {
-  const exp = new Handlebars.Exception('Just a test message.');
-
-  // Assert
-  exp.message === 'Just a test message.' ? 'Passed': 'Failed';
-
-  throw exp;
-} catch(e) {
-  // Catch exception here.
-}
-
-// Test exception constructor with message and node.
-try {
-  const node: Handlebars.ExceptionNode = {
-    loc: {
-      start: { line: 1, column: 5 },
-      end: { line: 10, column: 2 }
-    }
-  };
-
-  const exp = new Handlebars.Exception('Just a test message.', node);
-
-  // Assert
-  exp.message === 'Just a test message.' ? 'Passed': 'Failed';
-  exp.lineNumber === 1 ? 'Passed': 'Failed';
-  exp.column === 5 ? 'Passed': 'Failed';
-  exp.endLineNumber === 10 ? 'Passed': 'Failed';
-  exp.endColumn === 2 ? 'Passed': 'Failed';
-  exp.description; // Could be a string value.
-  exp.name; // Could be a string value. 
-  exp.fileName; // Could be a string value. 
-  exp.stack; // Could be a string value if not undefined.
+function testExceptionTypings() {
+  // Test exception constructor with just message.
+  try {
+    const exp = new Handlebars.Exception('Just a test message.');
   
-  throw exp;
-} catch(e) {
-  // Catch exception here.
+    // Assert
+    exp.message === 'Just a test message.' ? 'Passed': 'Failed';
+  
+    throw exp;
+  } catch(e) {
+    // Catch exception here.
+  }
+  
+  // Test exception constructor with message and node.
+  try {
+    const node: Handlebars.ExceptionNode = {
+      loc: {
+        start: { line: 1, column: 5 },
+        end: { line: 10, column: 2 }
+      }
+    };
+  
+    const exp = new Handlebars.Exception('Just a test message.', node);
+  
+    // Assert
+    exp.message === 'Just a test message.' ? 'Passed': 'Failed';
+    exp.lineNumber === 1 ? 'Passed': 'Failed';
+    exp.column === 5 ? 'Passed': 'Failed';
+    exp.endLineNumber === 10 ? 'Passed': 'Failed';
+    exp.endColumn === 2 ? 'Passed': 'Failed';
+    exp.description; // Could be a string value.
+    exp.name; // Could be a string value. 
+    exp.fileName; // Could be a string value. 
+    exp.stack; // Could be a string value if not undefined.
+    
+    throw exp;
+  } catch(e) {
+    // Catch exception here.
+  }
 }
