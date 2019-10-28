@@ -306,7 +306,7 @@ describe('blocks', function() {
       equals(run, true);
     });
 
-    describe('registration', function() {
+    describe.only('registration', function() {
       it('unregisters', function() {
         handlebarsEnv.decorators = {};
 
