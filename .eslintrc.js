@@ -4,7 +4,8 @@ module.exports = {
     "self": false
   },
   "env": {
-    "node": true
+    "node": true,
+    "es6": true
   },
   "rules": {
     // overrides eslint:recommended defaults
