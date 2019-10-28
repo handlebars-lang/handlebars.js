@@ -21,6 +21,7 @@
     "node": ">=0.4.7"
   },
   "dependencies": {
+    "eslint-plugin-compat": "^3.3.0",
     "neo-async": "^2.6.0",
     "optimist": "^0.6.1",
     "source-map": "^0.6.1"
@@ -37,6 +38,7 @@
     "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
+    "eslint-plugin-es5": "^1.4.1",
     "grunt": "^1.0.3",
     "grunt-babel": "^5.0.0",
     "grunt-bg-shell": "^2.3.3",

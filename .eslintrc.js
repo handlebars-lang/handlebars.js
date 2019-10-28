@@ -1,5 +1,5 @@
 module.exports = {
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended","plugin:compat/recommended"],
   "globals": {
     "self": false
   },

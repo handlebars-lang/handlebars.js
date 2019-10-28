@@ -9,7 +9,7 @@ var filename = 'dist/handlebars.js';
 if (global.minimizedTest) {
   filename = 'dist/handlebars.min.js';
 }
-var distHandlebars = fs.readFileSync(require.resolve(`../../${filename}`), 'utf-8');
+var distHandlebars = fs.readFileSync(require.resolve('../../' + filename), 'utf-8');
 vm.runInThisContext(distHandlebars, filename);
 
 global.CompilerContext = {

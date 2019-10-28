@@ -126,7 +126,7 @@ describe('ast', function() {
   describe('whitespace control', function() {
     describe('parse', function() {
       it('mustache', function() {
-        let ast = Handlebars.parse('  {{~comment~}} ');
+        var ast = Handlebars.parse('  {{~comment~}} ');
 
         equals(ast.body[0].value, '');
         equals(ast.body[2].value, '');
@@ -142,7 +142,7 @@ describe('ast', function() {
 
     describe('parseWithoutProcessing', function() {
       it('mustache', function() {
-        let ast = Handlebars.parseWithoutProcessing('  {{~comment~}} ');
+        var ast = Handlebars.parseWithoutProcessing('  {{~comment~}} ');
 
         equals(ast.body[0].value, '  ');
         equals(ast.body[2].value, ' ');
