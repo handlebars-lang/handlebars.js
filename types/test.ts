@@ -201,3 +201,42 @@ function testParseWithoutProcessing() {
 
   const parsedTemplateWithoutOptions: hbs.AST.Program = Handlebars.parseWithoutProcessing('<p>Hello, my name is {{name}}.</p>');
 }
+
+function testExceptionTypings() {
+  // Test exception constructor with a single argument - message.
+  let exception: Handlebars.Exception = new Handlebars.Exception('message');
+
+  // Fields
+  let message: string = exception.message;
+  let lineNumber: number = exception.lineNumber;
+  let column: number = exception.column;
+  let endLineNumber: number = exception.endLineNumber;
+  let endColumn: number = exception.endColumn;
+  let description = exception.description;
+  let name: string = exception.name;
+  let fileName: string = exception.fileName;
+  let stack: string | undefined = exception.stack;
+}
+
+function testExceptionWithNodeTypings() {
+  // Test exception constructor with both arguments.
+  const exception: Handlebars.Exception = new Handlebars.Exception('message', {
+    type: 'MustacheStatement',
+    loc: {
+      source: 'source',
+      start: { line: 1, column: 5 },
+      end: { line: 10, column: 2 }
+    }
+  });
+
+  // Fields
+  let message: string = exception.message;
+  let lineNumber: number = exception.lineNumber;
+  let column: number = exception.column;
+  let endLineNumber: number = exception.endLineNumber;
+  let endColumn: number = exception.endColumn;
+  let description = exception.description;
+  let name: string = exception.name;
+  let fileName: string = exception.fileName;
+  let stack: string | undefined = exception.stack;
+}

@@ -66,7 +66,6 @@ declare namespace Handlebars {
   export function K(): void;
   export function createFrame(object: any): any;
   export function blockParams(obj: any[], ids: any[]): any[];
-  export function Exception(message: string): void;
   export function log(level: number, obj: any): void;
   export function parse(input: string, options?: ParseOptions): hbs.AST.Program;
   export function parseWithoutProcessing(input: string, options?: ParseOptions): hbs.AST.Program;
@@ -86,6 +85,20 @@ declare namespace Handlebars {
   export const decorators: { [name: string]: Function };
 
   export function noConflict(): typeof Handlebars;
+
+  export class Exception {
+      constructor(message: string, node?: hbs.AST.Node);
+      description: string;
+      fileName: string;
+      lineNumber?: any;
+      endLineNumber?: any;
+      message: string;
+      name: string;
+      number: number;
+      stack?: string;
+      column?: any;
+      endColumn?: any;
+  }
 
   export class SafeString {
       constructor(str: string);
