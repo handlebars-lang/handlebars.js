@@ -4,22 +4,8 @@ module.exports = {
     "self": false
   },
   "env": {
-    "node": true
-  },
-  "ecmaFeatures": {
-    // Enabling features that can be implemented without polyfills. Want to avoid polyfills at this time.
-    "arrowFunctions": true,
-    "blockBindings": true,
-    "defaultParams": true,
-    "destructuring": true,
-    "modules": true,
-    "objectLiteralComputedProperties": true,
-    "objectLiteralDuplicateProperties": true,
-    "objectLiteralShorthandMethods": true,
-    "objectLiteralShorthandProperties": true,
-    "restParams": true,
-    "spread": true,
-    "templateStrings": true
+    "node": true,
+    "es6": true
   },
   "rules": {
     // overrides eslint:recommended defaults
@@ -124,6 +110,8 @@ module.exports = {
     "no-var": "warn"
   },
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 6,
+    "ecmaFeatures": {}
   }
 }
