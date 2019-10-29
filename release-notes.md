@@ -2,7 +2,18 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.1...master)
+
+## v4.5.1 - October 29th, 2019
+Bugfixs
+
+- fix: move "eslint-plugin-compat" to devDependencies - 5e9d17f (#1589)
+
+Compatibility notes:
+- No compatibility issues are to be expected
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.0...v4.5.1)
 
 ## v4.5.0 - October 28th, 2019
 Features / Improvements
