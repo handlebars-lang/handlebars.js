@@ -278,7 +278,6 @@ declare namespace hbs {
 
       interface Program extends Node {
           body: Statement[];
-          blockParams: string[];
       }
 
       interface Statement extends Node {}
@@ -287,18 +286,25 @@ declare namespace hbs {
           type: 'MustacheStatement';
           path: PathExpression | Literal;
           params: Expression[];
-          hash: Hash;
+          hash?: Hash;
           escaped: boolean;
           strip: StripFlags;
       }
 
-      interface Decorator extends MustacheStatement { }
+      interface Decorator extends Statement {
+          type: 'Decorator';
+          path: PathExpression | Literal;
+          params: Expression[];
+          hash?: Hash;
+          escaped: boolean;
+          strip: StripFlags;
+      }
 
       interface BlockStatement extends Statement {
           type: 'BlockStatement';
           path: PathExpression;
           params: Expression[];
-          hash: Hash;
+          hash?: Hash;
           program: Program;
           inverse: Program;
           openStrip: StripFlags;
@@ -306,13 +312,21 @@ declare namespace hbs {
           closeStrip: StripFlags;
       }
 
-      interface DecoratorBlock extends BlockStatement { }
+      interface DecoratorBlock extends Statement {
+          type: 'DecoratorBlock';
+          path: PathExpression;
+          params: Expression[];
+          hash?: Hash;
+          program: Program;
+          openStrip: StripFlags;
+          closeStrip: StripFlags;
+      }
 
       interface PartialStatement extends Statement {
           type: 'PartialStatement';
           name: PathExpression | SubExpression;
           params: Expression[];
-          hash: Hash;
+          hash?: Hash;
           indent: string;
           strip: StripFlags;
       }
@@ -321,7 +335,7 @@ declare namespace hbs {
           type: 'PartialBlockStatement';
           name: PathExpression | SubExpression;
           params: Expression[];
-          hash: Hash;
+          hash?: Hash;
           program: Program;
           openStrip: StripFlags;
           closeStrip: StripFlags;
@@ -345,7 +359,7 @@ declare namespace hbs {
           type: 'SubExpression';
           path: PathExpression;
           params: Expression[];
-          hash: Hash;
+          hash?: Hash;
       }
 
       interface PathExpression extends Expression {
@@ -357,6 +371,7 @@ declare namespace hbs {
       }
 
       interface Literal extends Expression {}
+
       interface StringLiteral extends Literal {
           type: 'StringLiteral';
           value: string;
