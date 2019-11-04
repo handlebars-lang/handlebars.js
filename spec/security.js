@@ -113,14 +113,67 @@ describe('security issues', function() {
 
     describe('GH-1563', function() {
         it('should not allow to access constructor after overriding via __defineGetter__', function() {
-            if (({}).__defineGetter__ == null || ({}).__lookupGetter__ == null) {
-                return; // Browser does not support this exploit anyway
-            }
-            shouldCompileTo('{{__defineGetter__ "undefined" valueOf }}' +
-                '{{#with __lookupGetter__ }}' +
-                '{{__defineGetter__ "propertyIsEnumerable" (this.bind (this.bind 1)) }}' +
-                '{{constructor.name}}' +
-                '{{/with}}', {}, '');
+
+            shouldThrow(function() {
+                compileWithPartials('{{__defineGetter__ "undefined" valueOf }}' +
+                    '{{#with __lookupGetter__ }}' +
+                    '{{__defineGetter__ "propertyIsEnumerable" (this.bind (this.bind 1)) }}' +
+                    '{{constructor.name}}' +
+                    '{{/with}}', [{}, {}, {}, {}])({});
+                }
+            );
+        });
+    });
+
+    describe('the compile option "allowNonHelperFunctionCall"', function() {
+        it('when set to false should prevent calling functions in input objects', function() {
+            shouldThrow(function() {
+                var template = compileWithPartials('{{test abc}}', [{}, {}, {}, {allowNonHelperFunctionCall: false}]);
+                template({test: function() { return 'abc'; }});
+            }, null, /Missing helper/);
+        });
+        it('when set to false should prevent calling functions in input objects (in strict mode)', function() {
+            shouldThrow(function() {
+                var template = compileWithPartials('{{obj.method abc}}', [{}, {}, {}, {allowNonHelperFunctionCall: false, strict: true}]);
+                template({});
+            }, null, /Cannot create code.*obj\.method.*Non-helper/);
+        });
+
+    });
+
+    describe('Properties that are required to be enumerable', function() {
+
+        it('access should be restricted if not enumerable', function() {
+            shouldCompileTo('{{__defineGetter__}}', {}, '');
+            shouldCompileTo('{{__defineSetter__}}', {}, '');
+            shouldCompileTo('{{__proto__}}', {}, '');
+            shouldCompileTo('{{constructor}}', {}, '');
+        });
+
+        it('access should be allowed if enumerable', function() {
+            shouldCompileTo('{{__defineGetter__}}', {__defineGetter__: 'abc'}, 'abc');
+            shouldCompileTo('{{__defineSetter__}}', {__defineSetter__: 'abc'}, 'abc');
+            shouldCompileTo('{{constructor}}', {constructor: 'abc'}, 'abc');
+        });
+
+        it('access can be allowed via the compile-option "propertyMustBeEnumerable"', function() {
+            var context = {};
+            ['__defineGetter__', '__defineSetter__'].forEach(function(property) {
+                Object.defineProperty(context, property, {
+                    get: function() {
+                        return property;
+                    },
+                    enumerable: false
+                });
+            });
+
+            var compileOptions = {
+                propertyMustBeEnumerable: {
+                    __defineGetter__: false
+                }
+            };
+
+            shouldCompileTo('{{__defineGetter__}}{{__defineSetter__}}', [context, {}, {}, compileOptions], '__defineGetter__');
         });
     });
 });
