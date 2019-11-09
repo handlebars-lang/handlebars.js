@@ -16,6 +16,34 @@ var ast = Handlebars.parse(myTemplate);
 Handlebars.precompile(ast);
 ```
 
+### Parsing
+
+There are two primary APIs that are used to parse an existing template into the AST:
+
+#### parseWithoutProcessing
+
+`Handlebars.parseWithoutProcessing` is the primary mechanism to turn a raw template string into the Handlebars AST described in this document. No processing is done on the resulting AST which makes this ideal for codemod (for source to source transformation) tooling.
+
+Example:
+
+```js
+let ast = Handlebars.parseWithoutProcessing(myTemplate);
+```
+
+#### parse
+
+`Handlebars.parse` will parse the template with `parseWithoutProcessing` (see above) then it will update the AST to strip extraneous whitespace. The whitespace stripping functionality handles two distinct situations:
+
+* Removes whitespace around dynamic statements that are on a line by themselves (aka "stand alone")
+* Applies "whitespace control" characters (i.e. `~`) by truncating the `ContentStatement` `value` property appropriately (e.g. `\n\n{{~foo}}` would have a `ContentStatement` with a `value` of `''`)
+
+`Handlebars.parse` is used internally by `Handlebars.precompile` and `Handlebars.compile`.
+
+Example:
+
+```js
+let ast = Handlebars.parse(myTemplate);
+```
 
 ### Basic
 

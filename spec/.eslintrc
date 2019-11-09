@@ -1,14 +1,19 @@
 {
+  "extends": [
+    "../.eslintrc.js",
+    "plugin:es5/no-es2015"
+  ],
+  "plugins": [
+    "es5"
+  ],
   "globals": {
     "CompilerContext": true,
     "Handlebars": true,
     "handlebarsEnv": true,
-
     "shouldCompileTo": true,
     "shouldCompileToWithPartials": true,
     "shouldThrow": true,
     "compileWithPartials": true,
-
     "console": true,
     "require": true,
     "suite": true,
