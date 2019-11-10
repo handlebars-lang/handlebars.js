@@ -34,6 +34,8 @@
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
+    "chai": "^4.2.0",
+    "dirty-chai": "^2.0.1",
     "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
