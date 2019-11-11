@@ -108,14 +108,14 @@ describe('compiler', function() {
       equal(/return ""/.test(Handlebars.precompile('')), true);
     });
   });
-  
+
   describe('Compile Partials Correctly', function() {
     var compileCount = 0;
     var origTemplateFunc = Handlebars.template;
     before(function() {
-      Handlebars.template = function(...params) {
+      Handlebars.template = function(params) {
         compileCount++;
-        return origTemplateFunc(...params);
+        return origTemplateFunc(params);
       };
       Handlebars.registerPartial({
         'dude': 'I am a partial'
@@ -123,7 +123,7 @@ describe('compiler', function() {
     });
     after(function() {
       Handlebars.template = origTemplateFunc;
-      // Handlebars.unregisterPartial('dude');
+      Handlebars.unregisterPartial('dude');
     });
 
     it('should only compile global partials once', function() {
