@@ -2,7 +2,18 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.2...master)
+
+## v4.5.2 - November 13th, 2019
+# Bugfixes
+
+- fix: use String(field) in lookup when checking for "constructor" - d541378
+- test: add fluent API for testing Handlebars - c2ac79c
+
+Compatibility notes:
+- no incompatibility are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.1...v4.5.2)
 
 ## v4.5.1 - October 29th, 2019
 Bugfixs
