@@ -13,6 +13,7 @@
     "shouldCompileTo": true,
     "shouldCompileToWithPartials": true,
     "shouldThrow": true,
+    "expectTemplate": true,
     "compileWithPartials": true,
     "console": true,
     "require": true,
