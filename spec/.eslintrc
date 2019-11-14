@@ -28,15 +28,18 @@
     "stop": true,
     "ok": true,
     "strictEqual": true,
-    "define": true
+    "define": true,
+    "expect": true,
+    "chai": true
   },
   "env": {
     "mocha": true
   },
   "rules": {
     // Disabling for tests, for now.
-    "no-path-concat": 0,
+    "no-path-concat": "off",
 
-    "no-var": 0
+    "no-var": "off",
+    "dot-notation": "off"
   }
 }

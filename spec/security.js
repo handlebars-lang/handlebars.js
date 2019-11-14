@@ -75,11 +75,11 @@ describe('security issues', function() {
             });
             it('should throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
                 var functionCalls = [];
-                shouldThrow(function() {
+                expect(function() {
                     var template = Handlebars.compile('{{blockHelperMissing "abc" .}}');
                     template({ fn: function() { functionCalls.push('called'); }});
-                }, Error);
-                equals(functionCalls.length, 0);
+                }).to.throw(Error);
+                expect(functionCalls.length).to.equal(0);
             });
             it('should throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
                 shouldThrow(function() {

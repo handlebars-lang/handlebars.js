@@ -63,12 +63,20 @@ global.compileWithPartials = function(string, hashOrArray, partials) {
 };
 
 
+/**
+ * @deprecated Use chai's expect-style API instead (`expect(actualValue).to.equal(expectedValue)`)
+ * @see https://www.chaijs.com/api/bdd/
+ */
 global.equals = global.equal = function equals(a, b, msg) {
   if (a !== b) {
     throw new AssertError("'" + a + "' should === '" + b + "'" + (msg ? ': ' + msg : ''), equals);
   }
 };
 
+/**
+ * @deprecated Use chai's expect-style API instead (`expect(actualValue).to.equal(expectedValue)`)
+ * @see https://www.chaijs.com/api/bdd/#method_throw
+ */
 global.shouldThrow = function(callback, type, msg) {
   var failed;
   try {
