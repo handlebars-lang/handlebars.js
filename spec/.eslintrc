@@ -27,6 +27,7 @@
     "start": true,
     "stop": true,
     "ok": true,
+    "sinon": true,
     "strictEqual": true,
     "define": true,
     "expect": true,
