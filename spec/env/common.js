@@ -142,24 +142,35 @@ HandlebarsTestBench.prototype.withMessage = function(message) {
 };
 
 HandlebarsTestBench.prototype.toCompileTo = function(expectedOutputAsString) {
+  expect(this._compileAndExeute()).to.equal(expectedOutputAsString);
+};
+
+// see chai "to.throw" (https://www.chaijs.com/api/bdd/#method_throw)
+HandlebarsTestBench.prototype.toThrow = function(errorLike, errMsgMatcher, msg) {
   var self = this;
+  expect(function() {
+    self._compileAndExeute();
+  }).to.throw(errorLike, errMsgMatcher, msg);
+};
+
+HandlebarsTestBench.prototype._compileAndExeute = function() {
   var compile = Object.keys(this.partials).length > 0
       ? CompilerContext.compileWithPartial
       : CompilerContext.compile;
 
+  var combinedRuntimeOptions = this._combineRuntimeOptions();
+
+  var template = compile(this.templateAsString, this.compileOptions);
+  return template(this.input, combinedRuntimeOptions);
+};
+
+HandlebarsTestBench.prototype._combineRuntimeOptions = function() {
+  var self = this;
   var combinedRuntimeOptions = {};
   Object.keys(this.runtimeOptions).forEach(function(key) {
     combinedRuntimeOptions[key] = self.runtimeOptions[key];
   });
   combinedRuntimeOptions.helpers = this.helpers;
   combinedRuntimeOptions.partials = this.partials;
-
-  var template = compile(this.templateAsString, this.compileOptions);
-  var output = template(this.input, combinedRuntimeOptions);
-
-  if (output !== expectedOutputAsString) {
-    // Error message formatted so that IntelliJ-Idea shows "diff"-button
-    // https://stackoverflow.com/a/10945655/4251384
-    throw new AssertError(this.message + '\nexpected:' + expectedOutputAsString + 'but was:' + output);
-  }
+  return combinedRuntimeOptions;
 };
