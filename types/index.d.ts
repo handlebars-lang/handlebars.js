@@ -215,11 +215,6 @@ interface CompileOptions {
   ignoreStandalone?: boolean;
   explicitPartialContext?: boolean;
   allowNonHelperFunctionCall?: boolean;
-  propertyMustBeEnumerable?: PropertyMustBeEnumerable;
-}
-
-type PropertyMustBeEnumerable = {
-  [name: string]: boolean;
 }
 
 type KnownHelpers = {
