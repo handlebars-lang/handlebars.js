@@ -59,7 +59,7 @@ describe('compiler', function() {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
         equal(true, false, 'Statement must throw exception. This line should not be executed.');
       } catch (err) {
-        equal(err.propertyIsEnumerable('column'), true, 'Checking error column');
+        equal(Object.prototype.propertyIsEnumerable.call(err, 'column'), true, 'Checking error column');
       }
     });
 
