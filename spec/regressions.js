@@ -342,10 +342,10 @@ describe('Regressions', function() {
     }
 
     var newHandlebarsInstance;
-    before(function() {
+    beforeEach(function() {
       newHandlebarsInstance = Handlebars.create();
     });
-    after(function() {
+    afterEach(function() {
       sinon.restore();
     });
 
