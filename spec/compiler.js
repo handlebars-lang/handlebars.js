@@ -108,29 +108,4 @@ describe('compiler', function() {
       equal(/return ""/.test(Handlebars.precompile('')), true);
     });
   });
-
-  describe('Compile Partials Correctly', function() {
-    var compileCount = 0;
-    var origTemplateFunc = Handlebars.template;
-    before(function() {
-      Handlebars.template = function(params) {
-        compileCount++;
-        return origTemplateFunc(params);
-      };
-      Handlebars.registerPartial({
-        'dude': 'I am a partial'
-      });
-    });
-    after(function() {
-      Handlebars.template = origTemplateFunc;
-      Handlebars.unregisterPartial('dude');
-    });
-
-    it('should only compile global partials once', function() {
-      var string = 'Dudes: {{> dude}} {{> dude}}';
-      Handlebars.compile(string)(); // This should compile template + partial once
-      Handlebars.compile(string)(); // This should only compile template
-      equal(compileCount, 3);
-    });
-  });
 });

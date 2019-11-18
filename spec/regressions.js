@@ -334,4 +334,31 @@ describe('Regressions', function() {
 
     shouldCompileTo('{{helpa length="foo"}}', [obj, helpers], 'foo');
   });
+
+  describe('GH-1598: Performance degradation for partials since v4.3.0', function() {
+    // Do not run test for runs without compiler
+    if (!Handlebars.compile) {
+      return;
+    }
+
+    var newHandlebarsInstance;
+    before(function() {
+      newHandlebarsInstance = Handlebars.create();
+    });
+    after(function() {
+      sinon.restore();
+    });
+
+    it('should only compile global partials once', function() {
+      var templateSpy = sinon.spy(newHandlebarsInstance, 'template');
+      newHandlebarsInstance.registerPartial({
+        'dude': 'I am a partial'
+      });
+      var string = 'Dudes: {{> dude}} {{> dude}}';
+      newHandlebarsInstance.compile(string)(); // This should compile template + partial once
+      newHandlebarsInstance.compile(string)(); // This should only compile template
+      equal(templateSpy.callCount, 3);
+      sinon.restore();
+    });
+  });
 });
