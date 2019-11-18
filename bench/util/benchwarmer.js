@@ -29,7 +29,7 @@ BenchWarmer.prototype = {
     });
   },
   push: function(name, fn) {
-    if (this.names.indexOf(name) == -1) {
+    if (this.names.indexOf(name) === -1) {
       this.names.push(name);
     }
 
@@ -77,7 +77,7 @@ BenchWarmer.prototype = {
 
         var errors = false, prop, bench;
         for (prop in self.errors) {
-          if (self.errors.hasOwnProperty(prop)
+          if (Object.prototype.hasOwnProperty.call(self, prop)
               && self.errors[prop].error.message !== 'EWOT') {
             errors = true;
             break;
@@ -86,9 +86,8 @@ BenchWarmer.prototype = {
 
         if (errors) {
           print('\n\nErrors:\n');
-          for (prop in self.errors) {
-            if (self.errors.hasOwnProperty(prop)
-                && self.errors[prop].error.message !== 'EWOT') {
+          Object.keys(self.errors).forEach(function(prop) {
+            if (self.errors[prop].error.message !== 'EWOT') {
               bench = self.errors[prop];
               print('\n' + bench.name + ':\n');
               print(bench.error.message);
@@ -97,7 +96,7 @@ BenchWarmer.prototype = {
               }
               print('\n');
             }
-          }
+          });
         }
 
         callback();

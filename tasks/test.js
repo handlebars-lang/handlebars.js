@@ -33,7 +33,7 @@ module.exports = function(grunt) {
 
     var runner = childProcess.fork('./spec/env/runner', [], {stdio: 'inherit'});
     runner.on('close', function(code) {
-      if (code != 0) {
+      if (code !== 0) {
         grunt.fatal(code + ' tests failed');
       }
       done();
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
 
     var runner = childProcess.fork('./spec/env/runner', ['--min'], {stdio: 'inherit'});
     runner.on('close', function(code) {
-      if (code != 0) {
+      if (code !== 0) {
         grunt.fatal(code + ' tests failed');
       }
       done();

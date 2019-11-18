@@ -1,11 +1,26 @@
 describe('security issues', function() {
     describe('GH-1495: Prevent Remote Code Execution via constructor', function() {
         it('should not allow constructors to be accessed', function() {
-            shouldCompileTo('{{constructor.name}}', {}, '');
-            shouldCompileTo('{{lookup (lookup this "constructor") "name"}}', {}, '');
+            expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+                .withInput({})
+                .toCompileTo('');
+
+            expectTemplate('{{constructor.name}}')
+                .withInput({})
+                .toCompileTo('');
         });
 
-        it('should allow the "constructor" property to be accessed if it is enumerable', function() {
+        it('GH-1603: should not allow constructors to be accessed (lookup via toString)', function() {
+          expectTemplate('{{lookup (lookup this (list "constructor")) "name"}}')
+              .withInput({})
+              .withHelper('list', function(element) {
+                return [element];
+              })
+              .toCompileTo('');
+        });
+
+
+      it('should allow the "constructor" property to be accessed if it is enumerable', function() {
             shouldCompileTo('{{constructor.name}}', {'constructor': {
                 'name': 'here we go'
             }}, 'here we go');
@@ -13,6 +28,13 @@ describe('security issues', function() {
                 'name': 'here we go'
             }}, 'here we go');
         });
+
+        it('should allow the "constructor" property to be accessed if it is enumerable', function() {
+            shouldCompileTo('{{lookup (lookup this "constructor") "name"}}', {'constructor': {
+                    'name': 'here we go'
+                }}, 'here we go');
+        });
+
 
         it('should allow prototype properties that are not constructors', function() {
             function TestClass() {
@@ -53,11 +75,11 @@ describe('security issues', function() {
             });
             it('should throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
                 var functionCalls = [];
-                shouldThrow(function() {
+                expect(function() {
                     var template = Handlebars.compile('{{blockHelperMissing "abc" .}}');
                     template({ fn: function() { functionCalls.push('called'); }});
-                }, Error);
-                equals(functionCalls.length, 0);
+                }).to.throw(Error);
+                expect(functionCalls.length).to.equal(0);
             });
             it('should throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
                 shouldThrow(function() {
@@ -92,13 +114,31 @@ describe('security issues', function() {
     describe('GH-1563', function() {
         it('should not allow to access constructor after overriding via __defineGetter__', function() {
             if (({}).__defineGetter__ == null || ({}).__lookupGetter__ == null) {
-                return; // Browser does not support this exploit anyway
+                return this.skip(); // Browser does not support this exploit anyway
             }
-            shouldCompileTo('{{__defineGetter__ "undefined" valueOf }}' +
+            expectTemplate('{{__defineGetter__ "undefined" valueOf }}' +
                 '{{#with __lookupGetter__ }}' +
                 '{{__defineGetter__ "propertyIsEnumerable" (this.bind (this.bind 1)) }}' +
                 '{{constructor.name}}' +
-                '{{/with}}', {}, '');
+                '{{/with}}')
+                .withInput({})
+                .toThrow(/Missing helper: "__defineGetter__"/);
         });
+    });
+
+    describe('GH-1595', function() {
+      it('properties, that are required to be enumerable', function() {
+        expectTemplate('{{constructor}}').withInput({}).toCompileTo('');
+        expectTemplate('{{__defineGetter__}}').withInput({}).toCompileTo('');
+        expectTemplate('{{__defineSetter__}}').withInput({}).toCompileTo('');
+        expectTemplate('{{__lookupGetter__}}').withInput({}).toCompileTo('');
+        expectTemplate('{{__proto__}}').withInput({}).toCompileTo('');
+
+        expectTemplate('{{lookup "constructor"}}').withInput({}).toCompileTo('');
+        expectTemplate('{{lookup "__defineGetter__"}}').withInput({}).toCompileTo('');
+        expectTemplate('{{lookup "__defineSetter__"}}').withInput({}).toCompileTo('');
+        expectTemplate('{{lookup "__lookupGetter__"}}').withInput({}).toCompileTo('');
+        expectTemplate('{{lookup "__proto__"}}').withInput({}).toCompileTo('');
+      });
     });
 });

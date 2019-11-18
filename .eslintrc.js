@@ -57,6 +57,7 @@ module.exports = {
     "no-with": "error",
     "radix": "error",
     "wrap-iife": "error",
+    "no-prototype-builtins": "error",
 
 
     // Variables //
@@ -114,4 +115,4 @@ module.exports = {
     "ecmaVersion": 6,
     "ecmaFeatures": {}
   }
-}
+};
