@@ -211,12 +211,12 @@ describe('Regressions', function() {
         // It's valid to execute a block against an undefined context, but
         // helpers can not do so, so we expect to have an empty object here;
         for (var name in this) {
-          if (this.hasOwnProperty(name)) {
+          if (Object.prototype.hasOwnProperty.call(this, name)) {
             return 'found';
           }
         }
         // And to make IE happy, check for the known string as length is not enumerated.
-        return (this == 'bat' ? 'found' : 'not');
+        return (this === 'bat' ? 'found' : 'not');
       }
     };
 
