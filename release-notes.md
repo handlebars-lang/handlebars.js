@@ -2,7 +2,49 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.3...master)
+
+## v4.5.3 - November 18th, 2019
+Bugfixes:
+
+- fix: add "no-prototype-builtins" eslint-rule and fix all occurences - f7f05d7
+- fix: add more properties required to be enumerable - 1988878
+
+Chores / Build:
+- fix: use !== 0 instead of != 0 - c02b05f
+- add chai and dirty-chai and sinon, for cleaner test-assertions and spies, 
+  deprecate old assertion-methods  - 93e284e, 886ba86, 0817dad, 93516a0
+
+Security:
+
+- The properties `__proto__`, `__defineGetter__`, `__defineSetter__` and `__lookupGetter__` 
+  have been added to the list of "properties that must be enumerable".
+  If a property by that name is found and not enumerable on its parent, 
+  it will silently evaluate to `undefined`. This is done in both the compiled template and the "lookup"-helper. 
+  This will prevent new Remote-Code-Execution exploits that have been
+  published recently.
+
+Compatibility notes: 
+
+- Due to the security-fixes. The semantics of the templates using
+  `__proto__`, `__defineGetter__`, `__defineSetter__` and `__lookupGetter__` in the respect that those expression now return 
+  `undefined` rather than their actual value from the proto.
+- The semantics have not changed in cases where the properties are  enumerable, as in:
+
+```js
+{
+  __proto__: 'some string'
+}
+```
+
+- The change may be breaking in that respect, but we still only 
+  increase the patch-version, because the incompatible use-cases
+  are not intended, undocumented and far less important than fixing
+  Remote-Code-Execution exploits on existing systems.
+
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.5.2...v4.5.3)
 
 ## v4.5.2 - November 13th, 2019
 # Bugfixes
