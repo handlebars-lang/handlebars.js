@@ -43,16 +43,17 @@ module.exports = function(grunt) {
         ]
       }
     },
-
+    webpack: {
+      build: require('./webpack.config')
+    },
     babel: {
       options: {
         sourceMaps: 'inline',
-        loose: ['es6.modules'],
         auxiliaryCommentBefore: 'istanbul ignore next'
       },
       amd: {
         options: {
-          modules: 'amd'
+          plugins: ['@babel/plugin-transform-modules-amd']
         },
         files: [{
           expand: true,
@@ -64,79 +65,13 @@ module.exports = function(grunt) {
 
       cjs: {
         options: {
-          modules: 'common'
+          plugins: ['@babel/plugin-transform-modules-commonjs']
         },
         files: [{
           cwd: 'lib/',
           expand: true,
           src: '**/!(index).js',
           dest: 'dist/cjs/'
-        }]
-      }
-    },
-    webpack: {
-      options: {
-        context: __dirname,
-        module: {
-          loaders: [
-            // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next' }
-          ]
-        },
-        output: {
-          path: 'dist/',
-          library: 'Handlebars',
-          libraryTarget: 'umd'
-        }
-      },
-      handlebars: {
-        entry: './lib/handlebars.js',
-        output: {
-          filename: 'handlebars.js'
-        }
-      },
-      runtime: {
-        entry: './lib/handlebars.runtime.js',
-        output: {
-          filename: 'handlebars.runtime.js'
-        }
-      }
-    },
-
-    requirejs: {
-      options: {
-        optimize: 'none',
-        baseUrl: 'dist/amd/'
-      },
-      dist: {
-        options: {
-          name: 'handlebars',
-          out: 'dist/handlebars.amd.js'
-        }
-      },
-      runtime: {
-        options: {
-          name: 'handlebars.runtime',
-          out: 'dist/handlebars.runtime.amd.js'
-        }
-      }
-    },
-
-    uglify: {
-      options: {
-        mangle: true,
-        compress: true,
-        preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
-      },
-      dist: {
-        files: [{
-          cwd: 'dist/',
-          expand: true,
-          src: ['handlebars*.js', '!*.min.js'],
-          dest: 'dist/',
-          rename: function(dest, src) {
-            return dest + src.replace(/\.js$/, '.min.js');
-          }
         }]
       }
     },
@@ -221,20 +156,18 @@ module.exports = function(grunt) {
                     'node',
                     'globals']);
 
-  this.registerTask('amd', ['babel:amd', 'requirejs']);
+  this.registerTask('amd', ['babel:amd']);
   this.registerTask('node', ['babel:cjs']);
   this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-requirejs');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-bg-shell');

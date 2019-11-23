@@ -39,7 +39,11 @@ if (global.minimizedTest) {
 
 
 function run(env, callback) {
+  if (errors > 0) {
+    throw new Error('Errors have been detected before');
+  }
   var mocha = new Mocha();
+  mocha.bail();
   mocha.ui('bdd');
   mocha.files = files.slice();
   if (grep) {
@@ -54,6 +58,6 @@ function run(env, callback) {
   require(env);
   mocha.run(function(errorCount) {
     errors += errorCount;
-    callback();
+      callback();
   });
 }

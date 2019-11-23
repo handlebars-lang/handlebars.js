@@ -1,7 +1,8 @@
 module.exports = {
   "extends": ["eslint:recommended","plugin:compat/recommended"],
   "globals": {
-    "self": false
+    "self": false,
+    "SOURCE_MAPS": true
   },
   "env": {
     "node": true,
