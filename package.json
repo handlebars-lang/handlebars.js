@@ -38,6 +38,7 @@
     "@knappi/grunt-saucelabs": "^9.0.2",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^8.0.6",
+    "babel-plugin-add-module-exports": "^1.0.2",
     "benchmark": "~1.0",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",

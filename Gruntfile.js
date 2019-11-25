@@ -65,7 +65,11 @@ module.exports = function(grunt) {
 
       cjs: {
         options: {
-          plugins: ['@babel/plugin-transform-modules-commonjs']
+          plugins: [
+            '@babel/plugin-transform-modules-commonjs',
+            // support "import * as Handlebars" for backward-compatibility
+            'babel-plugin-add-module-exports'
+          ]
         },
         files: [{
           cwd: 'lib/',
