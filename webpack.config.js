@@ -35,28 +35,28 @@ module.exports = [
     createBuild({
         name: 'amd-compiler-runtime',
         entry: './lib/handlebars.js',
-        output: buildAmdOutput('handlebars.amd.js'),
+        output: buildAmdOutput('handlebars.amd.js', 'handlebars'),
         shouldHandlebarsSupportSourceMaps: false,
         minimize: false
     }),
     createBuild({
         name: 'amd-compiler-runtime-min',
         entry: './lib/handlebars.js',
-        output: buildAmdOutput('handlebars.amd.min.js'),
+        output: buildAmdOutput('handlebars.amd.min.js', 'handlebars'),
         shouldHandlebarsSupportSourceMaps: false,
         minimize: true
     }),
     createBuild({
         name: 'amd-runtime',
         entry: './lib/handlebars.runtime.js',
-        output: buildAmdOutput('handlebars.runtime.amd.js'),
+        output: buildAmdOutput('handlebars.runtime.amd.js', 'handlebars.runtime'),
         shouldHandlebarsSupportSourceMaps: false,
         minimize: false
     }),
     createBuild({
         name: 'amd-runtime-min',
         entry: './lib/handlebars.runtime.js',
-        output: buildAmdOutput('handlebars.runtime.amd.min.js'),
+        output: buildAmdOutput('handlebars.runtime.amd.min.js', 'handlebars.runtime'),
         shouldHandlebarsSupportSourceMaps: false,
         minimize: true
     })
@@ -104,10 +104,10 @@ function buildPluginConfig(shouldHandlebarsSupportSourceMaps) {
     return plugins;
 }
 
-function buildAmdOutput(outputFile) {
+function buildAmdOutput(outputFile, targetModuleName) {
     return {
         path: path.resolve(__dirname, 'dist'),
-            library: 'Handlebars',
+            library: targetModuleName,
             libraryTarget: 'amd',
             filename: outputFile,
             globalObject: 'this',

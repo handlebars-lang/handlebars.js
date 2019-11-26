@@ -22,7 +22,7 @@ vm.runInThisContext(fs.readFileSync(__dirname + '/../../' + filename), filename)
 
 var parse = require('../../dist/cjs/handlebars/compiler/base').parse;
 var compiler = require('../../dist/cjs/handlebars/compiler/compiler');
-var JavaScriptCompiler = require('../../dist/cjs/handlebars/compiler/javascript-compiler')['default'];
+var JavaScriptCompiler = require('../../dist/cjs/handlebars/compiler/javascript-compiler');
 
 global.CompilerContext = {
   browser: true,
