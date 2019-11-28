@@ -15,7 +15,7 @@ Checkout the official Handlebars docs site at
 Installing
 ----------
 
-See our [installation documentation](http://handlebarsjs.com/installation.html).
+See our [installation documentation](https://handlebarsjs.com/guide/#installation).
 
 Usage
 -----
