@@ -31,7 +31,7 @@ describe('subexpressions', function() {
   it('mixed paths and helpers', function() {
     var string = '{{blog baz.bat (equal a b) baz.bar}}';
 
-    var context = { bar: 'LOL', baz: {bat: 'foo!', bar: 'bar!'} };
+    var context = { bar: 'LOL', baz: { bat: 'foo!', bar: 'bar!' } };
     var helpers = {
       blog: function(val, that, theOther) {
         return 'val is ' + val + ', ' + that + ' and ' + theOther;
@@ -59,7 +59,7 @@ describe('subexpressions', function() {
   });
 
   it('GH-800 : Complex subexpressions', function() {
-    var context = {a: 'a', b: 'b', c: {c: 'c'}, d: 'd', e: {e: 'e'}};
+    var context = { a: 'a', b: 'b', c: { c: 'c' }, d: 'd', e: { e: 'e' } };
     var helpers = {
       dash: function(a, b) {
         return a + '-' + b;
@@ -69,7 +69,11 @@ describe('subexpressions', function() {
       }
     };
 
-    shouldCompileTo("{{dash 'abc' (concat a b)}}", [context, helpers], 'abc-ab');
+    shouldCompileTo(
+      "{{dash 'abc' (concat a b)}}",
+      [context, helpers],
+      'abc-ab'
+    );
     shouldCompileTo('{{dash d (concat a b)}}', [context, helpers], 'd-ab');
     shouldCompileTo('{{dash c.c (concat a b)}}', [context, helpers], 'c-ab');
     shouldCompileTo('{{dash (concat a b) c.c}}', [context, helpers], 'ab-c');
@@ -122,24 +126,36 @@ describe('subexpressions', function() {
   });
 
   it('multiple subexpressions in a hash', function() {
-    var string = '{{input aria-label=(t "Name") placeholder=(t "Example User")}}';
+    var string =
+      '{{input aria-label=(t "Name") placeholder=(t "Example User")}}';
 
     var helpers = {
       input: function(options) {
         var hash = options.hash;
         var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
         var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
-        return new Handlebars.SafeString('<input aria-label="' + ariaLabel + '" placeholder="' + placeholder + '" />');
+        return new Handlebars.SafeString(
+          '<input aria-label="' +
+            ariaLabel +
+            '" placeholder="' +
+            placeholder +
+            '" />'
+        );
       },
       t: function(defaultString) {
         return new Handlebars.SafeString(defaultString);
       }
     };
-    shouldCompileTo(string, [{}, helpers], '<input aria-label="Name" placeholder="Example User" />');
+    shouldCompileTo(
+      string,
+      [{}, helpers],
+      '<input aria-label="Name" placeholder="Example User" />'
+    );
   });
 
   it('multiple subexpressions in a hash with context', function() {
-    var string = '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}';
+    var string =
+      '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}';
 
     var context = {
       item: {
@@ -153,44 +169,84 @@ describe('subexpressions', function() {
         var hash = options.hash;
         var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
         var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
-        return new Handlebars.SafeString('<input aria-label="' + ariaLabel + '" placeholder="' + placeholder + '" />');
+        return new Handlebars.SafeString(
+          '<input aria-label="' +
+            ariaLabel +
+            '" placeholder="' +
+            placeholder +
+            '" />'
+        );
       },
       t: function(defaultString) {
         return new Handlebars.SafeString(defaultString);
       }
     };
-    shouldCompileTo(string, [context, helpers], '<input aria-label="Name" placeholder="Example User" />');
+    shouldCompileTo(
+      string,
+      [context, helpers],
+      '<input aria-label="Name" placeholder="Example User" />'
+    );
   });
 
   it('in string params mode,', function() {
-    var template = CompilerContext.compile('{{snog (blorg foo x=y) yeah a=b}}', {stringParams: true});
+    var template = CompilerContext.compile(
+      '{{snog (blorg foo x=y) yeah a=b}}',
+      {
+        stringParams: true
+      }
+    );
 
     var helpers = {
       snog: function(a, b, options) {
         equals(a, 'foo');
-        equals(options.types.length, 2, 'string params for outer helper processed correctly');
-        equals(options.types[0], 'SubExpression', 'string params for outer helper processed correctly');
-        equals(options.types[1], 'PathExpression', 'string params for outer helper processed correctly');
+        equals(
+          options.types.length,
+          2,
+          'string params for outer helper processed correctly'
+        );
+        equals(
+          options.types[0],
+          'SubExpression',
+          'string params for outer helper processed correctly'
+        );
+        equals(
+          options.types[1],
+          'PathExpression',
+          'string params for outer helper processed correctly'
+        );
         return a + b;
       },
 
       blorg: function(a, options) {
-        equals(options.types.length, 1, 'string params for inner helper processed correctly');
-        equals(options.types[0], 'PathExpression', 'string params for inner helper processed correctly');
+        equals(
+          options.types.length,
+          1,
+          'string params for inner helper processed correctly'
+        );
+        equals(
+          options.types[0],
+          'PathExpression',
+          'string params for inner helper processed correctly'
+        );
         return a;
       }
     };
 
-    var result = template({
-      foo: {},
-      yeah: {}
-    }, {helpers: helpers});
+    var result = template(
+      {
+        foo: {},
+        yeah: {}
+      },
+      { helpers: helpers }
+    );
 
     equals(result, 'fooyeah');
   });
 
   it('as hashes in string params mode', function() {
-    var template = CompilerContext.compile('{{blog fun=(bork)}}', {stringParams: true});
+    var template = CompilerContext.compile('{{blog fun=(bork)}}', {
+      stringParams: true
+    });
 
     var helpers = {
       blog: function(options) {
@@ -202,7 +258,7 @@ describe('subexpressions', function() {
       }
     };
 
-    var result = template({}, {helpers: helpers});
+    var result = template({}, { helpers: helpers });
     equals(result, 'val is BORK');
   });
 

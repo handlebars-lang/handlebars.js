@@ -1,19 +1,27 @@
 var _ = require('underscore'),
-    runner = require('./util/template-runner'),
-
-    eco, dust, Handlebars, Mustache;
+  runner = require('./util/template-runner'),
+  eco,
+  dust,
+  Handlebars,
+  Mustache;
 
 try {
   dust = require('dustjs-linkedin');
-} catch (err) { /* NOP */ }
+} catch (err) {
+  /* NOP */
+}
 
 try {
   Mustache = require('mustache');
-} catch (err) { /* NOP */ }
+} catch (err) {
+  /* NOP */
+}
 
 try {
   eco = require('eco');
-} catch (err) { /* NOP */ }
+} catch (err) {
+  /* NOP */
+}
 
 function error() {
   throw new Error('EWOT');
@@ -22,21 +30,28 @@ function error() {
 function makeSuite(bench, name, template, handlebarsOnly) {
   // Create aliases to minimize any impact from having to walk up the closure tree.
   var templateName = name,
+    context = template.context,
+    partials = template.partials,
+    handlebarsOut,
+    compatOut,
+    dustOut,
+    ecoOut,
+    mustacheOut;
 
-      context = template.context,
-      partials = template.partials,
-
-      handlebarsOut,
-      compatOut,
-      dustOut,
-      ecoOut,
-      mustacheOut;
-
-  var handlebar = Handlebars.compile(template.handlebars, {data: false}),
-      compat = Handlebars.compile(template.handlebars, {data: false, compat: true}),
-      options = {helpers: template.helpers};
-  _.each(template.partials && template.partials.handlebars, function(partial, partialName) {
-    Handlebars.registerPartial(partialName, Handlebars.compile(partial, {data: false}));
+  var handlebar = Handlebars.compile(template.handlebars, { data: false }),
+    compat = Handlebars.compile(template.handlebars, {
+      data: false,
+      compat: true
+    }),
+    options = { helpers: template.helpers };
+  _.each(template.partials && template.partials.handlebars, function(
+    partial,
+    partialName
+  ) {
+    Handlebars.registerPartial(
+      partialName,
+      Handlebars.compile(partial, { data: false })
+    );
   });
 
   handlebarsOut = handlebar(context, options);
@@ -58,7 +73,9 @@ function makeSuite(bench, name, template, handlebarsOnly) {
       dustOut = false;
       dust.loadSource(dust.compile(template.dust, templateName));
 
-      dust.render(templateName, context, function(err, out) { dustOut = out; });
+      dust.render(templateName, context, function(err, out) {
+        dustOut = out;
+      });
 
       bench('dust', function() {
         dust.render(templateName, context, function() {});
@@ -84,7 +101,7 @@ function makeSuite(bench, name, template, handlebarsOnly) {
 
   if (Mustache) {
     var mustacheSource = template.mustache,
-        mustachePartials = partials && partials.mustache;
+      mustachePartials = partials && partials.mustache;
 
     if (mustacheSource) {
       mustacheOut = Mustache.to_html(mustacheSource, context, mustachePartials);
@@ -107,9 +124,16 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     b = b.replace(/\s/g, '');
 
     if (handlebarsOut !== b) {
-      throw new Error('Template output mismatch: ' + name
-            + '\n\nHandlebars: ' + handlebarsOut
-            + '\n\n' + lang + ': ' + b);
+      throw new Error(
+        'Template output mismatch: ' +
+          name +
+          '\n\nHandlebars: ' +
+          handlebarsOut +
+          '\n\n' +
+          lang +
+          ': ' +
+          b
+      );
     }
   }
 
