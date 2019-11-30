@@ -39,6 +39,8 @@
     "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-compat": "^3.3.0",
     "eslint-plugin-es5": "^1.4.1",
     "grunt": "^1.0.3",
@@ -52,13 +54,15 @@
     "grunt-contrib-requirejs": "^1",
     "grunt-contrib-uglify": "^1",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^20.1.0",
     "grunt-webpack": "^1.0.8",
+    "husky": "^3.1.0",
     "istanbul": "^0.3.0",
     "jison": "~0.3.0",
+    "lint-staged": "^9.5.0",
     "mocha": "^5",
     "mock-stdin": "^0.3.0",
     "mustache": "^2.1.3",
+    "prettier": "^1.19.1",
     "semver": "^5.0.1",
     "sinon": "^7.5.0",
     "typescript": "^3.4.3",
@@ -76,6 +80,9 @@
     "handlebars": "bin/handlebars"
   },
   "scripts": {
+    "format": "prettier --write '**/*.js' && eslint --fix .",
+    "check-format": "prettier --check '**/*.js'",
+    "lint": "eslint .",
     "checkTypes": "dtslint types",
     "test": "grunt"
   },
@@ -98,5 +105,20 @@
     "release-notes.md",
     "runtime.js",
     "types/*.d.ts"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
 }

@@ -4,19 +4,6 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    eslint: {
-      files: [
-        '*.js',
-        'bench/**/*.js',
-        'tasks/**/*.js',
-        'lib/**/!(*.min|parser).js',
-        'spec/**/!(*.amd|json2|require).js',
-        'integration-testing/multi-nodejs-test/*.js',
-        'integration-testing/webpack-test/*.js',
-        'integration-testing/webpack-test/src/*.js'
-      ]
-    },
-
     clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js', 'integration-testing/**/node_modules'],
 
     copy: {
@@ -215,7 +202,6 @@ module.exports = function(grunt) {
 
   // Build a new version of the library
   this.registerTask('build', 'Builds a distributable version of the current project', [
-                    'eslint',
                     'bgShell:checkTypes',
                     'parser',
                     'node',
@@ -226,7 +212,7 @@ module.exports = function(grunt) {
   this.registerTask('globals', ['webpack']);
   this.registerTask('tests', ['concat:tests']);
 
-  this.registerTask('release', 'Build final packages', ['eslint', 'amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
+  this.registerTask('release', 'Build final packages', ['amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -238,7 +224,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-bg-shell');
-  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('@knappi/grunt-saucelabs');
   grunt.loadNpmTasks('grunt-webpack');
 

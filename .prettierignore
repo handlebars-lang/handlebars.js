@@ -6,8 +6,7 @@
 npm-debug.log
 sauce_connect.log*
 .idea
-/yarn-error.log
-/yarn.lock
+yarn-error.log
 node_modules
 /handlebars-release.tgz
 
@@ -16,3 +15,7 @@ lib/handlebars/compiler/parser.js
 /coverage/
 /dist/
 /integration-testing/*/dist/
+
+# Third-party or files that must remain unchanged
+/spec/expected/
+/spec/vendor

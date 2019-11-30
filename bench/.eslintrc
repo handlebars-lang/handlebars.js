@@ -1,4 +1,5 @@
 {
+  "extends": "prettier",
   "globals": {
     "require": true
   },
