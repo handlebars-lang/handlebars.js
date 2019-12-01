@@ -35,6 +35,7 @@
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
     "chai": "^4.2.0",
+    "concurrently": "^5.0.0",
     "dirty-chai": "^2.0.1",
     "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
@@ -82,9 +83,13 @@
   "scripts": {
     "format": "prettier --write '**/*.js' && eslint --fix .",
     "check-format": "prettier --check '**/*.js'",
-    "lint": "eslint .",
-    "checkTypes": "dtslint types",
-    "test": "grunt"
+    "lint": "eslint --max-warnings 0 . ",
+    "dtslint": "dtslint types",
+    "test": "grunt",
+    "extensive-tests-and-publish-to-aws": "grunt --stack extensive-tests-and-publish-to-aws",
+    "integration-test": "grunt integration-tests",
+    "--- combined tasks ---": "",
+    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:dtslint npm:check-format npm:test"
   },
   "jspm": {
     "main": "handlebars",

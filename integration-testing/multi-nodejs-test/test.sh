@@ -12,7 +12,8 @@ cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 # It does (almost) not test for correctness, because that is already done in the mocha-tests.
 # And it does not use any NodeJS based testing framwork to make this part independent of the Node version.
 
-# A list of NodeJS versions is expected as cli-args
+unset npm_config_prefix
+
 echo "Handlebars should be able to run in various versions of NodeJS"
 for i in  0.10 0.12 4 5 6 7 8 9 10 11 ; do
     rm target node_modules package-lock.json -rf
