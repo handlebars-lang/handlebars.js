@@ -51,7 +51,7 @@ Full documentation and more examples are at [handlebarsjs.com](https://handlebar
 Precompiling Templates
 ----------------------
 
-Handlebars allows templates to be precompiled and included as javascript code rather than the handlebars template allowing for faster startup time. Full details are located [here](https://handlebars-archive.knappi.org/precompilation.html).
+Handlebars allows templates to be precompiled and included as javascript code rather than the handlebars template allowing for faster startup time. Full details are located [here](https://handlebarsjs.com/installation/precompilation.html).
 
 Differences Between Handlebars.js and Mustache
 ----------------------------------------------
