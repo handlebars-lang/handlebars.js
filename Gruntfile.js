@@ -212,10 +212,13 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('bench', ['metrics']);
-  grunt.registerTask(
-    'sauce',
-    process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []
-  );
+
+  if (process.env.SAUCE_USERNAME) {
+    grunt.registerTask('sauce', ['concat:tests', 'connect', 'saucelabs-mocha']);
+  } else {
+    grunt.registerTask('sauce', []);
+  }
+
   // Requires secret properties (saucelabs-credentials etc.) from .travis.yaml
   grunt.registerTask('extensive-tests-and-publish-to-aws', [
     'default',
