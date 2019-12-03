@@ -1,32 +1,42 @@
 /* eslint-disable no-process-env */
 module.exports = function(grunt) {
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js', 'integration-testing/**/node_modules'],
+    clean: [
+      'tmp',
+      'dist',
+      'lib/handlebars/compiler/parser.js',
+      'integration-testing/**/node_modules'
+    ],
 
     copy: {
       dist: {
         options: {
           processContent: function(content) {
-            return grunt.template.process('/**!\n\n @license\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n')
-                + content;
+            return (
+              grunt.template.process(
+                '/**!\n\n @license\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n'
+              ) + content
+            );
           }
         },
-        files: [
-          {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/'}
-        ]
+        files: [{ expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/' }]
       },
       cdnjs: {
         files: [
-          {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/cdnjs'}
+          { expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/cdnjs' }
         ]
       },
       components: {
         files: [
-          {expand: true, cwd: 'components/', src: ['**'], dest: 'dist/components'},
-          {expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/components'}
+          {
+            expand: true,
+            cwd: 'components/',
+            src: ['**'],
+            dest: 'dist/components'
+          },
+          { expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/components' }
         ]
       }
     },
@@ -41,24 +51,28 @@ module.exports = function(grunt) {
         options: {
           modules: 'amd'
         },
-        files: [{
-          expand: true,
-          cwd: 'lib/',
-          src: '**/!(index).js',
-          dest: 'dist/amd/'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: 'lib/',
+            src: '**/!(index).js',
+            dest: 'dist/amd/'
+          }
+        ]
       },
 
       cjs: {
         options: {
           modules: 'common'
         },
-        files: [{
-          cwd: 'lib/',
-          expand: true,
-          src: '**/!(index).js',
-          dest: 'dist/cjs/'
-        }]
+        files: [
+          {
+            cwd: 'lib/',
+            expand: true,
+            src: '**/!(index).js',
+            dest: 'dist/cjs/'
+          }
+        ]
       }
     },
     webpack: {
@@ -67,7 +81,12 @@ module.exports = function(grunt) {
         module: {
           loaders: [
             // the optional 'runtime' transformer tells babel to require the runtime instead of inlining it.
-            { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next' }
+            {
+              test: /\.jsx?$/,
+              exclude: /node_modules/,
+              loader:
+                'babel-loader?optional=runtime&loose=es6.modules&auxiliaryCommentBefore=istanbul%20ignore%20next'
+            }
           ]
         },
         output: {
@@ -116,15 +135,17 @@ module.exports = function(grunt) {
         preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
       },
       dist: {
-        files: [{
-          cwd: 'dist/',
-          expand: true,
-          src: ['handlebars*.js', '!*.min.js'],
-          dest: 'dist/',
-          rename: function(dest, src) {
-            return dest + src.replace(/\.js$/, '.min.js');
+        files: [
+          {
+            cwd: 'dist/',
+            expand: true,
+            src: ['handlebars*.js', '!*.min.js'],
+            dest: 'dist/',
+            rename: function(dest, src) {
+              return dest + src.replace(/\.js$/, '.min.js');
+            }
           }
-        }]
+        ]
       }
     },
 
@@ -148,28 +169,41 @@ module.exports = function(grunt) {
       all: {
         options: {
           build: process.env.TRAVIS_JOB_ID,
-          urls: ['http://localhost:9999/spec/?headless=true', 'http://localhost:9999/spec/amd.html?headless=true'],
+          urls: [
+            'http://localhost:9999/spec/?headless=true',
+            'http://localhost:9999/spec/amd.html?headless=true'
+          ],
           detailedError: true,
           concurrency: 4,
           browsers: [
-            {browserName: 'chrome'},
-            {browserName: 'firefox', platform: 'Linux'},
+            { browserName: 'chrome' },
+            { browserName: 'firefox', platform: 'Linux' },
             // {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
             // {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
-            {browserName: 'internet explorer', version: 11, platform: 'Windows 8.1'},
-            {browserName: 'internet explorer', version: 10, platform: 'Windows 8'}
+            {
+              browserName: 'internet explorer',
+              version: 11,
+              platform: 'Windows 8.1'
+            },
+            {
+              browserName: 'internet explorer',
+              version: 10,
+              platform: 'Windows 8'
+            }
           ]
         }
       },
       sanity: {
         options: {
           build: process.env.TRAVIS_JOB_ID,
-          urls: ['http://localhost:9999/spec/umd.html?headless=true', 'http://localhost:9999/spec/amd-runtime.html?headless=true', 'http://localhost:9999/spec/umd-runtime.html?headless=true'],
+          urls: [
+            'http://localhost:9999/spec/umd.html?headless=true',
+            'http://localhost:9999/spec/amd-runtime.html?headless=true',
+            'http://localhost:9999/spec/umd-runtime.html?headless=true'
+          ],
           detailedError: true,
           concurrency: 2,
-          browsers: [
-            {browserName: 'chrome'}
-          ]
+          browsers: [{ browserName: 'chrome' }]
         }
       }
     },
@@ -180,7 +214,6 @@ module.exports = function(grunt) {
         bg: false,
         fail: true
       }
-
     },
 
     watch: {
@@ -211,9 +244,9 @@ module.exports = function(grunt) {
   grunt.task.loadTasks('tasks');
 
   this.registerTask(
-      'build',
-      'Builds a distributable version of the current project',
-      ['parser', 'node', 'globals']
+    'build',
+    'Builds a distributable version of the current project',
+    ['parser', 'node', 'globals']
   );
 
   this.registerTask('node', ['babel:cjs']);
@@ -231,13 +264,30 @@ module.exports = function(grunt) {
   this.registerTask('amd', ['babel:amd', 'requirejs']);
 
   grunt.registerTask('bench', ['metrics']);
-  grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
+  grunt.registerTask(
+    'sauce',
+    process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []
+  );
   // Requires secret properties (saucelabs-credentials etc.) from .travis.yaml
-  grunt.registerTask('extensive-tests-and-publish-to-aws', ['default', 'bgShell:integrationTests', 'sauce', 'metrics', 'publish:latest']);
-  grunt.registerTask('on-file-change', ['build', 'amd', 'concat:tests', 'test']);
+  grunt.registerTask('extensive-tests-and-publish-to-aws', [
+    'default',
+    'bgShell:integrationTests',
+    'sauce',
+    'metrics',
+    'publish:latest'
+  ]);
+  grunt.registerTask('on-file-change', [
+    'build',
+    'amd',
+    'concat:tests',
+    'test'
+  ]);
 
   // === Primary tasks ===
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
-  grunt.registerTask('integration-tests', ['default', 'bgShell:integrationTests']);
+  grunt.registerTask('integration-tests', [
+    'default',
+    'bgShell:integrationTests'
+  ]);
 };

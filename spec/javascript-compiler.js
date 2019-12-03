@@ -13,7 +13,10 @@ describe('javascript-compiler api', function() {
     });
 
     it('should allow override', function() {
-      handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function(parent, name) {
+      handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function(
+        parent,
+        name
+      ) {
         return parent + '.bar_' + name;
       };
       /* eslint-disable camelcase */
@@ -43,7 +46,7 @@ describe('javascript-compiler api', function() {
       };
       handlebarsEnv.VM.checkRevision = function(compilerInfo) {
         if (compilerInfo !== 'crazy') {
-          throw new Error('It didn\'t work');
+          throw new Error("It didn't work");
         }
       };
       shouldCompileTo('{{foo}} ', { foo: 'food' }, 'food ');
@@ -54,7 +57,8 @@ describe('javascript-compiler api', function() {
     beforeEach(function() {
       handlebarsEnv.JavaScriptCompiler.prototype.forceBuffer = true;
       $superAppend = handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer;
-      $superCreate = handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer;
+      $superCreate =
+        handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer;
     });
     afterEach(function() {
       handlebarsEnv.JavaScriptCompiler.prototype.forceBuffer = false;
@@ -69,7 +73,9 @@ describe('javascript-compiler api', function() {
       shouldCompileTo('{{foo}} ', { foo: 'food' }, 'foo_food ');
     });
     it('should allow append buffer override', function() {
-      handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function(string) {
+      handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function(
+        string
+      ) {
         return $superAppend.call(this, [string, ' + "_foo"']);
       };
       shouldCompileTo('{{foo}}', { foo: 'food' }, 'food_foo');

@@ -5,19 +5,30 @@ describe('utils', function() {
       if (!(safe instanceof Handlebars.SafeString)) {
         throw new Error('Must be instance of SafeString');
       }
-      equals(safe.toString(), 'testing 1, 2, 3', 'SafeString is equivalent to its underlying string');
+      equals(
+        safe.toString(),
+        'testing 1, 2, 3',
+        'SafeString is equivalent to its underlying string'
+      );
     });
 
     it('it should not escape SafeString properties', function() {
       var name = new Handlebars.SafeString('<em>Sean O&#x27;Malley</em>');
 
-      shouldCompileTo('{{name}}', [{name: name}], '<em>Sean O&#x27;Malley</em>');
+      shouldCompileTo(
+        '{{name}}',
+        [{ name: name }],
+        '<em>Sean O&#x27;Malley</em>'
+      );
     });
   });
 
   describe('#escapeExpression', function() {
     it('shouhld escape html', function() {
-      equals(Handlebars.Utils.escapeExpression('foo<&"\'>'), 'foo&lt;&amp;&quot;&#x27;&gt;');
+      equals(
+        Handlebars.Utils.escapeExpression('foo<&"\'>'),
+        'foo&lt;&amp;&quot;&#x27;&gt;'
+      );
       equals(Handlebars.Utils.escapeExpression('foo='), 'foo&#x3D;');
     });
     it('should not escape SafeString', function() {
@@ -58,7 +69,7 @@ describe('utils', function() {
       equals(Handlebars.Utils.isEmpty(0), false);
       equals(Handlebars.Utils.isEmpty([1]), false);
       equals(Handlebars.Utils.isEmpty('foo'), false);
-      equals(Handlebars.Utils.isEmpty({bar: 1}), false);
+      equals(Handlebars.Utils.isEmpty({ bar: 1 }), false);
     });
   });
 
@@ -69,7 +80,7 @@ describe('utils', function() {
       }
       A.prototype.b = 4;
 
-      var b = {b: 2};
+      var b = { b: 2 };
 
       Handlebars.Utils.extend(b, new A());
 

@@ -1,11 +1,10 @@
 require('./common');
 
 var fs = require('fs'),
-    vm = require('vm');
+  vm = require('vm');
 
 var chai = require('chai');
 var dirtyChai = require('dirty-chai');
-
 
 chai.use(dirtyChai);
 global.expect = chai.expect;
@@ -18,7 +17,10 @@ var filename = 'dist/handlebars.js';
 if (global.minimizedTest) {
   filename = 'dist/handlebars.min.js';
 }
-var distHandlebars = fs.readFileSync(require.resolve('../../' + filename), 'utf-8');
+var distHandlebars = fs.readFileSync(
+  require.resolve('../../' + filename),
+  'utf-8'
+);
 vm.runInThisContext(distHandlebars, filename);
 
 global.CompilerContext = {

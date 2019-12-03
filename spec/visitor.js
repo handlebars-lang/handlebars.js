@@ -7,7 +7,11 @@ describe('Visitor', function() {
     // Simply run the thing and make sure it does not fail and that all of the
     // stub methods are executed
     var visitor = new Handlebars.Visitor();
-    visitor.accept(Handlebars.parse('{{foo}}{{#foo (bar 1 "1" true undefined null) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'));
+    visitor.accept(
+      Handlebars.parse(
+        '{{foo}}{{#foo (bar 1 "1" true undefined null) foo=@data}}{{!comment}}{{> bar }} {{/foo}}'
+      )
+    );
     visitor.accept(Handlebars.parse('{{#> bar }} {{/bar}}'));
     visitor.accept(Handlebars.parse('{{#* bar }} {{/bar}}'));
     visitor.accept(Handlebars.parse('{{* bar }}'));
@@ -40,7 +44,11 @@ describe('Visitor', function() {
       equal(comment.value, 'comment');
     };
 
-    visitor.accept(Handlebars.parse('{{#foo.bar (foo.bar 1 "2" true) foo=@foo.bar}}{{!comment}}{{> bar }} {{/foo.bar}}'));
+    visitor.accept(
+      Handlebars.parse(
+        '{{#foo.bar (foo.bar 1 "2" true) foo=@foo.bar}}{{!comment}}{{> bar }} {{/foo.bar}}'
+      )
+    );
   });
 
   describe('mutating', function() {
@@ -50,12 +58,15 @@ describe('Visitor', function() {
 
         visitor.mutating = true;
         visitor.StringLiteral = function(string) {
-          return {type: 'NumberLiteral', value: 42, loc: string.loc};
+          return { type: 'NumberLiteral', value: 42, loc: string.loc };
         };
 
         var ast = Handlebars.parse('{{foo foo="foo"}}');
         visitor.accept(ast);
-        equals(Handlebars.print(ast), '{{ PATH:foo [] HASH{foo=NUMBER{42}} }}\n');
+        equals(
+          Handlebars.print(ast),
+          '{{ PATH:foo [] HASH{foo=NUMBER{42}} }}\n'
+        );
       });
       it('should treat undefined resonse as identity', function() {
         var visitor = new Handlebars.Visitor();
@@ -63,7 +74,10 @@ describe('Visitor', function() {
 
         var ast = Handlebars.parse('{{foo foo=42}}');
         visitor.accept(ast);
-        equals(Handlebars.print(ast), '{{ PATH:foo [] HASH{foo=NUMBER{42}} }}\n');
+        equals(
+          Handlebars.print(ast),
+          '{{ PATH:foo [] HASH{foo=NUMBER{42}} }}\n'
+        );
       });
       it('should remove false responses', function() {
         var visitor = new Handlebars.Visitor();
@@ -78,30 +92,38 @@ describe('Visitor', function() {
         equals(Handlebars.print(ast), '{{ PATH:foo [] }}\n');
       });
       it('should throw when removing required values', function() {
-        shouldThrow(function() {
-          var visitor = new Handlebars.Visitor();
+        shouldThrow(
+          function() {
+            var visitor = new Handlebars.Visitor();
 
-          visitor.mutating = true;
-          visitor.PathExpression = function() {
-            return false;
-          };
+            visitor.mutating = true;
+            visitor.PathExpression = function() {
+              return false;
+            };
 
-          var ast = Handlebars.parse('{{foo 42}}');
-          visitor.accept(ast);
-        }, Handlebars.Exception, 'MustacheStatement requires path');
+            var ast = Handlebars.parse('{{foo 42}}');
+            visitor.accept(ast);
+          },
+          Handlebars.Exception,
+          'MustacheStatement requires path'
+        );
       });
       it('should throw when returning non-node responses', function() {
-        shouldThrow(function() {
-          var visitor = new Handlebars.Visitor();
+        shouldThrow(
+          function() {
+            var visitor = new Handlebars.Visitor();
 
-          visitor.mutating = true;
-          visitor.PathExpression = function() {
-            return {};
-          };
+            visitor.mutating = true;
+            visitor.PathExpression = function() {
+              return {};
+            };
 
-          var ast = Handlebars.parse('{{foo 42}}');
-          visitor.accept(ast);
-        }, Handlebars.Exception, 'Unexpected node type "undefined" found when accepting path on MustacheStatement');
+            var ast = Handlebars.parse('{{foo 42}}');
+            visitor.accept(ast);
+          },
+          Handlebars.Exception,
+          'Unexpected node type "undefined" found when accepting path on MustacheStatement'
+        );
       });
     });
     describe('arrays', function() {
@@ -110,7 +132,7 @@ describe('Visitor', function() {
 
         visitor.mutating = true;
         visitor.StringLiteral = function(string) {
-          return {type: 'NumberLiteral', value: 42, loc: string.locInfo};
+          return { type: 'NumberLiteral', value: 42, loc: string.locInfo };
         };
 
         var ast = Handlebars.parse('{{foo "foo"}}');
