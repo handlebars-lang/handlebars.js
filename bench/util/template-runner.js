@@ -1,12 +1,12 @@
 var _ = require('underscore'),
-    BenchWarmer = require('./benchwarmer'),
-    templates = require('../templates');
+  BenchWarmer = require('./benchwarmer'),
+  templates = require('../templates');
 
 module.exports = function(grunt, makeSuite, callback) {
   var warmer = new BenchWarmer();
 
   var handlebarsOnly = grunt.option('handlebars-only'),
-      grep = grunt.option('grep');
+    grep = grunt.option('grep');
   if (grep) {
     grep = new RegExp(grep);
   }

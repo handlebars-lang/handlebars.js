@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 var fs = require('fs'),
-    Mocha = require('mocha'),
-    path = require('path');
+  Mocha = require('mocha'),
+  path = require('path');
 
 var errors = 0,
-    testDir = path.dirname(__dirname),
-    grep = process.argv[2];
+  testDir = path.dirname(__dirname),
+  grep = process.argv[2];
 
 // Lazy hack, but whatever
 if (grep === '--min') {
@@ -13,9 +13,14 @@ if (grep === '--min') {
   grep = undefined;
 }
 
-var files = fs.readdirSync(testDir)
-      .filter(function(name) { return (/.*\.js$/).test(name); })
-      .map(function(name) { return testDir + path.sep + name; });
+var files = fs
+  .readdirSync(testDir)
+  .filter(function(name) {
+    return /.*\.js$/.test(name);
+  })
+  .map(function(name) {
+    return testDir + path.sep + name;
+  });
 
 if (global.minimizedTest) {
   run('./runtime', function() {
@@ -36,7 +41,6 @@ if (global.minimizedTest) {
     });
   });
 }
-
 
 function run(env, callback) {
   var mocha = new Mocha();

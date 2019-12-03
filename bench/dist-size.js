@@ -1,12 +1,14 @@
 var async = require('neo-async'),
-    fs = require('fs'),
-    zlib = require('zlib');
+  fs = require('fs'),
+  zlib = require('zlib');
 
 module.exports = function(grunt, callback) {
   var distFiles = fs.readdirSync('dist'),
-      distSizes = {};
+    distSizes = {};
 
-  async.each(distFiles, function(file, callback) {
+  async.each(
+    distFiles,
+    function(file, callback) {
       var content;
       try {
         content = fs.readFileSync('dist/' + file);
@@ -32,7 +34,10 @@ module.exports = function(grunt, callback) {
       });
     },
     function() {
-      grunt.log.writeln('Distribution sizes: ' + JSON.stringify(distSizes, undefined, 2));
+      grunt.log.writeln(
+        'Distribution sizes: ' + JSON.stringify(distSizes, undefined, 2)
+      );
       callback([distSizes]);
-    });
+    }
+  );
 };

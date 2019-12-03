@@ -1,14 +1,16 @@
 var _ = require('underscore'),
-    async = require('neo-async'),
-    metrics = require('../bench');
+  async = require('neo-async'),
+  metrics = require('../bench');
 
 module.exports = function(grunt) {
   grunt.registerTask('metrics', function() {
     var done = this.async(),
-        execName = grunt.option('name'),
-        events = {};
+      execName = grunt.option('name'),
+      events = {};
 
-    async.each(_.keys(metrics), function(name, complete) {
+    async.each(
+      _.keys(metrics),
+      function(name, complete) {
         if (/^_/.test(name) || (execName && name !== execName)) {
           return complete();
         }
@@ -18,6 +20,7 @@ module.exports = function(grunt) {
           complete();
         });
       },
-      done);
+      done
+    );
   });
 };

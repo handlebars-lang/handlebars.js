@@ -5,7 +5,7 @@ if (typeof require !== 'undefined' && require.extensions['.handlebars']) {
       equal(template, require('./artifacts/example_1.handlebars'));
 
       var expected = 'foo\n';
-      var result = template({foo: 'foo'});
+      var result = template({ foo: 'foo' });
 
       equal(result, expected);
     });
@@ -15,7 +15,7 @@ if (typeof require !== 'undefined' && require.extensions['.handlebars']) {
       equal(template, require('./artifacts/example_2.hbs'));
 
       var expected = 'Hello, World!\n';
-      var result = template({name: 'World'});
+      var result = template({ name: 'World' });
 
       equal(result, expected);
     });

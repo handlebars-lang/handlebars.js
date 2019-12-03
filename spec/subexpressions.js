@@ -31,7 +31,7 @@ describe('subexpressions', function() {
   it('mixed paths and helpers', function() {
     var string = '{{blog baz.bat (equal a b) baz.bar}}';
 
-    var context = { bar: 'LOL', baz: {bat: 'foo!', bar: 'bar!'} };
+    var context = { bar: 'LOL', baz: { bat: 'foo!', bar: 'bar!' } };
     var helpers = {
       blog: function(val, that, theOther) {
         return 'val is ' + val + ', ' + that + ' and ' + theOther;
@@ -59,7 +59,7 @@ describe('subexpressions', function() {
   });
 
   it('GH-800 : Complex subexpressions', function() {
-    var context = {a: 'a', b: 'b', c: {c: 'c'}, d: 'd', e: {e: 'e'}};
+    var context = { a: 'a', b: 'b', c: { c: 'c' }, d: 'd', e: { e: 'e' } };
     var helpers = {
       dash: function(a, b) {
         return a + '-' + b;
@@ -69,7 +69,11 @@ describe('subexpressions', function() {
       }
     };
 
-    shouldCompileTo("{{dash 'abc' (concat a b)}}", [context, helpers], 'abc-ab');
+    shouldCompileTo(
+      "{{dash 'abc' (concat a b)}}",
+      [context, helpers],
+      'abc-ab'
+    );
     shouldCompileTo('{{dash d (concat a b)}}', [context, helpers], 'd-ab');
     shouldCompileTo('{{dash c.c (concat a b)}}', [context, helpers], 'c-ab');
     shouldCompileTo('{{dash (concat a b) c.c}}', [context, helpers], 'ab-c');
@@ -122,24 +126,36 @@ describe('subexpressions', function() {
   });
 
   it('multiple subexpressions in a hash', function() {
-    var string = '{{input aria-label=(t "Name") placeholder=(t "Example User")}}';
+    var string =
+      '{{input aria-label=(t "Name") placeholder=(t "Example User")}}';
 
     var helpers = {
       input: function(options) {
         var hash = options.hash;
         var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
         var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
-        return new Handlebars.SafeString('<input aria-label="' + ariaLabel + '" placeholder="' + placeholder + '" />');
+        return new Handlebars.SafeString(
+          '<input aria-label="' +
+            ariaLabel +
+            '" placeholder="' +
+            placeholder +
+            '" />'
+        );
       },
       t: function(defaultString) {
         return new Handlebars.SafeString(defaultString);
       }
     };
-    shouldCompileTo(string, [{}, helpers], '<input aria-label="Name" placeholder="Example User" />');
+    shouldCompileTo(
+      string,
+      [{}, helpers],
+      '<input aria-label="Name" placeholder="Example User" />'
+    );
   });
 
   it('multiple subexpressions in a hash with context', function() {
-    var string = '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}';
+    var string =
+      '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}';
 
     var context = {
       item: {
@@ -153,13 +169,23 @@ describe('subexpressions', function() {
         var hash = options.hash;
         var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
         var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
-        return new Handlebars.SafeString('<input aria-label="' + ariaLabel + '" placeholder="' + placeholder + '" />');
+        return new Handlebars.SafeString(
+          '<input aria-label="' +
+            ariaLabel +
+            '" placeholder="' +
+            placeholder +
+            '" />'
+        );
       },
       t: function(defaultString) {
         return new Handlebars.SafeString(defaultString);
       }
     };
-    shouldCompileTo(string, [context, helpers], '<input aria-label="Name" placeholder="Example User" />');
+    shouldCompileTo(
+      string,
+      [context, helpers],
+      '<input aria-label="Name" placeholder="Example User" />'
+    );
   });
 
   it('subexpression functions on the context', function() {

@@ -17,7 +17,10 @@ module.exports = {
     });
   },
   clean: function(callback) {
-    childProcess.exec('git diff-index --name-only HEAD --', {}, function(err, stdout) {
+    childProcess.exec('git diff-index --name-only HEAD --', {}, function(
+      err,
+      stdout
+    ) {
       callback(undefined, !err && !stdout);
     });
   },
@@ -47,10 +50,13 @@ module.exports = {
     });
   },
   master: function(callback) {
-    childProcess.exec('git rev-parse --short origin/master', {}, function(err, stdout) {
+    childProcess.exec('git rev-parse --short origin/master', {}, function(
+      err,
+      stdout
+    ) {
       // This will error if master was not checked out but in this case we know we are not master
       // so we can ignore.
-      if (err && !(/Needed a single revision/.test(err.message))) {
+      if (err && !/Needed a single revision/.test(err.message)) {
         throw new Error('git.master: ' + err.message);
       }
 
@@ -77,7 +83,9 @@ module.exports = {
     });
   },
   tag: function(name, callback) {
-    childProcess.exec('git tag -a --message=' + name + ' ' + name, {}, function(err) {
+    childProcess.exec('git tag -a --message=' + name + ' ' + name, {}, function(
+      err
+    ) {
       if (err) {
         throw new Error('git.tag: ' + err.message);
       }
@@ -98,7 +106,7 @@ module.exports = {
       });
 
       var versionTags = tags.filter(function(info) {
-        return (/^v/.test(info[0]));
+        return /^v/.test(info[0]);
       });
 
       callback(undefined, versionTags[0] || tags[0]);

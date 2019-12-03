@@ -1,8 +1,8 @@
 var _ = require('underscore'),
-    async = require('neo-async'),
-    AWS = require('aws-sdk'),
-    git = require('./util/git'),
-    semver = require('semver');
+  async = require('neo-async'),
+  AWS = require('aws-sdk'),
+  git = require('./util/git'),
+  semver = require('semver');
 
 module.exports = function(grunt) {
   grunt.registerTask('publish:latest', function() {
@@ -53,21 +53,27 @@ module.exports = function(grunt) {
 
   function initSDK() {
     var bucket = process.env.S3_BUCKET_NAME,
-        key = process.env.S3_ACCESS_KEY_ID,
-        secret = process.env.S3_SECRET_ACCESS_KEY;
+      key = process.env.S3_ACCESS_KEY_ID,
+      secret = process.env.S3_SECRET_ACCESS_KEY;
 
     if (!bucket || !key || !secret) {
       throw new Error('Missing S3 config values');
     }
 
-    AWS.config.update({accessKeyId: key, secretAccessKey: secret});
+    AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
   }
   function publish(files, callback) {
     var s3 = new AWS.S3(),
-        bucket = process.env.S3_BUCKET_NAME;
+      bucket = process.env.S3_BUCKET_NAME;
 
-    async.each(_.keys(files), function(file, callback) {
-        var params = {Bucket: bucket, Key: file, Body: grunt.file.read(files[file])};
+    async.each(
+      _.keys(files),
+      function(file, callback) {
+        var params = {
+          Bucket: bucket,
+          Key: file,
+          Body: grunt.file.read(files[file])
+        };
         s3.putObject(params, function(err) {
           if (err) {
             throw err;
@@ -77,15 +83,24 @@ module.exports = function(grunt) {
           }
         });
       },
-      callback);
+      callback
+    );
   }
   function fileMap(suffixes) {
     var map = {};
-    _.each(['handlebars.js', 'handlebars.min.js', 'handlebars.runtime.js', 'handlebars.runtime.min.js'], function(file) {
-      _.each(suffixes, function(suffix) {
-        map[file.replace(/\.js$/, suffix + '.js')] = 'dist/' + file;
-      });
-    });
+    _.each(
+      [
+        'handlebars.js',
+        'handlebars.min.js',
+        'handlebars.runtime.js',
+        'handlebars.runtime.min.js'
+      ],
+      function(file) {
+        _.each(suffixes, function(suffix) {
+          map[file.replace(/\.js$/, suffix + '.js')] = 'dist/' + file;
+        });
+      }
+    );
     return map;
   }
 };

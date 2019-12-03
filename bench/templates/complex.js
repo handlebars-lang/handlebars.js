@@ -7,9 +7,9 @@ module.exports = {
     },
     hasItems: true, // To make things fairer in mustache land due to no `{{if}}` construct on arrays
     items: [
-      {name: 'red', current: true, url: '#Red'},
-      {name: 'green', current: false, url: '#Green'},
-      {name: 'blue', current: false, url: '#Blue'}
+      { name: 'red', current: true, url: '#Red' },
+      { name: 'green', current: false, url: '#Green' },
+      { name: 'blue', current: false, url: '#Blue' }
     ]
   },
 
