@@ -13,8 +13,7 @@ install:
   # Clone submodules (mustache spec)
   - cmd: git submodule update --init --recursive
   # Install modules
-  - cmd: npm install
-  - cmd: npm install -g grunt-cli
+  - cmd: npm ci
 
 
 # Post-install test scripts
@@ -23,7 +22,7 @@ test_script:
   - cmd: node --version
   - cmd: npm --version
   # Run tests
-  - cmd: grunt --stack travis
+  - cmd: npm run test
 
 # Don't actually build
 build: off

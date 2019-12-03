@@ -175,11 +175,6 @@ module.exports = function(grunt) {
     },
 
     bgShell: {
-      checkTypes: {
-        cmd: 'npm run checkTypes',
-        bg: false,
-        fail: true
-      },
       integrationTests: {
         cmd: './integration-testing/run-integration-tests.sh',
         bg: false,
@@ -195,24 +190,10 @@ module.exports = function(grunt) {
         },
 
         files: ['src/*', 'lib/**/*.js', 'spec/**/*.js'],
-        tasks: ['build', 'amd', 'tests', 'test']
+        tasks: ['on-file-change']
       }
     }
   });
-
-  // Build a new version of the library
-  this.registerTask('build', 'Builds a distributable version of the current project', [
-                    'bgShell:checkTypes',
-                    'parser',
-                    'node',
-                    'globals']);
-
-  this.registerTask('amd', ['babel:amd', 'requirejs']);
-  this.registerTask('node', ['babel:cjs']);
-  this.registerTask('globals', ['webpack']);
-  this.registerTask('tests', ['concat:tests']);
-
-  this.registerTask('release', 'Build final packages', ['amd', 'uglify', 'test:min', 'copy:dist', 'copy:components', 'copy:cdnjs']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -229,11 +210,33 @@ module.exports = function(grunt) {
 
   grunt.task.loadTasks('tasks');
 
+  this.registerTask(
+      'build',
+      'Builds a distributable version of the current project',
+      ['parser', 'node', 'globals']
+  );
+
+  this.registerTask('node', ['babel:cjs']);
+  this.registerTask('globals', ['webpack']);
+
+  this.registerTask('release', 'Build final packages', [
+    'amd',
+    'uglify',
+    'test:min',
+    'copy:dist',
+    'copy:components',
+    'copy:cdnjs'
+  ]);
+
+  this.registerTask('amd', ['babel:amd', 'requirejs']);
+
   grunt.registerTask('bench', ['metrics']);
   grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
+  // Requires secret properties (saucelabs-credentials etc.) from .travis.yaml
+  grunt.registerTask('extensive-tests-and-publish-to-aws', ['default', 'bgShell:integrationTests', 'sauce', 'metrics', 'publish:latest']);
+  grunt.registerTask('on-file-change', ['build', 'amd', 'concat:tests', 'test']);
 
-  grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'bgShell:integrationTests', 'sauce', 'metrics', 'publish:latest'] : ['default']);
-
+  // === Primary tasks ===
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
   grunt.registerTask('integration-tests', ['default', 'bgShell:integrationTests']);
