@@ -4,19 +4,6 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    eslint: {
-      files: [
-        '*.js',
-        'bench/**/*.js',
-        'tasks/**/*.js',
-        'lib/**/!(*.min|parser).js',
-        'spec/**/!(*.amd|json2|require).js',
-        'integration-testing/multi-nodejs-test/*.js',
-        'integration-testing/webpack-test/*.js',
-        'integration-testing/webpack-test/src/*.js'
-      ]
-    },
-
     clean: ['tmp', 'dist', 'lib/handlebars/compiler/parser.js', 'integration-testing/**/node_modules'],
 
     copy: {
@@ -145,11 +132,6 @@ module.exports = function(grunt) {
     },
 
     bgShell: {
-      checkTypes: {
-        cmd: 'npm run checkTypes',
-        bg: false,
-        fail: true
-      },
       integrationTests: {
         cmd: './integration-testing/run-integration-tests.sh',
         bg: false,
@@ -165,24 +147,10 @@ module.exports = function(grunt) {
         },
 
         files: ['src/*', 'lib/**/*.js', 'spec/**/*.js'],
-        tasks: ['build', 'tests', 'test']
+        tasks: ['on-file-change']
       }
     }
   });
-
-  // Build a new version of the library
-  this.registerTask('build', 'Builds a distributable version of the current project', [
-                    'eslint',
-                    'bgShell:checkTypes',
-                    'parser',
-                    'node',
-                    'globals']);
-
-  this.registerTask('node', ['babel:cjs']);
-  this.registerTask('globals', ['webpack']);
-  this.registerTask('tests', ['concat:tests']);
-
-  this.registerTask('release', 'Build final packages', ['eslint', 'uglify', 'test:min', 'copy:dist', 'copy:components']);
 
   // Load tasks from npm
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -193,17 +161,34 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-bg-shell');
-  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('@knappi/grunt-saucelabs');
   grunt.loadNpmTasks('grunt-webpack');
 
   grunt.task.loadTasks('tasks');
 
+  this.registerTask(
+      'build',
+      'Builds a distributable version of the current project',
+      ['parser', 'node', 'globals']
+  );
+
+  this.registerTask('node', ['babel:cjs']);
+  this.registerTask('globals', ['webpack']);
+
+  this.registerTask('release', 'Build final packages', [
+    'uglify',
+    'test:min',
+    'copy:dist',
+    'copy:components'
+  ]);
+
   grunt.registerTask('bench', ['metrics']);
   grunt.registerTask('sauce', process.env.SAUCE_USERNAME ? ['tests', 'connect', 'saucelabs-mocha'] : []);
+  // Requires secret properties (saucelabs-credentials etc.) from .travis.yaml
+  grunt.registerTask('extensive-tests-and-publish-to-aws', ['default', 'bgShell:integrationTests', 'sauce', 'metrics', 'publish:latest']);
+  grunt.registerTask('on-file-change', ['build', 'concat:tests', 'test']);
 
-  grunt.registerTask('travis', process.env.PUBLISH ? ['default', 'bgShell:integrationTests', 'sauce', 'metrics', 'publish:latest'] : ['default']);
-
+  // === Primary tasks ===
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
   grunt.registerTask('integration-tests', ['default', 'bgShell:integrationTests']);
