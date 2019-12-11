@@ -1,4 +1,4 @@
-var async = require('neo-async'),
+const async = require('neo-async'),
   git = require('./util/git'),
   semver = require('semver');
 
@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     'version',
     'Updates the current release version',
     function() {
-      var done = this.async(),
+      const done = this.async(),
         pkg = grunt.config('pkg'),
         version = grunt.option('ver');
 
@@ -61,7 +61,7 @@ module.exports = function(grunt) {
   );
 
   function replace(path, regex, value) {
-    var content = grunt.file.read(path);
+    let content = grunt.file.read(path);
     content = content.replace(regex, value);
     grunt.file.write(path, content);
   }

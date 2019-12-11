@@ -1,10 +1,10 @@
-var _ = require('underscore'),
+const _ = require('underscore'),
   async = require('neo-async'),
   metrics = require('../bench');
 
 module.exports = function(grunt) {
   grunt.registerTask('metrics', function() {
-    var done = this.async(),
+    const done = this.async(),
       execName = grunt.option('name'),
       events = {};
 

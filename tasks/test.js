@@ -1,13 +1,13 @@
-var childProcess = require('child_process'),
+const childProcess = require('child_process'),
   fs = require('fs'),
   os = require('os');
 
 module.exports = function(grunt) {
   grunt.registerTask('test:bin', function() {
-    var done = this.async();
+    const done = this.async();
 
-    var cmd = './bin/handlebars';
-    var args = ['-a', 'spec/artifacts/empty.handlebars'];
+    let cmd = './bin/handlebars';
+    const args = ['-a', 'spec/artifacts/empty.handlebars'];
 
     // On Windows, the executable handlebars.js file cannot be run directly
     if (os.platform() === 'win32') {
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
         throw err;
       }
 
-      var expected = fs
+      const expected = fs
         .readFileSync('./spec/expected/empty.amd.js')
         .toString()
         .replace(/\r\n/g, '\n');
@@ -38,9 +38,9 @@ module.exports = function(grunt) {
     });
   });
   grunt.registerTask('test:mocha', function() {
-    var done = this.async();
+    const done = this.async();
 
-    var runner = childProcess.fork('./spec/env/runner', [], {
+    const runner = childProcess.fork('./spec/env/runner', [], {
       stdio: 'inherit'
     });
     runner.on('close', function(code) {
@@ -51,24 +51,24 @@ module.exports = function(grunt) {
     });
   });
   grunt.registerTask('test:cov', function() {
-    var done = this.async();
+    const done = this.async();
 
-    var runner = childProcess.fork(
+    const runner = childProcess.spawn(
       'node_modules/istanbul/lib/cli.js',
       ['cover', '--source-map', '--', './spec/env/runner.js'],
       { stdio: 'inherit' }
     );
-    runner.on('close', function(code) {
-      if (code != 0) {
+    runner.on('exit', function(code) {
+      if (code !== 0) {
         grunt.fatal(code + ' tests failed');
       }
       done();
     });
   });
   grunt.registerTask('test:min', function() {
-    var done = this.async();
+    const done = this.async();
 
-    var runner = childProcess.fork('./spec/env/runner', ['--min'], {
+    const runner = childProcess.fork('./spec/env/runner', ['--min'], {
       stdio: 'inherit'
     });
     runner.on('close', function(code) {
@@ -80,9 +80,9 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test:check-cov', function() {
-    var done = this.async();
+    const done = this.async();
 
-    var runner = childProcess.fork(
+    const runner = childProcess.fork(
       'node_modules/istanbul/lib/cli.js',
       [
         'check-coverage',

@@ -1,4 +1,4 @@
-var _ = require('underscore'),
+const _ = require('underscore'),
   async = require('neo-async'),
   AWS = require('aws-sdk'),
   git = require('./util/git'),
@@ -6,7 +6,7 @@ var _ = require('underscore'),
 
 module.exports = function(grunt) {
   grunt.registerTask('publish:latest', function() {
-    var done = this.async();
+    const done = this.async();
 
     git.debug(function(remotes, branches) {
       grunt.log.writeln('remotes: ' + remotes);
@@ -15,7 +15,7 @@ module.exports = function(grunt) {
       git.commitInfo(function(err, info) {
         grunt.log.writeln('tag: ' + info.tagName);
 
-        var files = [];
+        const files = [];
 
         // Publish the master as "latest" and with the commit-id
         if (info.isMaster) {
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
     });
   });
   grunt.registerTask('publish:version', function() {
-    var done = this.async();
+    const done = this.async();
     initSDK();
 
     git.commitInfo(function(err, info) {
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
   });
 
   function initSDK() {
-    var bucket = process.env.S3_BUCKET_NAME,
+    const bucket = process.env.S3_BUCKET_NAME,
       key = process.env.S3_ACCESS_KEY_ID,
       secret = process.env.S3_SECRET_ACCESS_KEY;
 
@@ -63,13 +63,13 @@ module.exports = function(grunt) {
     AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
   }
   function publish(files, callback) {
-    var s3 = new AWS.S3(),
+    const s3 = new AWS.S3(),
       bucket = process.env.S3_BUCKET_NAME;
 
     async.each(
       _.keys(files),
       function(file, callback) {
-        var params = {
+        const params = {
           Bucket: bucket,
           Key: file,
           Body: grunt.file.read(files[file])
@@ -87,7 +87,7 @@ module.exports = function(grunt) {
     );
   }
   function fileMap(suffixes) {
-    var map = {};
+    const map = {};
     _.each(
       [
         'handlebars.js',
