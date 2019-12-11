@@ -1,4 +1,4 @@
-var childProcess = require('child_process');
+const childProcess = require('child_process');
 
 module.exports = {
   debug: function(callback) {
@@ -99,13 +99,13 @@ module.exports = {
         throw new Error('git.tagName: ' + err.message);
       }
 
-      var tags = stdout.trim().split(/\n/);
+      let tags = stdout.trim().split(/\n/);
       tags = tags.filter(function(info) {
         info = info.split('-');
         return info.length == 1;
       });
 
-      var versionTags = tags.filter(function(info) {
+      const versionTags = tags.filter(function(info) {
         return /^v/.test(info[0]);
       });
 
