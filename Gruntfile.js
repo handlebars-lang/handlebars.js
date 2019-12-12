@@ -263,6 +263,8 @@ module.exports = function(grunt) {
 
   this.registerTask('amd', ['babel:amd', 'requirejs']);
 
+  this.registerTask('test', ['test:bin', 'test:cov', 'test:check-cov']);
+
   grunt.registerTask('bench', ['metrics']);
 
   if (process.env.SAUCE_USERNAME) {
