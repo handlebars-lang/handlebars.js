@@ -710,6 +710,23 @@ describe('builtin helpers', function() {
       shouldCompileTo(string, hash, '');
       equals(true, called);
     });
+
+    it('should pass zero log arguments', function() {
+      var string = '{{log}}';
+      var hash = { blah: 'whee' };
+      var called;
+
+      console.info = console.log = function() {
+        expect(arguments.length).to.equal(0);
+        called = true;
+        console.log = $log;
+      };
+
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('');
+      expect(called).to.be.true();
+    });
     /* eslint-enable no-console */
   });
 
