@@ -29,7 +29,7 @@ module.exports = function(grunt) {
       ]
         .map(grunt.file.read)
         .join('');
-      grunt.file['delete']('handlebars.js');
+      grunt.file.delete('handlebars.js');
 
       grunt.file.write('lib/handlebars/compiler/parser.js', src);
       grunt.log.writeln('Parser "lib/handlebars/compiler/parser.js" created.');
