@@ -2,63 +2,62 @@ const childProcess = require('child_process');
 
 module.exports = {
   async remotes() {
-    return git('remotes', '-v');
+    return git('remote', '-v');
   },
   async branches() {
     return git('branch', '-a');
   },
-  async clean() {
-    const stdout = git('diff-index', '--name-only', 'HEAD', '--');
-    return stdout === '';
-  },
   async commitInfo() {
-    const headSha = await this.headSha();
-    const masterSha = await this.masterSha();
+    const headSha = await getHeadSha();
+    const masterSha = await getMasterSha();
     return {
       headSha,
       masterSha,
-      tagName: await this.tagName(),
+      tagName: await getTagName(),
       isMaster: headSha === masterSha
     };
   },
-  async headSha() {
-    const stdout = await git(' rev-parse', '--short', 'HEAD');
-    return stdout.trim();
-  },
-  async masterSha() {
-    try {
-      const stdout = await git('rev-parse', '--short', 'origin/master');
-      return stdout.trim();
-    } catch (error) {
-      if (/Needed a single revision/.test(error.message)) {
-        // Master was not checked out but in this case, so we know we are not master. We can ignore this
-        return '';
-      }
-      throw error;
-    }
-  },
-
   async add(path) {
     return git('add', '-f', path);
   },
   async commit(message) {
     return git('commit', '--message', message);
   },
-  async tag(name) {
-    return git('tag', '-a', `--message=${name}`, name);
-  },
-  async tagName() {
-    const stdout = await git('tag', '-l', '--points-at', 'HEAD');
-
-    const tags = stdout.trim().split(/\n|\r\n/);
-    const versionTags = tags.filter(tag => /^v/.test(tag));
-
-    if (versionTags[0] != null) {
-      return versionTags;
-    }
-    return tags[0];
-  }
+  git // visible for testing
 };
+
+async function getHeadSha() {
+  const stdout = await git('rev-parse', '--short', 'HEAD');
+  return stdout.trim();
+}
+
+async function getMasterSha() {
+  try {
+    const stdout = await git('rev-parse', '--short', 'origin/master');
+    return stdout.trim();
+  } catch (error) {
+    if (/Needed a single revision/.test(error.message)) {
+      // Master was not checked out but in this case, so we know we are not master. We can ignore this
+      return '';
+    }
+    throw error;
+  }
+}
+
+async function getTagName() {
+  const stdout = await git('tag', '-l', '--points-at', 'HEAD');
+  const trimmedStdout = stdout.trim();
+  if (trimmedStdout === '') {
+    return null; // there is no tag
+  }
+
+  const tags = trimmedStdout.split(/\n|\r\n/);
+  const versionTags = tags.filter(tag => /^v/.test(tag));
+  if (versionTags[0] != null) {
+    return versionTags[0];
+  }
+  return tags[0];
+}
 
 async function git(...args) {
   return new Promise((resolve, reject) =>

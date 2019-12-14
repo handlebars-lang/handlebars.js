@@ -6,12 +6,12 @@ const semver = require('semver');
 module.exports = function(grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
-  registerAsyncTask('publish:latest', async () => {
+  registerAsyncTask('publish-to-aws', async () => {
     grunt.log.writeln('remotes: ' + (await git.remotes()));
     grunt.log.writeln('branches: ' + (await git.branches()));
 
     const commitInfo = await git.commitInfo();
-    grunt.log.writeln('tag: ' + commitInfo.tagName);
+    grunt.log.writeln('tag: ', commitInfo.tagName);
 
     const suffixes = [];
 
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     }
 
     // Publish tags by their tag-name
-    if (commitInfo.tagName && semver.valid(commitInfo.tagName)) {
+    if (commitInfo.tagName != null && semver.valid(commitInfo.tagName)) {
       suffixes.push('-' + commitInfo.tagName);
     }
 
