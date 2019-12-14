@@ -1,54 +1,38 @@
-const _ = require('underscore'),
-  async = require('neo-async'),
-  AWS = require('aws-sdk'),
-  git = require('./util/git'),
-  semver = require('semver');
+const AWS = require('aws-sdk');
+const git = require('./util/git');
+const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
+const semver = require('semver');
 
 module.exports = function(grunt) {
-  grunt.registerTask('publish:latest', function() {
-    const done = this.async();
+  const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
-    git.debug(function(remotes, branches) {
-      grunt.log.writeln('remotes: ' + remotes);
-      grunt.log.writeln('branches: ' + branches);
+  registerAsyncTask('publish:latest', async () => {
+    grunt.log.writeln('remotes: ' + (await git.remotes()));
+    grunt.log.writeln('branches: ' + (await git.branches()));
 
-      git.commitInfo(function(err, info) {
-        grunt.log.writeln('tag: ' + info.tagName);
+    const commitInfo = await git.commitInfo();
+    grunt.log.writeln('tag: ' + commitInfo.tagName);
 
-        const files = [];
+    const suffixes = [];
 
-        // Publish the master as "latest" and with the commit-id
-        if (info.isMaster) {
-          files.push('-latest');
-          files.push('-' + info.head);
-        }
+    // Publish the master as "latest" and with the commit-id
+    if (commitInfo.isMaster) {
+      suffixes.push('-latest');
+      suffixes.push('-' + commitInfo.headSha);
+    }
 
-        // Publish tags by their tag-name
-        if (info.tagName && semver.valid(info.tagName)) {
-          files.push('-' + info.tagName);
-        }
+    // Publish tags by their tag-name
+    if (commitInfo.tagName && semver.valid(commitInfo.tagName)) {
+      suffixes.push('-' + commitInfo.tagName);
+    }
 
-        if (files.length > 0) {
-          initSDK();
-          grunt.log.writeln('publishing files: ' + JSON.stringify(files));
-          publish(fileMap(files), done);
-        } else {
-          // Silently ignore for branches
-          done();
-        }
-      });
-    });
-  });
-  grunt.registerTask('publish:version', function() {
-    const done = this.async();
-    initSDK();
-
-    git.commitInfo(function(err, info) {
-      if (!info.tagName) {
-        throw new Error('The current commit must be tagged');
-      }
-      publish(fileMap(['-' + info.tagName]), done);
-    });
+    if (suffixes.length > 0) {
+      initSDK();
+      grunt.log.writeln(
+        'publishing file-suffixes: ' + JSON.stringify(suffixes)
+      );
+      await publish(suffixes);
+    }
   });
 
   function initSDK() {
@@ -62,45 +46,57 @@ module.exports = function(grunt) {
 
     AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
   }
-  function publish(files, callback) {
-    const s3 = new AWS.S3(),
-      bucket = process.env.S3_BUCKET_NAME;
 
-    async.each(
-      _.keys(files),
-      function(file, callback) {
-        const params = {
-          Bucket: bucket,
-          Key: file,
-          Body: grunt.file.read(files[file])
-        };
-        s3.putObject(params, function(err) {
-          if (err) {
-            throw err;
-          } else {
-            grunt.log.writeln('Published ' + file + ' to build server.');
-            callback();
-          }
-        });
-      },
-      callback
-    );
+  async function publish(suffixes) {
+    const publishPromises = suffixes.map(suffix => publishSuffix(suffix));
+    return Promise.all(publishPromises);
   }
-  function fileMap(suffixes) {
-    const map = {};
-    _.each(
-      [
-        'handlebars.js',
-        'handlebars.min.js',
-        'handlebars.runtime.js',
-        'handlebars.runtime.min.js'
-      ],
-      function(file) {
-        _.each(suffixes, function(suffix) {
-          map[file.replace(/\.js$/, suffix + '.js')] = 'dist/' + file;
-        });
-      }
-    );
-    return map;
+
+  async function publishSuffix(suffix) {
+    const filenames = [
+      'handlebars.js',
+      'handlebars.min.js',
+      'handlebars.runtime.js',
+      'handlebars.runtime.min.js'
+    ];
+    const publishPromises = filenames.map(filename => {
+      const nameInBucket = getNameInBucket(filename, suffix);
+      const localFile = getLocalFile(filename);
+      uploadToBucket(localFile, nameInBucket);
+      grunt.log.writeln(
+        `Published ${localFile} to build server (${nameInBucket})`
+      );
+    });
+    return Promise.all(publishPromises);
+  }
+
+  async function uploadToBucket(localFile, nameInBucket) {
+    const bucket = process.env.S3_BUCKET_NAME;
+    const uploadParams = {
+      Bucket: bucket,
+      Key: nameInBucket,
+      Body: grunt.file.read(localFile)
+    };
+    return s3PutObject(uploadParams);
   }
 };
+
+function s3PutObject(uploadParams) {
+  const s3 = new AWS.S3();
+  return new Promise((resolve, reject) => {
+    s3.putObject(uploadParams, err => {
+      if (err != null) {
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+}
+
+function getNameInBucket(filename, suffix) {
+  return filename.replace(/\.js$/, suffix + '.js');
+}
+
+function getLocalFile(filename) {
+  return 'dist/' + filename;
+}
