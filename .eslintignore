@@ -9,6 +9,7 @@ sauce_connect.log*
 yarn-error.log
 node_modules
 /handlebars-release.tgz
+.nyc_output
 
 # Generated files
 lib/handlebars/compiler/parser.js
