@@ -17,7 +17,6 @@ module.exports = {
     // Best Practices //
     //----------------//
     'default-case': 'warn',
-    'dot-notation': ['error', { allowKeywords: false }],
     'guard-for-in': 'warn',
     'no-alert': 'error',
     'no-caller': 'error',

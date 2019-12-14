@@ -211,6 +211,8 @@ module.exports = function(grunt) {
     'copy:components'
   ]);
 
+  this.registerTask('test', ['test:bin', 'test:cov']);
+
   grunt.registerTask('bench', ['metrics']);
 
   if (process.env.SAUCE_USERNAME) {
@@ -225,7 +227,7 @@ module.exports = function(grunt) {
     'bgShell:integrationTests',
     'sauce',
     'metrics',
-    'publish:latest'
+    'publish-to-aws'
   ]);
   grunt.registerTask('on-file-change', ['build', 'concat:tests', 'test']);
 
