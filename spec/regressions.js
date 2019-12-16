@@ -390,7 +390,7 @@ describe('Regressions', function() {
     it('should compile and execute templates', function() {
       var newHandlebarsInstance = Handlebars.create();
 
-      registerTemplate(newHandlebarsInstance);
+      registerTemplate(newHandlebarsInstance, compiledTemplateVersion7());
       newHandlebarsInstance.registerHelper('loud', function(value) {
         return value.toUpperCase();
       });
@@ -405,7 +405,7 @@ describe('Regressions', function() {
 
       shouldThrow(
         function() {
-          registerTemplate(newHandlebarsInstance);
+          registerTemplate(newHandlebarsInstance, compiledTemplateVersion7());
           newHandlebarsInstance.templates['test.hbs']({});
         },
         Handlebars.Exception,
@@ -413,11 +413,31 @@ describe('Regressions', function() {
       );
     });
 
-    // This is a only slightly modified precompiled templated from compiled with 4.2.1
-    function registerTemplate(Handlebars) {
+    it('should pass "options.lookupProperty" to "lookup"-helper, even with old templates', function() {
+      var newHandlebarsInstance = Handlebars.create();
+      registerTemplate(
+        newHandlebarsInstance,
+        compiledTemplateVersion7_usingLookupHelper()
+      );
+
+      newHandlebarsInstance.templates['test.hbs']({});
+
+      expect(
+        newHandlebarsInstance.templates['test.hbs']({
+          property: 'a',
+          test: { a: 'b' }
+        })
+      ).to.equal('b');
+    });
+
+    function registerTemplate(Handlebars, compileTemplate) {
       var template = Handlebars.template,
         templates = (Handlebars.templates = Handlebars.templates || {});
-      templates['test.hbs'] = template({
+      templates['test.hbs'] = template(compileTemplate);
+    }
+
+    function compiledTemplateVersion7() {
+      return {
         compiler: [7, '>= 4.0.0'],
         main: function(container, depth0, helpers, partials, data) {
           return (
@@ -435,7 +455,29 @@ describe('Regressions', function() {
           );
         },
         useData: true
-      });
+      };
+    }
+
+    function compiledTemplateVersion7_usingLookupHelper() {
+      // This is the compiled version of "{{lookup test property}}"
+      return {
+        compiler: [7, '>= 4.0.0'],
+        main: function(container, depth0, helpers, partials, data) {
+          return container.escapeExpression(
+            helpers.lookup.call(
+              depth0 != null ? depth0 : container.nullContext || {},
+              depth0 != null ? depth0.test : depth0,
+              depth0 != null ? depth0.property : depth0,
+              {
+                name: 'lookup',
+                hash: {},
+                data: data
+              }
+            )
+          );
+        },
+        useData: true
+      };
     }
   });
 

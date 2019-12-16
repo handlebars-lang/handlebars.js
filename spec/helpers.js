@@ -1328,4 +1328,15 @@ describe('helpers', function() {
       );
     });
   });
+
+  describe('the lookupProperty-option', function() {
+    it('should be passed to custom helpers', function() {
+      expectTemplate('{{testHelper}}')
+        .withHelper('testHelper', function testHelper(options) {
+          return options.lookupProperty(this, 'testProperty');
+        })
+        .withInput({ testProperty: 'abc' })
+        .toCompileTo('abc');
+    });
+  });
 });
