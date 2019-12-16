@@ -30,6 +30,8 @@ declare namespace Handlebars {
       data?: any;
       blockParams?: any[];
       allowCallsToHelperMissing?: boolean;
+      allowedProtoProperties?: { [name: string]: boolean }
+      allowedProtoMethods?: { [name: string]: boolean }
   }
 
   export interface HelperOptions {

@@ -19,7 +19,7 @@ describe('security issues', function() {
         .toCompileTo('');
     });
 
-    it('should allow the "constructor" property to be accessed if it is enumerable', function() {
+    it('should allow the "constructor" property to be accessed if it is an "ownProperty"', function() {
       shouldCompileTo(
         '{{constructor.name}}',
         {
@@ -40,7 +40,7 @@ describe('security issues', function() {
       );
     });
 
-    it('should allow the "constructor" property to be accessed if it is enumerable', function() {
+    it('should allow the "constructor" property to be accessed if it is an "own property"', function() {
       shouldCompileTo(
         '{{lookup (lookup this "constructor") "name"}}',
         {
@@ -49,27 +49,6 @@ describe('security issues', function() {
           }
         },
         'here we go'
-      );
-    });
-
-    it('should allow prototype properties that are not constructors', function() {
-      function TestClass() {}
-
-      Object.defineProperty(TestClass.prototype, 'abc', {
-        get: function() {
-          return 'xyz';
-        }
-      });
-
-      shouldCompileTo(
-        '{{#with this as |obj|}}{{obj.abc}}{{/with}}',
-        new TestClass(),
-        'xyz'
-      );
-      shouldCompileTo(
-        '{{#with this as |obj|}}{{lookup obj "abc"}}{{/with}}',
-        new TestClass(),
-        'xyz'
       );
     });
   });
@@ -171,38 +150,183 @@ describe('security issues', function() {
   });
 
   describe('GH-1595', function() {
-    it('properties, that are required to be enumerable', function() {
+    it('properties, that are required to be own properties', function() {
       expectTemplate('{{constructor}}')
         .withInput({})
         .toCompileTo('');
+
       expectTemplate('{{__defineGetter__}}')
         .withInput({})
         .toCompileTo('');
+
       expectTemplate('{{__defineSetter__}}')
         .withInput({})
         .toCompileTo('');
+
       expectTemplate('{{__lookupGetter__}}')
         .withInput({})
         .toCompileTo('');
+
       expectTemplate('{{__proto__}}')
         .withInput({})
         .toCompileTo('');
 
-      expectTemplate('{{lookup "constructor"}}')
+      expectTemplate('{{lookup this "constructor"}}')
         .withInput({})
         .toCompileTo('');
-      expectTemplate('{{lookup "__defineGetter__"}}')
+
+      expectTemplate('{{lookup this "__defineGetter__"}}')
         .withInput({})
         .toCompileTo('');
-      expectTemplate('{{lookup "__defineSetter__"}}')
+
+      expectTemplate('{{lookup this "__defineSetter__"}}')
         .withInput({})
         .toCompileTo('');
-      expectTemplate('{{lookup "__lookupGetter__"}}')
+
+      expectTemplate('{{lookup this "__lookupGetter__"}}')
         .withInput({})
         .toCompileTo('');
-      expectTemplate('{{lookup "__proto__"}}')
+
+      expectTemplate('{{lookup this "__proto__"}}')
         .withInput({})
         .toCompileTo('');
     });
+
+    describe('GH-1631: disallow access to prototype functions', function() {
+      function TestClass() {}
+
+      TestClass.prototype.aProperty = 'propertyValue';
+      TestClass.prototype.aMethod = function() {
+        return 'returnValue';
+      };
+
+      describe('control access to prototype methods via "allowedProtoMethods"', function() {
+        it('should be prohibited by default', function() {
+          expectTemplate('{{aMethod}}')
+            .withInput(new TestClass())
+            .toCompileTo('');
+        });
+
+        it('can be allowed', function() {
+          expectTemplate('{{aMethod}}')
+            .withInput(new TestClass())
+            .withRuntimeOptions({
+              allowedProtoMethods: {
+                aMethod: true
+              }
+            })
+            .toCompileTo('returnValue');
+        });
+
+        it('should be prohibited by default (in "compat" mode)', function() {
+          expectTemplate('{{aMethod}}')
+            .withInput(new TestClass())
+            .withCompileOptions({ compat: true })
+            .toCompileTo('');
+        });
+
+        it('can be allowed (in "compat" mode)', function() {
+          expectTemplate('{{aMethod}}')
+            .withInput(new TestClass())
+            .withCompileOptions({ compat: true })
+            .withRuntimeOptions({
+              allowedProtoMethods: {
+                aMethod: true
+              }
+            })
+            .toCompileTo('returnValue');
+        });
+
+        it('should cause the recursive lookup by default (in "compat" mode)', function() {
+          expectTemplate('{{#aString}}{{trim}}{{/aString}}')
+            .withInput({ aString: '  abc  ', trim: 'trim' })
+            .withCompileOptions({ compat: true })
+            .toCompileTo('trim');
+        });
+
+        it('should not cause the recursive lookup if allowed through options(in "compat" mode)', function() {
+          expectTemplate('{{#aString}}{{trim}}{{/aString}}')
+            .withInput({ aString: '  abc  ', trim: 'trim' })
+            .withCompileOptions({ compat: true })
+            .withRuntimeOptions({
+              allowedProtoMethods: {
+                trim: true
+              }
+            })
+            .toCompileTo('abc');
+        });
+      });
+
+      describe('control access to prototype non-methods via "allowedProtoProperties"', function() {
+        it('should be prohibited by default', function() {
+          expectTemplate('{{aProperty}}')
+            .withInput(new TestClass())
+            .toCompileTo('');
+        });
+
+        it('can be turned on', function() {
+          expectTemplate('{{aProperty}}')
+            .withInput(new TestClass())
+            .withRuntimeOptions({
+              allowedProtoProperties: {
+                aProperty: true
+              }
+            })
+            .toCompileTo('propertyValue');
+        });
+
+        it('should be prohibited by default (in "compat" mode)', function() {
+          expectTemplate('{{aProperty}}')
+            .withInput(new TestClass())
+            .withCompileOptions({ compat: true })
+            .toCompileTo('');
+        });
+
+        it('can be turned on (in "compat" mode)', function() {
+          expectTemplate('{{aProperty}}')
+            .withInput(new TestClass())
+            .withCompileOptions({ compat: true })
+            .withRuntimeOptions({
+              allowedProtoProperties: {
+                aProperty: true
+              }
+            })
+            .toCompileTo('propertyValue');
+        });
+      });
+
+      describe('compatibility with old runtimes, that do not provide the function "container.lookupProperty"', function() {
+        beforeEach(function simulateRuntimeWithoutLookupProperty() {
+          var oldTemplateMethod = handlebarsEnv.template;
+          sinon.replace(handlebarsEnv, 'template', function(templateSpec) {
+            templateSpec.main = wrapToAdjustContainer(templateSpec.main);
+            return oldTemplateMethod.call(this, templateSpec);
+          });
+        });
+
+        afterEach(function() {
+          sinon.restore();
+        });
+
+        it('should work with simple properties', function() {
+          expectTemplate('{{aProperty}}')
+            .withInput({ aProperty: 'propertyValue' })
+            .toCompileTo('propertyValue');
+        });
+
+        it('should work with Array.prototype.length', function() {
+          expectTemplate('{{anArray.length}}')
+            .withInput({ anArray: ['a', 'b', 'c'] })
+            .toCompileTo('3');
+        });
+      });
+    });
   });
 });
+
+function wrapToAdjustContainer(precompiledTemplateFunction) {
+  return function templateFunctionWrapper(container /*, more args */) {
+    delete container.lookupProperty;
+    return precompiledTemplateFunction.apply(this, arguments);
+  };
+}
