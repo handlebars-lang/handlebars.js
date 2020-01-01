@@ -1,7 +1,10 @@
-const childProcess = require('child_process'),
-  fs = require('fs'),
-  os = require('os'),
-  expect = require('chai').expect;
+const childProcess = require('child_process');
+const fs = require('fs');
+const os = require('os');
+
+const chai = require('chai');
+chai.use(require('chai-diff'));
+const expect = chai.expect;
 
 module.exports = function(grunt) {
   grunt.registerTask('test:bin', function() {
@@ -18,7 +21,7 @@ module.exports = function(grunt) {
     const normalizedOutput = normalizeCrlf(stdout);
     const normalizedExpectedOutput = normalizeCrlf(expectedOutput);
 
-    expect(normalizedOutput).to.equal(normalizedExpectedOutput);
+    expect(normalizedOutput).not.to.be.differentFrom(normalizedExpectedOutput);
   });
 };
 
