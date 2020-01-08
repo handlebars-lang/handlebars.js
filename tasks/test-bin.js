@@ -1,7 +1,11 @@
-const childProcess = require('child_process'),
-  fs = require('fs'),
-  os = require('os'),
-  expect = require('chai').expect;
+const childProcess = require('child_process');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+const chai = require('chai');
+chai.use(require('chai-diff'));
+const expect = chai.expect;
 
 module.exports = function(grunt) {
   grunt.registerTask('test:bin', function() {
@@ -18,7 +22,7 @@ module.exports = function(grunt) {
     const normalizedOutput = normalizeCrlf(stdout);
     const normalizedExpectedOutput = normalizeCrlf(expectedOutput);
 
-    expect(normalizedOutput).to.equal(normalizedExpectedOutput);
+    expect(normalizedOutput).not.to.be.differentFrom(normalizedExpectedOutput);
   });
 };
 
@@ -34,7 +38,13 @@ function executeBinHandlebars(...args) {
 }
 
 function execFilesSyncUtf8(command, args) {
-  return childProcess.execFileSync(command, args, { encoding: 'utf-8' });
+  const env = process.env;
+  env.PATH = addPathToNodeJs(env.PATH);
+  return childProcess.execFileSync(command, args, { encoding: 'utf-8', env });
+}
+
+function addPathToNodeJs(pathEnvironment) {
+  return path.dirname(process.argv0) + path.delimiter + pathEnvironment;
 }
 
 function normalizeCrlf(string) {

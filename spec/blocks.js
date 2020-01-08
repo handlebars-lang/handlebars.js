@@ -275,6 +275,7 @@ describe('blocks', function() {
         'Goodbye cruel OMG!'
       );
     });
+
     it('block with deep recursive pathed lookup', function() {
       var string =
         '{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}';
