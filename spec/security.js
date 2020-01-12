@@ -190,6 +190,10 @@ describe('security issues', function() {
       return 'returnValue';
     };
 
+    beforeEach(function() {
+      handlebarsEnv.resetLoggedPropertyAccesses();
+    });
+
     afterEach(function() {
       sinon.restore();
     });
@@ -204,6 +208,23 @@ describe('security issues', function() {
       function checkProtoMethodAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function() {
           var spy = sinon.spy(console, 'error');
+
+          expectTemplate('{{aMethod}}')
+            .withInput(new TestClass())
+            .withCompileOptions(compileOptions)
+            .toCompileTo('');
+
+          expect(spy.calledOnce).to.be.true();
+          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+        });
+
+        it('should only log the warning once', function() {
+          var spy = sinon.spy(console, 'error');
+
+          expectTemplate('{{aMethod}}')
+            .withInput(new TestClass())
+            .withCompileOptions(compileOptions)
+            .toCompileTo('');
 
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
