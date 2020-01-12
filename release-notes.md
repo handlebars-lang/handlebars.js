@@ -2,7 +2,20 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.1...master)
+
+## v4.7.1 - January 12th, 2020
+
+Bugfixes:
+
+- fix: fix log output in case of illegal property access - f152dfc
+- fix: log error for illegal property access only once per property - 3c1e252
+
+Compatibility notes:
+
+- no incompatibilities are to be expected.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.0...v4.7.1)
 
 ## v4.7.0 - January 10th, 2020
 
