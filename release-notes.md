@@ -2,7 +2,23 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.1...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.2...master)
+
+## v4.7.2 - January 13th, 2020
+
+Bugfixes:
+
+- fix: don't wrap helpers that are not functions - 9d5aa36, #1639
+
+Chore/Build:
+
+- chore: execute saucelabs-task only if access-key exists - a4fd391
+
+Compatibility notes:
+
+- No breaking changes are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.1...v4.7.2)
 
 ## v4.7.1 - January 12th, 2020
 
