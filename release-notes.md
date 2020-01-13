@@ -30,13 +30,13 @@ Chores, docs:
 BREAKING CHANGES:
 
 - access to prototype properties is forbidden completely by default,
-  specific properties or methods can be allow via runtime-options.
+  specific properties or methods can be allowed via runtime-options.
   See #1633 for details.
   If you are using Handlebars as documented, you should not be accessing prototype
   properties from your template anyway, so the changes should not be a problem
   for you. Only the use of undocumented features can break your build.
 
-  That is why we only bump the minor version despite mentioning breaking changes
+  That is why we only bump the minor version despite mentioning breaking changes.
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.5.3...v4.6.0)
 
