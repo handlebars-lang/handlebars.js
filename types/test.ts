@@ -241,12 +241,14 @@ function testExceptionWithNodeTypings() {
   let stack: string | undefined = exception.stack;
 }
 
-function testProtoPropertyControlOptions() {
+function testProtoAccessControlControlOptions() {
   Handlebars.compile('test')(
     {},
     {
       allowedProtoMethods: { allowedMethod: true, forbiddenMethod: false },
-      allowedProtoProperties: { allowedProperty: true, forbiddenProperty: false }
+      allowedProtoProperties: { allowedProperty: true, forbiddenProperty: false },
+      allowProtoMethodsByDefault: true,
+      allowProtoPropertiesByDefault: false,
     }
   );
 }

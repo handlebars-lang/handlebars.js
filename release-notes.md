@@ -2,7 +2,51 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.6.0...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.2...master)
+
+## v4.7.2 - January 13th, 2020
+
+Bugfixes:
+
+- fix: don't wrap helpers that are not functions - 9d5aa36, #1639
+
+Chore/Build:
+
+- chore: execute saucelabs-task only if access-key exists - a4fd391
+
+Compatibility notes:
+
+- No breaking changes are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.1...v4.7.2)
+
+## v4.7.1 - January 12th, 2020
+
+Bugfixes:
+
+- fix: fix log output in case of illegal property access - f152dfc
+- fix: log error for illegal property access only once per property - 3c1e252
+
+Compatibility notes:
+
+- no incompatibilities are to be expected.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.0...v4.7.1)
+
+## v4.7.0 - January 10th, 2020
+
+Features:
+
+- feat: default options for controlling proto access - 7af1c12, #1635
+  - This makes it possible to disable the prototype access restrictions added in 4.6.0
+  - an error is logged in the console, if access to prototype properties is attempted and denied
+    and no explicit configuration has taken place.
+
+Compatibility notes:
+
+- no compatibilities are expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.6.0...v4.7.0)
 
 ## v4.6.0 - January 8th, 2020
 

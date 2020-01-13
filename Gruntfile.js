@@ -215,7 +215,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('bench', ['metrics']);
 
-  if (process.env.SAUCE_USERNAME) {
+  if (process.env.SAUCE_ACCESS_KEY) {
     grunt.registerTask('sauce', ['concat:tests', 'connect', 'saucelabs-mocha']);
   } else {
     grunt.registerTask('sauce', []);

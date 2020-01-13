@@ -529,4 +529,13 @@ describe('Regressions', function() {
       sinon.restore();
     });
   });
+
+  describe("GH-1639: TypeError: Cannot read property 'apply' of undefined\" when handlebars version > 4.6.0 (undocumented, deprecated usage)", function() {
+    it('should treat undefined helpers like non-existing helpers', function() {
+      expectTemplate('{{foo}}')
+        .withHelper('foo', undefined)
+        .withInput({ foo: 'bar' })
+        .toCompileTo('bar');
+    });
+  });
 });
