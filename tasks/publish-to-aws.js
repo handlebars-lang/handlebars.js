@@ -59,10 +59,10 @@ module.exports = function(grunt) {
       'handlebars.runtime.js',
       'handlebars.runtime.min.js'
     ];
-    const publishPromises = filenames.map(filename => {
+    const publishPromises = filenames.map(async filename => {
       const nameInBucket = getNameInBucket(filename, suffix);
       const localFile = getLocalFile(filename);
-      uploadToBucket(localFile, nameInBucket);
+      await uploadToBucket(localFile, nameInBucket);
       grunt.log.writeln(
         `Published ${localFile} to build server (${nameInBucket})`
       );
