@@ -252,3 +252,7 @@ function testProtoAccessControlControlOptions() {
     }
   );
 }
+
+function testHandlebarsVersion() {
+  let version: string = Handlebars.VERSION;
+}

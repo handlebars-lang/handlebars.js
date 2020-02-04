@@ -88,6 +88,8 @@ declare namespace Handlebars {
   // TODO: replace Function with actual signature
   export const decorators: { [name: string]: Function };
 
+  export const VERSION: string;
+
   export function noConflict(): typeof Handlebars;
 
   export class Exception {
