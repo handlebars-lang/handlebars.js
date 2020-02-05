@@ -2,7 +2,25 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.2...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.3...master)
+
+## v4.7.3 - February 5th, 2020
+
+Chore/Housekeeping:
+
+- [#1644](https://github.com/wycats/handlebars.js/issues/1644) - Download links to aws broken on handlebarsjs.com - access denied ([@Tea56](https://api.github.com/users/Tea56))
+- Fix spelling and punctuation in changelog - d78cc73
+
+Bugfixes:
+
+- Add Type Definition for Handlebars.VERSION, Fixes #1647 - 4de51fe
+- Include Type Definition for runtime.js in Package - a32d05f
+
+Compatibility notes:
+
+- No incompatibilities are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.2...v4.7.3)
 
 ## v4.7.2 - January 13th, 2020
 
