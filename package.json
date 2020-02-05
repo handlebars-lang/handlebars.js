@@ -111,7 +111,8 @@
     "print-script",
     "release-notes.md",
     "runtime.js",
-    "types/*.d.ts"
+    "types/*.d.ts",
+    "runtime.d.ts"
   ],
   "husky": {
     "hooks": {
