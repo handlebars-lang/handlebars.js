@@ -2,7 +2,30 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.7...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.8...master)
+
+## v3.0.8 - February 23rd, 2020
+Bugfixes:
+- backport some (but not all) of the security fixes from 4.x - 156061e
+
+Compatibility notes:
+- The properties `__proto__`, `__defineGetter__`, `__defineSetter__` and `__lookupGetter__` 
+  have been added to the list of "dangerous properties". If a property
+  by that name is found and not an own-property of its parent, it will silently evaluate to undefined.
+  This is done in both the compiled template and the "lookup"-helper. This will prevent
+  Remote-Code-Execution exploits that have been published in npm advisories [1324](https://www.npmjs.com/advisories/1324)
+  and [1316](https://www.npmjs.com/advisories/1316).
+- The check for dangerous properties has been changed from "propertyIsEnumerable" to "hasOwnProperty", as it is now done 
+  in Handlebars 4.6.0 and later.
+
+Security issues resolved:
+- [npm advisory 1324](https://www.npmjs.com/advisories/1324)
+- [npm advisory 1316](https://www.npmjs.com/advisories/1316)
+- [npm advisory 1325](https://www.npmjs.com/advisories/1325)
+- [npm advisory 1164](https://www.npmjs.com/advisories/1164)
+
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v3.0.7...v3.0.8)
 
 ## v3.0.7 - June 30th, 2019
 Security fixes:
