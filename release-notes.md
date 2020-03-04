@@ -527,7 +527,7 @@ Compatibility notes:
 - [#1285](https://github.com/wycats/handlebars.js/pull/1285) [#1284](https://github.com/wycats/handlebars.js/issues/1284) Make "column"-property of Errors enumerable ([@nknapp](https://github.com/nknapp)) - a023cb4
 - [#1285](https://github.com/wycats/handlebars.js/pull/1285) Testcase to verify that compile-errors have a column-property ([@nknapp](https://github.com/nknapp)) - c7dc353
 
-[Commits](https://github.com/lawnsea/handlebars.js/compare/v4.0.6...v4.0.7)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.6...v4.0.7)
 
 ## v4.0.6 - November 12th, 2016
 
