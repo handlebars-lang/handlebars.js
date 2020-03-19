@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "neo-async": "^2.6.0",
-    "optimist": "^0.6.1",
-    "source-map": "^0.6.1"
+    "source-map": "^0.6.1",
+    "yargs": "^15.3.1"
   },
   "optionalDependencies": {
     "uglify-js": "^3.1.4"
