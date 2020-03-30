@@ -307,8 +307,9 @@ describe('precompiler', function() {
       Precompiler.loadTemplates(
         { files: [__dirname + '/artifacts'], extension: 'hbs' },
         function(err, opts) {
-          equal(opts.templates.length, 1);
+          equal(opts.templates.length, 2);
           equal(opts.templates[0].name, 'example_2');
+
           done(err);
         }
       );
@@ -317,7 +318,7 @@ describe('precompiler', function() {
       Precompiler.loadTemplates(
         { files: [__dirname + '/artifacts'], extension: 'handlebars' },
         function(err, opts) {
-          equal(opts.templates.length, 3);
+          equal(opts.templates.length, 5);
           equal(opts.templates[0].name, 'bom');
           equal(opts.templates[1].name, 'empty');
           equal(opts.templates[2].name, 'example_1');
