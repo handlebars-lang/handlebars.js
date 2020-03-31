@@ -161,20 +161,6 @@ const testCases = [
     expectedOutputSpec: './spec/expected/source.map.amd.js'
   },
   {
-    binInputParameters: [
-      '-i',
-      '<div>1</div>',
-      '-a',
-      '-m',
-      '-N',
-      'test',
-      '--map',
-      './spec/artifacts/source.map.amd.txt'
-    ],
-    outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/source.map.amd.js'
-  },
-  {
     binInputParameters: ['./spec/artifacts/bom.handlebars', '-b', '-a'],
     outputLocation: 'stdout',
     expectedOutputSpec: './spec/expected/bom.amd.js'
