@@ -77,12 +77,7 @@ const testCases = [
     expectedOutput: require('../package.json').version
   },
   {
-    binInputParameters: [
-      '-a',
-      '-e',
-      'hbs',
-      './spec/artifacts/non.default.extension.hbs'
-    ],
+    binInputParameters: ['-a', '-e', 'hbs', './spec/artifacts/example_2.hbs'],
     outputLocation: 'stdout',
     expectedOutputSpec: './spec/expected/non.default.extension.amd.js'
   },
@@ -155,24 +150,10 @@ const testCases = [
       '-N',
       'test',
       '--map',
-      './spec/artifacts/source.map.amd.txt'
+      './spec/artifacts/source.map.amd.json'
     ],
-    outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/source.map.amd.js'
-  },
-  {
-    binInputParameters: [
-      '-i',
-      '<div>1</div>',
-      '-a',
-      '-m',
-      '-N',
-      'test',
-      '--map',
-      './spec/artifacts/source.map.amd.txt'
-    ],
-    outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/source.map.amd.js'
+    outputLocation: './spec/artifacts/source.map.amd.json',
+    expectedOutputSpec: './spec/expected/source.map.amd.json'
   },
   {
     binInputParameters: ['./spec/artifacts/bom.handlebars', '-b', '-a'],
