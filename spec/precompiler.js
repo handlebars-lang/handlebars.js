@@ -307,7 +307,7 @@ describe('precompiler', function() {
       Precompiler.loadTemplates(
         { files: [__dirname + '/artifacts'], extension: 'hbs' },
         function(err, opts) {
-          equal(opts.templates.length, 2);
+          equal(opts.templates.length, 1);
           equal(opts.templates[0].name, 'example_2');
 
           done(err);
