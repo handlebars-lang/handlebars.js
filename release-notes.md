@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.4...master)
+
+## v4.7.4 - April 1st, 2020
+
+Chore/Housekeeping:
+
+- [#1666](https://github.com/wycats/handlebars.js/issues/1666) - Replaced minimist with yargs for handlebars CLI ([@aorinevo](https://api.github.com/users/aorinevo), [@AviVahl](https://api.github.com/users/AviVahl) & [@fabb](https://api.github.com/users/fabb))
+
+Compatibility notes:
+
+- No incompatibilities are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.3...v4.7.4)
 
 ## v4.7.3 - February 5th, 2020
 
@@ -527,7 +539,7 @@ Compatibility notes:
 - [#1285](https://github.com/wycats/handlebars.js/pull/1285) [#1284](https://github.com/wycats/handlebars.js/issues/1284) Make "column"-property of Errors enumerable ([@nknapp](https://github.com/nknapp)) - a023cb4
 - [#1285](https://github.com/wycats/handlebars.js/pull/1285) Testcase to verify that compile-errors have a column-property ([@nknapp](https://github.com/nknapp)) - c7dc353
 
-[Commits](https://github.com/lawnsea/handlebars.js/compare/v4.0.6...v4.0.7)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.0.6...v4.0.7)
 
 ## v4.0.6 - November 12th, 2016
 
