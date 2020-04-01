@@ -155,7 +155,7 @@ const testCases = [
       '-N',
       'test',
       '--map',
-      './spec/artifacts/source.map.amd.txt'
+      './spec/tmp/source.map.amd.txt'
     ],
     outputLocation: 'stdout',
     expectedOutputSpec: './spec/expected/source.map.amd.js'
