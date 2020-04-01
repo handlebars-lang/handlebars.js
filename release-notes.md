@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.3...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.4...master)
+
+## v4.7.4 - April 1st, 2020
+
+Chore/Housekeeping:
+
+- [#1666](https://github.com/wycats/handlebars.js/issues/1666) - Replaced minimist with yargs for handlebars CLI ([@aorinevo](https://api.github.com/users/aorinevo), [@AviVahl](https://api.github.com/users/AviVahl) & [@fabb](https://api.github.com/users/fabb))
+
+Compatibility notes:
+
+- No incompatibilities are to be expected
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.3...v4.7.4)
 
 ## v4.7.3 - February 5th, 2020
 
