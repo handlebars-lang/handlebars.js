@@ -4,8 +4,7 @@
 
 Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
 
-Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]! 
-
+Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]!
 
 In general we are going to ask for an **example** of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle **[template][jsfiddle]** to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here).
 
@@ -18,7 +17,8 @@ Documentation issues on the handlebarsjs.com site should be reported on [handleb
 - The branch `4.x` contains the currently released version. Bugfixes should be made in this branch.
 - The branch `master` contains the next version. A release date is not yet specified. Maintainers
   should merge the branch `4.x` into the master branch regularly.
-* The branch `3.x` comtains the legacy version `3.x`. Bugfixes are applied seperately (if needed). The branch will not 
+
+* The branch `3.x` comtains the legacy version `3.x`. Bugfixes are applied seperately (if needed). The branch will not
   be merged with any of the other branches.
 
 ## Pull Requests
@@ -94,21 +94,15 @@ You can use the following scripts to make sure that the travis-job does not fail
 - **npm run integration-test** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
   These tests only work on a Linux-machine with `nvm` installed (for running tests in multiple versions of NodeJS).
 
-## Ember testing
-
-The current ember distribution should be tested as part of the handlebars release process. This requires building the `handlebars-source` gem locally and then executing the ember test script.
-
-```sh
-npm link
-grunt build release
-cp dist/*.js $emberRepoDir/bower_components/handlebars/
-
-cd $emberRepoDir
-npm link handlebars
-npm test
-```
-
 ## Releasing the latest version
+
+Before attempting the release Handlebars, please make sure that you have the following authorizations:
+
+- Push-access to `wycats/handlebars.js`
+- Publishing rights on npmjs.com for the `handlebars` package
+- Publishing rights on gemfury for the `handlebars-source` package
+- Push-access to the repo for legacy package managers: `components/handlebars`
+- Push-access to the production-repo of the handlebars site: `handlebars-lang/handlebarsjs.com-github-pages`
 
 _When releasing a previous version of Handlebars, please look into the CONTRIBUNG.md in the corresponding branch._
 
@@ -135,7 +129,13 @@ in those places still point to the latest version
 - [The AWS S3 Bucket](https://s3.amazonaws.com/builds.handlebarsjs.com) (check latest-tag)
 - [RubyGems](https://rubygems.org/gems/handlebars-source)
 
-When everything is OK, the handlebars site needs to be updated to point to the new version numbers. The jsfiddle link should be updated to point to the most recent distribution for all instances in our documentation.
+When everything is OK, the **handlebars site** needs to be updated.
+
+Go to the master branch of the repo [handlebars-lang/handlebarsjs.com-github-pages](https://github.com/handlebars-lang/handlebarsjs.com-github-pages/tree/master)
+and make a minimal change to the README. This will invoke a github-action that redeploys
+the site, fetching the latest version-number from the npm-registry.
+(note that the default-branch of this repo is not the master and regular changes are done
+in the `handlebars-lang/docs`-repo).
 
 [generator-release]: https://github.com/walmartlabs/generator-release
 [pull-request]: https://github.com/wycats/handlebars.js/pull/new/master

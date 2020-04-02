@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.4...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.5...master)
+
+## v4.7.5 - April 2nd, 2020
+
+Chore/Housekeeping:
+
+- Node.js version support has been changed to v6+
+
+Compatibility notes:
+
+- Node.js < v6 is no longer supported
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.4...v4.7.5)
 
 ## v4.7.4 - April 1st, 2020
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 # shellcheck disable=SC1090
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -15,13 +17,13 @@ cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 unset npm_config_prefix
 
 echo "Handlebars should be able to run in various versions of NodeJS"
-for i in  0.10 0.12 4 5 6 7 8 9 10 11 ; do
+for i in 6 7 8 9 10 11 12 13; do
     rm target node_modules package-lock.json -rf
     mkdir target
     nvm install "$i"
     nvm exec "$i" npm install
-    nvm exec "$i" npm run test || exit 1
-    nvm exec "$i" npm run test-precompile || exit 1
+    nvm exec "$i" npm run test
+    nvm exec "$i" npm run test-precompile
 
     echo Success
 done
