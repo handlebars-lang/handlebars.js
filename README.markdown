@@ -79,7 +79,7 @@ Supported Environments
 
 Handlebars has been designed to work in any ECMAScript 3 environment. This includes
 
-- Node.js v6+
+- Node.js (see below)
 - Chrome
 - Firefox
 - Safari 5+
@@ -90,6 +90,17 @@ Older versions and other runtimes are likely to work but have not been formally
 tested. The compiler requires `JSON.stringify` to be implemented natively or via a polyfill. If using the precompiler this is not necessary.
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/handlebars.svg)](https://saucelabs.com/u/handlebars)
+
+## NodeJS support policy
+
+Handlebars aims to support the **current** version of Node.js as well as **active LTS** versions.
+
+Our policy regarding Node.js is that dropping support for unsupported Node.js-versions 
+is **not** considered a breaking change. Please have a look at the Node.js support timetable
+at https://github.com/nodejs/Release/blob/master/README.md.
+
+This policy does not affect browser compatibility. Dropping support for a currently supported 
+browser version will be a breaking change and a major version bump.
 
 Performance
 -----------
