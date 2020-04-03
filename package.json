@@ -18,12 +18,13 @@
   "license": "MIT",
   "readmeFilename": "README.markdown",
   "engines": {
-    "node": ">=6"
+    "node": ">=0.4.7"
   },
   "dependencies": {
+    "minimist": "^1.2.5",
     "neo-async": "^2.6.0",
     "source-map": "^0.6.1",
-    "yargs": "^14.2.3"
+    "wordwrap": "^1.0.0"
   },
   "optionalDependencies": {
     "uglify-js": "^3.1.4"
