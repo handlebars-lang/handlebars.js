@@ -2,7 +2,19 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.5...master)
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.6...master)
+
+## v4.7.6 - April 3rd, 2020
+
+Chore/Housekeeping:
+
+- [#1672](https://github.com/wycats/handlebars.js/issues/1672) - Switch cmd parser to latest minimist ([@dougwilson](https://api.github.com/users/dougwilson)
+
+Compatibility notes:
+
+- Restored Node.js compatibility
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.5...v4.7.6)
 
 ## v4.7.5 - April 2nd, 2020
 
