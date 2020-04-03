@@ -18,7 +18,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "engines": {
-    "node": ">=6"
+    "node": ">=0.4.7"
   },
   "dependencies": {
     "neo-async": "^2.6.0",
