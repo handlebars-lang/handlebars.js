@@ -2,6 +2,7 @@ Precompile handlebar templates.
 Usage: handlebars [template|directory]...
 
 Options:
+  --help               Outputs this message                                                                    [boolean]
   -f, --output         Output File                                                                              [string]
   --map                Source Map File                                                                          [string]
   -a, --amd            Exports amd style (require.js)                                                          [boolean]
@@ -21,5 +22,4 @@ Options:
   -d, --data           Include data when compiling                                                             [boolean]
   -e, --extension      Template extension.                                              [string] [default: "handlebars"]
   -b, --bom            Removes the BOM (Byte Order Mark) from the beginning of the templates.                  [boolean]
-  -v, --version        Prints the current compiler version                                                     [boolean]
-  --help               Outputs this message                                                                    [boolean]
+  -v, --version        Show version number                                                                     [boolean]
