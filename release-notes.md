@@ -8,11 +8,11 @@
 
 Chore/Housekeeping:
 
-- Node.js version support has been changed to v6+
+- ~Node.js version support has been changed to v6+~ Reverted in 4.7.6
 
 Compatibility notes:
 
-- Node.js < v6 is no longer supported
+- ~Node.js < v6 is no longer supported~ Reverted in 4.7.6
 
 [Commits](https://github.com/wycats/handlebars.js/compare/v4.7.4...v4.7.5)
 
