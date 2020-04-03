@@ -164,6 +164,16 @@ const testCases = [
     binInputParameters: ['./spec/artifacts/bom.handlebars', '-b', '-a'],
     outputLocation: 'stdout',
     expectedOutputSpec: './spec/expected/bom.amd.js'
+  },
+  // Issue #1673
+  {
+    binInputParameters: [
+      '--amd',
+      '--no-amd',
+      'spec/artifacts/empty.handlebars'
+    ],
+    outputLocation: 'stdout',
+    expectedOutputSpec: './spec/expected/empty.common.js'
   }
 ];
 
