@@ -453,6 +453,12 @@ describe('Tokenizer', function() {
     shouldBeToken(result[3], 'STRING', 'baz');
   });
 
+  it('tokenizes mustaches with String params using back-ticks as "OPEN ID ID STRING CLOSE"', function() {
+    var result = tokenize('{{ foo bar `baz` }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
+    shouldBeToken(result[3], 'STRING', 'baz');
+  });
+
   it('tokenizes String params with spaces inside as "STRING"', function() {
     var result = tokenize('{{ foo bar "baz bat" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
@@ -469,6 +475,12 @@ describe('Tokenizer', function() {
     var result = tokenize("{{ foo 'bar\\'baz' }}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[2], 'STRING', "bar'baz");
+  });
+
+  it('tokenizes String params using back-tics with escapes quotes as STRING', function() {
+    var result = tokenize('{{ foo `bar\\`baz` }}');
+    shouldMatchTokens(result, ['OPEN', 'ID', 'STRING', 'CLOSE']);
+    shouldBeToken(result[2], 'STRING', 'bar`baz');
   });
 
   it('tokenizes numbers', function() {
