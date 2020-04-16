@@ -394,6 +394,17 @@ describe('basic context', function() {
     );
   });
 
+  it('nested paths with Map', function() {
+    var map = new Map();
+    map.set('expression', 'beautiful');
+    shouldCompileTo(
+      'Goodbye {{foo/expression}} world!',
+      { foo: map },
+      'Goodbye beautiful world!',
+      'Nested paths access nested objects'
+    );
+  });
+
   it('nested paths with empty string value', function() {
     shouldCompileTo(
       'Goodbye {{alan/expression}} world!',

@@ -551,6 +551,29 @@ describe('builtin helpers', function() {
         );
       });
     }
+
+    it('each on Map and @key', function() {
+      var goodbyes = new Map();
+      goodbyes.set('first', 'goodbye');
+      goodbyes.set('second', 'Goodbye');
+      goodbyes.set('last', 'GOODBYE');
+      var goodbyesEmpty = new Map();
+      var string =
+        '{{#each goodbyes}}{{@key}}. {{.}}! {{/each}}cruel {{world}}!';
+      var hash = { goodbyes: goodbyes, world: 'world' };
+      shouldCompileTo(
+        string,
+        hash,
+        'first. goodbye! second. Goodbye! last. GOODBYE! cruel world!',
+        'each with map argument iterates over entries when not empty'
+      );
+      shouldCompileTo(
+        string,
+        { goodbyes: goodbyesEmpty, world: 'world' },
+        'cruel world!',
+        'each with map argument ignores the contents when empty'
+      );
+    });
   });
 
   describe('#log', function() {
