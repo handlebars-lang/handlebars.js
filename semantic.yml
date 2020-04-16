@@ -1,0 +1,6 @@
+scopes:
+    - parser
+    - compiler
+    - runtime
+    - cli
+titleAndCommits: true
