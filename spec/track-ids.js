@@ -5,7 +5,7 @@ describe('track ids', function() {
   });
 
   it('should not include anything without the flag', function() {
-    var template = CompilerContext.compile('{{wycats is.a slave.driver}}');
+    var string = '{{wycats is.a slave.driver}}';
 
     var helpers = {
       wycats: function(passiveVoice, noun, options) {
@@ -16,12 +16,13 @@ describe('track ids', function() {
       }
     };
 
-    equals(template({}, { helpers: helpers }), 'success');
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .toCompileTo('success');
   });
   it('should include argument ids', function() {
-    var template = CompilerContext.compile('{{wycats is.a slave.driver}}', {
-      trackIds: true
-    });
+    var string = '{{wycats is.a slave.driver}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       wycats: function(passiveVoice, noun, options) {
@@ -41,16 +42,15 @@ describe('track ids', function() {
       }
     };
 
-    equals(
-      template(context, { helpers: helpers }),
-      'HELP ME MY BOSS is.a:foo slave.driver:bar'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('HELP ME MY BOSS is.a:foo slave.driver:bar');
   });
   it('should include hash ids', function() {
-    var template = CompilerContext.compile(
-      '{{wycats bat=is.a baz=slave.driver}}',
-      { trackIds: true }
-    );
+    var string = '{{wycats bat=is.a baz=slave.driver}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       wycats: function(options) {
@@ -70,16 +70,15 @@ describe('track ids', function() {
       }
     };
 
-    equals(
-      template(context, { helpers: helpers }),
-      'HELP ME MY BOSS is.a:foo slave.driver:bar'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('HELP ME MY BOSS is.a:foo slave.driver:bar');
   });
   it('should note ../ and ./ references', function() {
-    var template = CompilerContext.compile(
-      '{{wycats ./is.a ../slave.driver this.is.a this}}',
-      { trackIds: true }
-    );
+    var string = '{{wycats ./is.a ../slave.driver this.is.a this}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       wycats: function(passiveVoice, noun, thiz, thiz2, options) {
@@ -101,15 +100,15 @@ describe('track ids', function() {
       }
     };
 
-    equals(
-      template(context, { helpers: helpers }),
-      'HELP ME MY BOSS is.a:foo ../slave.driver:undefined'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('HELP ME MY BOSS is.a:foo ../slave.driver:undefined');
   });
   it('should note @data references', function() {
-    var template = CompilerContext.compile('{{wycats @is.a @slave.driver}}', {
-      trackIds: true
-    });
+    var string = '{{wycats @is.a @slave.driver}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       wycats: function(passiveVoice, noun, options) {
@@ -129,16 +128,16 @@ describe('track ids', function() {
       }
     };
 
-    equals(
-      template({}, { helpers: helpers, data: context }),
-      'HELP ME MY BOSS @is.a:foo @slave.driver:bar'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withRuntimeOptions({ data: context })
+      .toCompileTo('HELP ME MY BOSS @is.a:foo @slave.driver:bar');
   });
 
   it('should return null for constants', function() {
-    var template = CompilerContext.compile('{{wycats 1 "foo" key=false}}', {
-      trackIds: true
-    });
+    var string = '{{wycats 1 "foo" key=false}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       wycats: function(passiveVoice, noun, options) {
@@ -157,15 +156,15 @@ describe('track ids', function() {
       }
     };
 
-    equals(
-      template(context, { helpers: helpers }),
-      'HELP ME MY BOSS 1 foo false'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('HELP ME MY BOSS 1 foo false');
   });
   it('should return true for subexpressions', function() {
-    var template = CompilerContext.compile('{{wycats (sub)}}', {
-      trackIds: true
-    });
+    var string = '{{wycats (sub)}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       sub: function() {
@@ -178,14 +177,16 @@ describe('track ids', function() {
       }
     };
 
-    equals(template(context, { helpers: helpers }), 'HELP ME MY BOSS 1');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('HELP ME MY BOSS 1');
   });
 
   it('should use block param paths', function() {
-    var template = CompilerContext.compile(
-      '{{#doIt as |is|}}{{wycats is.a slave.driver is}}{{/doIt}}',
-      { trackIds: true }
-    );
+    var string = '{{#doIt as |is|}}{{wycats is.a slave.driver is}}{{/doIt}}';
+    var compileOptions = { trackIds: true };
 
     var helpers = {
       doIt: function(options) {
@@ -211,10 +212,11 @@ describe('track ids', function() {
       }
     };
 
-    equals(
-      template(context, { helpers: helpers }),
-      'HELP ME MY BOSS zomg.a:foo slave.driver:bar'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('HELP ME MY BOSS zomg.a:foo slave.driver:bar');
   });
 
   describe('builtin helpers', function() {
@@ -229,119 +231,109 @@ describe('track ids', function() {
 
     describe('#each', function() {
       it('should track contextPath for arrays', function() {
-        var template = CompilerContext.compile(
-          '{{#each array}}{{wycats name}}{{/each}}',
-          { trackIds: true }
-        );
+        var string = '{{#each array}}{{wycats name}}{{/each}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template(
-            { array: [{ name: 'foo' }, { name: 'bar' }] },
-            { helpers: helpers }
-          ),
-          'foo:array.0\nbar:array.1\n'
-        );
+        var input = { array: [{ name: 'foo' }, { name: 'bar' }] };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:array.0\nbar:array.1\n');
       });
       it('should track contextPath for keys', function() {
-        var template = CompilerContext.compile(
-          '{{#each object}}{{wycats name}}{{/each}}',
-          { trackIds: true }
-        );
+        var string = '{{#each object}}{{wycats name}}{{/each}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template(
-            { object: { foo: { name: 'foo' }, bar: { name: 'bar' } } },
-            { helpers: helpers }
-          ),
-          'foo:object.foo\nbar:object.bar\n'
-        );
+        var input = { object: { foo: { name: 'foo' }, bar: { name: 'bar' } } };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:object.foo\nbar:object.bar\n');
       });
       it('should handle nesting', function() {
-        var template = CompilerContext.compile(
-          '{{#each .}}{{#each .}}{{wycats name}}{{/each}}{{/each}}',
-          { trackIds: true }
-        );
+        var string = '{{#each .}}{{#each .}}{{wycats name}}{{/each}}{{/each}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template(
-            { array: [{ name: 'foo' }, { name: 'bar' }] },
-            { helpers: helpers }
-          ),
-          'foo:.array..0\nbar:.array..1\n'
-        );
+        var input = { array: [{ name: 'foo' }, { name: 'bar' }] };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:.array..0\nbar:.array..1\n');
       });
       it('should handle block params', function() {
-        var template = CompilerContext.compile(
-          '{{#each array as |value|}}{{blockParams value.name}}{{/each}}',
-          { trackIds: true }
-        );
+        var string =
+          '{{#each array as |value|}}{{blockParams value.name}}{{/each}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template(
-            { array: [{ name: 'foo' }, { name: 'bar' }] },
-            { helpers: helpers }
-          ),
-          'foo:array.0.name\nbar:array.1.name\n'
-        );
+        var input = { array: [{ name: 'foo' }, { name: 'bar' }] };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:array.0.name\nbar:array.1.name\n');
       });
     });
     describe('#with', function() {
       it('should track contextPath', function() {
-        var template = CompilerContext.compile(
-          '{{#with field}}{{wycats name}}{{/with}}',
-          { trackIds: true }
-        );
+        var string = '{{#with field}}{{wycats name}}{{/with}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template({ field: { name: 'foo' } }, { helpers: helpers }),
-          'foo:field\n'
-        );
+        var input = { field: { name: 'foo' } };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:field\n');
       });
       it('should handle nesting', function() {
-        var template = CompilerContext.compile(
-          '{{#with bat}}{{#with field}}{{wycats name}}{{/with}}{{/with}}',
-          { trackIds: true }
-        );
+        var string =
+          '{{#with bat}}{{#with field}}{{wycats name}}{{/with}}{{/with}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template({ bat: { field: { name: 'foo' } } }, { helpers: helpers }),
-          'foo:bat.field\n'
-        );
+        var input = { bat: { field: { name: 'foo' } } };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:bat.field\n');
       });
     });
     describe('#blockHelperMissing', function() {
       it('should track contextPath for arrays', function() {
-        var template = CompilerContext.compile(
-          '{{#field}}{{wycats name}}{{/field}}',
-          { trackIds: true }
-        );
+        var string = '{{#field}}{{wycats name}}{{/field}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template({ field: [{ name: 'foo' }] }, { helpers: helpers }),
-          'foo:field.0\n'
-        );
+        var input = { field: [{ name: 'foo' }] };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:field.0\n');
       });
       it('should track contextPath for keys', function() {
-        var template = CompilerContext.compile(
-          '{{#field}}{{wycats name}}{{/field}}',
-          { trackIds: true }
-        );
+        var string = '{{#field}}{{wycats name}}{{/field}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template({ field: { name: 'foo' } }, { helpers: helpers }),
-          'foo:field\n'
-        );
+        var input = { field: { name: 'foo' } };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:field\n');
       });
       it('should handle nesting', function() {
-        var template = CompilerContext.compile(
-          '{{#bat}}{{#field}}{{wycats name}}{{/field}}{{/bat}}',
-          { trackIds: true }
-        );
+        var string = '{{#bat}}{{#field}}{{wycats name}}{{/field}}{{/bat}}';
+        var compileOptions = { trackIds: true };
 
-        equals(
-          template({ bat: { field: { name: 'foo' } } }, { helpers: helpers }),
-          'foo:bat.field\n'
-        );
+        var input = { bat: { field: { name: 'foo' } } };
+        expectTemplate(string)
+          .withCompileOptions(compileOptions)
+          .withHelpers(helpers)
+          .withInput(input)
+          .toCompileTo('foo:bat.field\n');
       });
     });
   });

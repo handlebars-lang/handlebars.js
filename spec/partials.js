@@ -63,18 +63,11 @@ describe('partials', function() {
         return 'missing';
       }
     };
-    shouldThrow(
-      function() {
-        shouldCompileToWithPartials(
-          string,
-          [hash, helpers, { dude: partial }],
-          true,
-          'Dudes: Yehuda (http://yehuda) Alan (http://alan) '
-        );
-      },
-      Handlebars.Exception,
-      'The partial missing could not be found'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .withPartial('dude', partial)
+      .toThrow(Handlebars.Exception, 'The partial missing could not be found');
   });
 
   it('partials with context', function() {
@@ -142,10 +135,7 @@ describe('partials', function() {
   });
 
   it('partials with duplicate parameters', function() {
-    shouldThrow(
-      function() {
-        CompilerContext.compile('Dudes: {{>dude dudes foo bar=baz}}');
-      },
+    expectTemplate('Dudes: {{>dude dudes foo bar=baz}}').toThrow(
       Error,
       'Unsupported number of partial arguments: 2 - 1:7'
     );
@@ -190,11 +180,7 @@ describe('partials', function() {
   });
 
   it('rendering undefined partial throws an exception', function() {
-    shouldThrow(
-      function() {
-        var template = CompilerContext.compile('{{> whatever}}');
-        template();
-      },
+    expectTemplate('{{> whatever}}').toThrow(
       Handlebars.Exception,
       'The partial whatever could not be found'
     );
@@ -212,11 +198,7 @@ describe('partials', function() {
   });
 
   it('rendering template partial in vm mode throws an exception', function() {
-    shouldThrow(
-      function() {
-        var template = CompilerContext.compile('{{> whatever}}');
-        template();
-      },
+    expectTemplate('{{> whatever}}').toThrow(
       Handlebars.Exception,
       'The partial whatever could not be found'
     );
@@ -620,17 +602,9 @@ describe('partials', function() {
         {},
         'success'
       );
-      shouldThrow(
-        function() {
-          shouldCompileTo(
-            '{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{/with}}{{> myPartial}}',
-            {},
-            'success'
-          );
-        },
-        Error,
-        /myPartial could not/
-      );
+      expectTemplate(
+        '{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{/with}}{{> myPartial}}'
+      ).toThrow(Error, /myPartial could not/);
     });
     it('should override global partials', function() {
       shouldCompileTo(

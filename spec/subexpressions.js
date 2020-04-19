@@ -189,10 +189,8 @@ describe('subexpressions', function() {
   });
 
   it('in string params mode,', function() {
-    var template = CompilerContext.compile(
-      '{{snog (blorg foo x=y) yeah a=b}}',
-      { stringParams: true }
-    );
+    var string = '{{snog (blorg foo x=y) yeah a=b}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       snog: function(a, b, options) {
@@ -230,21 +228,21 @@ describe('subexpressions', function() {
       }
     };
 
-    var result = template(
-      {
-        foo: {},
-        yeah: {}
-      },
-      { helpers: helpers }
-    );
+    var input = {
+      foo: {},
+      yeah: {}
+    };
 
-    equals(result, 'fooyeah');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(input)
+      .toCompileTo('fooyeah');
   });
 
   it('as hashes in string params mode', function() {
-    var template = CompilerContext.compile('{{blog fun=(bork)}}', {
-      stringParams: true
-    });
+    var string = '{{blog fun=(bork)}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       blog: function(options) {
@@ -256,8 +254,10 @@ describe('subexpressions', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-    equals(result, 'val is BORK');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .toCompileTo('val is BORK');
   });
 
   it('subexpression functions on the context', function() {
@@ -285,8 +285,9 @@ describe('subexpressions', function() {
         return val + val;
       }
     };
-    shouldThrow(function() {
-      shouldCompileTo(string, [context, helpers], 'LOLLOL!');
-    });
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toThrow();
   });
 });

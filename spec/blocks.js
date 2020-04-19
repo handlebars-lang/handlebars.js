@@ -42,14 +42,10 @@ describe('blocks', function() {
       world: 'world'
     };
 
-    var template = CompilerContext.compile(string);
-    var result = template(hash);
-
-    equal(
-      result,
-      '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!',
-      'The @index variable is used'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withMessage('The @index variable is used')
+      .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
   });
 
   it('empty block', function() {
@@ -101,9 +97,7 @@ describe('blocks', function() {
   it('block with complex lookup using nested context', function() {
     var string = '{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}';
 
-    shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error);
+    expectTemplate(string).toThrow(Error);
   });
 
   it('block with deep nested complex lookup', function() {
@@ -118,18 +112,20 @@ describe('blocks', function() {
   });
 
   it('works with cached blocks', function() {
-    var template = CompilerContext.compile(
-      '{{#each person}}{{#with .}}{{first}} {{last}}{{/with}}{{/each}}',
-      { data: false }
-    );
+    var string =
+      '{{#each person}}{{#with .}}{{first}} {{last}}{{/with}}{{/each}}';
+    var compileOptions = { data: false };
 
-    var result = template({
+    var input = {
       person: [
         { first: 'Alan', last: 'Johnson' },
         { first: 'Alan', last: 'Johnson' }
       ]
-    });
-    equals(result, 'Alan JohnsonAlan Johnson');
+    };
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withInput(input)
+      .toCompileTo('Alan JohnsonAlan Johnson');
   });
 
   describe('inverted sections', function() {
@@ -194,13 +190,9 @@ describe('blocks', function() {
       );
     });
     it('chained inverted sections with mismatch', function() {
-      shouldThrow(function() {
-        shouldCompileTo(
-          '{{#people}}{{name}}{{else if none}}{{none}}{{/if}}',
-          { none: 'No people' },
-          'No people'
-        );
-      }, Error);
+      expectTemplate(
+        '{{#people}}{{name}}{{else if none}}{{none}}{{/if}}'
+      ).toThrow(Error);
     });
 
     it('block inverted sections with empty arrays', function() {

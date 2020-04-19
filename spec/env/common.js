@@ -146,8 +146,24 @@ HandlebarsTestBench.prototype.withHelper = function(name, helperFunction) {
   return this;
 };
 
+HandlebarsTestBench.prototype.withHelpers = function(helperFunctions) {
+  var self = this;
+  Object.keys(helperFunctions).forEach(function(name) {
+    self.withHelper(name, helperFunctions[name]);
+  });
+  return this;
+};
+
 HandlebarsTestBench.prototype.withPartial = function(name, partialAsString) {
   this.partials[name] = partialAsString;
+  return this;
+};
+
+HandlebarsTestBench.prototype.withPartials = function(partials) {
+  var self = this;
+  Object.keys(partials).forEach(function(name) {
+    self.withPartial(name, partials[name]);
+  });
   return this;
 };
 

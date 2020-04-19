@@ -483,10 +483,7 @@ describe('basic context', function() {
   });
 
   it('this keyword nested inside path', function() {
-    shouldThrow(
-      function() {
-        CompilerContext.compile('{{#hellos}}{{text/this/foo}}{{/hellos}}');
-      },
+    expectTemplate('{{#hellos}}{{text/this/foo}}{{/hellos}}').toThrow(
       Error,
       'Invalid path: text/this - 1:13'
     );
@@ -524,13 +521,7 @@ describe('basic context', function() {
 
   it('this keyword nested inside helpers param', function() {
     var string = '{{#hellos}}{{foo text/this/foo}}{{/hellos}}';
-    shouldThrow(
-      function() {
-        CompilerContext.compile(string);
-      },
-      Error,
-      'Invalid path: text/this - 1:17'
-    );
+    expectTemplate(string).toThrow(Error, 'Invalid path: text/this - 1:17');
 
     shouldCompileTo(
       '{{foo [this]}}',

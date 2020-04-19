@@ -146,13 +146,10 @@ describe('builtin helpers', function() {
       );
     });
     it('works when data is disabled', function() {
-      var template = CompilerContext.compile(
-        '{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}',
-        { data: false }
-      );
-
-      var result = template({ person: { first: 'Alan', last: 'Johnson' } });
-      equals(result, 'Alan Johnson');
+      expectTemplate('{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}')
+        .withInput({ person: { first: 'Alan', last: 'Johnson' } })
+        .withCompileOptions({ data: false })
+        .toCompileTo('Alan Johnson');
     });
   });
 
@@ -256,14 +253,10 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!',
-        'The @index variable is used'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @index variable is used')
+        .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
     });
 
     it('each with nested @index', function() {
@@ -278,14 +271,12 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!',
-        'The @index variable is used'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @index variable is used')
+        .toCompileTo(
+          '0. goodbye! 0 1 2 After 0 1. Goodbye! 0 1 2 After 1 2. GOODBYE! 0 1 2 After 2 cruel world!'
+        );
     });
 
     it('each with block params', function() {
@@ -296,13 +287,11 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '0. goodbye!  0 0 0 1 After 0 1. Goodbye!  1 0 1 1 After 1 cruel world!'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo(
+          '0. goodbye!  0 0 0 1 After 0 1. Goodbye!  1 0 1 1 After 1 cruel world!'
+        );
     });
 
     it('each object with @index', function() {
@@ -317,14 +306,10 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!',
-        'The @index variable is used'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @index variable is used')
+        .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
     });
 
     it('each with @first', function() {
@@ -339,10 +324,10 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(result, 'goodbye! cruel world!', 'The @first variable is used');
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @first variable is used')
+        .toCompileTo('goodbye! cruel world!');
     });
 
     it('each with nested @first', function() {
@@ -357,14 +342,12 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '(goodbye! goodbye! goodbye!) (goodbye!) (goodbye!) cruel world!',
-        'The @first variable is used'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @first variable is used')
+        .toCompileTo(
+          '(goodbye! goodbye! goodbye!) (goodbye!) (goodbye!) cruel world!'
+        );
     });
 
     it('each object with @first', function() {
@@ -375,10 +358,10 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(result, 'goodbye! cruel world!', 'The @first variable is used');
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @first variable is used')
+        .toCompileTo('goodbye! cruel world!');
     });
 
     it('each with @last', function() {
@@ -393,10 +376,10 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(result, 'GOODBYE! cruel world!', 'The @last variable is used');
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @last variable is used')
+        .toCompileTo('GOODBYE! cruel world!');
     });
 
     it('each object with @last', function() {
@@ -407,10 +390,10 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(result, 'Goodbye! cruel world!', 'The @last variable is used');
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @last variable is used')
+        .toCompileTo('Goodbye! cruel world!');
     });
 
     it('each with nested @last', function() {
@@ -425,14 +408,12 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '(GOODBYE!) (GOODBYE!) (GOODBYE! GOODBYE! GOODBYE!) cruel world!',
-        'The @last variable is used'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('The @last variable is used')
+        .toCompileTo(
+          '(GOODBYE!) (GOODBYE!) (GOODBYE! GOODBYE! GOODBYE!) cruel world!'
+        );
     });
 
     it('each with function argument', function() {
@@ -473,37 +454,30 @@ describe('builtin helpers', function() {
         world: 'world'
       };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(
-        result,
-        '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!',
-        'Empty string key is not skipped'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('Empty string key is not skipped')
+        .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
     });
 
     it('data passed to helpers', function() {
       var string = '{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}';
       var hash = { letters: ['a', 'b', 'c'] };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash, {
-        data: {
-          exclaim: '!'
-        }
-      });
-      equal(result, 'a!b!c!', 'should output data');
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('should output data')
+        .withRuntimeOptions({
+          data: {
+            exclaim: '!'
+          }
+        })
+        .toCompileTo('a!b!c!');
     });
 
     it('each on implicit context', function() {
-      shouldThrow(
-        function() {
-          var template = CompilerContext.compile(
-            '{{#each}}{{text}}! {{/each}}cruel world!'
-          );
-          template({});
-        },
+      var string = '{{#each}}{{text}}! {{/each}}cruel world!';
+      expectTemplate(string).toThrow(
         handlebarsEnv.Exception,
         'Must pass iterator to #each'
       );
@@ -735,19 +709,17 @@ describe('builtin helpers', function() {
       var string = '{{#each goodbyes}}{{lookup ../data .}}{{/each}}',
         hash = { goodbyes: [0, 1], data: ['foo', 'bar'] };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(result, 'foobar');
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('foobar');
     });
     it('should not fail on undefined value', function() {
       var string = '{{#each goodbyes}}{{lookup ../bar .}}{{/each}}',
         hash = { goodbyes: [0, 1], data: ['foo', 'bar'] };
 
-      var template = CompilerContext.compile(string);
-      var result = template(hash);
-
-      equal(result, '');
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('');
     });
   });
 });

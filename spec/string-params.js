@@ -1,8 +1,9 @@
 describe('string params mode', function() {
   it('arguments to helpers can be retrieved from options hash in string form', function() {
-    var template = CompilerContext.compile('{{wycats is.a slave.driver}}', {
+    var string = '{{wycats is.a slave.driver}}';
+    var compileOptions = {
       stringParams: true
-    });
+    };
 
     var helpers = {
       wycats: function(passiveVoice, noun) {
@@ -10,20 +11,16 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-
-    equals(
-      result,
-      'HELP ME MY BOSS is.a slave.driver',
-      'String parameters output'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withMessage('String parameters output')
+      .toCompileTo('HELP ME MY BOSS is.a slave.driver');
   });
 
   it('when using block form, arguments to helpers can be retrieved from options hash in string form', function() {
-    var template = CompilerContext.compile(
-      '{{#wycats is.a slave.driver}}help :({{/wycats}}',
-      { stringParams: true }
-    );
+    var string = '{{#wycats is.a slave.driver}}help :({{/wycats}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       wycats: function(passiveVoice, noun, options) {
@@ -38,20 +35,16 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-
-    equals(
-      result,
-      'HELP ME MY BOSS is.a slave.driver: help :(',
-      'String parameters output'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withMessage('String parameters output')
+      .toCompileTo('HELP ME MY BOSS is.a slave.driver: help :(');
   });
 
   it('when inside a block in String mode, .. passes the appropriate context in the options hash', function() {
-    var template = CompilerContext.compile(
-      '{{#with dale}}{{tomdale ../need dad.joke}}{{/with}}',
-      { stringParams: true }
-    );
+    var string = '{{#with dale}}{{tomdale ../need dad.joke}}{{/with}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       tomdale: function(desire, noun, options) {
@@ -68,27 +61,23 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template(
-      {
-        dale: {},
+    var input = {
+      dale: {},
 
-        need: 'need-a'
-      },
-      { helpers: helpers }
-    );
+      need: 'need-a'
+    };
 
-    equals(
-      result,
-      'STOP ME FROM READING HACKER NEWS I need-a dad.joke',
-      'Proper context variable output'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(input)
+      .withMessage('Proper context variable output')
+      .toCompileTo('STOP ME FROM READING HACKER NEWS I need-a dad.joke');
   });
 
   it('information about the types is passed along', function() {
-    var template = CompilerContext.compile(
-      "{{tomdale 'need' dad.joke true false}}",
-      { stringParams: true }
-    );
+    var string = "{{tomdale 'need' dad.joke true false}}";
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       tomdale: function(desire, noun, trueBool, falseBool, options) {
@@ -111,15 +100,15 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-    equal(result, 'Helper called');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .toCompileTo('Helper called');
   });
 
   it('hash parameters get type information', function() {
-    var template = CompilerContext.compile(
-      "{{tomdale he.says desire='need' noun=dad.joke bool=true}}",
-      { stringParams: true }
-    );
+    var string = "{{tomdale he.says desire='need' noun=dad.joke bool=true}}";
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       tomdale: function(exclamation, options) {
@@ -136,15 +125,16 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-    equal(result, 'Helper called');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .toCompileTo('Helper called');
   });
 
   it('hash parameters get context information', function() {
-    var template = CompilerContext.compile(
-      "{{#with dale}}{{tomdale he.says desire='need' noun=../dad/joke bool=true}}{{/with}}",
-      { stringParams: true }
-    );
+    var string =
+      "{{#with dale}}{{tomdale he.says desire='need' noun=../dad/joke bool=true}}{{/with}}";
+    var compileOptions = { stringParams: true };
 
     var context = { dale: {} };
 
@@ -165,15 +155,17 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template(context, { helpers: helpers });
-    equal(result, 'Helper called');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(context)
+      .toCompileTo('Helper called');
   });
 
   it('when inside a block in String mode, .. passes the appropriate context in the options hash to a block helper', function() {
-    var template = CompilerContext.compile(
-      '{{#with dale}}{{#tomdale ../need dad.joke}}wot{{/tomdale}}{{/with}}',
-      { stringParams: true }
-    );
+    var string =
+      '{{#with dale}}{{#tomdale ../need dad.joke}}wot{{/tomdale}}{{/with}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       tomdale: function(desire, noun, options) {
@@ -192,27 +184,24 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template(
-      {
-        dale: {},
+    var input = {
+      dale: {},
 
-        need: 'need-a'
-      },
-      { helpers: helpers }
-    );
+      need: 'need-a'
+    };
 
-    equals(
-      result,
-      'STOP ME FROM READING HACKER NEWS I need-a dad.joke wot',
-      'Proper context variable output'
-    );
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .withInput(input)
+      .withMessage('Proper context variable output')
+      .toCompileTo('STOP ME FROM READING HACKER NEWS I need-a dad.joke wot');
   });
 
   it('with nested block ambiguous', function() {
-    var template = CompilerContext.compile(
-      '{{#with content}}{{#view}}{{firstName}} {{lastName}}{{/view}}{{/with}}',
-      { stringParams: true }
-    );
+    var string =
+      '{{#with content}}{{#view}}{{firstName}} {{lastName}}{{/view}}{{/with}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       with: function() {
@@ -223,14 +212,15 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-    equals(result, 'WITH');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .toCompileTo('WITH');
   });
 
   it('should handle DATA', function() {
-    var template = CompilerContext.compile('{{foo @bar}}', {
-      stringParams: true
-    });
+    var string = '{{foo @bar}}';
+    var compileOptions = { stringParams: true };
 
     var helpers = {
       foo: function(bar, options) {
@@ -240,7 +230,9 @@ describe('string params mode', function() {
       }
     };
 
-    var result = template({}, { helpers: helpers });
-    equal(result, 'Foo!');
+    expectTemplate(string)
+      .withCompileOptions(compileOptions)
+      .withHelpers(helpers)
+      .toCompileTo('Foo!');
   });
 });

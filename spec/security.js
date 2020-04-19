@@ -60,18 +60,10 @@ describe('security issues', function() {
 
     describe('without the option "allowExplicitCallOfHelperMissing"', function() {
       it('should throw an exception when calling  "{{helperMissing}}" ', function() {
-        shouldThrow(function() {
-          var template = Handlebars.compile('{{helperMissing}}');
-          template({});
-        }, Error);
+        expectTemplate('{{helperMissing}}').toThrow(Error);
       });
       it('should throw an exception when calling  "{{#helperMissing}}{{/helperMissing}}" ', function() {
-        shouldThrow(function() {
-          var template = Handlebars.compile(
-            '{{#helperMissing}}{{/helperMissing}}'
-          );
-          template({});
-        }, Error);
+        expectTemplate('{{#helperMissing}}{{/helperMissing}}').toThrow(Error);
       });
       it('should throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
         var functionCalls = [];
@@ -86,16 +78,14 @@ describe('security issues', function() {
         expect(functionCalls.length).to.equal(0);
       });
       it('should throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
-        shouldThrow(function() {
-          var template = Handlebars.compile(
-            '{{#blockHelperMissing .}}{{/blockHelperMissing}}'
-          );
-          template({
-            fn: function() {
-              return 'functionInData';
-            }
-          });
-        }, Error);
+        var input = {
+          fn: function() {
+            return 'functionInData';
+          }
+        };
+        expectTemplate('{{#blockHelperMissing .}}{{/blockHelperMissing}}')
+          .withInput(input)
+          .toThrow(Error);
       });
     });
 

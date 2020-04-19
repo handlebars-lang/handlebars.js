@@ -104,16 +104,12 @@ describe('Regressions', function() {
       { name: 'Jane Doe', location: { city: 'New York' } }
     ];
 
-    var template = CompilerContext.compile(
-      '{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}'
-    );
+    var string = '{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}{{#.}}{{name}}{{/.}}';
 
-    var result = template(context);
-    equals(
-      result,
-      'John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe',
-      'It should output multiple times'
-    );
+    expectTemplate(string)
+      .withInput(context)
+      .withMessage('It should output multiple times')
+      .toCompileTo('John DoeJane DoeJohn DoeJane DoeJohn DoeJane Doe');
   });
 
   it('GS-428: Nested if else rendering', function() {
@@ -154,12 +150,8 @@ describe('Regressions', function() {
   });
 
   it('GH-437: Matching escaping', function() {
-    shouldThrow(function() {
-      CompilerContext.compile('{{{a}}');
-    }, Error);
-    shouldThrow(function() {
-      CompilerContext.compile('{{a}}}');
-    }, Error);
+    expectTemplate('{{{a}}').toThrow(Error, /Parse error on/);
+    expectTemplate('{{a}}}').toThrow(Error, /Parse error on/);
   });
 
   it('GH-676: Using array in escaping mustache fails', function() {
@@ -216,12 +208,12 @@ describe('Regressions', function() {
       notData: [1]
     };
 
-    var template = CompilerContext.compile(
-      '{{#if dater}}{{#each data}}{{../name}}{{/each}}{{else}}{{#each notData}}{{../name}}{{/each}}{{/if}}'
-    );
+    var string =
+      '{{#if dater}}{{#each data}}{{../name}}{{/each}}{{else}}{{#each notData}}{{../name}}{{/each}}{{/if}}';
 
-    var result = template(context);
-    equals(result, 'foo');
+    expectTemplate(string)
+      .withInput(context)
+      .toCompileTo('foo');
   });
 
   it('GH-1021: Each empty string key', function() {
