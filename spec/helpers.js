@@ -12,11 +12,10 @@ describe('helpers', function() {
         );
       }
     };
-    shouldCompileTo(
-      string,
-      [hash, helpers],
-      '<a href="/root/goodbye">Goodbye</a>'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('<a href="/root/goodbye">Goodbye</a>');
   });
 
   it('helper for raw block gets raw content', function() {
@@ -27,12 +26,11 @@ describe('helpers', function() {
         return options.fn();
       }
     };
-    shouldCompileTo(
-      string,
-      [hash, helpers],
-      ' {{test}} ',
-      'raw block helper gets raw content'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .withMessage('raw block helper gets raw content')
+      .toCompileTo(' {{test}} ');
   });
 
   it('helper for raw block gets parameters', function() {
@@ -43,12 +41,11 @@ describe('helpers', function() {
         return options.fn() + a + b + c;
       }
     };
-    shouldCompileTo(
-      string,
-      [hash, helpers],
-      ' {{test}} 123',
-      'raw block helper gets raw content'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .withMessage('raw block helper gets raw content')
+      .toCompileTo(' {{test}} 123');
   });
 
   describe('raw block parsing (with identity helper-function)', function() {
@@ -58,7 +55,9 @@ describe('helpers', function() {
           return options.fn();
         }
       };
-      shouldCompileTo(template, [{}, helpers], expected);
+      expectTemplate(template)
+        .withHelpers(helpers)
+        .toCompileTo(expected);
     }
 
     it('helper for nested raw block gets raw content', function() {
@@ -109,11 +108,10 @@ describe('helpers', function() {
         return out;
       }
     };
-    shouldCompileTo(
-      string,
-      [hash, helpers],
-      'Goodbye Alan! goodbye Alan! GOODBYE Alan! '
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('Goodbye Alan! goodbye Alan! GOODBYE Alan! ');
   });
   it('helper block with complex lookup expression', function() {
     var string = '{{#goodbyes}}{{../name}}{{/goodbyes}}';
@@ -128,11 +126,10 @@ describe('helpers', function() {
         return out;
       }
     };
-    shouldCompileTo(
-      string,
-      [hash, helpers],
-      'Goodbye Alan! goodbye Alan! GOODBYE Alan! '
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('Goodbye Alan! goodbye Alan! GOODBYE Alan! ');
   });
 
   it('helper with complex lookup and nested template', function() {
@@ -155,12 +152,10 @@ describe('helpers', function() {
         );
       }
     };
-    shouldCompileToWithPartials(
-      string,
-      [hash, helpers],
-      false,
-      '<a href="/root/goodbye">Goodbye</a>'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('<a href="/root/goodbye">Goodbye</a>');
   });
 
   it('helper with complex lookup and nested template in VM+Compiler', function() {
@@ -183,20 +178,22 @@ describe('helpers', function() {
         );
       }
     };
-    shouldCompileToWithPartials(
-      string,
-      [hash, helpers],
-      true,
-      '<a href="/root/goodbye">Goodbye</a>'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('<a href="/root/goodbye">Goodbye</a>');
   });
   it('helper returning undefined value', function() {
-    shouldCompileTo(' {{nothere}}', [{}, { nothere: function() {} }], ' ');
-    shouldCompileTo(
-      ' {{#nothere}}{{/nothere}}',
-      [{}, { nothere: function() {} }],
-      ' '
-    );
+    expectTemplate(' {{nothere}}')
+      .withHelpers({
+        nothere: function() {}
+      })
+      .toCompileTo(' ');
+    expectTemplate(' {{#nothere}}{{/nothere}}')
+      .withHelpers({
+        nothere: function() {}
+      })
+      .toCompileTo(' ');
   });
 
   it('block helper', function() {
@@ -246,15 +243,16 @@ describe('helpers', function() {
       ]
     };
 
-    shouldCompileTo(
-      source,
-      [data, { link: link }],
-      '<ul><li><a href="/people/1">Alan</a></li><li><a href="/people/2">Yehuda</a></li></ul>'
-    );
+    expectTemplate(source)
+      .withInput(data)
+      .withHelpers({ link: link })
+      .toCompileTo(
+        '<ul><li><a href="/people/1">Alan</a></li><li><a href="/people/2">Yehuda</a></li></ul>'
+      );
   });
 
   it('block helper for undefined value', function() {
-    shouldCompileTo("{{#empty}}shouldn't render{{/empty}}", {}, '');
+    expectTemplate("{{#empty}}shouldn't render{{/empty}}").toCompileTo('');
   });
 
   it('block helper passing a new context', function() {
@@ -342,24 +340,21 @@ describe('helpers', function() {
 
     // the meaning here may be kind of hard to catch, but list.not is always called,
     // so we should see the output of both
-    shouldCompileTo(
-      string,
-      [hash, { list: list }],
-      '<ul><li>Alan</li><li>Yehuda</li></ul>',
-      'an inverse wrapper is passed in as a new context'
-    );
-    shouldCompileTo(
-      string,
-      [empty, { list: list }],
-      "<p><em>Nobody's here</em></p>",
-      'an inverse wrapper can be optionally called'
-    );
-    shouldCompileTo(
-      messageString,
-      [rootMessage, { list: list }],
-      '<p>Nobody&#x27;s here</p>',
-      'the context of an inverse is the parent of the block'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withHelpers({ list: list })
+      .withMessage('an inverse wrapper is passed in as a new context')
+      .toCompileTo('<ul><li>Alan</li><li>Yehuda</li></ul>');
+    expectTemplate(string)
+      .withInput(empty)
+      .withHelpers({ list: list })
+      .withMessage('an inverse wrapper can be optionally called')
+      .toCompileTo("<p><em>Nobody's here</em></p>");
+    expectTemplate(messageString)
+      .withInput(rootMessage)
+      .withHelpers({ list: list })
+      .withMessage('the context of an inverse is the parent of the block')
+      .toCompileTo('<p>Nobody&#x27;s here</p>');
   });
 
   it('pathed lambas with parameters', function() {
@@ -374,84 +369,70 @@ describe('helpers', function() {
         return 'fail';
       }
     };
-    shouldCompileTo('{{./helper 1}}', [hash, helpers], 'winning');
-    shouldCompileTo('{{hash/helper 1}}', [hash, helpers], 'winning');
+    expectTemplate('{{./helper 1}}')
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('winning');
+    expectTemplate('{{hash/helper 1}}')
+      .withInput(hash)
+      .withHelpers(helpers)
+      .toCompileTo('winning');
   });
 
   describe('helpers hash', function() {
     it('providing a helpers hash', function() {
-      shouldCompileTo(
-        'Goodbye {{cruel}} {{world}}!',
-        [
-          { cruel: 'cruel' },
-          {
-            world: function() {
-              return 'world';
-            }
+      expectTemplate('Goodbye {{cruel}} {{world}}!')
+        .withInput({ cruel: 'cruel' })
+        .withHelpers({
+          world: function() {
+            return 'world';
           }
-        ],
-        'Goodbye cruel world!',
-        'helpers hash is available'
-      );
+        })
+        .withMessage('helpers hash is available')
+        .toCompileTo('Goodbye cruel world!');
 
-      shouldCompileTo(
-        'Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!',
-        [
-          { iter: [{ cruel: 'cruel' }] },
-          {
-            world: function() {
-              return 'world';
-            }
+      expectTemplate('Goodbye {{#iter}}{{cruel}} {{world}}{{/iter}}!')
+        .withInput({ iter: [{ cruel: 'cruel' }] })
+        .withHelpers({
+          world: function() {
+            return 'world';
           }
-        ],
-        'Goodbye cruel world!',
-        'helpers hash is available inside other blocks'
-      );
+        })
+        .withMessage('helpers hash is available inside other blocks')
+        .toCompileTo('Goodbye cruel world!');
     });
 
     it('in cases of conflict, helpers win', function() {
-      shouldCompileTo(
-        '{{{lookup}}}',
-        [
-          { lookup: 'Explicit' },
-          {
-            lookup: function() {
-              return 'helpers';
-            }
+      expectTemplate('{{{lookup}}}')
+        .withInput({ lookup: 'Explicit' })
+        .withHelpers({
+          lookup: function() {
+            return 'helpers';
           }
-        ],
-        'helpers',
-        'helpers hash has precedence escaped expansion'
-      );
-      shouldCompileTo(
-        '{{lookup}}',
-        [
-          { lookup: 'Explicit' },
-          {
-            lookup: function() {
-              return 'helpers';
-            }
+        })
+        .withMessage('helpers hash has precedence escaped expansion')
+        .toCompileTo('helpers');
+      expectTemplate('{{lookup}}')
+        .withInput({ lookup: 'Explicit' })
+        .withHelpers({
+          lookup: function() {
+            return 'helpers';
           }
-        ],
-        'helpers',
-        'helpers hash has precedence simple expansion'
-      );
+        })
+        .withMessage('helpers hash has precedence simple expansion')
+        .toCompileTo('helpers');
     });
 
     it('the helpers hash is available is nested contexts', function() {
-      shouldCompileTo(
-        '{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}',
-        [
-          { outer: { inner: { unused: [] } } },
-          {
-            helper: function() {
-              return 'helper';
-            }
+      expectTemplate('{{#outer}}{{#inner}}{{helper}}{{/inner}}{{/outer}}')
+        .withInput({ outer: { inner: { unused: [] } } })
+        .withHelpers({
+          helper: function() {
+            return 'helper';
           }
-        ],
-        'helper',
-        'helpers hash is available in nested contexts.'
-      );
+        })
+        .withMessage('helpers hash is available in nested contexts.')
+        .toCompileTo('helper');
     });
 
     it('the helper hash should augment the global hash', function() {
@@ -459,18 +440,16 @@ describe('helpers', function() {
         return 'found it!';
       });
 
-      shouldCompileTo(
-        '{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}',
-        [
-          { cruel: 'cruel' },
-          {
-            world: function() {
-              return 'world!';
-            }
+      expectTemplate(
+        '{{test_helper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}'
+      )
+        .withInput({ cruel: 'cruel' })
+        .withHelpers({
+          world: function() {
+            return 'world!';
           }
-        ],
-        'found it! Goodbye cruel world!!'
-      );
+        })
+        .toCompileTo('found it! Goodbye cruel world!!');
     });
   });
 
@@ -499,11 +478,11 @@ describe('helpers', function() {
         }
       });
 
-      shouldCompileTo(
-        '{{testHelper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}',
-        [{ cruel: 'cruel' }],
-        'found it! Goodbye cruel world!!'
-      );
+      expectTemplate(
+        '{{testHelper}} {{#if cruel}}Goodbye {{cruel}} {{world}}!{{/if}}'
+      )
+        .withInput({ cruel: 'cruel' })
+        .toCompileTo('found it! Goodbye cruel world!!');
     });
     it('fails with multiple and args', function() {
       shouldThrow(
@@ -539,12 +518,10 @@ describe('helpers', function() {
         return 'Hello ' + times + ' ' + times2 + ' times';
       }
     };
-    shouldCompileTo(
-      string,
-      [{}, helpers],
-      'Message: Hello -1.2 1.2 times',
-      'template with a negative integer literal'
-    );
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .withMessage('template with a negative integer literal')
+      .toCompileTo('Message: Hello -1.2 1.2 times');
   });
 
   it('negative number literals work', function() {
@@ -557,12 +534,10 @@ describe('helpers', function() {
         return 'Hello ' + times + ' times';
       }
     };
-    shouldCompileTo(
-      string,
-      [{}, helpers],
-      'Message: Hello -12 times',
-      'template with a negative integer literal'
-    );
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .withMessage('template with a negative integer literal')
+      .toCompileTo('Message: Hello -12 times');
   });
 
   describe('String literal parameters', function() {
@@ -584,12 +559,10 @@ describe('helpers', function() {
           );
         }
       };
-      shouldCompileTo(
-        string,
-        [{}, helpers],
-        'Message: Hello world 12 times: true false',
-        'template with a simple String literal'
-      );
+      expectTemplate(string)
+        .withHelpers(helpers)
+        .withMessage('template with a simple String literal')
+        .toCompileTo('Message: Hello world 12 times: true false');
     });
 
     it('using a quote in the middle of a parameter raises an error', function() {
@@ -604,12 +577,10 @@ describe('helpers', function() {
           return 'Hello ' + param;
         }
       };
-      shouldCompileTo(
-        string,
-        [{}, helpers],
-        'Message: Hello "world"',
-        'template with an escaped String literal'
-      );
+      expectTemplate(string)
+        .withHelpers(helpers)
+        .withMessage('template with an escaped String literal')
+        .toCompileTo('Message: Hello "world"');
     });
 
     it("it works with ' marks", function() {
@@ -619,12 +590,10 @@ describe('helpers', function() {
           return 'Hello ' + param;
         }
       };
-      shouldCompileTo(
-        string,
-        [{}, helpers],
-        "Message: Hello Alan's world",
-        "template with a ' mark"
-      );
+      expectTemplate(string)
+        .withHelpers(helpers)
+        .withMessage("template with a ' mark")
+        .toCompileTo("Message: Hello Alan's world");
     });
   });
 
@@ -638,12 +607,10 @@ describe('helpers', function() {
         return 'Hello ' + times + ' times';
       }
     };
-    shouldCompileTo(
-      string,
-      [{}, helpers],
-      'Message: Hello -12 times',
-      'template with a negative integer literal'
-    );
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .withMessage('template with a negative integer literal')
+      .toCompileTo('Message: Hello -12 times');
   });
 
   describe('multiple parameters', function() {
@@ -655,12 +622,11 @@ describe('helpers', function() {
           return 'Goodbye ' + cruel + ' ' + world;
         }
       };
-      shouldCompileTo(
-        string,
-        [hash, helpers],
-        'Message: Goodbye cruel world',
-        'regular helpers with multiple params'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withHelpers(helpers)
+        .withMessage('regular helpers with multiple params')
+        .toCompileTo('Message: Goodbye cruel world');
     });
 
     it('block multi-params work', function() {
@@ -672,12 +638,11 @@ describe('helpers', function() {
           return options.fn({ greeting: 'Goodbye', adj: cruel, noun: world });
         }
       };
-      shouldCompileTo(
-        string,
-        [hash, helpers],
-        'Message: Goodbye cruel world',
-        'block helpers with multiple params'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withHelpers(helpers)
+        .withMessage('block helpers with multiple params')
+        .toCompileTo('Message: Goodbye cruel world');
     });
   });
 
@@ -826,7 +791,10 @@ describe('helpers', function() {
         }
       };
 
-      shouldCompileTo(string, [context, helpers], 'Hello <a>world</a>');
+      expectTemplate(string)
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('Hello <a>world</a>');
     });
 
     it('if a value is not found, custom helperMissing is used', function() {
@@ -841,7 +809,10 @@ describe('helpers', function() {
         }
       };
 
-      shouldCompileTo(string, [context, helpers], 'Hello <a>winning</a>');
+      expectTemplate(string)
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('Hello <a>winning</a>');
     });
   });
 
@@ -962,7 +933,9 @@ describe('helpers', function() {
           return true;
         }
       };
-      shouldCompileTo(string, data, 'yep');
+      expectTemplate(string)
+        .withInput(data)
+        .toCompileTo('yep');
     });
     it('lambdas resolved by blockHelperMissing are bound to the context', function() {
       var string = '{{#truthy}}yep{{/truthy}}';
@@ -974,7 +947,9 @@ describe('helpers', function() {
           return false;
         }
       };
-      shouldCompileTo(string, boundData, '');
+      expectTemplate(string)
+        .withInput(boundData)
+        .toCompileTo('');
     });
   });
 
@@ -993,31 +968,34 @@ describe('helpers', function() {
     };
 
     it('should include in ambiguous mustache calls', function() {
-      shouldCompileTo('{{helper}}', [context, helpers], 'ran: helper');
+      expectTemplate('{{helper}}')
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('ran: helper');
     });
     it('should include in helper mustache calls', function() {
-      shouldCompileTo('{{helper 1}}', [context, helpers], 'ran: helper');
+      expectTemplate('{{helper 1}}')
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('ran: helper');
     });
     it('should include in ambiguous block calls', function() {
-      shouldCompileTo(
-        '{{#helper}}{{/helper}}',
-        [context, helpers],
-        'ran: helper'
-      );
+      expectTemplate('{{#helper}}{{/helper}}')
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('ran: helper');
     });
     it('should include in simple block calls', function() {
-      shouldCompileTo(
-        '{{#./helper}}{{/./helper}}',
-        [context, helpers],
-        'missing: ./helper'
-      );
+      expectTemplate('{{#./helper}}{{/./helper}}')
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('missing: ./helper');
     });
     it('should include in helper block calls', function() {
-      shouldCompileTo(
-        '{{#helper 1}}{{/helper}}',
-        [context, helpers],
-        'ran: helper'
-      );
+      expectTemplate('{{#helper 1}}{{/helper}}')
+        .withInput(context)
+        .withHelpers(helpers)
+        .toCompileTo('ran: helper');
     });
     it('should include in known helper calls', function() {
       var string = '{{helper}}';
@@ -1033,19 +1011,17 @@ describe('helpers', function() {
     });
 
     it('should include full id', function() {
-      shouldCompileTo(
-        '{{#foo.helper}}{{/foo.helper}}',
-        [{ foo: {} }, helpers],
-        'missing: foo.helper'
-      );
+      expectTemplate('{{#foo.helper}}{{/foo.helper}}')
+        .withInput({ foo: {} })
+        .withHelpers(helpers)
+        .toCompileTo('missing: foo.helper');
     });
 
     it('should include full id if a hash is passed', function() {
-      shouldCompileTo(
-        '{{#foo.helper bar=baz}}{{/foo.helper}}',
-        [{ foo: {} }, helpers],
-        'helper missing: foo.helper'
-      );
+      expectTemplate('{{#foo.helper bar=baz}}{{/foo.helper}}')
+        .withInput({ foo: {} })
+        .withHelpers(helpers)
+        .toCompileTo('helper missing: foo.helper');
     });
   });
 
@@ -1160,11 +1136,10 @@ describe('helpers', function() {
           return options.fn({ value: 'bar' }, { blockParams: [1, 2] });
         }
       };
-      shouldCompileTo(
-        '{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}',
-        [hash, helpers],
-        '1foo'
-      );
+      expectTemplate('{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}')
+        .withInput(hash)
+        .withHelpers(helpers)
+        .toCompileTo('1foo');
     });
     it('should take presedence over helper values', function() {
       var hash = {};
@@ -1177,11 +1152,10 @@ describe('helpers', function() {
           return options.fn({}, { blockParams: [1, 2] });
         }
       };
-      shouldCompileTo(
-        '{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}',
-        [hash, helpers],
-        '1foo'
-      );
+      expectTemplate('{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}')
+        .withInput(hash)
+        .withHelpers(helpers)
+        .toCompileTo('1foo');
     });
     it('should not take presedence over pathed values', function() {
       var hash = { value: 'bar' };
@@ -1194,11 +1168,12 @@ describe('helpers', function() {
           return options.fn(this, { blockParams: [1, 2] });
         }
       };
-      shouldCompileTo(
-        '{{#goodbyes as |value|}}{{./value}}{{/goodbyes}}{{value}}',
-        [hash, helpers],
-        'barfoo'
-      );
+      expectTemplate(
+        '{{#goodbyes as |value|}}{{./value}}{{/goodbyes}}{{value}}'
+      )
+        .withInput(hash)
+        .withHelpers(helpers)
+        .toCompileTo('barfoo');
     });
     it('should take presednece over parent block params', function() {
       var hash = { value: 'foo' },
@@ -1214,11 +1189,12 @@ describe('helpers', function() {
           );
         }
       };
-      shouldCompileTo(
-        '{{#goodbyes as |value|}}{{#goodbyes}}{{value}}{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{/goodbyes}}{{/goodbyes}}{{value}}',
-        [hash, helpers],
-        '13foo'
-      );
+      expectTemplate(
+        '{{#goodbyes as |value|}}{{#goodbyes}}{{value}}{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{/goodbyes}}{{/goodbyes}}{{value}}'
+      )
+        .withInput(hash)
+        .withHelpers(helpers)
+        .toCompileTo('13foo');
     });
 
     it('should allow block params on chained helpers', function() {
@@ -1229,11 +1205,12 @@ describe('helpers', function() {
           return options.fn({ value: 'bar' }, { blockParams: [1, 2] });
         }
       };
-      shouldCompileTo(
-        '{{#if bar}}{{else goodbyes as |value|}}{{value}}{{/if}}{{value}}',
-        [hash, helpers],
-        '1foo'
-      );
+      expectTemplate(
+        '{{#if bar}}{{else goodbyes as |value|}}{{value}}{{/if}}{{value}}'
+      )
+        .withInput(hash)
+        .withHelpers(helpers)
+        .toCompileTo('1foo');
     });
   });
 

@@ -20,36 +20,18 @@ describe('security issues', function() {
     });
 
     it('should allow the "constructor" property to be accessed if it is an "ownProperty"', function() {
-      shouldCompileTo(
-        '{{constructor.name}}',
-        {
-          constructor: {
-            name: 'here we go'
-          }
-        },
-        'here we go'
-      );
-      shouldCompileTo(
-        '{{lookup (lookup this "constructor") "name"}}',
-        {
-          constructor: {
-            name: 'here we go'
-          }
-        },
-        'here we go'
-      );
+      expectTemplate('{{constructor.name}}')
+        .withInput({ constructor: { name: 'here we go' } })
+        .toCompileTo('here we go');
+      expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+        .withInput({ constructor: { name: 'here we go' } })
+        .toCompileTo('here we go');
     });
 
     it('should allow the "constructor" property to be accessed if it is an "own property"', function() {
-      shouldCompileTo(
-        '{{lookup (lookup this "constructor") "name"}}',
-        {
-          constructor: {
-            name: 'here we go'
-          }
-        },
-        'here we go'
-      );
+      expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+        .withInput({ constructor: { name: 'here we go' } })
+        .toCompileTo('here we go');
     });
   });
 

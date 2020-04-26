@@ -14,48 +14,42 @@ describe('Regressions', function() {
       ]
     };
     var string = '{{#books}}{{title}}{{author.name}}{{/books}}';
-    shouldCompileTo(
-      string,
-      data,
-      'The origin of speciesCharles DarwinLazarillo de Tormes',
-      'Renders without an undefined property error'
-    );
+    expectTemplate(string)
+      .withInput(data)
+      .withMessage('Renders without an undefined property error')
+      .toCompileTo('The origin of speciesCharles DarwinLazarillo de Tormes');
   });
 
   it("GH-150: Inverted sections print when they shouldn't", function() {
     var string = '{{^set}}not set{{/set}} :: {{#set}}set{{/set}}';
 
-    shouldCompileTo(
-      string,
-      {},
-      'not set :: ',
-      "inverted sections run when property isn't present in context"
-    );
-    shouldCompileTo(
-      string,
-      { set: undefined },
-      'not set :: ',
-      'inverted sections run when property is undefined'
-    );
-    shouldCompileTo(
-      string,
-      { set: false },
-      'not set :: ',
-      'inverted sections run when property is false'
-    );
-    shouldCompileTo(
-      string,
-      { set: true },
-      ' :: set',
-      "inverted sections don't run when property is true"
-    );
+    expectTemplate(string)
+      .withMessage(
+        "inverted sections run when property isn't present in context"
+      )
+      .toCompileTo('not set :: ');
+    expectTemplate(string)
+      .withInput({ set: undefined })
+      .withMessage('inverted sections run when property is undefined')
+      .toCompileTo('not set :: ');
+    expectTemplate(string)
+      .withInput({ set: false })
+      .withMessage('inverted sections run when property is false')
+      .toCompileTo('not set :: ');
+    expectTemplate(string)
+      .withInput({ set: true })
+      .withMessage("inverted sections don't run when property is true")
+      .toCompileTo(' :: set');
   });
 
   it('GH-158: Using array index twice, breaks the template', function() {
     var string = '{{arr.[0]}}, {{arr.[1]}}';
     var data = { arr: [1, 2] };
 
-    shouldCompileTo(string, data, '1, 2', 'it works as expected');
+    expectTemplate(string)
+      .withInput(data)
+      .withMessage('it works as expected')
+      .toCompileTo('1, 2');
   });
 
   it("bug reported by @fat where lambdas weren't being properly resolved", function() {
@@ -95,7 +89,9 @@ describe('Regressions', function() {
       '<li class=two>@dhg</li>\n' +
       '<li class=three>@sayrer</li>\n' +
       '</ul>.\n';
-    shouldCompileTo(string, data, output);
+    expectTemplate(string)
+      .withInput(data)
+      .toCompileTo(output);
   });
 
   it('GH-408: Multiple loops fail', function() {
@@ -127,23 +123,31 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileTo(succeedingTemplate, [{}, helpers], '   Expected  ');
-    shouldCompileTo(failingTemplate, [{}, helpers], '  Expected  ');
+    expectTemplate(succeedingTemplate)
+      .withHelpers(helpers)
+      .toCompileTo('   Expected  ');
+    expectTemplate(failingTemplate)
+      .withHelpers(helpers)
+      .toCompileTo('  Expected  ');
   });
 
   it('GH-458: Scoped this identifier', function() {
-    shouldCompileTo('{{./foo}}', { foo: 'bar' }, 'bar');
+    expectTemplate('{{./foo}}')
+      .withInput({ foo: 'bar' })
+      .toCompileTo('bar');
   });
 
   it('GH-375: Unicode line terminators', function() {
-    shouldCompileTo('\u2028', {}, '\u2028');
+    expectTemplate('\u2028').toCompileTo('\u2028');
   });
 
   it('GH-534: Object prototype aliases', function() {
     /* eslint-disable no-extend-native */
     Object.prototype[0xd834] = true;
 
-    shouldCompileTo('{{foo}}', { foo: 'bar' }, 'bar');
+    expectTemplate('{{foo}}')
+      .withInput({ foo: 'bar' })
+      .toCompileTo('bar');
 
     delete Object.prototype[0xd834];
     /* eslint-enable no-extend-native */
@@ -158,7 +162,10 @@ describe('Regressions', function() {
     var string = '{{arr}}';
     var data = { arr: [1, 2] };
 
-    shouldCompileTo(string, data, data.arr.toString(), 'it works as expected');
+    expectTemplate(string)
+      .withInput(data)
+      .withMessage('it works as expected')
+      .toCompileTo(data.arr.toString());
   });
 
   it('Mustache man page', function() {
@@ -171,24 +178,27 @@ describe('Regressions', function() {
       in_ca: true
     };
 
-    shouldCompileTo(
-      string,
-      data,
-      'Hello Chris. You have just won $10000! Well, $6000, after taxes.',
-      'the hello world mustache example works'
-    );
+    expectTemplate(string)
+      .withInput(data)
+      .withMessage('the hello world mustache example works')
+      .toCompileTo(
+        'Hello Chris. You have just won $10000! Well, $6000, after taxes.'
+      );
   });
 
   it('GH-731: zero context rendering', function() {
-    shouldCompileTo(
-      '{{#foo}} This is {{bar}} ~ {{/foo}}',
-      { foo: 0, bar: 'OK' },
-      ' This is  ~ '
-    );
+    expectTemplate('{{#foo}} This is {{bar}} ~ {{/foo}}')
+      .withInput({
+        foo: 0,
+        bar: 'OK'
+      })
+      .toCompileTo(' This is  ~ ');
   });
 
   it('GH-820: zero pathed rendering', function() {
-    shouldCompileTo('{{foo.bar}}', { foo: 0 }, '');
+    expectTemplate('{{foo.bar}}')
+      .withInput({ foo: 0 })
+      .toCompileTo('');
   });
 
   it('GH-837: undefined values for helpers', function() {
@@ -198,7 +208,9 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileTo('{{str bar.baz}}', [{}, helpers], 'undefined');
+    expectTemplate('{{str bar.baz}}')
+      .withHelpers(helpers)
+      .toCompileTo('undefined');
   });
 
   it('GH-926: Depths and de-dupe', function() {
@@ -223,11 +235,9 @@ describe('Regressions', function() {
       value: 10000
     };
 
-    shouldCompileTo(
-      '{{#each data}}Key: {{@key}}\n{{/each}}',
-      { data: data },
-      'Key: \nKey: name\nKey: value\n'
-    );
+    expectTemplate('{{#each data}}Key: {{@key}}\n{{/each}}')
+      .withInput({ data: data })
+      .toCompileTo('Key: \nKey: name\nKey: value\n');
   });
 
   it('GH-1054: Should handle simple safe string responses', function() {
@@ -241,23 +251,19 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileToWithPartials(
-      root,
-      [{}, helpers, partials],
-      true,
-      '<partial>'
-    );
+    expectTemplate(root)
+      .withHelpers(helpers)
+      .withPartials(partials)
+      .toCompileTo('<partial>');
   });
 
   it('GH-1065: Sparse arrays', function() {
     var array = [];
     array[1] = 'foo';
     array[3] = 'bar';
-    shouldCompileTo(
-      '{{#each array}}{{@index}}{{.}}{{/each}}',
-      { array: array },
-      '1foo3bar'
-    );
+    expectTemplate('{{#each array}}{{@index}}{{.}}{{/each}}')
+      .withInput({ array: array })
+      .toCompileTo('1foo3bar');
   });
 
   it('GH-1093: Undefined helper context', function() {
@@ -276,11 +282,10 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileTo(
-      '{{#each obj}}{{{helper}}}{{.}}{{/each}}',
-      [{ obj: obj }, helpers],
-      'notfoundbat'
-    );
+    expectTemplate('{{#each obj}}{{{helper}}}{{.}}{{/each}}')
+      .withInput({ obj: obj })
+      .withHelpers(helpers)
+      .toCompileTo('notfoundbat');
   });
 
   it('should support multiple levels of inline partials', function() {
@@ -291,12 +296,9 @@ describe('Regressions', function() {
       layout:
         '{{#> doctype}}{{#*inline "content"}}layout{{> subcontent}}{{/inline}}{{/doctype}}'
     };
-    shouldCompileToWithPartials(
-      string,
-      [{}, {}, partials],
-      true,
-      'doctypelayoutsubcontent'
-    );
+    expectTemplate(string)
+      .withPartials(partials)
+      .toCompileTo('doctypelayoutsubcontent');
   });
   it('GH-1089: should support failover content in multiple levels of inline partials', function() {
     var string = '{{#> layout}}{{/layout}}';
@@ -305,12 +307,9 @@ describe('Regressions', function() {
       layout:
         '{{#> doctype}}{{#*inline "content"}}layout{{#> subcontent}}subcontent{{/subcontent}}{{/inline}}{{/doctype}}'
     };
-    shouldCompileToWithPartials(
-      string,
-      [{}, {}, partials],
-      true,
-      'doctypelayoutsubcontent'
-    );
+    expectTemplate(string)
+      .withPartials(partials)
+      .toCompileTo('doctypelayoutsubcontent');
   });
   it('GH-1099: should support greater than 3 nested levels of inline partials', function() {
     var string = '{{#> layout}}Outer{{/layout}}';
@@ -318,7 +317,9 @@ describe('Regressions', function() {
       layout: '{{#> inner}}Inner{{/inner}}{{> @partial-block }}',
       inner: ''
     };
-    shouldCompileToWithPartials(string, [{}, {}, partials], true, 'Outer');
+    expectTemplate(string)
+      .withPartials(partials)
+      .toCompileTo('Outer');
   });
 
   it('GH-1135 : Context handling within each iteration', function() {
@@ -333,14 +334,15 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileTo(
+    expectTemplate(
       '{{#each array}}\n' +
         ' 1. IF: {{#if true}}{{../name}}-{{../../name}}-{{../../../name}}{{/if}}\n' +
         ' 2. MYIF: {{#myif true}}{{../name}}={{../../name}}={{../../../name}}{{/myif}}\n' +
-        '{{/each}}',
-      [obj, helpers],
-      ' 1. IF: John--\n' + ' 2. MYIF: John==\n'
-    );
+        '{{/each}}'
+    )
+      .withInput(obj)
+      .withHelpers(helpers)
+      .toCompileTo(' 1. IF: John--\n' + ' 2. MYIF: John==\n');
   });
 
   it('GH-1186: Support block params for existing programs', function() {
@@ -349,18 +351,25 @@ describe('Regressions', function() {
       '{{#>test }}{{#each listOne as |item|}}{{ item }}{{/each}}{{/test}}' +
       '{{#>test }}{{#each listTwo as |item|}}{{ item }}{{/each}}{{/test}}';
 
-    shouldCompileTo(string, { listOne: ['a'], listTwo: ['b'] }, 'ab', '');
+    expectTemplate(string)
+      .withInput({
+        listOne: ['a'],
+        listTwo: ['b']
+      })
+      .withMessage('')
+      .toCompileTo('ab');
   });
 
   it('GH-1319: "unless" breaks when "each" value equals "null"', function() {
     var string =
       '{{#each list}}{{#unless ./prop}}parent={{../value}} {{/unless}}{{/each}}';
-    shouldCompileTo(
-      string,
-      { value: 'parent', list: [null, 'a'] },
-      'parent=parent parent=parent ',
-      ''
-    );
+    expectTemplate(string)
+      .withInput({
+        value: 'parent',
+        list: [null, 'a']
+      })
+      .withMessage('')
+      .toCompileTo('parent=parent parent=parent ');
   });
 
   it('GH-1341: 4.0.7 release breaks {{#if @partial-block}} usage', function() {
@@ -370,12 +379,9 @@ describe('Regressions', function() {
         '{{#if @partial-block}} block {{> @partial-block}} block {{/if}}',
       partial: '{{#> partialWithBlock}} partial {{/partialWithBlock}}'
     };
-    shouldCompileToWithPartials(
-      string,
-      [{}, {}, partials],
-      true,
-      'template  block  partial  block  template'
-    );
+    expectTemplate(string)
+      .withPartials(partials)
+      .toCompileTo('template  block  partial  block  template');
   });
 
   describe('GH-1561: 4.3.x should still work with precompiled templates from 4.0.0 <= x < 4.3.0', function() {
@@ -481,7 +487,10 @@ describe('Regressions', function() {
       }
     };
 
-    shouldCompileTo('{{helpa length="foo"}}', [obj, helpers], 'foo');
+    expectTemplate('{{helpa length="foo"}}')
+      .withInput(obj)
+      .withHelpers(helpers)
+      .toCompileTo('foo');
   });
 
   describe('GH-1598: Performance degradation for partials since v4.3.0', function() {

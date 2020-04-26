@@ -15,11 +15,9 @@ describe('utils', function() {
     it('it should not escape SafeString properties', function() {
       var name = new Handlebars.SafeString('<em>Sean O&#x27;Malley</em>');
 
-      shouldCompileTo(
-        '{{name}}',
-        [{ name: name }],
-        '<em>Sean O&#x27;Malley</em>'
-      );
+      expectTemplate('{{name}}')
+        .withInput({ name: name })
+        .toCompileTo('<em>Sean O&#x27;Malley</em>');
     });
   });
 

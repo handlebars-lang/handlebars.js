@@ -2,148 +2,165 @@ describe('builtin helpers', function() {
   describe('#if', function() {
     it('if', function() {
       var string = '{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!';
-      shouldCompileTo(
-        string,
-        { goodbye: true, world: 'world' },
-        'GOODBYE cruel world!',
-        'if with boolean argument shows the contents when true'
-      );
-      shouldCompileTo(
-        string,
-        { goodbye: 'dummy', world: 'world' },
-        'GOODBYE cruel world!',
-        'if with string argument shows the contents'
-      );
-      shouldCompileTo(
-        string,
-        { goodbye: false, world: 'world' },
-        'cruel world!',
-        'if with boolean argument does not show the contents when false'
-      );
-      shouldCompileTo(
-        string,
-        { world: 'world' },
-        'cruel world!',
-        'if with undefined does not show the contents'
-      );
-      shouldCompileTo(
-        string,
-        { goodbye: ['foo'], world: 'world' },
-        'GOODBYE cruel world!',
-        'if with non-empty array shows the contents'
-      );
-      shouldCompileTo(
-        string,
-        { goodbye: [], world: 'world' },
-        'cruel world!',
-        'if with empty array does not show the contents'
-      );
-      shouldCompileTo(
-        string,
-        { goodbye: 0, world: 'world' },
-        'cruel world!',
-        'if with zero does not show the contents'
-      );
-      shouldCompileTo(
-        '{{#if goodbye includeZero=true}}GOODBYE {{/if}}cruel {{world}}!',
-        { goodbye: 0, world: 'world' },
-        'GOODBYE cruel world!',
-        'if with zero does not show the contents'
-      );
+      expectTemplate(string)
+        .withInput({
+          goodbye: true,
+          world: 'world'
+        })
+        .withMessage('if with boolean argument shows the contents when true')
+        .toCompileTo('GOODBYE cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbye: 'dummy',
+          world: 'world'
+        })
+        .withMessage('if with string argument shows the contents')
+        .toCompileTo('GOODBYE cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbye: false,
+          world: 'world'
+        })
+        .withMessage(
+          'if with boolean argument does not show the contents when false'
+        )
+        .toCompileTo('cruel world!');
+      expectTemplate(string)
+        .withInput({ world: 'world' })
+        .withMessage('if with undefined does not show the contents')
+        .toCompileTo('cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbye: ['foo'],
+          world: 'world'
+        })
+        .withMessage('if with non-empty array shows the contents')
+        .toCompileTo('GOODBYE cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbye: [],
+          world: 'world'
+        })
+        .withMessage('if with empty array does not show the contents')
+        .toCompileTo('cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbye: 0,
+          world: 'world'
+        })
+        .withMessage('if with zero does not show the contents')
+        .toCompileTo('cruel world!');
+      expectTemplate(
+        '{{#if goodbye includeZero=true}}GOODBYE {{/if}}cruel {{world}}!'
+      )
+        .withInput({
+          goodbye: 0,
+          world: 'world'
+        })
+        .withMessage('if with zero does not show the contents')
+        .toCompileTo('GOODBYE cruel world!');
     });
 
     it('if with function argument', function() {
       var string = '{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!';
-      shouldCompileTo(
-        string,
-        {
+      expectTemplate(string)
+        .withInput({
           goodbye: function() {
             return true;
           },
           world: 'world'
-        },
-        'GOODBYE cruel world!',
-        'if with function shows the contents when function returns true'
-      );
-      shouldCompileTo(
-        string,
-        {
+        })
+        .withMessage(
+          'if with function shows the contents when function returns true'
+        )
+        .toCompileTo('GOODBYE cruel world!');
+      expectTemplate(string)
+        .withInput({
           goodbye: function() {
             return this.world;
           },
           world: 'world'
-        },
-        'GOODBYE cruel world!',
-        'if with function shows the contents when function returns string'
-      );
-      shouldCompileTo(
-        string,
-        {
+        })
+        .withMessage(
+          'if with function shows the contents when function returns string'
+        )
+        .toCompileTo('GOODBYE cruel world!');
+      expectTemplate(string)
+        .withInput({
           goodbye: function() {
             return false;
           },
           world: 'world'
-        },
-        'cruel world!',
-        'if with function does not show the contents when returns false'
-      );
-      shouldCompileTo(
-        string,
-        {
+        })
+        .withMessage(
+          'if with function does not show the contents when returns false'
+        )
+        .toCompileTo('cruel world!');
+      expectTemplate(string)
+        .withInput({
           goodbye: function() {
             return this.foo;
           },
           world: 'world'
-        },
-        'cruel world!',
-        'if with function does not show the contents when returns undefined'
-      );
+        })
+        .withMessage(
+          'if with function does not show the contents when returns undefined'
+        )
+        .toCompileTo('cruel world!');
     });
 
     it('should not change the depth list', function() {
       var string =
         '{{#with foo}}{{#if goodbye}}GOODBYE cruel {{../world}}!{{/if}}{{/with}}';
-      shouldCompileTo(
-        string,
-        { foo: { goodbye: true }, world: 'world' },
-        'GOODBYE cruel world!'
-      );
+      expectTemplate(string)
+        .withInput({
+          foo: { goodbye: true },
+          world: 'world'
+        })
+        .toCompileTo('GOODBYE cruel world!');
     });
   });
 
   describe('#with', function() {
     it('with', function() {
       var string = '{{#with person}}{{first}} {{last}}{{/with}}';
-      shouldCompileTo(
-        string,
-        { person: { first: 'Alan', last: 'Johnson' } },
-        'Alan Johnson'
-      );
+      expectTemplate(string)
+        .withInput({
+          person: {
+            first: 'Alan',
+            last: 'Johnson'
+          }
+        })
+        .toCompileTo('Alan Johnson');
     });
     it('with with function argument', function() {
       var string = '{{#with person}}{{first}} {{last}}{{/with}}';
-      shouldCompileTo(
-        string,
-        {
+      expectTemplate(string)
+        .withInput({
           person: function() {
-            return { first: 'Alan', last: 'Johnson' };
+            return {
+              first: 'Alan',
+              last: 'Johnson'
+            };
           }
-        },
-        'Alan Johnson'
-      );
+        })
+        .toCompileTo('Alan Johnson');
     });
     it('with with else', function() {
       var string =
         '{{#with person}}Person is present{{else}}Person is not present{{/with}}';
-      shouldCompileTo(string, {}, 'Person is not present');
+      expectTemplate(string).toCompileTo('Person is not present');
     });
     it('with provides block parameter', function() {
       var string = '{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}';
-      shouldCompileTo(
-        string,
-        { person: { first: 'Alan', last: 'Johnson' } },
-        'Alan Johnson'
-      );
+      expectTemplate(string)
+        .withInput({
+          person: {
+            first: 'Alan',
+            last: 'Johnson'
+          }
+        })
+        .toCompileTo('Alan Johnson');
     });
     it('works when data is disabled', function() {
       expectTemplate('{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}')
@@ -170,18 +187,19 @@ describe('builtin helpers', function() {
         ],
         world: 'world'
       };
-      shouldCompileTo(
-        string,
-        hash,
-        'goodbye! Goodbye! GOODBYE! cruel world!',
-        'each with array argument iterates over the contents when not empty'
-      );
-      shouldCompileTo(
-        string,
-        { goodbyes: [], world: 'world' },
-        'cruel world!',
-        'each with array argument ignores the contents when empty'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage(
+          'each with array argument iterates over the contents when not empty'
+        )
+        .toCompileTo('goodbye! Goodbye! GOODBYE! cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbyes: [],
+          world: 'world'
+        })
+        .withMessage('each with array argument ignores the contents when empty')
+        .toCompileTo('cruel world!');
     });
 
     it('each without data', function() {
@@ -194,23 +212,25 @@ describe('builtin helpers', function() {
         ],
         world: 'world'
       };
-      shouldCompileTo(
-        string,
-        [hash, , , , false],
-        'goodbye! Goodbye! GOODBYE! cruel world!'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withRuntimeOptions({ data: false })
+        .withCompileOptions({ data: false })
+        .toCompileTo('goodbye! Goodbye! GOODBYE! cruel world!');
 
       hash = { goodbyes: 'cruel', world: 'world' };
-      shouldCompileTo(
-        '{{#each .}}{{.}}{{/each}}',
-        [hash, , , , false],
-        'cruelworld'
-      );
+      expectTemplate('{{#each .}}{{.}}{{/each}}')
+        .withInput(hash)
+        .withRuntimeOptions({ data: false })
+        .withCompileOptions({ data: false })
+        .toCompileTo('cruelworld');
     });
 
     it('each without context', function() {
       var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
-      shouldCompileTo(string, [, , , ,], 'cruel !');
+      expectTemplate(string)
+        .withInput(undefined)
+        .toCompileTo('cruel !');
     });
 
     it('each with an object and @key', function() {
@@ -238,7 +258,12 @@ describe('builtin helpers', function() {
         true,
         'each with object argument iterates over the contents when not empty'
       );
-      shouldCompileTo(string, { goodbyes: {}, world: 'world' }, 'cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbyes: {},
+          world: 'world'
+        })
+        .toCompileTo('cruel world!');
     });
 
     it('each with @index', function() {
@@ -428,18 +453,21 @@ describe('builtin helpers', function() {
         },
         world: 'world'
       };
-      shouldCompileTo(
-        string,
-        hash,
-        'goodbye! Goodbye! GOODBYE! cruel world!',
-        'each with array function argument iterates over the contents when not empty'
-      );
-      shouldCompileTo(
-        string,
-        { goodbyes: [], world: 'world' },
-        'cruel world!',
-        'each with array function argument ignores the contents when empty'
-      );
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage(
+          'each with array function argument iterates over the contents when not empty'
+        )
+        .toCompileTo('goodbye! Goodbye! GOODBYE! cruel world!');
+      expectTemplate(string)
+        .withInput({
+          goodbyes: [],
+          world: 'world'
+        })
+        .withMessage(
+          'each with array function argument ignores the contents when empty'
+        )
+        .toCompileTo('cruel world!');
     });
 
     it('each object when last key is an empty string', function() {
@@ -511,18 +539,21 @@ describe('builtin helpers', function() {
         ]);
         var goodbyesEmpty = new Iterable([]);
         var hash = { goodbyes: goodbyes, world: 'world' };
-        shouldCompileTo(
-          string,
-          hash,
-          'goodbye! Goodbye! GOODBYE! cruel world!',
-          'each with array argument iterates over the contents when not empty'
-        );
-        shouldCompileTo(
-          string,
-          { goodbyes: goodbyesEmpty, world: 'world' },
-          'cruel world!',
-          'each with array argument ignores the contents when empty'
-        );
+        expectTemplate(string)
+          .withInput(hash)
+          .withMessage(
+            'each with array argument iterates over the contents when not empty'
+          )
+          .toCompileTo('goodbye! Goodbye! GOODBYE! cruel world!');
+        expectTemplate(string)
+          .withInput({
+            goodbyes: goodbyesEmpty,
+            world: 'world'
+          })
+          .withMessage(
+            'each with array argument ignores the contents when empty'
+          )
+          .toCompileTo('cruel world!');
       });
     }
   });
@@ -555,7 +586,10 @@ describe('builtin helpers', function() {
         logArg = arg;
       };
 
-      shouldCompileTo(string, hash, '', 'log should not display');
+      expectTemplate(string)
+        .withInput(hash)
+        .withMessage('log should not display')
+        .toCompileTo('');
       equals(1, levelArg, 'should call log with 1');
       equals('whee', logArg, "should call log with 'whee'");
     });
@@ -569,7 +603,11 @@ describe('builtin helpers', function() {
         logArg = arg;
       };
 
-      shouldCompileTo(string, [hash, , , , { level: '03' }], '');
+      expectTemplate(string)
+        .withInput(hash)
+        .withRuntimeOptions({ data: { level: '03' } })
+        .withCompileOptions({ data: true })
+        .toCompileTo('');
       equals('03', levelArg);
       equals('whee', logArg);
     });
@@ -591,7 +629,9 @@ describe('builtin helpers', function() {
         console.log = $log;
       };
 
-      shouldCompileTo(string, hash, '');
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('');
       equals(true, called);
     });
     it('should log at data level', function() {
@@ -605,7 +645,11 @@ describe('builtin helpers', function() {
         console.error = $error;
       };
 
-      shouldCompileTo(string, [hash, , , , { level: '03' }], '');
+      expectTemplate(string)
+        .withInput(hash)
+        .withRuntimeOptions({ data: { level: '03' } })
+        .withCompileOptions({ data: true })
+        .toCompileTo('');
       equals(true, called);
     });
     it('should handle missing logger', function() {
@@ -620,7 +664,11 @@ describe('builtin helpers', function() {
         console.log = $log;
       };
 
-      shouldCompileTo(string, [hash, , , , { level: '03' }], '');
+      expectTemplate(string)
+        .withInput(hash)
+        .withRuntimeOptions({ data: { level: '03' } })
+        .withCompileOptions({ data: true })
+        .toCompileTo('');
       equals(true, called);
     });
 
@@ -634,12 +682,20 @@ describe('builtin helpers', function() {
         called = true;
       };
 
-      shouldCompileTo(string, [hash, , , , { level: 'error' }], '');
+      expectTemplate(string)
+        .withInput(hash)
+        .withRuntimeOptions({ data: { level: 'error' } })
+        .withCompileOptions({ data: true })
+        .toCompileTo('');
       equals(true, called);
 
       called = false;
 
-      shouldCompileTo(string, [hash, , , , { level: 'ERROR' }], '');
+      expectTemplate(string)
+        .withInput(hash)
+        .withRuntimeOptions({ data: { level: 'ERROR' } })
+        .withCompileOptions({ data: true })
+        .toCompileTo('');
       equals(true, called);
     });
     it('should handle hash log levels', function() {
@@ -652,7 +708,9 @@ describe('builtin helpers', function() {
         called = true;
       };
 
-      shouldCompileTo(string, hash, '');
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('');
       equals(true, called);
     });
     it('should handle hash log levels', function() {
@@ -665,7 +723,9 @@ describe('builtin helpers', function() {
         console.info = console.log = console.error = console.debug = $log;
       };
 
-      shouldCompileTo(string, hash, '');
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('');
       equals(false, called);
     });
     it('should pass multiple log arguments', function() {
@@ -681,7 +741,9 @@ describe('builtin helpers', function() {
         console.log = $log;
       };
 
-      shouldCompileTo(string, hash, '');
+      expectTemplate(string)
+        .withInput(hash)
+        .toCompileTo('');
       equals(true, called);
     });
 

@@ -10,7 +10,10 @@ describe('subexpressions', function() {
         return 'LOL';
       }
     };
-    shouldCompileTo(string, [context, helpers], 'LOLLOL!');
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('LOLLOL!');
   });
 
   it('helper w args', function() {
@@ -25,7 +28,10 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    shouldCompileTo(string, [context, helpers], 'val is true');
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('val is true');
   });
 
   it('mixed paths and helpers', function() {
@@ -40,7 +46,10 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    shouldCompileTo(string, [context, helpers], 'val is foo!, true and bar!');
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('val is foo!, true and bar!');
   });
 
   it('supports much nesting', function() {
@@ -55,7 +64,10 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    shouldCompileTo(string, [context, helpers], 'val is true');
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('val is true');
   });
 
   it('GH-800 : Complex subexpressions', function() {
@@ -69,15 +81,26 @@ describe('subexpressions', function() {
       }
     };
 
-    shouldCompileTo(
-      "{{dash 'abc' (concat a b)}}",
-      [context, helpers],
-      'abc-ab'
-    );
-    shouldCompileTo('{{dash d (concat a b)}}', [context, helpers], 'd-ab');
-    shouldCompileTo('{{dash c.c (concat a b)}}', [context, helpers], 'c-ab');
-    shouldCompileTo('{{dash (concat a b) c.c}}', [context, helpers], 'ab-c');
-    shouldCompileTo('{{dash (concat a e.e) c.c}}', [context, helpers], 'ae-c');
+    expectTemplate("{{dash 'abc' (concat a b)}}")
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('abc-ab');
+    expectTemplate('{{dash d (concat a b)}}')
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('d-ab');
+    expectTemplate('{{dash c.c (concat a b)}}')
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('c-ab');
+    expectTemplate('{{dash (concat a b) c.c}}')
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('ab-c');
+    expectTemplate('{{dash (concat a e.e) c.c}}')
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('ae-c');
   });
 
   it('provides each nested helper invocation its own options hash', function() {
@@ -93,7 +116,9 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    shouldCompileTo(string, [{}, helpers], 'true');
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .toCompileTo('true');
   });
 
   it('with hashes', function() {
@@ -108,7 +133,10 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    shouldCompileTo(string, [context, helpers], 'val is true');
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('val is true');
   });
 
   it('as hashes', function() {
@@ -122,7 +150,9 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    shouldCompileTo(string, [{}, helpers], 'val is true');
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .toCompileTo('val is true');
   });
 
   it('multiple subexpressions in a hash', function() {
@@ -146,11 +176,9 @@ describe('subexpressions', function() {
         return new Handlebars.SafeString(defaultString);
       }
     };
-    shouldCompileTo(
-      string,
-      [{}, helpers],
-      '<input aria-label="Name" placeholder="Example User" />'
-    );
+    expectTemplate(string)
+      .withHelpers(helpers)
+      .toCompileTo('<input aria-label="Name" placeholder="Example User" />');
   });
 
   it('multiple subexpressions in a hash with context', function() {
@@ -181,11 +209,10 @@ describe('subexpressions', function() {
         return new Handlebars.SafeString(defaultString);
       }
     };
-    shouldCompileTo(
-      string,
-      [context, helpers],
-      '<input aria-label="Name" placeholder="Example User" />'
-    );
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('<input aria-label="Name" placeholder="Example User" />');
   });
 
   it('in string params mode,', function() {
@@ -272,7 +299,10 @@ describe('subexpressions', function() {
         return val + val;
       }
     };
-    shouldCompileTo(string, [context, helpers], 'LOLLOL!');
+    expectTemplate(string)
+      .withInput(context)
+      .withHelpers(helpers)
+      .toCompileTo('LOLLOL!');
   });
 
   it("subexpressions can't just be property lookups", function() {
