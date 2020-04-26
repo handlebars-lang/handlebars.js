@@ -368,15 +368,14 @@ describe('partials', function() {
 
   it('throw on missing partial', function() {
     var compile = handlebarsEnv.compile;
+    var compileWithPartial = CompilerContext.compileWithPartial;
     handlebarsEnv.compile = undefined;
-    shouldThrow(
-      function() {
-        shouldCompileTo('{{> dude}}', [{}, {}, { dude: 'fail' }], '');
-      },
-      Error,
-      /The partial dude could not be compiled/
-    );
+    CompilerContext.compileWithPartial = CompilerContext.compile;
+    expectTemplate('{{> dude}}')
+      .withPartials({ dude: 'fail' })
+      .toThrow(Error, /The partial dude could not be compiled/);
     handlebarsEnv.compile = compile;
+    CompilerContext.compileWithPartial = compileWithPartial;
   });
 
   describe('partial blocks', function() {
