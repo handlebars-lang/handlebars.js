@@ -40,22 +40,12 @@ describe('spec', function() {
         /* eslint-enable no-eval */
       }
       it(name + ' - ' + test.name, function() {
-        if (test.partials) {
-          shouldCompileToWithPartials(
-            test.template,
-            [data, {}, test.partials, true],
-            true,
-            test.expected,
-            test.desc + ' "' + test.template + '"'
-          );
-        } else {
-          shouldCompileTo(
-            test.template,
-            [data, {}, {}, true],
-            test.expected,
-            test.desc + ' "' + test.template + '"'
-          );
-        }
+        expectTemplate(test.template)
+          .withInput(data)
+          .withPartials(test.partials || {})
+          .withCompileOptions({ compat: true })
+          .withMessage(test.desc + ' "' + test.template + '"')
+          .toCompileTo(test.expected);
       });
     });
   });
