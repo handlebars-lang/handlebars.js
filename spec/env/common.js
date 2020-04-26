@@ -129,6 +129,7 @@ function HandlebarsTestBench(templateAsString) {
   this.templateAsString = templateAsString;
   this.helpers = {};
   this.partials = {};
+  this.decorators = {};
   this.input = {};
   this.message =
     'Template' + templateAsString + ' does not evaluate to expected output';
@@ -163,6 +164,22 @@ HandlebarsTestBench.prototype.withPartials = function(partials) {
   var self = this;
   Object.keys(partials).forEach(function(name) {
     self.withPartial(name, partials[name]);
+  });
+  return this;
+};
+
+HandlebarsTestBench.prototype.withDecorator = function(
+  name,
+  decoratorFunction
+) {
+  this.decorators[name] = decoratorFunction;
+  return this;
+};
+
+HandlebarsTestBench.prototype.withDecorators = function(decorators) {
+  var self = this;
+  Object.keys(decorators).forEach(function(name) {
+    self.withDecorator(name, decorators[name]);
   });
   return this;
 };
@@ -217,5 +234,6 @@ HandlebarsTestBench.prototype._combineRuntimeOptions = function() {
   });
   combinedRuntimeOptions.helpers = this.helpers;
   combinedRuntimeOptions.partials = this.partials;
+  combinedRuntimeOptions.decorators = this.decorators;
   return combinedRuntimeOptions;
 };
