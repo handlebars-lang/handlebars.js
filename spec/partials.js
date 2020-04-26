@@ -288,13 +288,11 @@ describe('partials', function() {
 
     var string = 'Dudes: {{> shared/dude}} {{> globalTest}}';
     var hash = { name: 'Jeepers', anotherDude: 'Creepers' };
-    shouldCompileToWithPartials(
-      string,
-      [hash],
-      true,
-      'Dudes: Jeepers Creepers',
-      'Partials can use globals or passed'
-    );
+    expectTemplate(string)
+      .withInput(hash)
+      .withPartial('notused', 'notused') // trick the test bench into running with partials enabled
+      .withMessage('Partials can use globals or passed')
+      .toCompileTo('Dudes: Jeepers Creepers');
   });
 
   it('Partials with integer path', function() {
