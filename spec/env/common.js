@@ -183,19 +183,18 @@ HandlebarsTestBench.prototype.withMessage = function(message) {
 };
 
 HandlebarsTestBench.prototype.toCompileTo = function(expectedOutputAsString) {
-  expect(this._compileAndExecute()).to.equal(expectedOutputAsString);
+  expect(this._compileAndExecute()).to.equal(
+    expectedOutputAsString,
+    this.message
+  );
 };
 
 // see chai "to.throw" (https://www.chaijs.com/api/bdd/#method_throw)
-HandlebarsTestBench.prototype.toThrow = function(
-  errorLike,
-  errMsgMatcher,
-  msg
-) {
+HandlebarsTestBench.prototype.toThrow = function(errorLike, errMsgMatcher) {
   var self = this;
   expect(function() {
     self._compileAndExecute();
-  }).to.throw(errorLike, errMsgMatcher, msg);
+  }).to.throw(errorLike, errMsgMatcher, this.message);
 };
 
 HandlebarsTestBench.prototype._compileAndExecute = function() {
