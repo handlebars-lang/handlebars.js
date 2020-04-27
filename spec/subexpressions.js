@@ -1,72 +1,56 @@
 describe('subexpressions', function() {
   it('arg-less helper', function() {
-    var string = '{{foo (bar)}}!';
-    var context = {};
-    var helpers = {
-      foo: function(val) {
-        return val + val;
-      },
-      bar: function() {
-        return 'LOL';
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate('{{foo (bar)}}!')
+      .withHelpers({
+        foo: function(val) {
+          return val + val;
+        },
+        bar: function() {
+          return 'LOL';
+        }
+      })
       .toCompileTo('LOLLOL!');
   });
 
   it('helper w args', function() {
-    var string = '{{blog (equal a b)}}';
-
-    var context = { bar: 'LOL' };
-    var helpers = {
-      blog: function(val) {
-        return 'val is ' + val;
-      },
-      equal: function(x, y) {
-        return x === y;
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate('{{blog (equal a b)}}')
+      .withInput({ bar: 'LOL' })
+      .withHelpers({
+        blog: function(val) {
+          return 'val is ' + val;
+        },
+        equal: function(x, y) {
+          return x === y;
+        }
+      })
       .toCompileTo('val is true');
   });
 
   it('mixed paths and helpers', function() {
-    var string = '{{blog baz.bat (equal a b) baz.bar}}';
-
-    var context = { bar: 'LOL', baz: { bat: 'foo!', bar: 'bar!' } };
-    var helpers = {
-      blog: function(val, that, theOther) {
-        return 'val is ' + val + ', ' + that + ' and ' + theOther;
-      },
-      equal: function(x, y) {
-        return x === y;
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate('{{blog baz.bat (equal a b) baz.bar}}')
+      .withInput({ bar: 'LOL', baz: { bat: 'foo!', bar: 'bar!' } })
+      .withHelpers({
+        blog: function(val, that, theOther) {
+          return 'val is ' + val + ', ' + that + ' and ' + theOther;
+        },
+        equal: function(x, y) {
+          return x === y;
+        }
+      })
       .toCompileTo('val is foo!, true and bar!');
   });
 
   it('supports much nesting', function() {
-    var string = '{{blog (equal (equal true true) true)}}';
-
-    var context = { bar: 'LOL' };
-    var helpers = {
-      blog: function(val) {
-        return 'val is ' + val;
-      },
-      equal: function(x, y) {
-        return x === y;
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate('{{blog (equal (equal true true) true)}}')
+      .withInput({ bar: 'LOL' })
+      .withHelpers({
+        blog: function(val) {
+          return 'val is ' + val;
+        },
+        equal: function(x, y) {
+          return x === y;
+        }
+      })
       .toCompileTo('val is true');
   });
 
@@ -85,18 +69,22 @@ describe('subexpressions', function() {
       .withInput(context)
       .withHelpers(helpers)
       .toCompileTo('abc-ab');
+
     expectTemplate('{{dash d (concat a b)}}')
       .withInput(context)
       .withHelpers(helpers)
       .toCompileTo('d-ab');
+
     expectTemplate('{{dash c.c (concat a b)}}')
       .withInput(context)
       .withHelpers(helpers)
       .toCompileTo('c-ab');
+
     expectTemplate('{{dash (concat a b) c.c}}')
       .withInput(context)
       .withHelpers(helpers)
       .toCompileTo('ab-c');
+
     expectTemplate('{{dash (concat a e.e) c.c}}')
       .withInput(context)
       .withHelpers(helpers)
@@ -104,8 +92,6 @@ describe('subexpressions', function() {
   });
 
   it('provides each nested helper invocation its own options hash', function() {
-    var string = '{{equal (equal true true) true}}';
-
     var lastOptions = null;
     var helpers = {
       equal: function(x, y, options) {
@@ -116,208 +102,177 @@ describe('subexpressions', function() {
         return x === y;
       }
     };
-    expectTemplate(string)
+    expectTemplate('{{equal (equal true true) true}}')
       .withHelpers(helpers)
       .toCompileTo('true');
   });
 
   it('with hashes', function() {
-    var string = "{{blog (equal (equal true true) true fun='yes')}}";
-
-    var context = { bar: 'LOL' };
-    var helpers = {
-      blog: function(val) {
-        return 'val is ' + val;
-      },
-      equal: function(x, y) {
-        return x === y;
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate("{{blog (equal (equal true true) true fun='yes')}}")
+      .withInput({ bar: 'LOL' })
+      .withHelpers({
+        blog: function(val) {
+          return 'val is ' + val;
+        },
+        equal: function(x, y) {
+          return x === y;
+        }
+      })
       .toCompileTo('val is true');
   });
 
   it('as hashes', function() {
-    var string = "{{blog fun=(equal (blog fun=1) 'val is 1')}}";
-
-    var helpers = {
-      blog: function(options) {
-        return 'val is ' + options.hash.fun;
-      },
-      equal: function(x, y) {
-        return x === y;
-      }
-    };
-    expectTemplate(string)
-      .withHelpers(helpers)
+    expectTemplate("{{blog fun=(equal (blog fun=1) 'val is 1')}}")
+      .withHelpers({
+        blog: function(options) {
+          return 'val is ' + options.hash.fun;
+        },
+        equal: function(x, y) {
+          return x === y;
+        }
+      })
       .toCompileTo('val is true');
   });
 
   it('multiple subexpressions in a hash', function() {
-    var string =
-      '{{input aria-label=(t "Name") placeholder=(t "Example User")}}';
-
-    var helpers = {
-      input: function(options) {
-        var hash = options.hash;
-        var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
-        var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
-        return new Handlebars.SafeString(
-          '<input aria-label="' +
-            ariaLabel +
-            '" placeholder="' +
-            placeholder +
-            '" />'
-        );
-      },
-      t: function(defaultString) {
-        return new Handlebars.SafeString(defaultString);
-      }
-    };
-    expectTemplate(string)
-      .withHelpers(helpers)
+    expectTemplate(
+      '{{input aria-label=(t "Name") placeholder=(t "Example User")}}'
+    )
+      .withHelpers({
+        input: function(options) {
+          var hash = options.hash;
+          var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
+          var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
+          return new Handlebars.SafeString(
+            '<input aria-label="' +
+              ariaLabel +
+              '" placeholder="' +
+              placeholder +
+              '" />'
+          );
+        },
+        t: function(defaultString) {
+          return new Handlebars.SafeString(defaultString);
+        }
+      })
       .toCompileTo('<input aria-label="Name" placeholder="Example User" />');
   });
 
   it('multiple subexpressions in a hash with context', function() {
-    var string =
-      '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}';
-
-    var context = {
-      item: {
-        field: 'Name',
-        placeholder: 'Example User'
-      }
-    };
-
-    var helpers = {
-      input: function(options) {
-        var hash = options.hash;
-        var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
-        var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
-        return new Handlebars.SafeString(
-          '<input aria-label="' +
-            ariaLabel +
-            '" placeholder="' +
-            placeholder +
-            '" />'
-        );
-      },
-      t: function(defaultString) {
-        return new Handlebars.SafeString(defaultString);
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate(
+      '{{input aria-label=(t item.field) placeholder=(t item.placeholder)}}'
+    )
+      .withInput({
+        item: {
+          field: 'Name',
+          placeholder: 'Example User'
+        }
+      })
+      .withHelpers({
+        input: function(options) {
+          var hash = options.hash;
+          var ariaLabel = Handlebars.Utils.escapeExpression(hash['aria-label']);
+          var placeholder = Handlebars.Utils.escapeExpression(hash.placeholder);
+          return new Handlebars.SafeString(
+            '<input aria-label="' +
+              ariaLabel +
+              '" placeholder="' +
+              placeholder +
+              '" />'
+          );
+        },
+        t: function(defaultString) {
+          return new Handlebars.SafeString(defaultString);
+        }
+      })
       .toCompileTo('<input aria-label="Name" placeholder="Example User" />');
   });
 
   it('in string params mode,', function() {
-    var string = '{{snog (blorg foo x=y) yeah a=b}}';
-    var compileOptions = { stringParams: true };
+    expectTemplate('{{snog (blorg foo x=y) yeah a=b}}')
+      .withCompileOptions({ stringParams: true })
+      .withHelpers({
+        snog: function(a, b, options) {
+          equals(a, 'foo');
+          equals(
+            options.types.length,
+            2,
+            'string params for outer helper processed correctly'
+          );
+          equals(
+            options.types[0],
+            'SubExpression',
+            'string params for outer helper processed correctly'
+          );
+          equals(
+            options.types[1],
+            'PathExpression',
+            'string params for outer helper processed correctly'
+          );
+          return a + b;
+        },
 
-    var helpers = {
-      snog: function(a, b, options) {
-        equals(a, 'foo');
-        equals(
-          options.types.length,
-          2,
-          'string params for outer helper processed correctly'
-        );
-        equals(
-          options.types[0],
-          'SubExpression',
-          'string params for outer helper processed correctly'
-        );
-        equals(
-          options.types[1],
-          'PathExpression',
-          'string params for outer helper processed correctly'
-        );
-        return a + b;
-      },
-
-      blorg: function(a, options) {
-        equals(
-          options.types.length,
-          1,
-          'string params for inner helper processed correctly'
-        );
-        equals(
-          options.types[0],
-          'PathExpression',
-          'string params for inner helper processed correctly'
-        );
-        return a;
-      }
-    };
-
-    var input = {
-      foo: {},
-      yeah: {}
-    };
-
-    expectTemplate(string)
-      .withCompileOptions(compileOptions)
-      .withHelpers(helpers)
-      .withInput(input)
+        blorg: function(a, options) {
+          equals(
+            options.types.length,
+            1,
+            'string params for inner helper processed correctly'
+          );
+          equals(
+            options.types[0],
+            'PathExpression',
+            'string params for inner helper processed correctly'
+          );
+          return a;
+        }
+      })
+      .withInput({
+        foo: {},
+        yeah: {}
+      })
       .toCompileTo('fooyeah');
   });
 
   it('as hashes in string params mode', function() {
-    var string = '{{blog fun=(bork)}}';
-    var compileOptions = { stringParams: true };
-
-    var helpers = {
-      blog: function(options) {
-        equals(options.hashTypes.fun, 'SubExpression');
-        return 'val is ' + options.hash.fun;
-      },
-      bork: function() {
-        return 'BORK';
-      }
-    };
-
-    expectTemplate(string)
-      .withCompileOptions(compileOptions)
-      .withHelpers(helpers)
+    expectTemplate('{{blog fun=(bork)}}')
+      .withCompileOptions({ stringParams: true })
+      .withHelpers({
+        blog: function(options) {
+          equals(options.hashTypes.fun, 'SubExpression');
+          return 'val is ' + options.hash.fun;
+        },
+        bork: function() {
+          return 'BORK';
+        }
+      })
       .toCompileTo('val is BORK');
   });
 
   it('subexpression functions on the context', function() {
-    var string = '{{foo (bar)}}!';
-    var context = {
-      bar: function() {
-        return 'LOL';
-      }
-    };
-    var helpers = {
-      foo: function(val) {
-        return val + val;
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate('{{foo (bar)}}!')
+      .withInput({
+        bar: function() {
+          return 'LOL';
+        }
+      })
+      .withHelpers({
+        foo: function(val) {
+          return val + val;
+        }
+      })
       .toCompileTo('LOLLOL!');
   });
 
   it("subexpressions can't just be property lookups", function() {
-    var string = '{{foo (bar)}}!';
-    var context = {
-      bar: 'LOL'
-    };
-    var helpers = {
-      foo: function(val) {
-        return val + val;
-      }
-    };
-    expectTemplate(string)
-      .withInput(context)
-      .withHelpers(helpers)
+    expectTemplate('{{foo (bar)}}!')
+      .withInput({
+        bar: 'LOL'
+      })
+      .withHelpers({
+        foo: function(val) {
+          return val + val;
+        }
+      })
       .toThrow();
   });
 });

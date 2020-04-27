@@ -23,6 +23,7 @@ describe('security issues', function() {
       expectTemplate('{{constructor.name}}')
         .withInput({ constructor: { name: 'here we go' } })
         .toCompileTo('here we go');
+
       expectTemplate('{{lookup (lookup this "constructor") "name"}}')
         .withInput({ constructor: { name: 'here we go' } })
         .toCompileTo('here we go');
@@ -44,9 +45,11 @@ describe('security issues', function() {
       it('should throw an exception when calling  "{{helperMissing}}" ', function() {
         expectTemplate('{{helperMissing}}').toThrow(Error);
       });
+
       it('should throw an exception when calling  "{{#helperMissing}}{{/helperMissing}}" ', function() {
         expectTemplate('{{#helperMissing}}{{/helperMissing}}').toThrow(Error);
       });
+
       it('should throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
         var functionCalls = [];
         expect(function() {
@@ -59,14 +62,14 @@ describe('security issues', function() {
         }).to.throw(Error);
         expect(functionCalls.length).to.equal(0);
       });
+
       it('should throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
-        var input = {
-          fn: function() {
-            return 'functionInData';
-          }
-        };
         expectTemplate('{{#blockHelperMissing .}}{{/blockHelperMissing}}')
-          .withInput(input)
+          .withInput({
+            fn: function() {
+              return 'functionInData';
+            }
+          })
           .toThrow(Error);
       });
     });
@@ -76,12 +79,14 @@ describe('security issues', function() {
         var template = Handlebars.compile('{{helperMissing}}');
         template({}, { allowCallsToHelperMissing: true });
       });
+
       it('should not throw an exception when calling  "{{#helperMissing}}{{/helperMissing}}" ', function() {
         var template = Handlebars.compile(
           '{{#helperMissing}}{{/helperMissing}}'
         );
         template({}, { allowCallsToHelperMissing: true });
       });
+
       it('should not throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
         var functionCalls = [];
         var template = Handlebars.compile('{{blockHelperMissing "abc" .}}');
@@ -95,6 +100,7 @@ describe('security issues', function() {
         );
         equals(functionCalls.length, 1);
       });
+
       it('should not throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
         var template = Handlebars.compile(
           '{{#blockHelperMissing true}}sdads{{/blockHelperMissing}}'

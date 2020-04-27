@@ -15,15 +15,19 @@ describe('basic context', function() {
     expectTemplate('\\{{foo}}')
       .withInput({ foo: 'food' })
       .toCompileTo('{{foo}}');
+
     expectTemplate('content \\{{foo}}')
       .withInput({ foo: 'food' })
       .toCompileTo('content {{foo}}');
+
     expectTemplate('\\\\{{foo}}')
       .withInput({ foo: 'food' })
       .toCompileTo('\\food');
+
     expectTemplate('content \\\\{{foo}}')
       .withInput({ foo: 'food' })
       .toCompileTo('content \\food');
+
     expectTemplate('\\\\ {{foo}}')
       .withInput({ foo: 'food' })
       .toCompileTo('\\\\ food');
@@ -65,14 +69,19 @@ describe('basic context', function() {
       .toCompileTo('Goodbye\ncruel\nworld!');
 
     expectTemplate('    {{~! comment ~}}      blah').toCompileTo('blah');
+
     expectTemplate('    {{~!-- long-comment --~}}      blah').toCompileTo(
       'blah'
     );
+
     expectTemplate('    {{! comment ~}}      blah').toCompileTo('    blah');
+
     expectTemplate('    {{!-- long-comment --~}}      blah').toCompileTo(
       '    blah'
     );
+
     expectTemplate('    {{~! comment}}      blah').toCompileTo('      blah');
+
     expectTemplate('    {{~!-- long-comment --}}      blah').toCompileTo(
       '      blah'
     );
@@ -104,13 +113,16 @@ describe('basic context', function() {
         num2: 0
       })
       .toCompileTo('num1: 42, num2: 0');
+
     expectTemplate('num: {{.}}')
       .withInput(0)
       .toCompileTo('num: 0');
+
     expectTemplate('num: {{num1/num2}}')
       .withInput({ num1: { num2: 0 } })
       .toCompileTo('num: 0');
   });
+
   it('false', function() {
     /* eslint-disable no-new-wrappers */
     expectTemplate('val1: {{val1}}, val2: {{val2}}')
@@ -119,9 +131,11 @@ describe('basic context', function() {
         val2: new Boolean(false)
       })
       .toCompileTo('val1: false, val2: false');
+
     expectTemplate('val: {{.}}')
       .withInput(false)
       .toCompileTo('val: false');
+
     expectTemplate('val: {{val1/val2}}')
       .withInput({ val1: { val2: false } })
       .toCompileTo('val: false');
@@ -132,6 +146,7 @@ describe('basic context', function() {
         val2: new Boolean(false)
       })
       .toCompileTo('val1: false, val2: false');
+
     expectTemplate('val: {{{val1/val2}}}')
       .withInput({ val1: { val2: false } })
       .toCompileTo('val: false');
@@ -152,6 +167,7 @@ describe('basic context', function() {
         }
       })
       .toCompileTo('true true object');
+
     expectTemplate('{{undefined}}')
       .withInput({
         undefined: function() {
@@ -159,6 +175,7 @@ describe('basic context', function() {
         }
       })
       .toCompileTo('undefined!');
+
     expectTemplate('{{null}}')
       .withInput({
         null: function() {
@@ -170,6 +187,7 @@ describe('basic context', function() {
 
   it('newlines', function() {
     expectTemplate("Alan's\nTest").toCompileTo("Alan's\nTest");
+
     expectTemplate("Alan's\rTest").toCompileTo("Alan's\rTest");
   });
 
@@ -179,16 +197,20 @@ describe('basic context', function() {
         "text is escaped so that it doesn't get caught on single quotes"
       )
       .toCompileTo("Awesome's");
+
     expectTemplate('Awesome\\')
       .withMessage("text is escaped so that the closing quote can't be ignored")
       .toCompileTo('Awesome\\');
+
     expectTemplate('Awesome\\\\ foo')
       .withMessage("text is escaped so that it doesn't mess up backslashes")
       .toCompileTo('Awesome\\\\ foo');
+
     expectTemplate('Awesome {{foo}}')
       .withInput({ foo: '\\' })
       .withMessage("text is escaped so that it doesn't mess up backslashes")
       .toCompileTo('Awesome \\');
+
     expectTemplate(" ' ' ")
       .withMessage('double quotes never produce invalid javascript')
       .toCompileTo(" ' ' ");
@@ -217,13 +239,12 @@ describe('basic context', function() {
   });
 
   it("functions returning safestrings shouldn't be escaped", function() {
-    var hash = {
-      awesome: function() {
-        return new Handlebars.SafeString("&'\\<>");
-      }
-    };
     expectTemplate('{{awesome}}')
-      .withInput(hash)
+      .withInput({
+        awesome: function() {
+          return new Handlebars.SafeString("&'\\<>");
+        }
+      })
       .withMessage("functions returning safestrings aren't escaped")
       .toCompileTo("&'\\<>");
   });
@@ -237,6 +258,7 @@ describe('basic context', function() {
       })
       .withMessage('functions are called and render their output')
       .toCompileTo('Awesome');
+
     expectTemplate('{{awesome}}')
       .withInput({
         awesome: function() {
@@ -259,6 +281,7 @@ describe('basic context', function() {
       .withMessage('functions are called with context arguments')
       .toCompileTo('Frank');
   });
+
   it('pathed functions with context argument', function() {
     expectTemplate('{{bar.awesome frank}}')
       .withInput({
@@ -272,6 +295,7 @@ describe('basic context', function() {
       .withMessage('functions are called with context arguments')
       .toCompileTo('Frank');
   });
+
   it('depthed functions with context argument', function() {
     expectTemplate('{{#with frank}}{{../awesome .}}{{/with}}')
       .withInput({
@@ -319,6 +343,7 @@ describe('basic context', function() {
       .withMessage('block functions are called with options')
       .toCompileTo('inner');
   });
+
   it('pathed block functions without context argument', function() {
     expectTemplate('{{#foo.awesome}}inner{{/foo.awesome}}')
       .withInput({
@@ -331,6 +356,7 @@ describe('basic context', function() {
       .withMessage('block functions are called with options')
       .toCompileTo('inner');
   });
+
   it('depthed block functions without context argument', function() {
     expectTemplate(
       '{{#with value}}{{#../awesome}}inner{{/../awesome}}{{/with}}'
@@ -350,10 +376,12 @@ describe('basic context', function() {
       .withInput({ 'foo-bar': 'baz' })
       .withMessage('Paths can contain hyphens (-)')
       .toCompileTo('baz');
+
     expectTemplate('{{foo.foo-bar}}')
       .withInput({ foo: { 'foo-bar': 'baz' } })
       .withMessage('Paths can contain hyphens (-)')
       .toCompileTo('baz');
+
     expectTemplate('{{foo/foo-bar}}')
       .withInput({ foo: { 'foo-bar': 'baz' } })
       .withMessage('Paths can contain hyphens (-)')
@@ -379,6 +407,7 @@ describe('basic context', function() {
       .withInput({ '@alan': { expression: 'beautiful' } })
       .withMessage('Literal paths can be used')
       .toCompileTo('Goodbye beautiful world!');
+
     expectTemplate('Goodbye {{[foo bar]/expression}} world!')
       .withInput({ 'foo bar': { expression: 'beautiful' } })
       .withMessage('Literal paths can be used')
@@ -389,18 +418,23 @@ describe('basic context', function() {
     expectTemplate('Goodbye {{[foo bar]}} world!')
       .withInput({ 'foo bar': 'beautiful' })
       .toCompileTo('Goodbye beautiful world!');
+
     expectTemplate('Goodbye {{"foo bar"}} world!')
       .withInput({ 'foo bar': 'beautiful' })
       .toCompileTo('Goodbye beautiful world!');
+
     expectTemplate("Goodbye {{'foo bar'}} world!")
       .withInput({ 'foo bar': 'beautiful' })
       .toCompileTo('Goodbye beautiful world!');
+
     expectTemplate('Goodbye {{"foo[bar"}} world!')
       .withInput({ 'foo[bar': 'beautiful' })
       .toCompileTo('Goodbye beautiful world!');
+
     expectTemplate('Goodbye {{"foo\'bar"}} world!')
       .withInput({ "foo'bar": 'beautiful' })
       .toCompileTo('Goodbye beautiful world!');
+
     expectTemplate("Goodbye {{'foo\"bar'}} world!")
       .withInput({ 'foo"bar': 'beautiful' })
       .toCompileTo('Goodbye beautiful world!');
@@ -417,25 +451,22 @@ describe('basic context', function() {
     expectTemplate('{{person/name}}')
       .withInput({ person: { name: null } })
       .toCompileTo('');
+
     expectTemplate('{{person/name}}')
       .withInput({ person: {} })
       .toCompileTo('');
   });
 
   it('this keyword in paths', function() {
-    var string = '{{#goodbyes}}{{this}}{{/goodbyes}}';
-    var hash = { goodbyes: ['goodbye', 'Goodbye', 'GOODBYE'] };
-    expectTemplate(string)
-      .withInput(hash)
+    expectTemplate('{{#goodbyes}}{{this}}{{/goodbyes}}')
+      .withInput({ goodbyes: ['goodbye', 'Goodbye', 'GOODBYE'] })
       .withMessage('This keyword in paths evaluates to current context')
       .toCompileTo('goodbyeGoodbyeGOODBYE');
 
-    string = '{{#hellos}}{{this/text}}{{/hellos}}';
-    hash = {
-      hellos: [{ text: 'hello' }, { text: 'Hello' }, { text: 'HELLO' }]
-    };
-    expectTemplate(string)
-      .withInput(hash)
+    expectTemplate('{{#hellos}}{{this/text}}{{/hellos}}')
+      .withInput({
+        hellos: [{ text: 'hello' }, { text: 'Hello' }, { text: 'HELLO' }]
+      })
       .withMessage('This keyword evaluates in more complex paths')
       .toCompileTo('helloHelloHELLO');
   });
@@ -449,6 +480,7 @@ describe('basic context', function() {
     expectTemplate('{{[this]}}')
       .withInput({ this: 'bar' })
       .toCompileTo('bar');
+
     expectTemplate('{{text/[this]}}')
       .withInput({ text: { this: 'bar' } })
       .toCompileTo('bar');
@@ -460,28 +492,27 @@ describe('basic context', function() {
         return 'bar ' + value;
       }
     };
-    var string = '{{#goodbyes}}{{foo this}}{{/goodbyes}}';
-    var hash = { goodbyes: ['goodbye', 'Goodbye', 'GOODBYE'] };
-    expectTemplate(string)
-      .withInput(hash)
+
+    expectTemplate('{{#goodbyes}}{{foo this}}{{/goodbyes}}')
+      .withInput({ goodbyes: ['goodbye', 'Goodbye', 'GOODBYE'] })
       .withHelpers(helpers)
       .withMessage('This keyword in paths evaluates to current context')
       .toCompileTo('bar goodbyebar Goodbyebar GOODBYE');
 
-    string = '{{#hellos}}{{foo this/text}}{{/hellos}}';
-    hash = {
-      hellos: [{ text: 'hello' }, { text: 'Hello' }, { text: 'HELLO' }]
-    };
-    expectTemplate(string)
-      .withInput(hash)
+    expectTemplate('{{#hellos}}{{foo this/text}}{{/hellos}}')
+      .withInput({
+        hellos: [{ text: 'hello' }, { text: 'Hello' }, { text: 'HELLO' }]
+      })
       .withHelpers(helpers)
       .withMessage('This keyword evaluates in more complex paths')
       .toCompileTo('bar hellobar Hellobar HELLO');
   });
 
   it('this keyword nested inside helpers param', function() {
-    var string = '{{#hellos}}{{foo text/this/foo}}{{/hellos}}';
-    expectTemplate(string).toThrow(Error, 'Invalid path: text/this - 1:17');
+    expectTemplate('{{#hellos}}{{foo text/this/foo}}{{/hellos}}').toThrow(
+      Error,
+      'Invalid path: text/this - 1:17'
+    );
 
     expectTemplate('{{foo [this]}}')
       .withInput({
@@ -491,6 +522,7 @@ describe('basic context', function() {
         this: 'bar'
       })
       .toCompileTo('bar');
+
     expectTemplate('{{foo text/[this]}}')
       .withInput({
         foo: function(value) {
@@ -503,9 +535,11 @@ describe('basic context', function() {
 
   it('pass string literals', function() {
     expectTemplate('{{"foo"}}').toCompileTo('');
+
     expectTemplate('{{"foo"}}')
       .withInput({ foo: 'bar' })
       .toCompileTo('bar');
+
     expectTemplate('{{#"foo"}}{{.}}{{/"foo"}}')
       .withInput({
         foo: ['bar', 'baz']
@@ -515,13 +549,17 @@ describe('basic context', function() {
 
   it('pass number literals', function() {
     expectTemplate('{{12}}').toCompileTo('');
+
     expectTemplate('{{12}}')
       .withInput({ '12': 'bar' })
       .toCompileTo('bar');
+
     expectTemplate('{{12.34}}').toCompileTo('');
+
     expectTemplate('{{12.34}}')
       .withInput({ '12.34': 'bar' })
       .toCompileTo('bar');
+
     expectTemplate('{{12.34 1}}')
       .withInput({
         '12.34': function(arg) {
@@ -533,27 +571,26 @@ describe('basic context', function() {
 
   it('pass boolean literals', function() {
     expectTemplate('{{true}}').toCompileTo('');
+
     expectTemplate('{{true}}')
       .withInput({ '': 'foo' })
       .toCompileTo('');
+
     expectTemplate('{{false}}')
       .withInput({ false: 'foo' })
       .toCompileTo('foo');
   });
 
   it('should handle literals in subexpression', function() {
-    var helpers = {
-      foo: function(arg) {
-        return arg;
-      }
-    };
     expectTemplate('{{foo (false)}}')
       .withInput({
         false: function() {
           return 'bar';
         }
       })
-      .withHelpers(helpers)
+      .withHelper('foo', function(arg) {
+        return arg;
+      })
       .toCompileTo('bar');
   });
 });

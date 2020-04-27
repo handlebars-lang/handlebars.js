@@ -7,6 +7,7 @@ describe('strict', function() {
         .withCompileOptions({ strict: true })
         .toThrow(Exception, /"hello" not defined in/);
     });
+
     it('should error on missing child', function() {
       expectTemplate('{{hello.bar}}')
         .withCompileOptions({ strict: true })
@@ -18,12 +19,14 @@ describe('strict', function() {
         .withInput({ hello: {} })
         .toThrow(Exception, /"bar" not defined in/);
     });
+
     it('should handle explicit undefined', function() {
       expectTemplate('{{hello.bar}}')
         .withCompileOptions({ strict: true })
         .withInput({ hello: { bar: undefined } })
         .toCompileTo('');
     });
+
     it('should error on missing property lookup in known helpers mode', function() {
       expectTemplate('{{hello}}')
         .withCompileOptions({
@@ -32,6 +35,7 @@ describe('strict', function() {
         })
         .toThrow(Exception, /"hello" not defined in/);
     });
+
     it('should error on missing context', function() {
       expectTemplate('{{hello}}')
         .withCompileOptions({ strict: true })
@@ -59,6 +63,7 @@ describe('strict', function() {
         .withInput({ foo: true })
         .toThrow(Exception, /"hello" not defined in/);
     });
+
     it('should throw on ambiguous blocks', function() {
       expectTemplate('{{#hello}}{{/hello}}')
         .withCompileOptions({ strict: true })
@@ -81,20 +86,17 @@ describe('strict', function() {
     });
 
     it('should allow undefined hash when passed to helpers', function() {
-      var string = '{{helper value=@foo}}';
-      var compileOptions = {
-        strict: true
-      };
-      var helpers = {
-        helper: function(options) {
-          equals('value' in options.hash, true);
-          equals(options.hash.value, undefined);
-          return 'success';
-        }
-      };
-      expectTemplate(string)
-        .withCompileOptions(compileOptions)
-        .withHelpers(helpers)
+      expectTemplate('{{helper value=@foo}}')
+        .withCompileOptions({
+          strict: true
+        })
+        .withHelpers({
+          helper: function(options) {
+            equals('value' in options.hash, true);
+            equals(options.hash.value, undefined);
+            return 'success';
+          }
+        })
         .toCompileTo('success');
     });
 
@@ -125,17 +127,20 @@ describe('strict', function() {
         .withCompileOptions({ assumeObjects: true })
         .toCompileTo('');
     });
+
     it('should ignore missing child', function() {
       expectTemplate('{{hello.bar}}')
         .withCompileOptions({ assumeObjects: true })
         .withInput({ hello: {} })
         .toCompileTo('');
     });
+
     it('should error on missing object', function() {
       expectTemplate('{{hello.bar}}')
         .withCompileOptions({ assumeObjects: true })
         .toThrow(Error);
     });
+
     it('should error on missing context', function() {
       expectTemplate('{{hello}}')
         .withCompileOptions({ assumeObjects: true })
