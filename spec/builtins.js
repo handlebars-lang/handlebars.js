@@ -520,16 +520,16 @@ describe('builtin helpers', function() {
           return new Iterator(this.arr);
         };
         var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
-        var goodbyes = new Iterable([
-          { text: 'goodbye' },
-          { text: 'Goodbye' },
-          { text: 'GOODBYE' }
-        ]);
-        var goodbyesEmpty = new Iterable([]);
-        var hash = { goodbyes: goodbyes, world: 'world' };
 
         expectTemplate(string)
-          .withInput(hash)
+          .withInput({
+            goodbyes: new Iterable([
+              { text: 'goodbye' },
+              { text: 'Goodbye' },
+              { text: 'GOODBYE' }
+            ]),
+            world: 'world'
+          })
           .withMessage(
             'each with array argument iterates over the contents when not empty'
           )
@@ -537,7 +537,7 @@ describe('builtin helpers', function() {
 
         expectTemplate(string)
           .withInput({
-            goodbyes: goodbyesEmpty,
+            goodbyes: new Iterable([]),
             world: 'world'
           })
           .withMessage(
@@ -655,8 +655,6 @@ describe('builtin helpers', function() {
     });
 
     it('should handle string log levels', function() {
-      var string = '{{log blah}}';
-      var hash = { blah: 'whee' };
       var called;
 
       console.error = function(log) {
@@ -664,8 +662,8 @@ describe('builtin helpers', function() {
         called = true;
       };
 
-      expectTemplate(string)
-        .withInput(hash)
+      expectTemplate('{{log blah}}')
+        .withInput({ blah: 'whee' })
         .withRuntimeOptions({ data: { level: 'error' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
@@ -673,8 +671,8 @@ describe('builtin helpers', function() {
 
       called = false;
 
-      expectTemplate(string)
-        .withInput(hash)
+      expectTemplate('{{log blah}}')
+        .withInput({ blah: 'whee' })
         .withRuntimeOptions({ data: { level: 'ERROR' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
@@ -682,8 +680,6 @@ describe('builtin helpers', function() {
     });
 
     it('should handle hash log levels', function() {
-      var string = '{{log blah level="error"}}';
-      var hash = { blah: 'whee' };
       var called;
 
       console.error = function(log) {
@@ -691,8 +687,8 @@ describe('builtin helpers', function() {
         called = true;
       };
 
-      expectTemplate(string)
-        .withInput(hash)
+      expectTemplate('{{log blah level="error"}}')
+        .withInput({ blah: 'whee' })
         .toCompileTo('');
       equals(true, called);
     });
