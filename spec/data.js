@@ -132,13 +132,9 @@ describe('data', function() {
   });
 
   it('passing in data to a compiled function that expects data - works with helpers in partials', function() {
-    var partials = {
-      myPartial: CompilerContext.compile('{{hello}}', { data: true })
-    };
-
     expectTemplate('{{>myPartial}}')
       .withCompileOptions({ data: true })
-      .withPartials(partials)
+      .withPartial('myPartial', '{{hello}}')
       .withHelper('hello', function(options) {
         return options.data.adjective + ' ' + this.noun;
       })
@@ -242,16 +238,13 @@ describe('data', function() {
 
   describe('@root', function() {
     it('the root context can be looked up via @root', function() {
-      var string = '{{@root.foo}}';
-      var input = { foo: 'hello' };
-
-      expectTemplate(string)
-        .withInput(input)
+      expectTemplate('{{@root.foo}}')
+        .withInput({ foo: 'hello' })
         .withRuntimeOptions({ data: {} })
         .toCompileTo('hello');
 
-      expectTemplate(string)
-        .withInput(input)
+      expectTemplate('{{@root.foo}}')
+        .withInput({ foo: 'hello' })
         .toCompileTo('hello');
     });
 
