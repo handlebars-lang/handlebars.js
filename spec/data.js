@@ -250,6 +250,7 @@ describe('data', function() {
 
     it('passed root values take priority', function() {
       expectTemplate('{{@root.foo}}')
+        .withInput({ foo: 'should not be used' })
         .withRuntimeOptions({ data: { root: { foo: 'hello' } } })
         .toCompileTo('hello');
     });
