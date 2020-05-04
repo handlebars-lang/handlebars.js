@@ -20,36 +20,19 @@ describe('security issues', function() {
     });
 
     it('should allow the "constructor" property to be accessed if it is an "ownProperty"', function() {
-      shouldCompileTo(
-        '{{constructor.name}}',
-        {
-          constructor: {
-            name: 'here we go'
-          }
-        },
-        'here we go'
-      );
-      shouldCompileTo(
-        '{{lookup (lookup this "constructor") "name"}}',
-        {
-          constructor: {
-            name: 'here we go'
-          }
-        },
-        'here we go'
-      );
+      expectTemplate('{{constructor.name}}')
+        .withInput({ constructor: { name: 'here we go' } })
+        .toCompileTo('here we go');
+
+      expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+        .withInput({ constructor: { name: 'here we go' } })
+        .toCompileTo('here we go');
     });
 
     it('should allow the "constructor" property to be accessed if it is an "own property"', function() {
-      shouldCompileTo(
-        '{{lookup (lookup this "constructor") "name"}}',
-        {
-          constructor: {
-            name: 'here we go'
-          }
-        },
-        'here we go'
-      );
+      expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+        .withInput({ constructor: { name: 'here we go' } })
+        .toCompileTo('here we go');
     });
   });
 
@@ -60,19 +43,13 @@ describe('security issues', function() {
 
     describe('without the option "allowExplicitCallOfHelperMissing"', function() {
       it('should throw an exception when calling  "{{helperMissing}}" ', function() {
-        shouldThrow(function() {
-          var template = Handlebars.compile('{{helperMissing}}');
-          template({});
-        }, Error);
+        expectTemplate('{{helperMissing}}').toThrow(Error);
       });
+
       it('should throw an exception when calling  "{{#helperMissing}}{{/helperMissing}}" ', function() {
-        shouldThrow(function() {
-          var template = Handlebars.compile(
-            '{{#helperMissing}}{{/helperMissing}}'
-          );
-          template({});
-        }, Error);
+        expectTemplate('{{#helperMissing}}{{/helperMissing}}').toThrow(Error);
       });
+
       it('should throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
         var functionCalls = [];
         expect(function() {
@@ -85,17 +62,15 @@ describe('security issues', function() {
         }).to.throw(Error);
         expect(functionCalls.length).to.equal(0);
       });
+
       it('should throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
-        shouldThrow(function() {
-          var template = Handlebars.compile(
-            '{{#blockHelperMissing .}}{{/blockHelperMissing}}'
-          );
-          template({
+        expectTemplate('{{#blockHelperMissing .}}{{/blockHelperMissing}}')
+          .withInput({
             fn: function() {
               return 'functionInData';
             }
-          });
-        }, Error);
+          })
+          .toThrow(Error);
       });
     });
 
@@ -104,12 +79,14 @@ describe('security issues', function() {
         var template = Handlebars.compile('{{helperMissing}}');
         template({}, { allowCallsToHelperMissing: true });
       });
+
       it('should not throw an exception when calling  "{{#helperMissing}}{{/helperMissing}}" ', function() {
         var template = Handlebars.compile(
           '{{#helperMissing}}{{/helperMissing}}'
         );
         template({}, { allowCallsToHelperMissing: true });
       });
+
       it('should not throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
         var functionCalls = [];
         var template = Handlebars.compile('{{blockHelperMissing "abc" .}}');
@@ -123,6 +100,7 @@ describe('security issues', function() {
         );
         equals(functionCalls.length, 1);
       });
+
       it('should not throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
         var template = Handlebars.compile(
           '{{#blockHelperMissing true}}sdads{{/blockHelperMissing}}'
