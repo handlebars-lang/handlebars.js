@@ -129,6 +129,7 @@ function HandlebarsTestBench(templateAsString) {
   this.templateAsString = templateAsString;
   this.helpers = {};
   this.partials = {};
+  this.decorators = {};
   this.input = {};
   this.message =
     'Template' + templateAsString + ' does not evaluate to expected output';
@@ -146,8 +147,40 @@ HandlebarsTestBench.prototype.withHelper = function(name, helperFunction) {
   return this;
 };
 
+HandlebarsTestBench.prototype.withHelpers = function(helperFunctions) {
+  var self = this;
+  Object.keys(helperFunctions).forEach(function(name) {
+    self.withHelper(name, helperFunctions[name]);
+  });
+  return this;
+};
+
 HandlebarsTestBench.prototype.withPartial = function(name, partialAsString) {
   this.partials[name] = partialAsString;
+  return this;
+};
+
+HandlebarsTestBench.prototype.withPartials = function(partials) {
+  var self = this;
+  Object.keys(partials).forEach(function(name) {
+    self.withPartial(name, partials[name]);
+  });
+  return this;
+};
+
+HandlebarsTestBench.prototype.withDecorator = function(
+  name,
+  decoratorFunction
+) {
+  this.decorators[name] = decoratorFunction;
+  return this;
+};
+
+HandlebarsTestBench.prototype.withDecorators = function(decorators) {
+  var self = this;
+  Object.keys(decorators).forEach(function(name) {
+    self.withDecorator(name, decorators[name]);
+  });
   return this;
 };
 
@@ -167,19 +200,18 @@ HandlebarsTestBench.prototype.withMessage = function(message) {
 };
 
 HandlebarsTestBench.prototype.toCompileTo = function(expectedOutputAsString) {
-  expect(this._compileAndExecute()).to.equal(expectedOutputAsString);
+  expect(this._compileAndExecute()).to.equal(
+    expectedOutputAsString,
+    this.message
+  );
 };
 
 // see chai "to.throw" (https://www.chaijs.com/api/bdd/#method_throw)
-HandlebarsTestBench.prototype.toThrow = function(
-  errorLike,
-  errMsgMatcher,
-  msg
-) {
+HandlebarsTestBench.prototype.toThrow = function(errorLike, errMsgMatcher) {
   var self = this;
   expect(function() {
     self._compileAndExecute();
-  }).to.throw(errorLike, errMsgMatcher, msg);
+  }).to.throw(errorLike, errMsgMatcher, this.message);
 };
 
 HandlebarsTestBench.prototype._compileAndExecute = function() {
@@ -202,5 +234,6 @@ HandlebarsTestBench.prototype._combineRuntimeOptions = function() {
   });
   combinedRuntimeOptions.helpers = this.helpers;
   combinedRuntimeOptions.partials = this.partials;
+  combinedRuntimeOptions.decorators = this.decorators;
   return combinedRuntimeOptions;
 };
