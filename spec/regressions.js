@@ -500,4 +500,21 @@ describe('Regressions', function() {
         .toCompileTo('bar');
     });
   });
+  describe('GH-1686: Nested each with equal values skips some iterations.', function() {
+    it('each with nested equal primitive type values', function() {
+      expectTemplate(
+        '{{#each abc as | c1 |}}' +
+          '{{#each ../abc as | c2 |}}' +
+          '{{#each ../../abc as | c3 |}}' +
+          '{{c1}}{{c2}}{{c3}} {{else}}! ' +
+          '{{/each}}\n' +
+          '{{/each}}\n\n' +
+          '{{/each}}'
+      )
+        .withInput({ abc: ['A', 'B', 'C'] })
+        .toCompileTo(
+          'AAA AAB AAC \nABA ABB ABC \nACA ACB ACC \n\nBAA BAB BAC \nBBA BBB BBC \nBCA BCB BCC \n\nCAA CAB CAC \nCBA CBB CBC \nCCA CCB CCC \n\n'
+        );
+    });
+  });
 });
