@@ -182,7 +182,7 @@ module.exports = function(grunt) {
         autoWatch: true
       },
       amd: {
-        configFile: 'karma-setup/requirejs/karma.conf.js',
+        configFile: 'karma-setup/amd/karma.conf.js',
         browsers: [],
         singleRun: false,
         autoWatch: true
