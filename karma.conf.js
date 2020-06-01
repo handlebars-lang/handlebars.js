@@ -1,6 +1,5 @@
 module.exports = function(config) {
   config.set({
-    baseUrl: '../..',
     reporters: ['dots'],
     frameworks: ['mocha', 'requirejs'],
     browsers: ['Chrome'],
