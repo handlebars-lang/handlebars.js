@@ -1,4 +1,15 @@
 describe('security issues', function() {
+  var consoleErrorFake = null;
+
+  beforeEach(function() {
+    consoleErrorFake = sinon.fake();
+    sinon.replace(console, 'error', consoleErrorFake);
+  });
+
+  afterEach(function() {
+    sinon.restore();
+  });
+
   describe('GH-1495: Prevent Remote Code Execution via constructor', function() {
     it('should not allow constructors to be accessed', function() {
       expectTemplate('{{lookup (lookup this "constructor") "name"}}')
@@ -88,17 +99,15 @@ describe('security issues', function() {
       });
 
       it('should not throw an exception when calling  "{{blockHelperMissing "abc" .}}" ', function() {
-        var functionCalls = [];
+        var fakeFunction = sinon.fake();
         var template = Handlebars.compile('{{blockHelperMissing "abc" .}}');
         template(
           {
-            fn: function() {
-              functionCalls.push('called');
-            }
+            fn: fakeFunction
           },
           { allowCallsToHelperMissing: true }
         );
-        equals(functionCalls.length, 1);
+        expect(fakeFunction.calledOnce).to.be.true();
       });
 
       it('should not throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function() {
@@ -185,20 +194,18 @@ describe('security issues', function() {
 
       function checkProtoMethodAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expect(spy.calledOnce).to.be.true();
-          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+          expect(consoleErrorFake.calledOnce).to.be.true();
+          expect(consoleErrorFake.args[0][0]).to.match(
+            /Handlebars: Access has been denied/
+          );
         });
 
         it('should only log the warning once', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -209,13 +216,13 @@ describe('security issues', function() {
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expect(spy.calledOnce).to.be.true();
-          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+          expect(consoleErrorFake.calledOnce).to.be.true();
+          expect(consoleErrorFake.args[0][0]).to.match(
+            /Handlebars: Access has been denied/
+          );
         });
 
         it('can be allowed, which disables the warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -226,12 +233,10 @@ describe('security issues', function() {
             })
             .toCompileTo('returnValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(consoleErrorFake.callCount).to.equal(0);
         });
 
         it('can be turned on by default, which disables the warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -240,12 +245,10 @@ describe('security issues', function() {
             })
             .toCompileTo('returnValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(consoleErrorFake.callCount).to.equal(0);
         });
 
         it('can be turned off by default, which disables the warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -254,7 +257,7 @@ describe('security issues', function() {
             })
             .toCompileTo('');
 
-          expect(spy.callCount).to.equal(0);
+          expect(consoleErrorFake.callCount).to.equal(0);
         });
 
         it('can be turned off, if turned on by default', function() {
@@ -300,20 +303,18 @@ describe('security issues', function() {
 
       function checkProtoPropertyAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expect(spy.calledOnce).to.be.true();
-          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+          expect(consoleErrorFake.calledOnce).to.be.true();
+          expect(consoleErrorFake.args[0][0]).to.match(
+            /Handlebars: Access has been denied/
+          );
         });
 
         it('can be explicitly prohibited by default, which disables the warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -322,12 +323,10 @@ describe('security issues', function() {
             })
             .toCompileTo('');
 
-          expect(spy.callCount).to.equal(0);
+          expect(consoleErrorFake.callCount).to.equal(0);
         });
 
         it('can be turned on, which disables the warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -338,12 +337,10 @@ describe('security issues', function() {
             })
             .toCompileTo('propertyValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(consoleErrorFake.callCount).to.equal(0);
         });
 
         it('can be turned on by default, which disables the warning', function() {
-          var spy = sinon.spy(console, 'error');
-
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
@@ -352,7 +349,7 @@ describe('security issues', function() {
             })
             .toCompileTo('propertyValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(consoleErrorFake.callCount).to.equal(0);
         });
 
         it('can be turned off, if turned on by default', function() {

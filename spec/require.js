@@ -1,4 +1,8 @@
-if (typeof require !== 'undefined' && require.extensions['.handlebars']) {
+if (
+  typeof require !== 'undefined' &&
+  require.extensions &&
+  require.extensions['.handlebars']
+) {
   describe('Require', function() {
     it('Load .handlebars files with require()', function() {
       var template = require('./artifacts/example_1');

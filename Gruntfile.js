@@ -165,6 +165,29 @@ module.exports = function(grunt) {
         }
       }
     },
+    karma: {
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      saucelabs: {
+        build: process.env.TRAVIS_JOB_ID || 'non-travis',
+        configFile: 'karma-setup/default/karma.conf.js',
+        ...require('./karma-setup/shared/saucelabs'),
+        singleRun: true
+      },
+      default: {
+        browsers: [],
+        configFile: 'karma-setup/default/karma.conf.js',
+        singleRun: false,
+        autoWatch: true
+      },
+      amd: {
+        configFile: 'karma-setup/amd/karma.conf.js',
+        browsers: [],
+        singleRun: false,
+        autoWatch: true
+      }
+    },
     'saucelabs-mocha': {
       all: {
         options: {
@@ -178,8 +201,8 @@ module.exports = function(grunt) {
           browsers: [
             { browserName: 'chrome' },
             { browserName: 'firefox', platform: 'Linux' },
-            // {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
-            // {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
+            { browserName: 'safari', version: 9, platform: 'OS X 10.11' },
+            { browserName: 'safari', version: 8, platform: 'OS X 10.10' },
             {
               browserName: 'internet explorer',
               version: 11,
@@ -238,7 +261,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-bg-shell');
-  grunt.loadNpmTasks('@knappi/grunt-saucelabs');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-webpack');
 
   grunt.task.loadTasks('tasks');
@@ -268,7 +291,7 @@ module.exports = function(grunt) {
   grunt.registerTask('bench', ['metrics']);
 
   if (process.env.SAUCE_ACCESS_KEY) {
-    grunt.registerTask('sauce', ['concat:tests', 'connect', 'saucelabs-mocha']);
+    grunt.registerTask('sauce', ['karma:saucelabs']);
   } else {
     grunt.registerTask('sauce', []);
   }
