@@ -44,7 +44,7 @@
     "eco": "~1.1.0-rc-3",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-compat": "^3.3.0",
+    "eslint-plugin-compat": "^3.8.0",
     "eslint-plugin-es5": "^1.4.1",
     "fs-extra": "^8.1.0",
     "grunt": "^1.0.4",
