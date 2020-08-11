@@ -1,4 +1,4 @@
-[![Travis Build Status](https://img.shields.io/travis/wycats/handlebars.js/master.svg)](https://travis-ci.org/wycats/handlebars.js)
+[![Travis Build Status](https://img.shields.io/travis/handlebars-lang/handlebars.js/master.svg)](https://travis-ci.org/github/handlebars-lang/handlebars.js)
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/wycats/handlebars.js?branch=master&svg=true)](https://ci.appveyor.com/project/wycats/handlebars-js)
 [![Selenium Test Status](https://saucelabs.com/buildstatus/handlebars)](https://saucelabs.com/u/handlebars)
 [![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
@@ -102,16 +102,16 @@ does have some big performance advantages. Justin Marney, a.k.a.
 [gotascii](http://github.com/gotascii), confirmed that with an
 [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The
 rewritten Handlebars (current version) is faster than the old version,
-with many [performance tests](https://travis-ci.org/wycats/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
+with many [performance tests](https://travis-ci.org/handlebars-lang/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
 
 
 Upgrading
 ---------
 
-See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
+See [release-notes.md](https://github.com/handlebars-lang/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
 If you are using Handlebars in production, please regularly look for issues labeled
-[possibly breaking](https://github.com/wycats/handlebars.js/issues?q=is%3Aopen+is%3Aissue+label%3A%22possibly+breaking%22).
+[possibly breaking](https://github.com/handlebars-lang/handlebars.js/issues?q=is%3Aopen+is%3Aissue+label%3A%22possibly+breaking%22).
 If this label is applied to an issue, it means that the requested change is probably not a breaking change,
 but since Handlebars is widely in use by a lot of people, chances are always there that it breaks somebodies build.
 
@@ -119,7 +119,7 @@ but since Handlebars is widely in use by a lot of people, chances are always the
 Known Issues
 ------------
 
-See [FAQ.md](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
+See [FAQ.md](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
 
 
 Handlebars in the Wild
@@ -175,4 +175,4 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
-[pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
+[pull-request]: https://github.com/handlebars-lang/handlebars.js/pull/new/master
