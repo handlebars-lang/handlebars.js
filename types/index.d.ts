@@ -25,7 +25,7 @@ declare namespace Handlebars {
       partial?: boolean;
       depths?: any[];
       helpers?: { [name: string]: Function };
-      partials?: { [name: string]: HandlebarsTemplateDelegate };
+      partials?: { [name: string]: Template };
       decorators?: { [name: string]: Function };
       data?: any;
       blockParams?: any[];
@@ -60,7 +60,7 @@ declare namespace Handlebars {
   export function unregisterHelper(name: string): void;
 
   export function registerPartial(name: string, fn: Template): void;
-  export function registerPartial(spec: { [name: string]: HandlebarsTemplateDelegate }): void;
+  export function registerPartial(spec: { [name: string]: Template }): void;
   export function unregisterPartial(name: string): void;
 
   // TODO: replace Function with actual signature
