@@ -249,6 +249,9 @@ function testProtoAccessControlControlOptions() {
       allowedProtoProperties: { allowedProperty: true, forbiddenProperty: false },
       allowProtoMethodsByDefault: true,
       allowProtoPropertiesByDefault: false,
+      partials: {
+        link: '<a href="/people/{{id}}">{{name}}</a>'
+      }
     }
   );
 }
