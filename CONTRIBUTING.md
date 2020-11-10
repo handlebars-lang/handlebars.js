@@ -1,5 +1,9 @@
 # How to Contribute
 
+## Reporting security issues
+
+Please don't open issues for security issues. Instead, file a report at https://www.npmjs.com/advisories/report?package=handlebars
+
 ## Reporting Issues
 
 Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
