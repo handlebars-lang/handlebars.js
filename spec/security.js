@@ -103,4 +103,26 @@ describe('security issues', function() {
             shouldCompileTo('{{lookup this "__proto__"}}', {}, '');
         });
     });
+
+  describe('escapes template variables', function() {
+    it('in compat mode', function() {
+      expectTemplate("{{'a\\b'}}")
+        .withCompileOptions({ compat: true })
+        .withInput({ 'a\\b': 'c' })
+        .toCompileTo('c');
+    });
+
+    it('in default mode', function() {
+      expectTemplate("{{'a\\b'}}")
+        .withCompileOptions()
+        .withInput({ 'a\\b': 'c' })
+        .toCompileTo('c');
+    });
+    it('in default mode', function() {
+      expectTemplate("{{'a\\b'}}")
+        .withCompileOptions({ strict: true })
+        .withInput({ 'a\\b': 'c' })
+        .toCompileTo('c');
+    });
+  });
 });
