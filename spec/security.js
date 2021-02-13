@@ -298,6 +298,10 @@ describe('security issues', function() {
         checkProtoPropertyAccess({ compat: true });
       });
 
+      describe('in strict-mode', function() {
+        checkProtoPropertyAccess({ strict: true });
+      });
+
       function checkProtoPropertyAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function() {
           var spy = sinon.spy(console, 'error');
