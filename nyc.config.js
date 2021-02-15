@@ -4,6 +4,6 @@ module.exports = {
   lines: 100,
   functions: 100,
   statements: 100,
-  exclude: ['**/spec/**', '**/handlebars/compiler/parser.js'],
+  exclude: ['**/spec/**'],
   reporter: 'html'
 };

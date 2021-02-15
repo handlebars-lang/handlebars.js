@@ -3,12 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    clean: [
-      'tmp',
-      'dist',
-      'lib/handlebars/compiler/parser.js',
-      'integration-testing/**/node_modules'
-    ],
+    clean: ['tmp', 'dist', 'integration-testing/**/node_modules'],
 
     copy: {
       dist: {
@@ -198,7 +193,7 @@ module.exports = function(grunt) {
   this.registerTask(
     'build',
     'Builds a distributable version of the current project',
-    ['parser', 'node', 'globals']
+    ['node', 'globals']
   );
 
   this.registerTask('node', ['babel:cjs']);

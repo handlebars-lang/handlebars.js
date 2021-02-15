@@ -22,7 +22,7 @@ vm.runInThisContext(
   filename
 );
 
-var parse = require('../../dist/cjs/handlebars/compiler/base').parse;
+var parse = require('@handlebars/parser').parse;
 var compiler = require('../../dist/cjs/handlebars/compiler/compiler');
 var JavaScriptCompiler = require('../../dist/cjs/handlebars/compiler/javascript-compiler');
 
