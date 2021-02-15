@@ -163,6 +163,7 @@ Handlebars in the Wild
 * [apiDoc](https://github.com/apidoc/apidoc) apiDoc uses handlebars as parsing engine for api documentation view generation.
 * [handlebars-wax](https://github.com/shannonmoeller/handlebars-wax) The missing Handlebars API. Effortless registration of data, partials, helpers, and decorators using file-system globs, modules, and plain-old JavaScript objects.
 * [openVALIDATION](https://github.com/openvalidation/openvalidation) a natural language compiler for validation rules. Generates program code in Java, JavaScript, C#, Python and Rust with handlebars.
+* [handlebars-action](https://github.com/marketplace/actions/handlebars-action) A GitHub action to transform files in your repository with Handlebars templating.
 
 External Resources
 ------------------
