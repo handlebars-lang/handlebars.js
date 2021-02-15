@@ -2,7 +2,26 @@
 
 ## Development
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.6...master)
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.7...master)
+
+## v4.7.7 - February 15th, 2021
+
+- fix weird error in integration tests - eb860c0
+- fix: check prototype property access in strict-mode (#1736) - b6d3de7
+- fix: escape property names in compat mode (#1736) - f058970
+- refactor: In spec tests, use expectTemplate over equals and shouldThrow (#1683) - 77825f8
+- chore: start testing on Node.js 12 and 13 - 3789a30
+
+(POSSIBLY) BREAKING CHANGES:
+
+- the changes from version [4.6.0](https://github.com/handlebars-lang/handlebars.js/blob/master/release-notes.md#v460---january-8th-2020) now also apply
+  in when using the compile-option "strict: true". Access to prototype properties is forbidden completely by default, specific properties or methods
+  can be allowed via runtime-options. See #1633 for details. If you are using Handlebars as documented, you should not be accessing prototype properties
+  from your template anyway, so the changes should not be a problem for you. Only the use of undocumented features can break your build.
+
+That is why we only bump the patch version despite mentioning breaking changes.
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.7.6...v4.7.7)
 
 ## v4.7.6 - April 3rd, 2020
 

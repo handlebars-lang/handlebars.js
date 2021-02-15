@@ -298,6 +298,10 @@ describe('security issues', function() {
         checkProtoPropertyAccess({ compat: true });
       });
 
+      describe('in strict-mode', function() {
+        checkProtoPropertyAccess({ strict: true });
+      });
+
       function checkProtoPropertyAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function() {
           var spy = sinon.spy(console, 'error');
@@ -394,6 +398,28 @@ describe('security issues', function() {
           .withInput({ anArray: ['a', 'b', 'c'] })
           .toCompileTo('3');
       });
+    });
+  });
+
+  describe('escapes template variables', function() {
+    it('in compat mode', function() {
+      expectTemplate("{{'a\\b'}}")
+        .withCompileOptions({ compat: true })
+        .withInput({ 'a\\b': 'c' })
+        .toCompileTo('c');
+    });
+
+    it('in default mode', function() {
+      expectTemplate("{{'a\\b'}}")
+        .withCompileOptions()
+        .withInput({ 'a\\b': 'c' })
+        .toCompileTo('c');
+    });
+    it('in default mode', function() {
+      expectTemplate("{{'a\\b'}}")
+        .withCompileOptions({ strict: true })
+        .withInput({ 'a\\b': 'c' })
+        .toCompileTo('c');
     });
   });
 });

@@ -12,18 +12,20 @@ cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 # However, the built distribution should work with older NodeJS versions as well.
 # This test is simple by design. It merely ensures, that calling Handlebars does not fail with old versions.
 # It does (almost) not test for correctness, because that is already done in the mocha-tests.
-# And it does not use any NodeJS based testing framwork to make this part independent of the Node version.
+# And it does not use any NodeJS based testing framework to make this part independent of the Node version.
 
 unset npm_config_prefix
 
 echo "Handlebars should be able to run in various versions of NodeJS"
-for i in  10 11 12 13 ; do
+for node_version_to_test in 10 11 12 13 14 15; do
+
     rm target node_modules package-lock.json -rf
     mkdir target
-    nvm install "$i"
-    nvm exec "$i" npm install
-    nvm exec "$i" npm run test
-    nvm exec "$i" npm run test-precompile
+
+    nvm install "$node_version_to_test"
+    nvm exec "$node_version_to_test" npm install
+    nvm exec "$node_version_to_test" npm run test
+    nvm exec "$node_version_to_test" npm run test-precompile
 
     echo Success
 done
