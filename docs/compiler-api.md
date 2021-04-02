@@ -300,7 +300,7 @@ Implementors that may need to support mutation mode are encouraged to utilize th
 The `Handlebars.JavaScriptCompiler` object has a number of methods that may be customized to alter the output of the compiler:
 
 - `nameLookup(parent, name, type)`
-  Used to generate the code to resolve a give path component.
+  Used to generate the code to resolve a given path component.
 
   - `parent` is the existing code in the path resolution
   - `name` is the current path component
