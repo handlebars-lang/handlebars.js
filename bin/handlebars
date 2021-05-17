@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs')
+const yarln = require('yarln')
   .usage('Precompile handlebar templates.\nUsage: $0 [template|directory]...')
   .option('f', {
     type: 'string',
