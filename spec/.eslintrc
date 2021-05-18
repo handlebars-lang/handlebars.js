@@ -3,12 +3,11 @@
     "CompilerContext": true,
     "Handlebars": true,
     "handlebarsEnv": true,
-
     "shouldCompileTo": true,
     "shouldCompileToWithPartials": true,
     "shouldThrow": true,
+    "expectTemplate": true,
     "compileWithPartials": true,
-
     "console": true,
     "require": true,
     "suite": true,
@@ -22,7 +21,9 @@
     "stop": true,
     "ok": true,
     "strictEqual": true,
-    "define": true
+    "define": true,
+    "expect": true,
+    "chai": true
   },
   "env": {
     "mocha": true
@@ -30,7 +31,7 @@
   "rules": {
     // Disabling for tests, for now.
     "no-path-concat": 0,
-
+    "dot-notation": 0,
     "no-var": 0
   }
 }

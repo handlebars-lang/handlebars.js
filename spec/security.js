@@ -1,17 +1,30 @@
 describe('security issues', function() {
     describe('GH-1495: Prevent Remote Code Execution via constructor', function() {
-        it('should not allow constructors to be accessed', function() {
-            shouldCompileTo('{{constructor.name}}', {}, '');
-            shouldCompileTo('{{lookup (lookup this "constructor") "name"}}', {}, '');
-        });
+      checkPropertyAccess({});
 
+      describe('in compat-mode', function() {
+        checkPropertyAccess({ compat: true });
+      });
+
+      describe('in strict-mode', function() {
+        checkPropertyAccess({ strict: true });
+      });
+
+
+      function checkPropertyAccess(compileOptions) {
         it('should allow the "constructor" property to be accessed if it is enumerable', function() {
-            shouldCompileTo('{{constructor.name}}', {'constructor': {
-                'name': 'here we go'
-            }}, 'here we go');
-            shouldCompileTo('{{lookup (lookup this "constructor") "name"}}', {'constructor': {
-                'name': 'here we go'
-            }}, 'here we go');
+          expectTemplate('{{constructor.name}}')
+            .withCompileOptions(compileOptions)
+            .withInput({'constructor': {
+              'name': 'here we go'
+            }})
+            .toCompileTo('here we go');
+          expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+            .withCompileOptions(compileOptions)
+            .withInput({'constructor': {
+              'name': 'here we go'
+            }})
+            .toCompileTo('here we go');
         });
 
         it('should allow prototype properties that are not constructors', function() {
@@ -24,11 +37,55 @@ describe('security issues', function() {
                 }
             });
 
-            shouldCompileTo('{{#with this}}{{this.abc}}{{/with}}',
-                new TestClass(), 'xyz');
-            shouldCompileTo('{{#with this}}{{lookup this "abc"}}{{/with}}',
-                new TestClass(), 'xyz');
+
+            expectTemplate('{{#with this}}{{this.abc}}{{/with}}')
+              .withCompileOptions(compileOptions)
+              .withInput(new TestClass())
+              .toCompileTo('xyz');
+
+            expectTemplate('{{#with this}}{{lookup this "abc"}}{{/with}}')
+              .withCompileOptions(compileOptions)
+              .withInput(new TestClass())
+              .toCompileTo('xyz');
         });
+
+        it('should not allow constructors to be accessed', function() {
+          expectTemplate('{{lookup (lookup this "constructor") "name"}}')
+            .withCompileOptions(compileOptions)
+            .withInput({})
+            .toCompileTo('');
+          if (compileOptions.strict) {
+            expectTemplate('{{constructor.name}}')
+              .withCompileOptions(compileOptions)
+              .withInput({})
+              .toThrow(TypeError);
+          } else {
+            expectTemplate('{{constructor.name}}')
+              .withCompileOptions(compileOptions)
+              .withInput({})
+              .toCompileTo('');
+          }
+        });
+
+        it('should not allow __proto__ to be accessed', function() {
+          expectTemplate('{{lookup (lookup this "__proto__") "name"}}')
+            .withCompileOptions(compileOptions)
+            .withInput({})
+            .toCompileTo('');
+          if (compileOptions.strict) {
+            expectTemplate('{{__proto__.name}}')
+              .withCompileOptions(compileOptions)
+              .withInput({})
+              .toThrow(TypeError);
+          } else {
+            expectTemplate('{{__proto__.name}}')
+              .withCompileOptions(compileOptions)
+              .withInput({})
+              .toCompileTo('');
+          }
+        });
+
+      }
     });
 
     describe('GH-1595', function() {
