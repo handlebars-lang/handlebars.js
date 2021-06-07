@@ -6,7 +6,7 @@ Handlebars.js
 =============
 
 Handlebars.js is an extension to the [Mustache templating
-language](http://mustache.github.com/) created by Chris Wanstrath.
+language](https://mustache.github.io/) created by Chris Wanstrath.
 Handlebars.js and Mustache are both logicless templating languages that
 keep the view and the code separated like we all know they should be.
 
@@ -22,7 +22,7 @@ Usage
 -----
 In general, the syntax of Handlebars.js templates is a superset
 of Mustache templates. For basic syntax, check out the [Mustache
-manpage](http://mustache.github.com/mustache.5.html).
+manpage](https://mustache.github.io/mustache.5.html).
 
 Once you have a template, use the `Handlebars.compile` method to compile
 the template into a function. The generated function takes a context
@@ -64,7 +64,7 @@ templates easier and also changes a tiny detail of how partials work.
 - [Literal Values](https://handlebarsjs.com/guide/expressions.html#literal-segments)
 - [Delimited Comments](https://handlebarsjs.com/guide/#template-comments)
 
-Block expressions have the same syntax as mustache sections but should not be confused with one another. Sections are akin to an implicit `each` or `with` statement depending on the input data and helpers are explicit pieces of code that are free to implement whatever behavior they like. The [mustache spec](http://mustache.github.io/mustache.5.html) defines the exact behavior of sections. In the case of name conflicts, helpers are given priority.
+Block expressions have the same syntax as mustache sections but should not be confused with one another. Sections are akin to an implicit `each` or `with` statement depending on the input data and helpers are explicit pieces of code that are free to implement whatever behavior they like. The [mustache spec](https://mustache.github.io/mustache.5.html) defines the exact behavior of sections. In the case of name conflicts, helpers are given priority.
 
 ### Compatibility
 
