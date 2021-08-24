@@ -21,7 +21,7 @@ Usage
 -----
 In general, the syntax of Handlebars.js templates is a superset
 of Mustache templates. For basic syntax, check out the [Mustache
-manpage](http://mustache.github.com/mustache.5.html).
+manpage](http://mustache.github.io/mustache.5.html).
 
 Once you have a template, use the `Handlebars.compile` method to compile
 the template into a function. The generated function takes a context
