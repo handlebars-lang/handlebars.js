@@ -3,7 +3,7 @@
   "barename": "handlebars",
   "version": "4.7.7",
   "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
-  "homepage": "http://www.handlebarsjs.com/",
+  "homepage": "https://www.handlebarsjs.com/",
   "keywords": [
     "handlebars",
     "mustache",

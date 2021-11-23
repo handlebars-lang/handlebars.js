@@ -78,14 +78,14 @@ We do linting and formatting in two phases:
 
 - Committed files are linted and formatted in a pre-commit hook. In this stage eslint-errors are forbidden,
   while warnings are allowed.
-- The travis-ci job also lints all files and checks if they are formatted correctly. In this stage, warnings
+- The GitHub CI job also lints all files and checks if they are formatted correctly. In this stage, warnings
   are forbidden.
 
-You can use the following scripts to make sure that the travis-job does not fail:
+You can use the following scripts to make sure that the CI job does not fail:
 
 - **npm run lint** will run `eslint` and fail on warnings
 - **npm run format** will run `prettier` on all files
-- **npm run check-before-pull-request** will perform all most checks that travis does in its build-job, excluding the "integration-test".
+- **npm run check-before-pull-request** will perform all most checks that our CI job does in its build-job, excluding the "integration-test".
 - **npm run integration-test** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
   These tests only work on a Linux-machine with `nvm` installed (for running tests in multiple versions of NodeJS).
 

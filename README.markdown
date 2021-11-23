@@ -1,6 +1,8 @@
-[![Travis Build Status](https://img.shields.io/travis/wycats/handlebars.js/master.svg)](https://travis-ci.org/wycats/handlebars.js)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/wycats/handlebars.js?branch=master&svg=true)](https://ci.appveyor.com/project/wycats/handlebars-js)
+[![CI Build Status](https://img.shields.io/github/workflow/status/handlebars-lang/handlebars.js/ci/master)](https://github.com/handlebars-lang/handlebars.js/actions)
 [![Selenium Test Status](https://saucelabs.com/buildstatus/handlebars)](https://saucelabs.com/u/handlebars)
+[![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/handlebars?label=minified%20%2B%20gzipped)](https://bundlephobia.com/package/handlebars)
+[![Install size](https://packagephobia.com/badge?p=handlebars)](https://packagephobia.com/result?p=handlebars)
 
 Handlebars.js
 =============
@@ -102,7 +104,7 @@ does have some big performance advantages. Justin Marney, a.k.a.
 [gotascii](http://github.com/gotascii), confirmed that with an
 [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The
 rewritten Handlebars (current version) is faster than the old version,
-with many [performance tests](https://travis-ci.org/wycats/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
+with many performance tests being 5 to 7 times faster than the Mustache equivalent.
 
 
 Upgrading
