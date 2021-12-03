@@ -2,7 +2,7 @@
 
 ## Reporting Issues
 
-Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
+Please see our [FAQ](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
 
 Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]! In general we are going to ask for an example of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle [template][jsfiddle] to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here)
 
@@ -47,7 +47,7 @@ You can also run our set of benchmarks with `grunt bench`.
 The `grunt dev` implements watching for tests and allows for in browser testing at `http://localhost:9999/spec/`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
-[http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
+[http://github.com/handlebars-lang/handlebars.js/issues](http://github.com/handlebars-lang/handlebars.js/issues).
 
 ##Running Tests
 

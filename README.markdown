@@ -110,12 +110,12 @@ with many performance tests being 5 to 7 times faster than the Mustache equivale
 Upgrading
 ---------
 
-See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
+See [release-notes.md](https://github.com/handlebars-lang/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
 Known Issues
 ------------
 
-See [FAQ.md](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
+See [FAQ.md](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
 
 
 Handlebars in the Wild
@@ -167,4 +167,4 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
-[pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
+[pull-request]: https://github.com/handlebars-lang/handlebars.js/pull/new/master
