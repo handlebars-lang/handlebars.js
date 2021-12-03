@@ -16,4 +16,4 @@ Decorators are executed when the block program is instantiated and are passed `(
 
 Decorators may set values on `props` or return a modified function that wraps `program` in particular behaviors. If the decorator returns nothing, then `program` is left unaltered.
 
-The [inline partial](https://github.com/wycats/handlebars.js/blob/master/lib/handlebars/decorators/inline.js) implementation provides an example of decorators being used for both metadata and wrapping behaviors.
+The [inline partial](https://github.com/handlebars-lang/handlebars.js/blob/master/lib/handlebars/decorators/inline.js) implementation provides an example of decorators being used for both metadata and wrapping behaviors.

@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wycats/handlebars.js.git"
+    "url": "https://github.com/handlebars-lang/handlebars.js.git"
   },
   "author": "Yehuda Katz",
   "license": "MIT",
@@ -121,7 +121,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,json,md}": [
+    "*.{js,css,json}": [
       "prettier --write",
       "git add"
     ],
