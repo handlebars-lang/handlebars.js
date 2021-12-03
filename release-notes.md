@@ -375,7 +375,13 @@ Both bullet points imly that Handlebars is not 100% percent compatible to 4.2.0,
 
 We consider it more important to resolve a major security issue than to maintain 100% compatibility.
 
-[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.2.1...v4.3.0)
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.2.2...v4.3.0)
+
+## v4.2.2 - October 2nd, 2019
+
+- Error message for syntax error missing location in 4.2.1+ (#1562)
+
+[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...v4.2.2)
 
 ## v4.2.1 - September 20th, 2019
 
