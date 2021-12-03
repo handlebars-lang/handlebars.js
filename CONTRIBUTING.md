@@ -8,7 +8,7 @@ Should you run into other issues with the project, please don't hesitate to let 
 
 Pull requests containing only failing tests demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
-Documentation issues on the handlebarsjs.com site should be reported on [handlebars-site](https://github.com/wycats/handlebars-site).
+Documentation issues on the [handlebarsjs.com](https://handlebarsjs.com) site should be reported on [handlebars-lang/docs](https://github.com/handlebars-lang/docs).
 
 ## Branches
 
@@ -93,7 +93,7 @@ You can use the following scripts to make sure that the CI job does not fail:
 
 Before attempting the release Handlebars, please make sure that you have the following authorizations:
 
-- Push-access to `wycats/handlebars.js`
+- Push-access to `handlebars-lang/handlebars.js`
 - Publishing rights on npmjs.com for the `handlebars` package
 - Publishing rights on gemfury for the `handlebars-source` package
 - Push-access to the repo for legacy package managers: `components/handlebars`
@@ -101,15 +101,12 @@ Before attempting the release Handlebars, please make sure that you have the fol
 
 _When releasing a previous version of Handlebars, please look into the CONTRIBUNG.md in the corresponding branch._
 
-Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
-
 A full release may be completed with the following:
 
 ```
 npm ci
-yo release
+npx grunt
 npm publish
-yo release:publish components handlebars.js dist/components/
 
 cd dist/components/
 gem build handlebars-source.gemspec
@@ -126,13 +123,13 @@ in those places still point to the latest version
 
 When everything is OK, the **handlebars site** needs to be updated.
 
-Go to the master branch of the repo [handlebars-lang/handlebarsjs.com-github-pages](https://github.com/handlebars-lang/handlebarsjs.com-github-pages/tree/master)
+Go to the master branch of the repo [handlebars-lang/docs](https://github.com/handlebars-lang/docs/tree/master)
 and make a minimal change to the README. This will invoke a github-action that redeploys
 the site, fetching the latest version-number from the npm-registry.
 (note that the default-branch of this repo is not the master and regular changes are done
 in the `handlebars-lang/docs`-repo).
 
 [generator-release]: https://github.com/walmartlabs/generator-release
-[pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
-[issue]: https://github.com/wycats/handlebars.js/issues/new
+[pull-request]: https://github.com/handlebars-lang/handlebars.js/pull/new/master
+[issue]: https://github.com/handlebars-lang/handlebars.js/issues/new
 [jsfiddle]: https://jsfiddle.net/9D88g/180/
