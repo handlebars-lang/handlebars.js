@@ -32,9 +32,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        operating-system: ['ubuntu-latest']
+        operating-system: ['ubuntu-latest', 'windows-latest']
         # https://nodejs.org/en/about/releases/
-        node-version: ['12', '14', '16', '17']
+        node-version: ['10', '12', '14', '16', '17']
 
     steps:
       - name: Checkout
