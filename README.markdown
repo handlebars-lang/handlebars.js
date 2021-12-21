@@ -10,7 +10,7 @@ Handlebars provides the power necessary to let you build **semantic templates** 
 Handlebars is largely compatible with Mustache templates. In most cases it is possible to swap out Mustache with Handlebars and continue using your current templates.
 
 Checkout the official Handlebars docs site at
-[https://handlebarsjs.com/](https://handlebarsjs.com) and the live demo at [http://tryhandlebarsjs.com/](http://tryhandlebarsjs.com/).
+[handlebarsjs.com](https://handlebarsjs.com) and try our [live demo](https://handlebarsjs.com/playground.html).
 
 Installing
 ----------
