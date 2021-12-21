@@ -217,7 +217,7 @@ describe('data', function() {
       })
       .withInput({ exclaim: true, zomg: 'planet' })
       .withRuntimeOptions({ data: { adjective: 'happy' } })
-      .withMessage('Overriden data output by helper')
+      .withMessage('Overridden data output by helper')
       .toCompileTo('sad world?');
   });
 
@@ -232,7 +232,7 @@ describe('data', function() {
       })
       .withInput({ exclaim: true, zomg: 'world' })
       .withRuntimeOptions({ data: { adjective: 'happy' } })
-      .withMessage('Overriden data output by helper')
+      .withMessage('Overridden data output by helper')
       .toCompileTo('sad world?');
   });
 
