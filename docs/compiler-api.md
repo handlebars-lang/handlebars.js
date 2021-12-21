@@ -291,7 +291,7 @@ scanner.accept(ast);
 
 The current node's ancestors will be maintained in the `parents` array, with the most recent parent listed first.
 
-The visitor may also be configured to operate in mutation mode by setting the `mutating` field to true. When in this mode, handler methods may return any valid AST node and it will replace the one they are currently operating on. Returning `false` will remove the given value (if valid) and returning `undefined` will leave the node in tact. This return structure only apply to mutation mode and non-mutation mode visitors are free to return whatever values they wish.
+The visitor may also be configured to operate in mutation mode by setting the `mutating` field to true. When in this mode, handler methods may return any valid AST node and it will replace the one they are currently operating on. Returning `false` will remove the given value (if valid) and returning `undefined` will leave the node intact. This return structure only apply to mutation mode and non-mutation mode visitors are free to return whatever values they wish.
 
 Implementors that may need to support mutation mode are encouraged to utilize the `acceptKey`, `acceptRequired` and `acceptArray` helpers which provide the conditional overwrite behavior as well as implement sanity checks where pertinent.
 

@@ -22,7 +22,7 @@ describe('utils', function() {
   });
 
   describe('#escapeExpression', function() {
-    it('shouhld escape html', function() {
+    it('should escape html', function() {
       equals(
         Handlebars.Utils.escapeExpression('foo<&"\'>'),
         'foo&lt;&amp;&quot;&#x27;&gt;'
