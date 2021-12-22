@@ -9,22 +9,21 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint (ESlint)
+      - name: Lint
         run: npm run lint
-
-      - name: Lint (Prettier)
-        run: npm run check-format
-
-      - name: Lint (TypeScript)
-        run: npm run dtslint
 
   test:
     name: Test
@@ -52,3 +51,31 @@ jobs:
 
       - name: Test
         run: npm run test
+
+  browser:
+    name: Browser Tests
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: |
+          npx playwright install-deps
+          npx playwright install
+
+      - name: Build
+        run: npx grunt prepare
+
+      - name: Test
+        run: npm run test:browser

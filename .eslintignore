@@ -4,7 +4,6 @@
 *.sublime-project
 *.sublime-workspace
 npm-debug.log
-sauce_connect.log*
 .idea
 yarn-error.log
 node_modules
