@@ -1,5 +1,4 @@
 [![CI Build Status](https://img.shields.io/github/workflow/status/handlebars-lang/handlebars.js/ci/master)](https://github.com/handlebars-lang/handlebars.js/actions)
-[![Selenium Test Status](https://saucelabs.com/buildstatus/handlebars)](https://saucelabs.com/u/handlebars)
 [![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
 [![Bundle size](https://img.shields.io/bundlephobia/minzip/handlebars?label=minified%20%2B%20gzipped)](https://bundlephobia.com/package/handlebars)
 [![Install size](https://packagephobia.com/badge?p=handlebars)](https://packagephobia.com/result?p=handlebars)
@@ -90,8 +89,6 @@ Handlebars has been designed to work in any ECMAScript 3 environment. This inclu
 
 Older versions and other runtimes are likely to work but have not been formally
 tested. The compiler requires `JSON.stringify` to be implemented natively or via a polyfill. If using the precompiler this is not necessary.
-
-[![Selenium Test Status](https://saucelabs.com/browser-matrix/handlebars.svg)](https://saucelabs.com/u/handlebars)
 
 Performance
 -----------
