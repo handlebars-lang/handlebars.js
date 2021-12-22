@@ -109,7 +109,6 @@
     "dist/amd/**/*.js",
     "dist/cjs/**/*.js",
     "lib",
-    "print-script",
     "release-notes.md",
     "runtime.js",
     "types/*.d.ts",
