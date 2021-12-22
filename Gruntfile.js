@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       'tmp',
       'dist',
       'lib/handlebars/compiler/parser.js',
-      'integration-testing/**/node_modules'
+      '/tests/integration/**/node_modules'
     ],
 
     copy: {
@@ -210,7 +210,7 @@ module.exports = function(grunt) {
 
     bgShell: {
       integrationTests: {
-        cmd: './integration-testing/run-integration-tests.sh',
+        cmd: './tests/integration/run-integration-tests.sh',
         bg: false,
         fail: true
       }

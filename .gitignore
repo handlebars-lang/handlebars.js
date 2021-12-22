@@ -16,5 +16,5 @@ node_modules
 lib/handlebars/compiler/parser.js
 /coverage/
 /dist/
-/integration-testing/*/dist/
+/tests/integration/*/dist/
 /spec/tmp/*
