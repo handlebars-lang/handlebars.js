@@ -1,4 +1,4 @@
-const metrics = require('../bench');
+const metrics = require('../tests/bench');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 
 module.exports = function(grunt) {
