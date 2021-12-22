@@ -26,7 +26,7 @@ jobs:
         run: npm run lint
 
   test:
-    name: Test
+    name: Test (Node)
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
@@ -52,8 +52,15 @@ jobs:
       - name: Test
         run: npm run test
 
+      - name: Test (Integration)
+        # https://github.com/webpack/webpack/issues/14532
+        if: ${{ matrix.node-version != '17' }}
+        run: |
+          cd ./tests/integration/webpack-babel-test && ./test.sh && cd -
+          cd ./tests/integration/webpack-test && ./test.sh && cd -
+
   browser:
-    name: Browser Tests
+    name: Test (Browser)
     runs-on: 'ubuntu-latest'
     steps:
       - name: Checkout

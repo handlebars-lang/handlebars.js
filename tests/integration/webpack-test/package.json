@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "handlebars": "file:../..",
+    "handlebars": "file:../../..",
     "handlebars-loader": "^1.7.1",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"

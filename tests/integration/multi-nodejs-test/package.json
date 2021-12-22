@@ -7,7 +7,7 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "handlebars": "file:../.."
+    "handlebars": "file:../../.."
   },
   "scripts": {
     "test": "node run-handlebars.js",
