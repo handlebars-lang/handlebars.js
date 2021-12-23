@@ -94,7 +94,7 @@
     "test:mocha": "grunt build && grunt test",
     "test:browser": "playwright test --config tests/browser/playwright.config.js tests/browser/spec.js",
     "test:integration": "grunt integration-tests",
-    "test:serve": "node ./tests/server.js",
+    "test:serve": "grunt connect:server:keepalive",
     "extensive-tests-and-publish-to-aws": "npx mocha tasks/tests/ && grunt --stack extensive-tests-and-publish-to-aws",
     "--- combined tasks ---": "",
     "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
