@@ -19,7 +19,7 @@ const config = {
   reporter: 'list',
   webServer: {
     command: 'npm run test:serve',
-    port: 3000,
+    port: 9999,
     reuseExistingServer: false
   }
 };
