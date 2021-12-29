@@ -381,7 +381,7 @@ We consider it more important to resolve a major security issue than to maintain
 
 - Error message for syntax error missing location in 4.2.1+ (#1562)
 
-[Commits](https://github.com/wycats/handlebars.js/compare/v4.2.1...v4.2.2)
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.2.1...v4.2.2)
 
 ## v4.2.1 - September 20th, 2019
 
