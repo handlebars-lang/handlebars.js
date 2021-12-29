@@ -11,8 +11,6 @@ function BenchWarmer() {
   this.errors = {};
 }
 
-var print = require('util').print;
-
 BenchWarmer.prototype = {
   winners: function(benches) {
     return Benchmark.filter(benches, 'fastest');
@@ -69,7 +67,7 @@ BenchWarmer.prototype = {
 
         self.startLine('');
 
-        print('\n');
+        console.log('\n');
         self.printHeader('scaled');
         _.each(self.scaled, function(value, name) {
           self.startLine(name);
@@ -78,7 +76,7 @@ BenchWarmer.prototype = {
             self.writeValue(value[lang] || '');
           });
         });
-        print('\n');
+        console.log('\n');
 
         var errors = false,
           prop,
@@ -94,16 +92,16 @@ BenchWarmer.prototype = {
         }
 
         if (errors) {
-          print('\n\nErrors:\n');
+          console.log('\n\nErrors:\n');
           Object.keys(self.errors).forEach(function(prop) {
             if (self.errors[prop].error.message !== 'EWOT') {
               bench = self.errors[prop];
-              print('\n' + bench.name + ':\n');
-              print(bench.error.message);
+              console.log('\n' + bench.name + ':\n');
+              console.log(bench.error.message);
               if (bench.error.stack) {
-                print(bench.error.stack.join('\n'));
+                console.log(bench.error.stack.join('\n'));
               }
-              print('\n');
+              console.log('\n');
             }
           });
         }
@@ -112,7 +110,7 @@ BenchWarmer.prototype = {
       }
     });
 
-    print('\n');
+    console.log('\n');
   },
 
   scaleTimes: function() {
@@ -163,11 +161,11 @@ BenchWarmer.prototype = {
     }
 
     if (winners) {
-      print('WINNER(S)');
+      console.log('WINNER(S)');
       horSize = horSize + 'WINNER(S)'.length;
     }
 
-    print('\n' + new Array(horSize + 1).join('-'));
+    console.log('\n' + new Array(horSize + 1).join('-'));
   },
 
   startLine: function(name) {
@@ -179,8 +177,8 @@ BenchWarmer.prototype = {
 
     this.currentBenches = [];
 
-    print(winners.join(', '));
-    print('\n');
+    console.log(winners.join(', '));
+    console.log('\n');
 
     if (name) {
       this.writeValue(name);
@@ -216,7 +214,7 @@ BenchWarmer.prototype = {
   writeValue: function(out) {
     var padding = this.benchSize - out.length + 1;
     out = out + new Array(padding).join(' ');
-    print(out);
+    console.log(out);
   }
 };
 

@@ -7,9 +7,6 @@ cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # This script tests with precompiler and the built distribution with multiple NodeJS version.
-# The rest of the travis-build will only work with newer NodeJS versions, because the build
-# tools don't support older versions.
-# However, the built distribution should work with older NodeJS versions as well.
 # This test is simple by design. It merely ensures, that calling Handlebars does not fail with old versions.
 # It does (almost) not test for correctness, because that is already done in the mocha-tests.
 # And it does not use any NodeJS based testing framework to make this part independent of the Node version.
@@ -17,7 +14,7 @@ cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 unset npm_config_prefix
 
 echo "Handlebars should be able to run in various versions of NodeJS"
-for node_version_to_test in 10 11 12 13 14 15; do
+for node_version_to_test in 10 11 12 13 14 15 16 17; do
 
     rm target node_modules package-lock.json -rf
     mkdir target

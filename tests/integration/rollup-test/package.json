@@ -1,0 +1,14 @@
+{
+  "name": "rollup-test",
+  "description": "Various tests with Handlebars and rollup",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rollup --config rollup.config.js --failAfterWarnings"
+  },
+  "private": true,
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "handlebars": "file:../../..",
+    "rollup": "^2.61.1"
+  }
+}

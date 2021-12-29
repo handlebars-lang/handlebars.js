@@ -4,8 +4,8 @@
 		<id>handlebars.js</id>
 		<version>5.0.0-alpha.1</version>
 		<authors>handlebars.js Authors</authors>
-		<licenseUrl>https://github.com/wycats/handlebars.js/blob/master/LICENSE</licenseUrl>
-		<projectUrl>https://github.com/wycats/handlebars.js/</projectUrl>
+		<licenseUrl>https://github.com/handlebars-lang/handlebars.js/blob/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/handlebars-lang/handlebars.js/</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Extension of the Mustache logicless template language</description>
 		<releaseNotes></releaseNotes>

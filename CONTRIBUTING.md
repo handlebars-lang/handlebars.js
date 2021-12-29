@@ -6,7 +6,7 @@ Please don't open issues for security issues. Instead, file a report at https://
 
 ## Reporting Issues
 
-Please see our [FAQ](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
+Please see our [FAQ](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
 
 Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]!
 
@@ -14,15 +14,14 @@ In general we are going to ask for an **example** of the problem failing, which 
 
 Pull requests containing only failing tests demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
-Documentation issues on the handlebarsjs.com site should be reported on [handlebars-site](https://github.com/wycats/handlebars-site).
+Documentation issues on the [handlebarsjs.com](https://handlebarsjs.com) site should be reported on [handlebars-lang/docs](https://github.com/handlebars-lang/docs).
 
 ## Branches
 
 - The branch `4.x` contains the currently released version. Bugfixes should be made in this branch.
 - The branch `master` contains the next version. A release date is not yet specified. Maintainers
   should merge the branch `4.x` into the master branch regularly.
-
-* The branch `3.x` comtains the legacy version `3.x`. Bugfixes are applied seperately (if needed). The branch will not
+- The branch `3.x` contains the legacy version `3.x`. Bugfixes are applied separately (if needed). The branch will not
   be merged with any of the other branches.
 
 ## Pull Requests
@@ -56,7 +55,7 @@ You can also run our set of benchmarks with `grunt bench`.
 The `grunt dev` implements watching for tests and allows for in browser testing at `http://localhost:9999/spec/`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
-[http://github.com/wycats/handlebars.js/issues](http://github.com/wycats/handlebars.js/issues).
+[http://github.com/handlebars-lang/handlebars.js/issues](http://github.com/handlebars-lang/handlebars.js/issues).
 
 ## Running Tests
 
@@ -87,14 +86,14 @@ We do linting and formatting in two phases:
 
 - Committed files are linted and formatted in a pre-commit hook. In this stage eslint-errors are forbidden,
   while warnings are allowed.
-- The travis-ci job also lints all files and checks if they are formatted correctly. In this stage, warnings
+- The GitHub CI job also lints all files and checks if they are formatted correctly. In this stage, warnings
   are forbidden.
 
-You can use the following scripts to make sure that the travis-job does not fail:
+You can use the following scripts to make sure that the CI job does not fail:
 
 - **npm run lint** will run `eslint` and fail on warnings
 - **npm run format** will run `prettier` on all files
-- **npm run check-before-pull-request** will perform all most checks that travis does in its build-job, excluding the "integration-test".
+- **npm run check-before-pull-request** will perform all most checks that our CI job does in its build-job, excluding the "integration-test".
 - **npm run integration-test** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
   These tests only work on a Linux-machine with `nvm` installed (for running tests in multiple versions of NodeJS).
 
@@ -102,7 +101,7 @@ You can use the following scripts to make sure that the travis-job does not fail
 
 Before attempting the release Handlebars, please make sure that you have the following authorizations:
 
-- Push-access to `wycats/handlebars.js`
+- Push-access to `handlebars-lang/handlebars.js`
 - Publishing rights on npmjs.com for the `handlebars` package
 - Publishing rights on gemfury for the `handlebars-source` package
 - Push-access to the repo for legacy package managers: `components/handlebars`
@@ -110,15 +109,12 @@ Before attempting the release Handlebars, please make sure that you have the fol
 
 _When releasing a previous version of Handlebars, please look into the CONTRIBUNG.md in the corresponding branch._
 
-Handlebars utilizes the [release yeoman generator][generator-release] to perform most release tasks.
-
 A full release may be completed with the following:
 
 ```
 npm ci
-yo release
+npx grunt
 npm publish
-yo release:publish components handlebars.js dist/components/
 
 cd dist/components/
 gem build handlebars-source.gemspec
@@ -135,13 +131,13 @@ in those places still point to the latest version
 
 When everything is OK, the **handlebars site** needs to be updated.
 
-Go to the master branch of the repo [handlebars-lang/handlebarsjs.com-github-pages](https://github.com/handlebars-lang/handlebarsjs.com-github-pages/tree/master)
+Go to the master branch of the repo [handlebars-lang/docs](https://github.com/handlebars-lang/docs/tree/master)
 and make a minimal change to the README. This will invoke a github-action that redeploys
 the site, fetching the latest version-number from the npm-registry.
 (note that the default-branch of this repo is not the master and regular changes are done
 in the `handlebars-lang/docs`-repo).
 
 [generator-release]: https://github.com/walmartlabs/generator-release
-[pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
-[issue]: https://github.com/wycats/handlebars.js/issues/new
+[pull-request]: https://github.com/handlebars-lang/handlebars.js/pull/new/master
+[issue]: https://github.com/handlebars-lang/handlebars.js/issues/new
 [jsfiddle]: https://jsfiddle.net/4nbwjaqz/4/
