@@ -1,4 +1,4 @@
-[![CI Build Status](https://img.shields.io/github/workflow/status/handlebars-lang/handlebars.js/ci/master)](https://github.com/handlebars-lang/handlebars.js/actions)
+[![CI Build Status](https://github.com/handlebars-lang/handlebars.js/actions/workflows/ci.yml/badge.svg)](https://github.com/handlebars-lang/handlebars.js/actions/workflows/ci.yml)
 [![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
 [![Bundle size](https://img.shields.io/bundlephobia/minzip/handlebars?label=minified%20%2B%20gzipped)](https://bundlephobia.com/package/handlebars)
 [![Install size](https://packagephobia.com/badge?p=handlebars)](https://packagephobia.com/result?p=handlebars)
