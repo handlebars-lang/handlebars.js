@@ -1,34 +1,58 @@
 describe('runtime', function() {
   describe('#template', function() {
     it('should throw on invalid templates', function() {
-      shouldThrow(function() {
-        Handlebars.template({});
-      }, Error, 'Unknown template object: object');
-      shouldThrow(function() {
-        Handlebars.template();
-      }, Error, 'Unknown template object: undefined');
-      shouldThrow(function() {
-        Handlebars.template('');
-      }, Error, 'Unknown template object: string');
+      shouldThrow(
+        function() {
+          Handlebars.template({});
+        },
+        Error,
+        'Unknown template object: object'
+      );
+      shouldThrow(
+        function() {
+          Handlebars.template();
+        },
+        Error,
+        'Unknown template object: undefined'
+      );
+      shouldThrow(
+        function() {
+          Handlebars.template('');
+        },
+        Error,
+        'Unknown template object: string'
+      );
     });
     it('should throw on version mismatch', function() {
-      shouldThrow(function() {
-        Handlebars.template({
-          main: {},
-          compiler: [Handlebars.COMPILER_REVISION + 1]
-        });
-      }, Error, /Template was precompiled with a newer version of Handlebars than the current runtime/);
-      shouldThrow(function() {
-        Handlebars.template({
-          main: {},
-          compiler: [Handlebars.COMPILER_REVISION - 1]
-        });
-      }, Error, /Template was precompiled with an older version of Handlebars than the current runtime/);
-      shouldThrow(function() {
-        Handlebars.template({
-          main: {}
-        });
-      }, Error, /Template was precompiled with an older version of Handlebars than the current runtime/);
+      shouldThrow(
+        function() {
+          Handlebars.template({
+            main: {},
+            compiler: [Handlebars.COMPILER_REVISION + 1]
+          });
+        },
+        Error,
+        /Template was precompiled with a newer version of Handlebars than the current runtime/
+      );
+      shouldThrow(
+        function() {
+          Handlebars.template({
+            main: {},
+            compiler: [Handlebars.LAST_COMPATIBLE_COMPILER_REVISION - 1]
+          });
+        },
+        Error,
+        /Template was precompiled with an older version of Handlebars than the current runtime/
+      );
+      shouldThrow(
+        function() {
+          Handlebars.template({
+            main: {}
+          });
+        },
+        Error,
+        /Template was precompiled with an older version of Handlebars than the current runtime/
+      );
     });
   });
 
@@ -38,34 +62,42 @@ describe('runtime', function() {
     }
 
     it('should throw for depthed methods without depths', function() {
-      shouldThrow(function() {
-        var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
-        // Calling twice to hit the non-compiled case.
-        template._setup({});
-        template._setup({});
-        template._child(1);
-      }, Error, 'must pass parent depths');
+      shouldThrow(
+        function() {
+          var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
+          // Calling twice to hit the non-compiled case.
+          template._setup({});
+          template._setup({});
+          template._child(1);
+        },
+        Error,
+        'must pass parent depths'
+      );
     });
 
     it('should throw for block param methods without params', function() {
-      shouldThrow(function() {
-        var template = Handlebars.compile('{{#foo as |foo|}}{{foo}}{{/foo}}');
-        // Calling twice to hit the non-compiled case.
-        template._setup({});
-        template._setup({});
-        template._child(1);
-      }, Error, 'must pass block params');
+      shouldThrow(
+        function() {
+          var template = Handlebars.compile('{{#foo as |foo|}}{{foo}}{{/foo}}');
+          // Calling twice to hit the non-compiled case.
+          template._setup({});
+          template._setup({});
+          template._child(1);
+        },
+        Error,
+        'must pass block params'
+      );
     });
     it('should expose child template', function() {
       var template = Handlebars.compile('{{#foo}}bar{{/foo}}');
-        // Calling twice to hit the non-compiled case.
+      // Calling twice to hit the non-compiled case.
       equal(template._child(1)(), 'bar');
       equal(template._child(1)(), 'bar');
     });
     it('should render depthed content', function() {
       var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
-        // Calling twice to hit the non-compiled case.
-      equal(template._child(1, undefined, [], [{bar: 'baz'}])(), 'baz');
+      // Calling twice to hit the non-compiled case.
+      equal(template._child(1, undefined, [], [{ bar: 'baz' }])(), 'baz');
     });
   });
 

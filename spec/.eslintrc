@@ -1,14 +1,21 @@
 {
+  "extends": [
+    "../.eslintrc.js",
+    "plugin:es5/no-es2015",
+    "prettier"
+  ],
+  "plugins": [
+    "es5"
+  ],
   "globals": {
     "CompilerContext": true,
     "Handlebars": true,
     "handlebarsEnv": true,
-
     "shouldCompileTo": true,
     "shouldCompileToWithPartials": true,
     "shouldThrow": true,
+    "expectTemplate": true,
     "compileWithPartials": true,
-
     "console": true,
     "require": true,
     "suite": true,
@@ -21,16 +28,20 @@
     "start": true,
     "stop": true,
     "ok": true,
+    "sinon": true,
     "strictEqual": true,
-    "define": true
+    "define": true,
+    "expect": true,
+    "chai": true
   },
   "env": {
     "mocha": true
   },
   "rules": {
     // Disabling for tests, for now.
-    "no-path-concat": 0,
+    "no-path-concat": "off",
 
-    "no-var": 0
+    "no-var": "off",
+    "dot-notation": "off"
   }
 }

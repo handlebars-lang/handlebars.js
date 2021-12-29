@@ -1,7 +1,15 @@
 require('./common');
 
 var fs = require('fs'),
-    vm = require('vm');
+  vm = require('vm');
+
+var chai = require('chai');
+var dirtyChai = require('dirty-chai');
+
+chai.use(dirtyChai);
+global.expect = chai.expect;
+
+global.sinon = require('sinon');
 
 global.Handlebars = 'no-conflict';
 
@@ -9,7 +17,10 @@ var filename = 'dist/handlebars.runtime.js';
 if (global.minimizedTest) {
   filename = 'dist/handlebars.runtime.min.js';
 }
-vm.runInThisContext(fs.readFileSync(__dirname + '/../../' + filename), filename);
+vm.runInThisContext(
+  fs.readFileSync(__dirname + '/../../' + filename),
+  filename
+);
 
 var parse = require('../../dist/cjs/handlebars/compiler/base').parse;
 var compiler = require('../../dist/cjs/handlebars/compiler/compiler');
@@ -21,7 +32,11 @@ global.CompilerContext = {
   compile: function(template, options) {
     // Hack the compiler on to the environment for these specific tests
     handlebarsEnv.precompile = function(precompileTemplate, precompileOptions) {
-      return compiler.precompile(precompileTemplate, precompileOptions, handlebarsEnv);
+      return compiler.precompile(
+        precompileTemplate,
+        precompileOptions,
+        handlebarsEnv
+      );
     };
     handlebarsEnv.parse = parse;
     handlebarsEnv.Compiler = compiler.Compiler;

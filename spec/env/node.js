@@ -1,5 +1,13 @@
 require('./common');
 
+var chai = require('chai');
+var dirtyChai = require('dirty-chai');
+
+chai.use(dirtyChai);
+global.expect = chai.expect;
+
+global.sinon = require('sinon');
+
 global.Handlebars = require('../../lib');
 
 global.CompilerContext = {

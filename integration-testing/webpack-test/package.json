@@ -1,0 +1,21 @@
+{
+  "name": "webpack-test",
+  "description": "Various tests with Handlebars and Webpack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "test": "node dist/main.js"
+  },
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "handlebars": "file:../..",
+    "handlebars-loader": "^1.7.1",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  }
+}

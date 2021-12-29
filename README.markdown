@@ -1,28 +1,30 @@
-[![Travis Build Status](https://img.shields.io/travis/wycats/handlebars.js/master.svg)](https://travis-ci.org/wycats/handlebars.js)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/wycats/handlebars.js?branch=master&svg=true)](https://ci.appveyor.com/project/wycats/handlebars-js)
+[![CI Build Status](https://img.shields.io/github/workflow/status/handlebars-lang/handlebars.js/ci/master)](https://github.com/handlebars-lang/handlebars.js/actions)
 [![Selenium Test Status](https://saucelabs.com/buildstatus/handlebars)](https://saucelabs.com/u/handlebars)
+[![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/handlebars?label=minified%20%2B%20gzipped)](https://bundlephobia.com/package/handlebars)
+[![Install size](https://packagephobia.com/badge?p=handlebars)](https://packagephobia.com/result?p=handlebars)
 
 Handlebars.js
 =============
 
 Handlebars.js is an extension to the [Mustache templating
-language](http://mustache.github.com/) created by Chris Wanstrath.
+language](https://mustache.github.io/) created by Chris Wanstrath.
 Handlebars.js and Mustache are both logicless templating languages that
 keep the view and the code separated like we all know they should be.
 
 Checkout the official Handlebars docs site at
-[http://www.handlebarsjs.com](http://www.handlebarsjs.com) and the live demo at [http://tryhandlebarsjs.com/](http://tryhandlebarsjs.com/).
+[https://handlebarsjs.com/](https://handlebarsjs.com) and the live demo at [http://tryhandlebarsjs.com/](http://tryhandlebarsjs.com/).
 
 Installing
 ----------
 
-See our [installation documentation](http://handlebarsjs.com/installation.html).
+See our [installation documentation](https://handlebarsjs.com/installation/).
 
 Usage
 -----
 In general, the syntax of Handlebars.js templates is a superset
 of Mustache templates. For basic syntax, check out the [Mustache
-manpage](http://mustache.github.com/mustache.5.html).
+manpage](https://mustache.github.io/mustache.5.html).
 
 Once you have a template, use the `Handlebars.compile` method to compile
 the template into a function. The generated function takes a context
@@ -46,25 +48,25 @@ var result = template(data);
 // </ul>
 ```
 
-Full documentation and more examples are at [handlebarsjs.com](http://handlebarsjs.com/).
+Full documentation and more examples are at [handlebarsjs.com](https://handlebarsjs.com/).
 
 Precompiling Templates
 ----------------------
 
-Handlebars allows templates to be precompiled and included as javascript code rather than the handlebars template allowing for faster startup time. Full details are located [here](http://handlebarsjs.com/precompilation.html).
+Handlebars allows templates to be precompiled and included as javascript code rather than the handlebars template allowing for faster startup time. Full details are located [here](https://handlebarsjs.com/installation/precompilation.html).
 
 Differences Between Handlebars.js and Mustache
 ----------------------------------------------
 Handlebars.js adds a couple of additional features to make writing
 templates easier and also changes a tiny detail of how partials work.
 
-- [Nested Paths](http://handlebarsjs.com/#paths)
-- [Helpers](http://handlebarsjs.com/#helpers)
-- [Block Expressions](http://handlebarsjs.com/#block-expressions)
-- [Literal Values](http://handlebarsjs.com/#literals)
-- [Delimited Comments](http://handlebarsjs.com/#comments)
+- [Nested Paths](https://handlebarsjs.com/guide/expressions.html#path-expressions)
+- [Helpers](https://handlebarsjs.com/guide/expressions.html#helpers)
+- [Block Expressions](https://handlebarsjs.com/guide/block-helpers.html#basic-blocks)
+- [Literal Values](https://handlebarsjs.com/guide/expressions.html#literal-segments)
+- [Delimited Comments](https://handlebarsjs.com/guide/#template-comments)
 
-Block expressions have the same syntax as mustache sections but should not be confused with one another. Sections are akin to an implicit `each` or `with` statement depending on the input data and helpers are explicit pieces of code that are free to implement whatever behavior they like. The [mustache spec](http://mustache.github.io/mustache.5.html) defines the exact behavior of sections. In the case of name conflicts, helpers are given priority.
+Block expressions have the same syntax as mustache sections but should not be confused with one another. Sections are akin to an implicit `each` or `with` statement depending on the input data and helpers are explicit pieces of code that are free to implement whatever behavior they like. The [mustache spec](https://mustache.github.io/mustache.5.html) defines the exact behavior of sections. In the case of name conflicts, helpers are given priority.
 
 ### Compatibility
 
@@ -102,18 +104,18 @@ does have some big performance advantages. Justin Marney, a.k.a.
 [gotascii](http://github.com/gotascii), confirmed that with an
 [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The
 rewritten Handlebars (current version) is faster than the old version,
-with many [performance tests](https://travis-ci.org/wycats/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
+with many performance tests being 5 to 7 times faster than the Mustache equivalent.
 
 
 Upgrading
 ---------
 
-See [release-notes.md](https://github.com/wycats/handlebars.js/blob/master/release-notes.md) for upgrade notes.
+See [release-notes.md](https://github.com/handlebars-lang/handlebars.js/blob/master/release-notes.md) for upgrade notes.
 
 Known Issues
 ------------
 
-See [FAQ.md](https://github.com/wycats/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
+See [FAQ.md](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for known issues and common pitfalls.
 
 
 Handlebars in the Wild
@@ -165,4 +167,4 @@ License
 -------
 Handlebars.js is released under the MIT license.
 
-[pull-request]: https://github.com/wycats/handlebars.js/pull/new/master
+[pull-request]: https://github.com/handlebars-lang/handlebars.js/pull/new/master

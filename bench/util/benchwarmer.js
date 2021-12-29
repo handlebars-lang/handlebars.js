@@ -1,5 +1,5 @@
 var _ = require('underscore'),
-    Benchmark = require('benchmark');
+  Benchmark = require('benchmark');
 
 function BenchWarmer() {
   this.benchmarks = [];
@@ -29,20 +29,25 @@ BenchWarmer.prototype = {
     });
   },
   push: function(name, fn) {
-    if (this.names.indexOf(name) == -1) {
+    if (this.names.indexOf(name) === -1) {
       this.names.push(name);
     }
 
-    var first = this.first, suiteName = this.suiteName, self = this;
+    var first = this.first,
+      suiteName = this.suiteName,
+      self = this;
     this.first = false;
 
     var bench = new Benchmark(fn, {
       name: this.suiteName + ': ' + name,
       onComplete: function() {
-        if (first) { self.startLine(suiteName); }
+        if (first) {
+          self.startLine(suiteName);
+        }
         self.writeBench(bench);
         self.currentBenches.push(bench);
-      }, onError: function() {
+      },
+      onError: function() {
         self.errors[this.name] = this;
       }
     });
@@ -75,10 +80,14 @@ BenchWarmer.prototype = {
         });
         print('\n');
 
-        var errors = false, prop, bench;
+        var errors = false,
+          prop,
+          bench;
         for (prop in self.errors) {
-          if (self.errors.hasOwnProperty(prop)
-              && self.errors[prop].error.message !== 'EWOT') {
+          if (
+            Object.prototype.hasOwnProperty.call(self, prop) &&
+            self.errors[prop].error.message !== 'EWOT'
+          ) {
             errors = true;
             break;
           }
@@ -86,9 +95,8 @@ BenchWarmer.prototype = {
 
         if (errors) {
           print('\n\nErrors:\n');
-          for (prop in self.errors) {
-            if (self.errors.hasOwnProperty(prop)
-                && self.errors[prop].error.message !== 'EWOT') {
+          Object.keys(self.errors).forEach(function(prop) {
+            if (self.errors[prop].error.message !== 'EWOT') {
               bench = self.errors[prop];
               print('\n' + bench.name + ':\n');
               print(bench.error.message);
@@ -97,7 +105,7 @@ BenchWarmer.prototype = {
               }
               print('\n');
             }
-          }
+          });
         }
 
         callback();
@@ -108,23 +116,39 @@ BenchWarmer.prototype = {
   },
 
   scaleTimes: function() {
-    var scaled = this.scaled = {};
-    _.each(this.times, function(times, name) {
-      var output = scaled[name] = {};
+    var scaled = (this.scaled = {});
+    _.each(
+      this.times,
+      function(times, name) {
+        var output = (scaled[name] = {});
 
-      _.each(times, function(time, lang) {
-        output[lang] = ((time - this.minimum) / (this.maximum - this.minimum) * 100).toFixed(2);
-      }, this);
-    }, this);
+        _.each(
+          times,
+          function(time, lang) {
+            output[lang] = (
+              ((time - this.minimum) / (this.maximum - this.minimum)) *
+              100
+            ).toFixed(2);
+          },
+          this
+        );
+      },
+      this
+    );
   },
 
   printHeader: function(title, winners) {
-    var benchSize = 0, names = this.names, i, l;
+    var benchSize = 0,
+      names = this.names,
+      i,
+      l;
 
     for (i = 0, l = names.length; i < l; i++) {
       var name = names[i];
 
-      if (benchSize < name.length) { benchSize = name.length; }
+      if (benchSize < name.length) {
+        benchSize = name.length;
+      }
     }
 
     this.nameSize = benchSize + 2;
@@ -147,7 +171,9 @@ BenchWarmer.prototype = {
   },
 
   startLine: function(name) {
-    var winners = Benchmark.map(this.winners(this.currentBenches), function(bench) {
+    var winners = Benchmark.map(this.winners(this.currentBenches), function(
+      bench
+    ) {
       return bench.name.split(': ')[1];
     });
 
@@ -165,9 +191,9 @@ BenchWarmer.prototype = {
 
     if (!bench.error) {
       var count = bench.hz,
-          moe = count * bench.stats.rme / 100,
-          minimum,
-          maximum;
+        moe = (count * bench.stats.rme) / 100,
+        minimum,
+        maximum;
 
       count = Math.round(count / 1000);
       moe = Math.round(moe / 1000);

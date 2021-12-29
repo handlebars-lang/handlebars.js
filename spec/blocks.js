@@ -1,308 +1,405 @@
 describe('blocks', function() {
   it('array', function() {
     var string = '{{#goodbyes}}{{text}}! {{/goodbyes}}cruel {{world}}!';
-    var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
-    shouldCompileTo(string, hash, 'goodbye! Goodbye! GOODBYE! cruel world!',
-                    'Arrays iterate over the contents when not empty');
 
-    shouldCompileTo(string, {goodbyes: [], world: 'world'}, 'cruel world!',
-                    'Arrays ignore the contents when empty');
+    expectTemplate(string)
+      .withInput({
+        goodbyes: [
+          { text: 'goodbye' },
+          { text: 'Goodbye' },
+          { text: 'GOODBYE' }
+        ],
+        world: 'world'
+      })
+      .withMessage('Arrays iterate over the contents when not empty')
+      .toCompileTo('goodbye! Goodbye! GOODBYE! cruel world!');
+
+    expectTemplate(string)
+      .withInput({
+        goodbyes: [],
+        world: 'world'
+      })
+      .withMessage('Arrays ignore the contents when empty')
+      .toCompileTo('cruel world!');
   });
 
   it('array without data', function() {
-    var string = '{{#goodbyes}}{{text}}{{/goodbyes}} {{#goodbyes}}{{text}}{{/goodbyes}}';
-    var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
-    shouldCompileTo(string, [hash,,, false], 'goodbyeGoodbyeGOODBYE goodbyeGoodbyeGOODBYE');
+    expectTemplate(
+      '{{#goodbyes}}{{text}}{{/goodbyes}} {{#goodbyes}}{{text}}{{/goodbyes}}'
+    )
+      .withInput({
+        goodbyes: [
+          { text: 'goodbye' },
+          { text: 'Goodbye' },
+          { text: 'GOODBYE' }
+        ],
+        world: 'world'
+      })
+      .withCompileOptions({ compat: false })
+      .toCompileTo('goodbyeGoodbyeGOODBYE goodbyeGoodbyeGOODBYE');
   });
 
   it('array with @index', function() {
-    var string = '{{#goodbyes}}{{@index}}. {{text}}! {{/goodbyes}}cruel {{world}}!';
-    var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
-
-    var template = CompilerContext.compile(string);
-    var result = template(hash);
-
-    equal(result, '0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!', 'The @index variable is used');
+    expectTemplate(
+      '{{#goodbyes}}{{@index}}. {{text}}! {{/goodbyes}}cruel {{world}}!'
+    )
+      .withInput({
+        goodbyes: [
+          { text: 'goodbye' },
+          { text: 'Goodbye' },
+          { text: 'GOODBYE' }
+        ],
+        world: 'world'
+      })
+      .withMessage('The @index variable is used')
+      .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
   });
 
   it('empty block', function() {
     var string = '{{#goodbyes}}{{/goodbyes}}cruel {{world}}!';
-    var hash = {goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}], world: 'world'};
-    shouldCompileTo(string, hash, 'cruel world!',
-                    'Arrays iterate over the contents when not empty');
 
-    shouldCompileTo(string, {goodbyes: [], world: 'world'}, 'cruel world!',
-                    'Arrays ignore the contents when empty');
+    expectTemplate(string)
+      .withInput({
+        goodbyes: [
+          { text: 'goodbye' },
+          { text: 'Goodbye' },
+          { text: 'GOODBYE' }
+        ],
+        world: 'world'
+      })
+      .withMessage('Arrays iterate over the contents when not empty')
+      .toCompileTo('cruel world!');
+
+    expectTemplate(string)
+      .withInput({
+        goodbyes: [],
+        world: 'world'
+      })
+      .withMessage('Arrays ignore the contents when empty')
+      .toCompileTo('cruel world!');
   });
 
   it('block with complex lookup', function() {
-    var string = '{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}';
-    var hash = {name: 'Alan', goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}]};
-
-    shouldCompileTo(string, hash, 'goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! ',
-                    'Templates can access variables in contexts up the stack with relative path syntax');
+    expectTemplate('{{#goodbyes}}{{text}} cruel {{../name}}! {{/goodbyes}}')
+      .withInput({
+        name: 'Alan',
+        goodbyes: [
+          { text: 'goodbye' },
+          { text: 'Goodbye' },
+          { text: 'GOODBYE' }
+        ]
+      })
+      .withMessage(
+        'Templates can access variables in contexts up the stack with relative path syntax'
+      )
+      .toCompileTo(
+        'goodbye cruel Alan! Goodbye cruel Alan! GOODBYE cruel Alan! '
+      );
   });
 
   it('multiple blocks with complex lookup', function() {
-    var string = '{{#goodbyes}}{{../name}}{{../name}}{{/goodbyes}}';
-    var hash = {name: 'Alan', goodbyes: [{text: 'goodbye'}, {text: 'Goodbye'}, {text: 'GOODBYE'}]};
-
-    shouldCompileTo(string, hash, 'AlanAlanAlanAlanAlanAlan');
+    expectTemplate('{{#goodbyes}}{{../name}}{{../name}}{{/goodbyes}}')
+      .withInput({
+        name: 'Alan',
+        goodbyes: [
+          { text: 'goodbye' },
+          { text: 'Goodbye' },
+          { text: 'GOODBYE' }
+        ]
+      })
+      .toCompileTo('AlanAlanAlanAlanAlanAlan');
   });
 
   it('block with complex lookup using nested context', function() {
-    var string = '{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}';
-
-    shouldThrow(function() {
-      CompilerContext.compile(string);
-    }, Error);
+    expectTemplate(
+      '{{#goodbyes}}{{text}} cruel {{foo/../name}}! {{/goodbyes}}'
+    ).toThrow(Error);
   });
 
   it('block with deep nested complex lookup', function() {
-    var string = '{{#outer}}Goodbye {{#inner}}cruel {{../sibling}} {{../../omg}}{{/inner}}{{/outer}}';
-    var hash = {omg: 'OMG!', outer: [{ sibling: 'sad', inner: [{ text: 'goodbye' }] }] };
-
-    shouldCompileTo(string, hash, 'Goodbye cruel sad OMG!');
+    expectTemplate(
+      '{{#outer}}Goodbye {{#inner}}cruel {{../sibling}} {{../../omg}}{{/inner}}{{/outer}}'
+    )
+      .withInput({
+        omg: 'OMG!',
+        outer: [{ sibling: 'sad', inner: [{ text: 'goodbye' }] }]
+      })
+      .toCompileTo('Goodbye cruel sad OMG!');
   });
 
   it('works with cached blocks', function() {
-    var template = CompilerContext.compile('{{#each person}}{{#with .}}{{first}} {{last}}{{/with}}{{/each}}', {data: false});
-
-    var result = template({person: [{first: 'Alan', last: 'Johnson'}, {first: 'Alan', last: 'Johnson'}]});
-    equals(result, 'Alan JohnsonAlan Johnson');
+    expectTemplate(
+      '{{#each person}}{{#with .}}{{first}} {{last}}{{/with}}{{/each}}'
+    )
+      .withCompileOptions({ data: false })
+      .withInput({
+        person: [
+          { first: 'Alan', last: 'Johnson' },
+          { first: 'Alan', last: 'Johnson' }
+        ]
+      })
+      .toCompileTo('Alan JohnsonAlan Johnson');
   });
 
   describe('inverted sections', function() {
     it('inverted sections with unset value', function() {
-      var string = '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}';
-      var hash = {};
-      shouldCompileTo(string, hash, 'Right On!', "Inverted section rendered when value isn't set.");
+      expectTemplate(
+        '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}'
+      )
+        .withMessage("Inverted section rendered when value isn't set.")
+        .toCompileTo('Right On!');
     });
 
     it('inverted section with false value', function() {
-      var string = '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}';
-      var hash = {goodbyes: false};
-      shouldCompileTo(string, hash, 'Right On!', 'Inverted section rendered when value is false.');
+      expectTemplate(
+        '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}'
+      )
+        .withInput({ goodbyes: false })
+        .withMessage('Inverted section rendered when value is false.')
+        .toCompileTo('Right On!');
     });
 
     it('inverted section with empty set', function() {
-      var string = '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}';
-      var hash = {goodbyes: []};
-      shouldCompileTo(string, hash, 'Right On!', 'Inverted section rendered when value is empty set.');
+      expectTemplate(
+        '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}'
+      )
+        .withInput({ goodbyes: [] })
+        .withMessage('Inverted section rendered when value is empty set.')
+        .toCompileTo('Right On!');
     });
 
     it('block inverted sections', function() {
-      shouldCompileTo('{{#people}}{{name}}{{^}}{{none}}{{/people}}', {none: 'No people'},
-        'No people');
+      expectTemplate('{{#people}}{{name}}{{^}}{{none}}{{/people}}')
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people');
     });
+
     it('chained inverted sections', function() {
-      shouldCompileTo('{{#people}}{{name}}{{else if none}}{{none}}{{/people}}', {none: 'No people'},
-        'No people');
-      shouldCompileTo('{{#people}}{{name}}{{else if nothere}}fail{{else unless nothere}}{{none}}{{/people}}', {none: 'No people'},
-        'No people');
-      shouldCompileTo('{{#people}}{{name}}{{else if none}}{{none}}{{else}}fail{{/people}}', {none: 'No people'},
-        'No people');
+      expectTemplate('{{#people}}{{name}}{{else if none}}{{none}}{{/people}}')
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people');
+
+      expectTemplate(
+        '{{#people}}{{name}}{{else if nothere}}fail{{else unless nothere}}{{none}}{{/people}}'
+      )
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people');
+
+      expectTemplate(
+        '{{#people}}{{name}}{{else if none}}{{none}}{{else}}fail{{/people}}'
+      )
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people');
     });
+
     it('chained inverted sections with mismatch', function() {
-      shouldThrow(function() {
-        shouldCompileTo('{{#people}}{{name}}{{else if none}}{{none}}{{/if}}', {none: 'No people'},
-          'No people');
-      }, Error);
+      expectTemplate(
+        '{{#people}}{{name}}{{else if none}}{{none}}{{/if}}'
+      ).toThrow(Error);
     });
 
     it('block inverted sections with empty arrays', function() {
-      shouldCompileTo('{{#people}}{{name}}{{^}}{{none}}{{/people}}', {none: 'No people', people: []},
-        'No people');
+      expectTemplate('{{#people}}{{name}}{{^}}{{none}}{{/people}}')
+        .withInput({
+          none: 'No people',
+          people: []
+        })
+        .toCompileTo('No people');
     });
   });
 
   describe('standalone sections', function() {
     it('block standalone else sections', function() {
-      shouldCompileTo('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
-        'No people\n');
-      shouldCompileTo('{{#none}}\n{{.}}\n{{^}}\n{{none}}\n{{/none}}\n', {none: 'No people'},
-        'No people\n');
-      shouldCompileTo('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
-        'No people\n');
+      expectTemplate('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n')
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people\n');
+
+      expectTemplate('{{#none}}\n{{.}}\n{{^}}\n{{none}}\n{{/none}}\n')
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people\n');
+
+      expectTemplate('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n')
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people\n');
     });
+
     it('block standalone else sections can be disabled', function() {
-      shouldCompileTo(
-        '{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n',
-        [{none: 'No people'}, {}, {}, {ignoreStandalone: true}],
-        '\nNo people\n\n');
-      shouldCompileTo(
-        '{{#none}}\n{{.}}\n{{^}}\nFail\n{{/none}}\n',
-        [{none: 'No people'}, {}, {}, {ignoreStandalone: true}],
-        '\nNo people\n\n');
+      expectTemplate('{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n')
+        .withInput({ none: 'No people' })
+        .withCompileOptions({ ignoreStandalone: true })
+        .toCompileTo('\nNo people\n\n');
+
+      expectTemplate('{{#none}}\n{{.}}\n{{^}}\nFail\n{{/none}}\n')
+        .withInput({ none: 'No people' })
+        .withCompileOptions({ ignoreStandalone: true })
+        .toCompileTo('\nNo people\n\n');
     });
+
     it('block standalone chained else sections', function() {
-      shouldCompileTo('{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{/people}}\n', {none: 'No people'},
-        'No people\n');
-      shouldCompileTo('{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{^}}\n{{/people}}\n', {none: 'No people'},
-        'No people\n');
+      expectTemplate(
+        '{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{/people}}\n'
+      )
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people\n');
+
+      expectTemplate(
+        '{{#people}}\n{{name}}\n{{else if none}}\n{{none}}\n{{^}}\n{{/people}}\n'
+      )
+        .withInput({ none: 'No people' })
+        .toCompileTo('No people\n');
     });
+
     it('should handle nesting', function() {
-      shouldCompileTo('{{#data}}\n{{#if true}}\n{{.}}\n{{/if}}\n{{/data}}\nOK.', {data: [1, 3, 5]}, '1\n3\n5\nOK.');
+      expectTemplate('{{#data}}\n{{#if true}}\n{{.}}\n{{/if}}\n{{/data}}\nOK.')
+        .withInput({
+          data: [1, 3, 5]
+        })
+        .toCompileTo('1\n3\n5\nOK.');
     });
   });
 
   describe('compat mode', function() {
     it('block with deep recursive lookup lookup', function() {
-      var string = '{{#outer}}Goodbye {{#inner}}cruel {{omg}}{{/inner}}{{/outer}}';
-      var hash = {omg: 'OMG!', outer: [{ inner: [{ text: 'goodbye' }] }] };
-
-      shouldCompileTo(string, [hash, undefined, undefined, true], 'Goodbye cruel OMG!');
+      expectTemplate(
+        '{{#outer}}Goodbye {{#inner}}cruel {{omg}}{{/inner}}{{/outer}}'
+      )
+        .withInput({ omg: 'OMG!', outer: [{ inner: [{ text: 'goodbye' }] }] })
+        .withCompileOptions({ compat: true })
+        .toCompileTo('Goodbye cruel OMG!');
     });
+
     it('block with deep recursive pathed lookup', function() {
-      var string = '{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}';
-      var hash = {omg: {yes: 'OMG!'}, outer: [{ inner: [{ yes: 'no', text: 'goodbye' }] }] };
-
-      shouldCompileTo(string, [hash, undefined, undefined, true], 'Goodbye cruel OMG!');
+      expectTemplate(
+        '{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}'
+      )
+        .withInput({
+          omg: { yes: 'OMG!' },
+          outer: [{ inner: [{ yes: 'no', text: 'goodbye' }] }]
+        })
+        .withCompileOptions({ compat: true })
+        .toCompileTo('Goodbye cruel OMG!');
     });
-    it('block with missed recursive lookup', function() {
-      var string = '{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}';
-      var hash = {omg: {no: 'OMG!'}, outer: [{ inner: [{ yes: 'no', text: 'goodbye' }] }] };
 
-      shouldCompileTo(string, [hash, undefined, undefined, true], 'Goodbye cruel ');
+    it('block with missed recursive lookup', function() {
+      expectTemplate(
+        '{{#outer}}Goodbye {{#inner}}cruel {{omg.yes}}{{/inner}}{{/outer}}'
+      )
+        .withInput({
+          omg: { no: 'OMG!' },
+          outer: [{ inner: [{ yes: 'no', text: 'goodbye' }] }]
+        })
+        .withCompileOptions({ compat: true })
+        .toCompileTo('Goodbye cruel ');
     });
   });
 
   describe('decorators', function() {
     it('should apply mustache decorators', function() {
-      var helpers = {
-        helper: function(options) {
+      expectTemplate('{{#helper}}{{*decorator}}{{/helper}}')
+        .withHelper('helper', function(options) {
           return options.fn.run;
-        }
-      };
-      var decorators = {
-        decorator: function(fn) {
+        })
+        .withDecorator('decorator', function(fn) {
           fn.run = 'success';
           return fn;
-        }
-      };
-      shouldCompileTo(
-          '{{#helper}}{{*decorator}}{{/helper}}',
-          {hash: {}, helpers: helpers, decorators: decorators},
-          'success');
+        })
+        .toCompileTo('success');
     });
+
     it('should apply allow undefined return', function() {
-      var helpers = {
-        helper: function(options) {
+      expectTemplate('{{#helper}}{{*decorator}}suc{{/helper}}')
+        .withHelper('helper', function(options) {
           return options.fn() + options.fn.run;
-        }
-      };
-      var decorators = {
-        decorator: function(fn) {
+        })
+        .withDecorator('decorator', function(fn) {
           fn.run = 'cess';
-        }
-      };
-      shouldCompileTo(
-          '{{#helper}}{{*decorator}}suc{{/helper}}',
-          {hash: {}, helpers: helpers, decorators: decorators},
-          'success');
+        })
+        .toCompileTo('success');
     });
 
     it('should apply block decorators', function() {
-      var helpers = {
-        helper: function(options) {
+      expectTemplate(
+        '{{#helper}}{{#*decorator}}success{{/decorator}}{{/helper}}'
+      )
+        .withHelper('helper', function(options) {
           return options.fn.run;
-        }
-      };
-      var decorators = {
-        decorator: function(fn, props, container, options) {
+        })
+        .withDecorator('decorator', function(fn, props, container, options) {
           fn.run = options.fn();
           return fn;
-        }
-      };
-      shouldCompileTo(
-          '{{#helper}}{{#*decorator}}success{{/decorator}}{{/helper}}',
-          {hash: {}, helpers: helpers, decorators: decorators},
-          'success');
+        })
+        .toCompileTo('success');
     });
+
     it('should support nested decorators', function() {
-      var helpers = {
-        helper: function(options) {
+      expectTemplate(
+        '{{#helper}}{{#*decorator}}{{#*nested}}suc{{/nested}}cess{{/decorator}}{{/helper}}'
+      )
+        .withHelper('helper', function(options) {
           return options.fn.run;
-        }
-      };
-      var decorators = {
-        decorator: function(fn, props, container, options) {
-          fn.run = options.fn.nested + options.fn();
-          return fn;
-        },
-        nested: function(fn, props, container, options) {
-          props.nested = options.fn();
-        }
-      };
-      shouldCompileTo(
-          '{{#helper}}{{#*decorator}}{{#*nested}}suc{{/nested}}cess{{/decorator}}{{/helper}}',
-          {hash: {}, helpers: helpers, decorators: decorators},
-          'success');
+        })
+        .withDecorators({
+          decorator: function(fn, props, container, options) {
+            fn.run = options.fn.nested + options.fn();
+            return fn;
+          },
+          nested: function(fn, props, container, options) {
+            props.nested = options.fn();
+          }
+        })
+        .toCompileTo('success');
     });
 
     it('should apply multiple decorators', function() {
-      var helpers = {
-        helper: function(options) {
+      expectTemplate(
+        '{{#helper}}{{#*decorator}}suc{{/decorator}}{{#*decorator}}cess{{/decorator}}{{/helper}}'
+      )
+        .withHelper('helper', function(options) {
           return options.fn.run;
-        }
-      };
-      var decorators = {
-        decorator: function(fn, props, container, options) {
+        })
+        .withDecorator('decorator', function(fn, props, container, options) {
           fn.run = (fn.run || '') + options.fn();
           return fn;
-        }
-      };
-      shouldCompileTo(
-          '{{#helper}}{{#*decorator}}suc{{/decorator}}{{#*decorator}}cess{{/decorator}}{{/helper}}',
-          {hash: {}, helpers: helpers, decorators: decorators},
-          'success');
+        })
+        .toCompileTo('success');
     });
 
     it('should access parent variables', function() {
-      var helpers = {
-        helper: function(options) {
+      expectTemplate('{{#helper}}{{*decorator foo}}{{/helper}}')
+        .withHelper('helper', function(options) {
           return options.fn.run;
-        }
-      };
-      var decorators = {
-        decorator: function(fn, props, container, options) {
+        })
+        .withDecorator('decorator', function(fn, props, container, options) {
           fn.run = options.args;
           return fn;
-        }
-      };
-      shouldCompileTo(
-          '{{#helper}}{{*decorator foo}}{{/helper}}',
-          {hash: {'foo': 'success'}, helpers: helpers, decorators: decorators},
-          'success');
+        })
+        .withInput({ foo: 'success' })
+        .toCompileTo('success');
     });
+
     it('should work with root program', function() {
       var run;
-      var decorators = {
-        decorator: function(fn, props, container, options) {
+      expectTemplate('{{*decorator "success"}}')
+        .withDecorator('decorator', function(fn, props, container, options) {
           equals(options.args[0], 'success');
           run = true;
           return fn;
-        }
-      };
-      shouldCompileTo(
-          '{{*decorator "success"}}',
-          {hash: {'foo': 'success'}, decorators: decorators},
-          '');
+        })
+        .withInput({ foo: 'success' })
+        .toCompileTo('');
       equals(run, true);
     });
+
     it('should fail when accessing variables from root', function() {
       var run;
-      var decorators = {
-        decorator: function(fn, props, container, options) {
+      expectTemplate('{{*decorator foo}}')
+        .withDecorator('decorator', function(fn, props, container, options) {
           equals(options.args[0], undefined);
           run = true;
           return fn;
-        }
-      };
-      shouldCompileTo(
-          '{{*decorator foo}}',
-          {hash: {'foo': 'fail'}, decorators: decorators},
-          '');
+        })
+        .withInput({ foo: 'fail' })
+        .toCompileTo('');
       equals(run, true);
     });
 
@@ -334,13 +431,25 @@ describe('blocks', function() {
         equals(handlebarsEnv.decorators.foo, undefined);
         equals(handlebarsEnv.decorators.bar, undefined);
       });
+
       it('fails with multiple and args', function() {
-        shouldThrow(function() {
-          handlebarsEnv.registerDecorator({
-            world: function() { return 'world!'; },
-            testHelper: function() { return 'found it!'; }
-          }, {});
-        }, Error, 'Arg not supported with multiple decorators');
+        shouldThrow(
+          function() {
+            handlebarsEnv.registerDecorator(
+              {
+                world: function() {
+                  return 'world!';
+                },
+                testHelper: function() {
+                  return 'found it!';
+                }
+              },
+              {}
+            );
+          },
+          Error,
+          'Arg not supported with multiple decorators'
+        );
       });
     });
   });

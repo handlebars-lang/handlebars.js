@@ -2,7 +2,7 @@ var fs = require('fs');
 
 var metrics = fs.readdirSync(__dirname);
 metrics.forEach(function(metric) {
-  if (metric === 'index.js' || !(/(.*)\.js$/.test(metric))) {
+  if (metric === 'index.js' || !/(.*)\.js$/.test(metric)) {
     return;
   }
 

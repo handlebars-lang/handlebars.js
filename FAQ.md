@@ -2,11 +2,11 @@
 
 1. How can I file a bug report:
 
-  See our guidelines on [reporting issues](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
+  See our guidelines on [reporting issues](https://github.com/handlebars-lang/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 1. Why isn't my Mustache template working?
 
-  Handlebars deviates from Mustache slightly on a few behaviors. These variations are documented in our [readme](https://github.com/wycats/handlebars.js#differences-between-handlebarsjs-and-mustache).
+  Handlebars deviates from Mustache slightly on a few behaviors. These variations are documented in our [readme](https://github.com/handlebars-lang/handlebars.js#differences-between-handlebarsjs-and-mustache).
 
 1. Why is it slower when compiling?
 
@@ -36,16 +36,18 @@
   ```sh
   handlebars --version
   ```
+
   If using the integrated precompiler and
 
   ```javascript
   console.log(Handlebars.VERSION);
   ```
+
   On the client side.
 
   We include the built client libraries in the npm package for those who want to be certain that they are using the same client libraries as the compiler.
 
-  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
+  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/handlebars-lang/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 1. Why doesn't IE like the `default` name in the AMD module?
 
@@ -53,8 +55,8 @@
 
 1. How do I load the runtime library when using AMD?
 
-  There are two options for loading under AMD environments. The first is to use the `handlebars.runtime.amd.js` file. This may require a [path mapping](https://github.com/wycats/handlebars.js/blob/master/spec/amd-runtime.html#L31) as well as access via the `default` field.
+  There are two options for loading under AMD environments. The first is to use the `handlebars.runtime.amd.js` file. This may require a [path mapping](https://github.com/handlebars-lang/handlebars.js/blob/master/spec/amd-runtime.html#L31) as well as access via the `default` field.
 
-  The other option is to load the `handlebars.runtime.js` UMD build, which might not require path configuration and exposes the library as both the module root and the `default` field for compatibility. 
+  The other option is to load the `handlebars.runtime.js` UMD build, which might not require path configuration and exposes the library as both the module root and the `default` field for compatibility.
 
   If not using ES6 transpilers or accessing submodules in the build the former option should be sufficient for most use cases.

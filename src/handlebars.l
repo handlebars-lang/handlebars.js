@@ -63,7 +63,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                     return 'END_RAW_BLOCK';
                                   }
                                  }
-<raw>[^\x00]*?/("{{{{")          { return 'CONTENT'; }
+<raw>[^\x00]+?/("{{{{")          { return 'CONTENT'; }
 
 <com>[\s\S]*?"--"{RIGHT_STRIP}?"}}" {
   this.popState();

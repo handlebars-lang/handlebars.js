@@ -1,23 +1,29 @@
-var _ = require('underscore'),
-    async = require('neo-async'),
-    metrics = require('../bench');
+const metrics = require('../bench');
+const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 
 module.exports = function(grunt) {
-  grunt.registerTask('metrics', function() {
-    var done = this.async(),
-        execName = grunt.option('name'),
-        events = {};
+  const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
-    async.each(_.keys(metrics), function(name, complete) {
-        if (/^_/.test(name) || (execName && name !== execName)) {
-          return complete();
-        }
+  registerAsyncTask('metrics', function() {
+    const onlyExecuteName = grunt.option('name');
+    const events = {};
 
+    const promises = Object.keys(metrics).map(async name => {
+      if (/^_/.test(name)) {
+        return;
+      }
+      if (onlyExecuteName != null && name !== onlyExecuteName) {
+        return;
+      }
+
+      return new Promise(resolve => {
         metrics[name](grunt, function(data) {
           events[name] = data;
-          complete();
+          resolve();
         });
-      },
-      done);
+      });
+    });
+
+    return Promise.all(promises);
   });
 };

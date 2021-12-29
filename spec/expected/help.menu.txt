@@ -1,0 +1,25 @@
+Precompile handlebar templates.
+Usage: handlebars [template|directory]...
+
+Options:
+  -f, --output         Output File                                                                              [string]
+  --map                Source Map File                                                                          [string]
+  -a, --amd            Exports amd style (require.js)                                                          [boolean]
+  -c, --commonjs       Exports CommonJS style, path to Handlebars module                        [string] [default: null]
+  -h, --handlebarPath  Path to handlebar.js (only valid for amd-style)                            [string] [default: ""]
+  -k, --known          Known helpers                                                                            [string]
+  -o, --knownOnly      Known helpers only                                                                      [boolean]
+  -m, --min            Minimize output                                                                         [boolean]
+  -n, --namespace      Template namespace                                     [string] [default: "Handlebars.templates"]
+  -s, --simple         Output template function only.                                                          [boolean]
+  -N, --name           Name of passed string templates. Optional if running in a simple mode. Required when operating on
+                       multiple templates.                                                                      [string]
+  -i, --string         Generates a template from the passed CLI argument.
+                       "-" is treated as a special value and causes stdin to be read for the template value.    [string]
+  -r, --root           Template root. Base value that will be stripped from template names.                     [string]
+  -p, --partial        Compiling a partial template                                                            [boolean]
+  -d, --data           Include data when compiling                                                             [boolean]
+  -e, --extension      Template extension.                                              [string] [default: "handlebars"]
+  -b, --bom            Removes the BOM (Byte Order Mark) from the beginning of the templates.                  [boolean]
+  -v, --version        Prints the current compiler version                                                     [boolean]
+  --help               Outputs this message                                                                    [boolean]
