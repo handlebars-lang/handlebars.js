@@ -79,7 +79,7 @@
     "./runtime": "./dist/cjs/handlebars.runtime.js"
   },
   "bin": {
-    "handlebars": "bin/handlebars"
+    "handlebars": "bin/handlebars.js"
   },
   "scripts": {
     "build": "grunt build",
