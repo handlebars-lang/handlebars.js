@@ -4,7 +4,7 @@ set -e
 
 # Cleanup: package-lock and "npm ci" is not working with local dependencies
 rm dist package-lock.json -rf
-npm install
+npm install --legacy-peer-deps
 npm run build
 
 for i in dist/*-test.js ; do
