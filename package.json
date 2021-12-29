@@ -23,7 +23,7 @@
     "@handlebars/parser": "^1.1.0",
     "neo-async": "^2.6.2",
     "source-map": "^0.6.1",
-    "yargs": "^15.3.1"
+    "yargs": "^16.2.0"
   },
   "peerDependencies": {
     "uglify-js": "^3.1.4"
