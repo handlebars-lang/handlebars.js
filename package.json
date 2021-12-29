@@ -29,6 +29,7 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
+    "@definitelytyped/dtslint": "^0.0.100",
     "@playwright/test": "^1.17.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
@@ -38,7 +39,6 @@
     "chai-diff": "^1.0.1",
     "concurrently": "^5.0.0",
     "dirty-chai": "^2.0.1",
-    "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
     "eslint": "^6.7.2",
