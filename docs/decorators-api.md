@@ -1,6 +1,6 @@
 # Decorators
 
-**Decorators are deprecated, please join the discussion at [#1574](https://github.com/wycats/handlebars.js/issues/1574) to see what we can do about it.**
+**Decorators are deprecated, please join the discussion at [#1574](https://github.com/handlebars-lang/handlebars.js/issues/1574) to see what we can do about it.**
 
 Decorators allow for blocks to be annotated with metadata or wrapped in functionality prior to execution of the block. This may be used to communicate with the containing helper or to set up a particular state in the system prior to running the block.
 

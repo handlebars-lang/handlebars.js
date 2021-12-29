@@ -1,4 +1,4 @@
-Before creating a pull-request, please check https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md first.
+Before creating a pull-request, please check https://github.com/handlebars-lang/handlebars.js/blob/master/CONTRIBUTING.md first.
 
 Generally we like to see pull requests that
 
