@@ -219,9 +219,9 @@ function executeBinHandlebars(...args) {
   if (os.platform() === 'win32') {
     // On Windows, the executable handlebars.js file cannot be run directly
     const nodeJs = process.argv[0];
-    return execFilesSyncUtf8(nodeJs, ['./bin/handlebars'].concat(args));
+    return execFilesSyncUtf8(nodeJs, ['./bin/handlebars.js'].concat(args));
   }
-  return execFilesSyncUtf8('./bin/handlebars', args);
+  return execFilesSyncUtf8('./bin/handlebars.js', args);
 }
 
 function execFilesSyncUtf8(command, args) {

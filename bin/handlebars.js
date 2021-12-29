@@ -111,7 +111,6 @@ delete argv._;
 
 const Precompiler = require('../dist/cjs/precompiler');
 Precompiler.loadTemplates(argv, function(err, opts) {
-
   if (err) {
     throw err;
   }

@@ -1,5 +1,5 @@
 Precompile handlebar templates.
-Usage: handlebars [template|directory]...
+Usage: handlebars.js [template|directory]...
 
 Options:
   --help               Outputs this message                                                                    [boolean]
