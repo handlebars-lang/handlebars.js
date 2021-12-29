@@ -1,7 +1,7 @@
-[![Travis Build Status](https://img.shields.io/travis/handlebars-lang/handlebars.js/master.svg)](https://travis-ci.org/github/handlebars-lang/handlebars.js)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/github/wycats/handlebars.js?branch=master&svg=true)](https://ci.appveyor.com/project/wycats/handlebars-js)
-[![Selenium Test Status](https://saucelabs.com/buildstatus/handlebars)](https://saucelabs.com/u/handlebars)
+[![CI Build Status](https://img.shields.io/github/workflow/status/handlebars-lang/handlebars.js/ci/master)](https://github.com/handlebars-lang/handlebars.js/actions)
 [![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/handlebars/badge?style=rounded)](https://www.jsdelivr.com/package/npm/handlebars)
+[![Bundle size](https://img.shields.io/bundlephobia/minzip/handlebars?label=minified%20%2B%20gzipped)](https://bundlephobia.com/package/handlebars)
+[![Install size](https://packagephobia.com/badge?p=handlebars)](https://packagephobia.com/result?p=handlebars)
 
 Handlebars.js
 =============
@@ -21,7 +21,7 @@ Usage
 -----
 In general, the syntax of Handlebars.js templates is a superset
 of Mustache templates. For basic syntax, check out the [Mustache
-manpage](http://mustache.github.com/mustache.5.html).
+manpage](https://mustache.github.io/mustache.5.html).
 
 Once you have a template, use the `Handlebars.compile` method to compile
 the template into a function. The generated function takes a context
@@ -63,7 +63,7 @@ templates easier and also changes a tiny detail of how partials work.
 - [Literal Values](https://handlebarsjs.com/guide/expressions.html#literal-segments)
 - [Delimited Comments](https://handlebarsjs.com/guide/#template-comments)
 
-Block expressions have the same syntax as mustache sections but should not be confused with one another. Sections are akin to an implicit `each` or `with` statement depending on the input data and helpers are explicit pieces of code that are free to implement whatever behavior they like. The [mustache spec](http://mustache.github.io/mustache.5.html) defines the exact behavior of sections. In the case of name conflicts, helpers are given priority.
+Block expressions have the same syntax as mustache sections but should not be confused with one another. Sections are akin to an implicit `each` or `with` statement depending on the input data and helpers are explicit pieces of code that are free to implement whatever behavior they like. The [mustache spec](https://mustache.github.io/mustache.5.html) defines the exact behavior of sections. In the case of name conflicts, helpers are given priority.
 
 ### Compatibility
 
@@ -89,8 +89,6 @@ Handlebars has been designed to work in any ECMAScript 3 environment. This inclu
 Older versions and other runtimes are likely to work but have not been formally
 tested. The compiler requires `JSON.stringify` to be implemented natively or via a polyfill. If using the precompiler this is not necessary.
 
-[![Selenium Test Status](https://saucelabs.com/browser-matrix/handlebars.svg)](https://saucelabs.com/u/handlebars)
-
 Performance
 -----------
 
@@ -102,7 +100,7 @@ does have some big performance advantages. Justin Marney, a.k.a.
 [gotascii](http://github.com/gotascii), confirmed that with an
 [independent test](http://sorescode.com/2010/09/12/benchmarks.html). The
 rewritten Handlebars (current version) is faster than the old version,
-with many [performance tests](https://travis-ci.org/handlebars-lang/handlebars.js/builds/33392182#L538) being 5 to 7 times faster than the Mustache equivalent.
+with many performance tests being 5 to 7 times faster than the Mustache equivalent.
 
 
 Upgrading

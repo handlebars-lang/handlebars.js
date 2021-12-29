@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request: {}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  test:
+    name: Test (Node)
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: ['ubuntu-latest', 'windows-latest']
+        # https://nodejs.org/en/about/releases/
+        node-version: ['10', '12', '14', '16', '17']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm run test
+
+      - name: Test (Integration)
+        # https://github.com/webpack/webpack/issues/14532
+        if: ${{ matrix.node-version != '17' }}
+        run: |
+          cd ./tests/integration/rollup-test && ./test.sh && cd -
+          cd ./tests/integration/webpack-babel-test && ./test.sh && cd -
+          cd ./tests/integration/webpack-test && ./test.sh && cd -
+
+  browser:
+    name: Test (Browser)
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: |
+          npx playwright install-deps
+          npx playwright install
+
+      - name: Build
+        run: npx grunt prepare
+
+      - name: Test
+        run: npm run test:browser

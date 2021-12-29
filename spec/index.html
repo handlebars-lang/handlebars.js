@@ -62,7 +62,7 @@
         }
         var runner = mocha.run();
 
-        //Reporting for saucelabs
+        // Reporting to test-runner
         var failedTests = [];
         runner.on('end', function(){
           window.mochaResults = runner.stats;

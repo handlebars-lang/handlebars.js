@@ -2,7 +2,7 @@
   "name": "handlebars",
   "version": "5.0.0-alpha.1",
   "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
-  "homepage": "http://www.handlebarsjs.com/",
+  "homepage": "https://www.handlebarsjs.com/",
   "keywords": [
     "handlebars",
     "mustache",
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wycats/handlebars.js.git"
+    "url": "https://github.com/handlebars-lang/handlebars.js.git"
   },
   "author": "Yehuda Katz",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@handlebars/parser": "^1.1.0",
-    "neo-async": "^2.6.0",
+    "neo-async": "^2.6.2",
     "source-map": "^0.6.1",
     "yargs": "^15.3.1"
   },
@@ -29,7 +29,8 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
-    "@knappi/grunt-saucelabs": "^9.0.2",
+    "@definitelytyped/dtslint": "^0.0.100",
+    "@playwright/test": "^1.17.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
@@ -38,12 +39,11 @@
     "chai-diff": "^1.0.1",
     "concurrently": "^5.0.0",
     "dirty-chai": "^2.0.1",
-    "dtslint": "^0.5.5",
     "dustjs-linkedin": "^2.0.2",
     "eco": "~1.1.0-rc-3",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-compat": "^3.3.0",
+    "eslint-plugin-compat": "^3.13.0",
     "eslint-plugin-es5": "^1.4.1",
     "fs-extra": "^8.1.0",
     "grunt": "^1.0.4",
@@ -84,15 +84,20 @@
     "handlebars": "bin/handlebars"
   },
   "scripts": {
+    "build": "grunt build",
     "format": "prettier --write '**/*.js' && eslint --fix .",
-    "check-format": "prettier --check '**/*.js'",
-    "lint": "eslint --max-warnings 0 .",
-    "dtslint": "dtslint types",
-    "test": "grunt",
-    "extensive-tests-and-publish-to-aws": "npx mocha tasks/task-tests/ && grunt --stack extensive-tests-and-publish-to-aws",
-    "integration-test": "grunt integration-tests",
+    "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
+    "lint:eslint": "eslint --max-warnings 0 .",
+    "lint:prettier": "prettier --check '**/*.js'",
+    "lint:types": "dtslint types",
+    "test": "npm run test:mocha",
+    "test:mocha": "grunt build && grunt test",
+    "test:browser": "playwright test --config tests/browser/playwright.config.js tests/browser/spec.js",
+    "test:integration": "grunt integration-tests",
+    "test:serve": "grunt connect:server:keepalive",
+    "extensive-tests-and-publish-to-aws": "npx mocha tasks/tests/ && grunt --stack extensive-tests-and-publish-to-aws",
     "--- combined tasks ---": "",
-    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:dtslint npm:check-format npm:test"
+    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
   },
   "jspm": {
     "main": "handlebars",
@@ -109,7 +114,6 @@
     "dist/amd/**/*.js",
     "dist/cjs/**/*.js",
     "lib",
-    "print-script",
     "release-notes.md",
     "runtime.js",
     "types/*.d.ts",
@@ -121,7 +125,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,json,md}": [
+    "*.{js,css,json}": [
       "prettier --write",
       "git add"
     ],

@@ -2,11 +2,11 @@
 
 ## How can I file a bug report:
 
-  See our guidelines on [reporting issues](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
+  See our guidelines on [reporting issues](https://github.com/handlebars-lang/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 ## Why isn't my Mustache template working?
 
-  Handlebars deviates from Mustache slightly on a few behaviors. These variations are documented in our [readme](https://github.com/wycats/handlebars.js#differences-between-handlebarsjs-and-mustache).
+  Handlebars deviates from Mustache slightly on a few behaviors. These variations are documented in our [readme](https://github.com/handlebars-lang/handlebars.js#differences-between-handlebarsjs-and-mustache).
 
 ## Why is it slower when compiling?
 
@@ -36,16 +36,18 @@
   ```sh
   handlebars --version
   ```
+
   If using the integrated precompiler and
 
   ```javascript
   console.log(Handlebars.VERSION);
   ```
+
   On the client side.
 
   We include the built client libraries in the npm package for those who want to be certain that they are using the same client libraries as the compiler.
 
-  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/wycats/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
+  Should these match, please file an issue with us, per our [issue filing guidelines](https://github.com/handlebars-lang/handlebars.js/blob/master/CONTRIBUTING.md#reporting-issues).
 
 ## How do I load the runtime library when using AMD?
 

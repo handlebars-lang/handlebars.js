@@ -14,7 +14,7 @@ node_modules
 # Generated files
 /coverage/
 /dist/
-/integration-testing/*/dist/
+/tests/integration/*/dist/
 
 # Third-party or files that must remain unchanged
 /spec/expected/
