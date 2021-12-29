@@ -12,16 +12,6 @@ test('Spec handlebars.js', async ({ page, baseURL }) => {
   await waitForMochaAndAssertResult(page);
 });
 
-test('Spec handlebars.amd.js (AMD)', async ({ page, baseURL }) => {
-  await page.goto(`${baseURL}/spec/amd.html?headless=true`);
-  await waitForMochaAndAssertResult(page);
-});
-
-test('Spec handlebars.runtime.amd.js (AMD)', async ({ page, baseURL }) => {
-  await page.goto(`${baseURL}/spec/amd-runtime.html?headless=true`);
-  await waitForMochaAndAssertResult(page);
-});
-
 test('Spec handlebars.js (UMD)', async ({ page, baseURL }) => {
   await page.goto(`${baseURL}/spec/umd.html?headless=true`);
   await waitForMochaAndAssertResult(page);
