@@ -7,8 +7,7 @@ module.exports = {
       return 'Colors';
     }
   },
-  handlebars: '{{echo (header)}}',
-  eco: '<%= @echo(@header()) %>'
+  handlebars: '{{echo (header)}}'
 };
 
 module.exports.context = module.exports.helpers;

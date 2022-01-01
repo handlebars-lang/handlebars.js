@@ -1,6 +1,5 @@
 var _ = require('underscore'),
   runner = require('./util/template-runner'),
-  eco,
   dust,
   Handlebars,
   Mustache;
@@ -17,12 +16,6 @@ try {
   /* NOP */
 }
 
-try {
-  eco = require('eco');
-} catch (err) {
-  /* NOP */
-}
-
 function error() {
   throw new Error('EWOT');
 }
@@ -35,7 +28,6 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     handlebarsOut,
     compatOut,
     dustOut,
-    ecoOut,
     mustacheOut;
 
   var handlebar = Handlebars.compile(template.handlebars, { data: false }),
@@ -85,20 +77,6 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     }
   }
 
-  if (eco) {
-    if (template.eco) {
-      var ecoTemplate = eco.compile(template.eco);
-
-      ecoOut = ecoTemplate(context);
-
-      bench('eco', function() {
-        ecoTemplate(context);
-      });
-    } else {
-      bench('eco', error);
-    }
-  }
-
   if (Mustache) {
     var mustacheSource = template.mustache,
       mustachePartials = partials && partials.mustache;
@@ -139,12 +117,11 @@ function makeSuite(bench, name, template, handlebarsOnly) {
 
   compare(compatOut, 'compat');
   compare(dustOut, 'dust');
-  compare(ecoOut, 'eco');
   compare(mustacheOut, 'mustache');
 }
 
 module.exports = function(grunt, callback) {
-  // Deferring load incase we are being run inline with the grunt build
+  // Deferring load in case we are being run inline with the grunt build
   Handlebars = require('../../lib');
 
   console.log('Execution Throughput');

@@ -40,7 +40,6 @@
     "concurrently": "^5.0.0",
     "dirty-chai": "^2.0.1",
     "dustjs-linkedin": "^2.0.2",
-    "eco": "~1.1.0-rc-3",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-compat": "^3.13.0",

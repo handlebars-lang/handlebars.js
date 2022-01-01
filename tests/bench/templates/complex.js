@@ -15,6 +15,5 @@ module.exports = {
 
   handlebars: fs.readFileSync(__dirname + '/complex.handlebars').toString(),
   dust: fs.readFileSync(__dirname + '/complex.dust').toString(),
-  eco: fs.readFileSync(__dirname + '/complex.eco').toString(),
   mustache: fs.readFileSync(__dirname + '/complex.mustache').toString()
 };

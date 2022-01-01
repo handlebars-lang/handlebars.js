@@ -10,7 +10,5 @@ module.exports = {
   },
   handlebars:
     '{{#each names}}{{#each name}}{{../bat}}{{../../foo}}{{/each}}{{/each}}',
-  mustache: '{{#names}}{{#name}}{{bat}}{{foo}}{{/name}}{{/names}}',
-  eco:
-    '<% for item in @names: %><% for child in item.name: %><%= item.bat %><%= @foo %><% end %><% end %>'
+  mustache: '{{#names}}{{#name}}{{bat}}{{foo}}{{/name}}{{/names}}'
 };
