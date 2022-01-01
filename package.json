@@ -59,7 +59,6 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-webpack": "^1.0.8",
     "husky": "^3.1.0",
-    "jison": "0.4.16",
     "lint-staged": "^9.5.0",
     "mocha": "^5",
     "mock-stdin": "^0.3.0",
