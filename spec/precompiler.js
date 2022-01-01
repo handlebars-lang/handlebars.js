@@ -83,14 +83,15 @@ describe('precompiler', function () {
     console.error = errorLogFunction;
   });
 
-  it('should output version', function () {
-    Precompiler.cli({ templates: [], version: true });
+  it('should output version', async function () {
+    // TODO do this for all other tests
+    await Precompiler.cli({ templates: [], version: true });
     equals(log, Handlebars.VERSION);
   });
   it('should throw if lacking templates', function () {
     shouldThrow(
-      function () {
-        Precompiler.cli({ templates: [] });
+      async function () {
+        await Precompiler.cli({ templates: [] });
       },
       Handlebars.Exception,
       'Must define at least one template or directory.'
