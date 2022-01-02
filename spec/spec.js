@@ -4,40 +4,34 @@ describe('spec', function() {
     return;
   }
 
-  var _ = require('underscore'),
-    fs = require('fs');
+  var fs = require('fs');
 
   var specDir = __dirname + '/mustache/specs/';
-  var specs = _.filter(fs.readdirSync(specDir), function(name) {
-    return /.*\.json$/.test(name);
-  });
+  var specs = fs.readdirSync(specDir).filter(name => /.*\.json$/.test(name));
 
-  _.each(specs, function(name) {
+  specs.forEach(function(name) {
     var spec = require(specDir + name);
-    _.each(spec.tests, function(test) {
-      // Our lambda implementation knowingly deviates from the optional Mustace lambda spec
-      // We also do not support alternative delimeters
+    spec.tests.forEach(function(test) {
+      // Our lambda implementation knowingly deviates from the optional Mustache lambda spec
+      // We also do not support alternative delimiters
       if (
         name === '~lambdas.json' ||
-        // We also choose to throw if paritals are not found
+        // We also choose to throw if partials are not found
         (name === 'partials.json' && test.name === 'Failed Lookup') ||
         // We nest the entire response from partials, not just the literals
         (name === 'partials.json' && test.name === 'Standalone Indentation') ||
         /\{\{=/.test(test.template) ||
-        _.any(test.partials, function(partial) {
-          return /\{\{=/.test(partial);
-        })
+        Object.values(test.partials || {}).some(value => /\{\{=/.test(value))
       ) {
         it.skip(name + ' - ' + test.name);
         return;
       }
 
-      var data = _.clone(test.data);
+      var data = Object.assign({}, test.data); // Shallow copy
       if (data.lambda) {
         // Blergh
-        /* eslint-disable no-eval */
+        /* eslint-disable-next-line no-eval */
         data.lambda = eval('(' + data.lambda.js + ')');
-        /* eslint-enable no-eval */
       }
       it(name + ' - ' + test.name, function() {
         expectTemplate(test.template)
