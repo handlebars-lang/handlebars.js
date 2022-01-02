@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:es5/no-es2015', 'prettier'],
+  extends: ['eslint:recommended', 'prettier'],
   globals: {
     self: false
   },
