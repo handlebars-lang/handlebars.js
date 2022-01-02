@@ -1,12 +1,5 @@
 {
-  "extends": [
-    "../.eslintrc.js",
-    "plugin:es5/no-es2015",
-    "prettier"
-  ],
-  "plugins": [
-    "es5"
-  ],
+  "extends": ["../.eslintrc.js"],
   "globals": {
     "CompilerContext": true,
     "Handlebars": true,
@@ -16,8 +9,6 @@
     "shouldThrow": true,
     "expectTemplate": true,
     "compileWithPartials": true,
-    "console": true,
-    "require": true,
     "suite": true,
     "equal": true,
     "equals": true,

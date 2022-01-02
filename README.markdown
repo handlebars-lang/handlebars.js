@@ -79,17 +79,16 @@ There are a few Mustache behaviors that Handlebars does not implement.
 Supported Environments
 ----------------------
 
-Handlebars has been designed to work in any ECMAScript 3 environment. This includes
+Handlebars has been designed to work in any ECMAScript 7 (2016) environment. This includes
 
-- Node.js 12+
+- Node.js
 - Chrome
 - Firefox
-- Safari 5+
-- Opera 11+
-- IE 6+
+- Safari
+- Edge
 
-Older versions and other runtimes are likely to work but have not been formally
-tested. The compiler requires `JSON.stringify` to be implemented natively or via a polyfill. If using the precompiler this is not necessary.
+If you need to support older environments, use Handlebars version 4.
+
 
 Performance
 -----------
