@@ -129,13 +129,16 @@ Handlebars in the Wild
 * [Assemble](https://assemble.io), by [@jonschlinkert](https://github.com/jonschlinkert) and [@doowb](https://github.com/doowb), is a static site generator that uses Handlebars.js as its template engine.
 * [CoSchedule](https://coschedule.com) An editorial calendar for WordPress that uses Handlebars.js.
 * [Ember.js](https://www.emberjs.com) makes Handlebars.js the primary way to structure your views, also with automatic data binding support.
+* [express-handlebars](https://github.com/express-handlebars/express-handlebars) A Handlebars view engine for Express which doesn't suck.
+* [express-hbs](https://github.com/TryGhost/express-hbs) Express Handlebars template engine with inheritance, partials, i18n and async helpers.
 * [Ghost](https://ghost.org/) Just a blogging platform.
 * [handlebars-action](https://github.com/marketplace/actions/handlebars-action) A GitHub action to transform files in your repository with Handlebars templating.
 * [handlebars_assets](https://github.com/leshill/handlebars_assets) A Rails Asset Pipeline gem from Les Hill (@leshill).
 * [handlebars-helpers](https://github.com/assemble/handlebars-helpers) is an extensive library with 100+ handlebars helpers.
 * [handlebars-layouts](https://github.com/shannonmoeller/handlebars-layouts) is a set of helpers which implement extensible and embeddable layout blocks as seen in other popular templating languages.
+* [handlebars-loader](https://github.com/pcardune/handlebars-loader) A handlebars template loader for webpack.
 * [handlebars-wax](https://github.com/shannonmoeller/handlebars-wax) The missing Handlebars API. Effortless registration of data, partials, helpers, and decorators using file-system globs, modules, and plain-old JavaScript objects.
-* [hbs](https://github.com/donpark/hbs) An Express.js view engine adapter for Handlebars.js, from Don Park.
+* [hbs](https://github.com/pillarjs/hbs) An Express.js view engine adapter for Handlebars.js, from Don Park.
 * [incremental-bars](https://github.com/atomictag/incremental-bars) adds support for [incremental-dom](https://github.com/google/incremental-dom) as template target to Handlebars.
 * [jblotus](https://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com) for anyone who would like to try out Handlebars.js in their browser.
 * [jQuery plugin](https://71104.github.io/jquery-handlebars/) allows you to use Handlebars.js with [jQuery](http://jquery.com/).
