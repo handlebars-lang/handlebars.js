@@ -146,6 +146,7 @@ Handlebars in the Wild
 * [koa-hbs](https://github.com/jwilm/koa-hbs) [koa](https://github.com/koajs/koa) generator based renderer for Handlebars.js.
 * [Marionette.Handlebars](https://github.com/hashchange/marionette.handlebars) adds support for Handlebars and Mustache templates to Marionette.
 * [openVALIDATION](https://github.com/openvalidation/openvalidation) a natural language compiler for validation rules. Generates program code in Java, JavaScript, C#, Python and Rust with handlebars.
+* [Plop](https://plopjs.com/) is a micro-generator framework that makes it easy to create files with a level of uniformity.
 * [promised-handlebars](https://github.com/nknapp/promised-handlebars) is a wrapper for Handlebars that allows helpers to return Promises.
 * [sammy.js](https://github.com/quirkey/sammy) by Aaron Quint, a.k.a. quirkey, supports Handlebars.js as one of its template plugins.
 * [Swag](https://github.com/elving/swag) by [@elving](https://github.com/elving) is a growing collection of helpers for handlebars.js. Give your handlebars.js templates some swag son!
