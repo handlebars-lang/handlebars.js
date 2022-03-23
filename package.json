@@ -71,7 +71,6 @@
     "underscore": "^1.5.1",
     "webpack": "^1.12.6",
     "webpack-dev-server": "^1.12.1",
-    "grunt": "^1.4.1",
     "coffeescript": "^2.6.1",
   },
   "main": "lib/index.js",
@@ -84,7 +83,7 @@
     "handlebars": "bin/handlebars.js"
   },
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "npm i -D && npm run build",
     "build": "grunt build",
     "format": "prettier --write '**/*.js' && eslint --fix .",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
