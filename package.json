@@ -70,7 +70,9 @@
     "uglify-js": "^3.1.4",
     "underscore": "^1.5.1",
     "webpack": "^1.12.6",
-    "webpack-dev-server": "^1.12.1"
+    "webpack-dev-server": "^1.12.1",
+    "grunt": "^1.4.1",
+    "coffeescript": "^2.6.1",
   },
   "main": "lib/index.js",
   "types": "types/index.d.ts",
