@@ -82,6 +82,7 @@
     "handlebars": "bin/handlebars.js"
   },
   "scripts": {
+    "prepare": "npm run build",
     "build": "grunt build",
     "format": "prettier --write '**/*.js' && eslint --fix .",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
