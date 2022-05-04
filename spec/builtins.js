@@ -324,6 +324,15 @@ describe('builtin helpers', function() {
         );
     });
 
+    it('each with block params and strict compilation', function() {
+      expectTemplate(
+        '{{#each goodbyes as |value index|}}{{index}}. {{value.text}}!{{/each}}'
+      )
+        .withCompileOptions({ strict: true })
+        .withInput({ goodbyes: [{ text: 'goodbye' }, { text: 'Goodbye' }] })
+        .toCompileTo('0. goodbye!1. Goodbye!');
+    });
+
     it('each object with @index', function() {
       expectTemplate(
         '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!'
