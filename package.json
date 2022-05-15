@@ -76,10 +76,7 @@
   },
   "main": "lib/index.js",
   "types": "types/index.d.ts",
-  "browser": {
-    ".": "./dist/cjs/handlebars.js",
-    "./runtime": "./dist/cjs/handlebars.runtime.js"
-  },
+  "browser": "./dist/cjs/handlebars.js",
   "bin": {
     "handlebars": "bin/handlebars"
   },
