@@ -1,6 +1,6 @@
 {
   "name": "webpack-test",
-  "description": "Various tests with Handlebars and Webpack",
+  "description": "Various tests with Handlebars and multiple webpack versions",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,14 +8,8 @@
     "test": "node dist/main.js"
   },
   "private": true,
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "handlebars": "file:../../..",
-    "handlebars-loader": "^1.7.1",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "handlebars-loader": "^1.7.1"
   }
 }
