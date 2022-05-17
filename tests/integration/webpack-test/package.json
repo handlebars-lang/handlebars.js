@@ -2,14 +2,14 @@
   "name": "webpack-test",
   "description": "Various tests with Handlebars and multiple webpack versions",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "test": "node dist/main.js"
-  },
   "private": true,
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
   "dependencies": {
     "handlebars": "file:../../..",
-    "handlebars-loader": "^1.7.1"
+    "handlebars-loader": "^1.7.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
   }
 }

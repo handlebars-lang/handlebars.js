@@ -111,11 +111,9 @@ module.exports = function(grunt) {
       }
     },
 
-    bgShell: {
+    shell: {
       integrationTests: {
-        cmd: './tests/integration/run-integration-tests.sh',
-        bg: false,
-        fail: true
+        command: './tests/integration/run-integration-tests.sh'
       }
     },
 
@@ -139,7 +137,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
-  grunt.loadNpmTasks('grunt-bg-shell');
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-webpack');
 
   grunt.task.loadTasks('tasks');
@@ -156,7 +154,7 @@ module.exports = function(grunt) {
   // Requires secret properties from .travis.yaml
   grunt.registerTask('extensive-tests-and-publish-to-aws', [
     'default',
-    'bgShell:integrationTests',
+    'shell:integrationTests',
     'metrics',
     'publish-to-aws'
   ]);
@@ -176,6 +174,6 @@ module.exports = function(grunt) {
   );
   grunt.registerTask('integration-tests', [
     'default',
-    'bgShell:integrationTests'
+    'shell:integrationTests'
   ]);
 };
