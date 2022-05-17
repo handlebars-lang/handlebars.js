@@ -81,7 +81,7 @@ Supported Environments
 
 Handlebars has been designed to work in any ECMAScript 3 environment. This includes
 
-- Node.js 10+
+- Node.js 12+
 - Chrome
 - Firefox
 - Safari 5+

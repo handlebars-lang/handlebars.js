@@ -10,6 +10,7 @@ testFiles
 
 module.exports = {
   entry: entryPoints,
+  mode: 'production',
   output: {
     filename: '[name]',
     path: __dirname + '/dist'
