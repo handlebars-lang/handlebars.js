@@ -25,6 +25,31 @@ jobs:
       - name: Lint
         run: npm run lint
 
+  dependencies:
+    name: Test (dependencies)
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          # Node 14 ships with npm v6, which doesn't install peer-dependencies by default.
+          # Starting with npm v7 (which is shipped with Node >= 16), peer-dependencies are
+          # automatically installed. So this test (check for unmet peer-dependencies) only
+          # works with Node <= 14.
+          node-version: '14'
+
+      # Simulate an installation by a dependent package
+      - name: Install dependencies
+        run: |
+          rm package-lock.json
+          npm install --production
+
+      - name: Check dependency tree
+        run: npm ls
+
   test:
     name: Test (Node)
     runs-on: ${{ matrix.operating-system }}
