@@ -3,7 +3,7 @@
   "description": "Various tests with Handlebars and rollup",
   "version": "1.0.0",
   "scripts": {
-    "build": "rollup --config rollup.config.js --failAfterWarnings"
+    "build": "rollup --config rollup.config.js"
   },
   "private": true,
   "devDependencies": {

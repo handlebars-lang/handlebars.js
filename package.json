@@ -20,7 +20,7 @@
     "node": ">=12"
   },
   "dependencies": {
-    "@handlebars/parser": "^1.1.0",
+    "@handlebars/parser": "^2.1.0",
     "neo-async": "^2.6.2",
     "source-map": "^0.6.1",
     "yargs": "^16.2.0"
