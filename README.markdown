@@ -113,7 +113,7 @@ See [release-notes.md](https://github.com/handlebars-lang/handlebars.js/blob/mas
 If you are using Handlebars in production, please regularly look for issues labeled
 [possibly breaking](https://github.com/handlebars-lang/handlebars.js/issues?q=is%3Aopen+is%3Aissue+label%3A%22possibly+breaking%22).
 If this label is applied to an issue, it means that the requested change is probably not a breaking change,
-but since Handlebars is widely in use by a lot of people, chances are always there that it breaks somebodies build.
+but since Handlebars is widely in use by a lot of people, there's always a chance that it breaks somebody's build.
 
 
 Known Issues
