@@ -11,6 +11,7 @@ testFiles
 module.exports = {
   entry: entryPoints,
   mode: 'production',
+  target: 'web',
   output: {
     filename: '[name]',
     path: __dirname + '/dist',
