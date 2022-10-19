@@ -5,7 +5,10 @@ module.exports = {
   },
   env: {
     node: true,
-    es6: true
+    es2020: true
+  },
+  parserOptions: {
+    sourceType: 'module'
   },
   rules: {
     'no-console': 'warn',
@@ -57,10 +60,5 @@ module.exports = {
     // ECMAScript 6 //
     //--------------//
     'no-var': 'error'
-  },
-  parserOptions: {
-    sourceType: 'module',
-    ecmaVersion: 6,
-    ecmaFeatures: {}
   }
 };
