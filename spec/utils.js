@@ -1,6 +1,6 @@
-describe('utils', function() {
-  describe('#SafeString', function() {
-    it('constructing a safestring from a string and checking its type', function() {
+describe('utils', function () {
+  describe('#SafeString', function () {
+    it('constructing a safestring from a string and checking its type', function () {
       var safe = new Handlebars.SafeString('testing 1, 2, 3');
       if (!(safe instanceof Handlebars.SafeString)) {
         throw new Error('Must be instance of SafeString');
@@ -12,7 +12,7 @@ describe('utils', function() {
       );
     });
 
-    it('it should not escape SafeString properties', function() {
+    it('it should not escape SafeString properties', function () {
       var name = new Handlebars.SafeString('<em>Sean O&#x27;Malley</em>');
 
       expectTemplate('{{name}}')
@@ -21,26 +21,26 @@ describe('utils', function() {
     });
   });
 
-  describe('#escapeExpression', function() {
-    it('should escape html', function() {
+  describe('#escapeExpression', function () {
+    it('should escape html', function () {
       equals(
         Handlebars.Utils.escapeExpression('foo<&"\'>'),
         'foo&lt;&amp;&quot;&#x27;&gt;'
       );
       equals(Handlebars.Utils.escapeExpression('foo='), 'foo&#x3D;');
     });
-    it('should not escape SafeString', function() {
+    it('should not escape SafeString', function () {
       var string = new Handlebars.SafeString('foo<&"\'>');
       equals(Handlebars.Utils.escapeExpression(string), 'foo<&"\'>');
 
       var obj = {
-        toHTML: function() {
+        toHTML: function () {
           return 'foo<&"\'>';
-        }
+        },
       };
       equals(Handlebars.Utils.escapeExpression(obj), 'foo<&"\'>');
     });
-    it('should handle falsy', function() {
+    it('should handle falsy', function () {
       equals(Handlebars.Utils.escapeExpression(''), '');
       equals(Handlebars.Utils.escapeExpression(undefined), '');
       equals(Handlebars.Utils.escapeExpression(null), '');
@@ -48,14 +48,14 @@ describe('utils', function() {
       equals(Handlebars.Utils.escapeExpression(false), 'false');
       equals(Handlebars.Utils.escapeExpression(0), '0');
     });
-    it('should handle empty objects', function() {
+    it('should handle empty objects', function () {
       equals(Handlebars.Utils.escapeExpression({}), {}.toString());
       equals(Handlebars.Utils.escapeExpression([]), [].toString());
     });
   });
 
-  describe('#isEmpty', function() {
-    it('should not be empty', function() {
+  describe('#isEmpty', function () {
+    it('should not be empty', function () {
       equals(Handlebars.Utils.isEmpty(undefined), true);
       equals(Handlebars.Utils.isEmpty(null), true);
       equals(Handlebars.Utils.isEmpty(false), true);
@@ -63,7 +63,7 @@ describe('utils', function() {
       equals(Handlebars.Utils.isEmpty([]), true);
     });
 
-    it('should be empty', function() {
+    it('should be empty', function () {
       equals(Handlebars.Utils.isEmpty(0), false);
       equals(Handlebars.Utils.isEmpty([1]), false);
       equals(Handlebars.Utils.isEmpty('foo'), false);
@@ -71,8 +71,8 @@ describe('utils', function() {
     });
   });
 
-  describe('#extend', function() {
-    it('should ignore prototype values', function() {
+  describe('#extend', function () {
+    it('should ignore prototype values', function () {
       function A() {
         this.a = 1;
       }

@@ -1,14 +1,14 @@
 const metrics = require('../tests/bench');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
-  registerAsyncTask('metrics', function() {
+  registerAsyncTask('metrics', function () {
     const onlyExecuteName = grunt.option('name');
     const events = {};
 
-    const promises = Object.keys(metrics).map(async name => {
+    const promises = Object.keys(metrics).map(async (name) => {
       if (/^_/.test(name)) {
         return;
       }
@@ -16,8 +16,8 @@ module.exports = function(grunt) {
         return;
       }
 
-      return new Promise(resolve => {
-        metrics[name](grunt, function(data) {
+      return new Promise((resolve) => {
+        metrics[name](grunt, function (data) {
           events[name] = data;
           resolve();
         });

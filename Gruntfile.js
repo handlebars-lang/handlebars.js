@@ -1,5 +1,5 @@
 /* eslint-disable no-process-env */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         options: {
-          processContent: function(content) {
+          processContent: function (content) {
             return (
               grunt.template.process(
                 '/**!\n\n @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt Expat\n <%= pkg.name %> v<%= pkg.version %>\n\n<%= grunt.file.read("LICENSE") %>\n*/\n'
@@ -16,9 +16,9 @@ module.exports = function(grunt) {
               content +
               '\n// @license-end\n'
             );
-          }
+          },
         },
-        files: [{ expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/' }]
+        files: [{ expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/' }],
       },
       components: {
         files: [
@@ -26,18 +26,23 @@ module.exports = function(grunt) {
             expand: true,
             cwd: 'components/',
             src: ['**'],
-            dest: 'dist/components'
+            dest: 'dist/components',
           },
-          { expand: true, cwd: 'dist/', src: ['*.js'], dest: 'dist/components' }
-        ]
-      }
+          {
+            expand: true,
+            cwd: 'dist/',
+            src: ['*.js'],
+            dest: 'dist/components',
+          },
+        ],
+      },
     },
 
     babel: {
       options: {
         sourceMaps: 'inline',
         loose: ['es6.modules'],
-        auxiliaryCommentBefore: 'istanbul ignore next'
+        auxiliaryCommentBefore: 'istanbul ignore next',
       },
       cjs: {
         files: [
@@ -45,10 +50,10 @@ module.exports = function(grunt) {
             cwd: 'lib/',
             expand: true,
             src: '**/!(index).js',
-            dest: 'dist/cjs/'
-          }
-        ]
-      }
+            dest: 'dist/cjs/',
+          },
+        ],
+      },
     },
     webpack: {
       options: {
@@ -56,28 +61,28 @@ module.exports = function(grunt) {
         output: {
           path: 'dist/',
           library: 'Handlebars',
-          libraryTarget: 'umd'
-        }
+          libraryTarget: 'umd',
+        },
       },
       handlebars: {
         entry: './dist/cjs/handlebars.js',
         output: {
-          filename: 'handlebars.js'
-        }
+          filename: 'handlebars.js',
+        },
       },
       runtime: {
         entry: './dist/cjs/handlebars.runtime.js',
         output: {
-          filename: 'handlebars.runtime.js'
-        }
-      }
+          filename: 'handlebars.runtime.js',
+        },
+      },
     },
 
     uglify: {
       options: {
         mangle: true,
         compress: true,
-        preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
+        preserveComments: /(?:^!|@(?:license|preserve|cc_on))/,
       },
       dist: {
         files: [
@@ -86,19 +91,19 @@ module.exports = function(grunt) {
             expand: true,
             src: ['handlebars*.js', '!*.min.js'],
             dest: 'dist/',
-            rename: function(dest, src) {
+            rename: function (dest, src) {
               return dest + src.replace(/\.js$/, '.min.js');
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     },
 
     concat: {
       tests: {
         src: ['spec/!(require).js'],
-        dest: 'tmp/tests.js'
-      }
+        dest: 'tmp/tests.js',
+      },
     },
 
     connect: {
@@ -106,27 +111,27 @@ module.exports = function(grunt) {
         options: {
           base: '.',
           hostname: '*',
-          port: 9999
-        }
-      }
+          port: 9999,
+        },
+      },
     },
 
     shell: {
       integrationTests: {
-        command: './tests/integration/run-integration-tests.sh'
-      }
+        command: './tests/integration/run-integration-tests.sh',
+      },
     },
 
     watch: {
       scripts: {
         options: {
-          atBegin: true
+          atBegin: true,
         },
 
         files: ['src/*', 'lib/**/*.js', 'spec/**/*.js'],
-        tasks: ['on-file-change']
-      }
-    }
+        tasks: ['on-file-change'],
+      },
+    },
   });
 
   // Load tasks from npm
@@ -148,7 +153,7 @@ module.exports = function(grunt) {
     'uglify',
     'test:min',
     'copy:dist',
-    'copy:components'
+    'copy:components',
   ]);
 
   // Requires secret properties from .travis.yaml
@@ -156,7 +161,7 @@ module.exports = function(grunt) {
     'default',
     'shell:integrationTests',
     'metrics',
-    'publish-to-aws'
+    'publish-to-aws',
   ]);
 
   grunt.registerTask('on-file-change', ['build', 'concat:tests', 'test']);
@@ -174,6 +179,6 @@ module.exports = function(grunt) {
   );
   grunt.registerTask('integration-tests', [
     'default',
-    'shell:integrationTests'
+    'shell:integrationTests',
   ]);
 };

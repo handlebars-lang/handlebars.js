@@ -3,6 +3,6 @@ module.exports = {
     'no-process-env': 'off',
     'prefer-const': 'warn',
     'compat/compat': 'off',
-    'dot-notation': ['error', { allowKeywords: true }]
-  }
+    'dot-notation': ['error', { allowKeywords: true }],
+  },
 };

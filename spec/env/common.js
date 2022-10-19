@@ -1,4 +1,4 @@
-var global = (function() {
+var global = (function () {
   return this;
 })();
 
@@ -21,7 +21,7 @@ if (Error.captureStackTrace) {
 /**
  * @deprecated Use "expectTemplate(template)...toCompileTo(output)" instead
  */
-global.shouldCompileTo = function(string, hashOrArray, expected, message) {
+global.shouldCompileTo = function (string, hashOrArray, expected, message) {
   shouldCompileToWithPartials(string, hashOrArray, false, expected, message);
 };
 
@@ -47,7 +47,7 @@ global.shouldCompileToWithPartials = function shouldCompileToWithPartials(
 /**
  * @deprecated Use "expectTemplate(template)...toCompileTo(output)" instead
  */
-global.compileWithPartials = function(string, hashOrArray, partials) {
+global.compileWithPartials = function (string, hashOrArray, partials) {
   var template, ary, options;
   if (hashOrArray && hashOrArray.hash) {
     ary = [hashOrArray.hash, hashOrArray];
@@ -92,7 +92,7 @@ global.equals = global.equal = function equals(a, b, msg) {
  * @deprecated Use chai's expect-style API instead (`expect(actualValue).to.equal(expectedValue)`)
  * @see https://www.chaijs.com/api/bdd/#method_throw
  */
-global.shouldThrow = function(callback, type, msg) {
+global.shouldThrow = function (callback, type, msg) {
   var failed;
   try {
     callback();
@@ -121,7 +121,7 @@ global.shouldThrow = function(callback, type, msg) {
   }
 };
 
-global.expectTemplate = function(templateAsString) {
+global.expectTemplate = function (templateAsString) {
   return new HandlebarsTestBench(templateAsString);
 };
 
@@ -137,38 +137,38 @@ function HandlebarsTestBench(templateAsString) {
   this.runtimeOptions = {};
 }
 
-HandlebarsTestBench.prototype.withInput = function(input) {
+HandlebarsTestBench.prototype.withInput = function (input) {
   this.input = input;
   return this;
 };
 
-HandlebarsTestBench.prototype.withHelper = function(name, helperFunction) {
+HandlebarsTestBench.prototype.withHelper = function (name, helperFunction) {
   this.helpers[name] = helperFunction;
   return this;
 };
 
-HandlebarsTestBench.prototype.withHelpers = function(helperFunctions) {
+HandlebarsTestBench.prototype.withHelpers = function (helperFunctions) {
   var self = this;
-  Object.keys(helperFunctions).forEach(function(name) {
+  Object.keys(helperFunctions).forEach(function (name) {
     self.withHelper(name, helperFunctions[name]);
   });
   return this;
 };
 
-HandlebarsTestBench.prototype.withPartial = function(name, partialAsString) {
+HandlebarsTestBench.prototype.withPartial = function (name, partialAsString) {
   this.partials[name] = partialAsString;
   return this;
 };
 
-HandlebarsTestBench.prototype.withPartials = function(partials) {
+HandlebarsTestBench.prototype.withPartials = function (partials) {
   var self = this;
-  Object.keys(partials).forEach(function(name) {
+  Object.keys(partials).forEach(function (name) {
     self.withPartial(name, partials[name]);
   });
   return this;
 };
 
-HandlebarsTestBench.prototype.withDecorator = function(
+HandlebarsTestBench.prototype.withDecorator = function (
   name,
   decoratorFunction
 ) {
@@ -176,30 +176,30 @@ HandlebarsTestBench.prototype.withDecorator = function(
   return this;
 };
 
-HandlebarsTestBench.prototype.withDecorators = function(decorators) {
+HandlebarsTestBench.prototype.withDecorators = function (decorators) {
   var self = this;
-  Object.keys(decorators).forEach(function(name) {
+  Object.keys(decorators).forEach(function (name) {
     self.withDecorator(name, decorators[name]);
   });
   return this;
 };
 
-HandlebarsTestBench.prototype.withCompileOptions = function(compileOptions) {
+HandlebarsTestBench.prototype.withCompileOptions = function (compileOptions) {
   this.compileOptions = compileOptions;
   return this;
 };
 
-HandlebarsTestBench.prototype.withRuntimeOptions = function(runtimeOptions) {
+HandlebarsTestBench.prototype.withRuntimeOptions = function (runtimeOptions) {
   this.runtimeOptions = runtimeOptions;
   return this;
 };
 
-HandlebarsTestBench.prototype.withMessage = function(message) {
+HandlebarsTestBench.prototype.withMessage = function (message) {
   this.message = message;
   return this;
 };
 
-HandlebarsTestBench.prototype.toCompileTo = function(expectedOutputAsString) {
+HandlebarsTestBench.prototype.toCompileTo = function (expectedOutputAsString) {
   expect(this._compileAndExecute()).to.equal(
     expectedOutputAsString,
     this.message
@@ -207,14 +207,14 @@ HandlebarsTestBench.prototype.toCompileTo = function(expectedOutputAsString) {
 };
 
 // see chai "to.throw" (https://www.chaijs.com/api/bdd/#method_throw)
-HandlebarsTestBench.prototype.toThrow = function(errorLike, errMsgMatcher) {
+HandlebarsTestBench.prototype.toThrow = function (errorLike, errMsgMatcher) {
   var self = this;
-  expect(function() {
+  expect(function () {
     self._compileAndExecute();
   }).to.throw(errorLike, errMsgMatcher, this.message);
 };
 
-HandlebarsTestBench.prototype._compileAndExecute = function() {
+HandlebarsTestBench.prototype._compileAndExecute = function () {
   var compile =
     Object.keys(this.partials).length > 0
       ? CompilerContext.compileWithPartial
@@ -226,10 +226,10 @@ HandlebarsTestBench.prototype._compileAndExecute = function() {
   return template(this.input, combinedRuntimeOptions);
 };
 
-HandlebarsTestBench.prototype._combineRuntimeOptions = function() {
+HandlebarsTestBench.prototype._combineRuntimeOptions = function () {
   var self = this;
   var combinedRuntimeOptions = {};
-  Object.keys(this.runtimeOptions).forEach(function(key) {
+  Object.keys(this.runtimeOptions).forEach(function (key) {
     combinedRuntimeOptions[key] = self.runtimeOptions[key];
   });
   combinedRuntimeOptions.helpers = this.helpers;

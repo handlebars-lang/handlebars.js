@@ -11,47 +11,47 @@ const testCases = [
   {
     binInputParameters: ['-a', 'spec/artifacts/empty.handlebars'],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.amd.js'
+    expectedOutputSpec: './spec/expected/empty.amd.js',
   },
   {
     binInputParameters: [
       '-a',
       '-f',
       'TEST_OUTPUT',
-      'spec/artifacts/empty.handlebars'
+      'spec/artifacts/empty.handlebars',
     ],
     outputLocation: 'TEST_OUTPUT',
-    expectedOutputSpec: './spec/expected/empty.amd.js'
+    expectedOutputSpec: './spec/expected/empty.amd.js',
   },
   {
     binInputParameters: [
       '-a',
       '-n',
       'CustomNamespace.templates',
-      'spec/artifacts/empty.handlebars'
+      'spec/artifacts/empty.handlebars',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.amd.namespace.js'
+    expectedOutputSpec: './spec/expected/empty.amd.namespace.js',
   },
   {
     binInputParameters: [
       '-a',
       '--namespace',
       'CustomNamespace.templates',
-      'spec/artifacts/empty.handlebars'
+      'spec/artifacts/empty.handlebars',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.amd.namespace.js'
+    expectedOutputSpec: './spec/expected/empty.amd.namespace.js',
   },
   {
     binInputParameters: ['-a', '-s', 'spec/artifacts/empty.handlebars'],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.amd.simple.js'
+    expectedOutputSpec: './spec/expected/empty.amd.simple.js',
   },
   {
     binInputParameters: ['-a', '-m', 'spec/artifacts/empty.handlebars'],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.amd.min.js'
+    expectedOutputSpec: './spec/expected/empty.amd.min.js',
   },
   {
     binInputParameters: [
@@ -61,44 +61,44 @@ const testCases = [
       'someHelper',
       '-k',
       'anotherHelper',
-      '-o'
+      '-o',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/non.empty.amd.known.helper.js'
+    expectedOutputSpec: './spec/expected/non.empty.amd.known.helper.js',
   },
   {
     binInputParameters: ['--help'],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/help.menu.txt'
+    expectedOutputSpec: './spec/expected/help.menu.txt',
   },
   {
     binInputParameters: ['-v'],
     outputLocation: 'stdout',
-    expectedOutput: require('../package.json').version
+    expectedOutput: require('../package.json').version,
   },
   {
     binInputParameters: [
       '-a',
       '-e',
       'hbs',
-      './spec/artifacts/non.default.extension.hbs'
+      './spec/artifacts/non.default.extension.hbs',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/non.default.extension.amd.js'
+    expectedOutputSpec: './spec/expected/non.default.extension.amd.js',
   },
   {
     binInputParameters: [
       '-a',
       '-p',
-      './spec/artifacts/partial.template.handlebars'
+      './spec/artifacts/partial.template.handlebars',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/partial.template.js'
+    expectedOutputSpec: './spec/expected/partial.template.js',
   },
   {
     binInputParameters: ['spec/artifacts/empty.handlebars', '-c'],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.common.js'
+    expectedOutputSpec: './spec/expected/empty.common.js',
   },
   {
     binInputParameters: [
@@ -106,30 +106,30 @@ const testCases = [
       'spec/artifacts/empty.handlebars',
       '-a',
       '-n',
-      'someNameSpace'
+      'someNameSpace',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/namespace.amd.js'
+    expectedOutputSpec: './spec/expected/namespace.amd.js',
   },
   {
     binInputParameters: [
       'spec/artifacts/empty.handlebars',
       '-h',
       'some-path/',
-      '-a'
+      '-a',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/handlebar.path.amd.js'
+    expectedOutputSpec: './spec/expected/handlebar.path.amd.js',
   },
   {
     binInputParameters: [
       'spec/artifacts/partial.template.handlebars',
       '-r',
       'spec',
-      '-a'
+      '-a',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.root.amd.js'
+    expectedOutputSpec: './spec/expected/empty.root.amd.js',
   },
   {
     binInputParameters: [
@@ -141,10 +141,10 @@ const testCases = [
       'firstTemplate',
       '-N',
       'secondTemplate',
-      '-a'
+      '-a',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.name.amd.js'
+    expectedOutputSpec: './spec/expected/empty.name.amd.js',
   },
   {
     binInputParameters: [
@@ -155,36 +155,36 @@ const testCases = [
       '-N',
       'test',
       '--map',
-      './spec/tmp/source.map.amd.txt'
+      './spec/tmp/source.map.amd.txt',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/source.map.amd.js'
+    expectedOutputSpec: './spec/expected/source.map.amd.js',
   },
   {
     binInputParameters: ['./spec/artifacts/bom.handlebars', '-b', '-a'],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/bom.amd.js'
+    expectedOutputSpec: './spec/expected/bom.amd.js',
   },
   // Issue #1673
   {
     binInputParameters: [
       '--amd',
       '--no-amd',
-      'spec/artifacts/empty.handlebars'
+      'spec/artifacts/empty.handlebars',
     ],
     outputLocation: 'stdout',
-    expectedOutputSpec: './spec/expected/empty.common.js'
-  }
+    expectedOutputSpec: './spec/expected/empty.common.js',
+  },
 ];
 
-module.exports = function(grunt) {
-  grunt.registerTask('test:bin', function() {
+module.exports = function (grunt) {
+  grunt.registerTask('test:bin', function () {
     testCases.forEach(
       ({
         binInputParameters,
         outputLocation,
         expectedOutputSpec,
-        expectedOutput
+        expectedOutput,
       }) => {
         const stdout = executeBinHandlebars(...binInputParameters);
 
@@ -205,7 +205,7 @@ module.exports = function(grunt) {
         expect(normalizedOutput).not.to.be.differentFrom(
           normalizedExpectedOutput,
           {
-            relaxedSpace: true
+            relaxedSpace: true,
           }
         );
       }

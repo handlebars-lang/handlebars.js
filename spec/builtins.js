@@ -1,12 +1,12 @@
-describe('builtin helpers', function() {
-  describe('#if', function() {
-    it('if', function() {
+describe('builtin helpers', function () {
+  describe('#if', function () {
+    it('if', function () {
       var string = '{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!';
 
       expectTemplate(string)
         .withInput({
           goodbye: true,
-          world: 'world'
+          world: 'world',
         })
         .withMessage('if with boolean argument shows the contents when true')
         .toCompileTo('GOODBYE cruel world!');
@@ -14,7 +14,7 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbye: 'dummy',
-          world: 'world'
+          world: 'world',
         })
         .withMessage('if with string argument shows the contents')
         .toCompileTo('GOODBYE cruel world!');
@@ -22,7 +22,7 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbye: false,
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'if with boolean argument does not show the contents when false'
@@ -37,7 +37,7 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbye: ['foo'],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('if with non-empty array shows the contents')
         .toCompileTo('GOODBYE cruel world!');
@@ -45,7 +45,7 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbye: [],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('if with empty array does not show the contents')
         .toCompileTo('cruel world!');
@@ -53,7 +53,7 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbye: 0,
-          world: 'world'
+          world: 'world',
         })
         .withMessage('if with zero does not show the contents')
         .toCompileTo('cruel world!');
@@ -63,21 +63,21 @@ describe('builtin helpers', function() {
       )
         .withInput({
           goodbye: 0,
-          world: 'world'
+          world: 'world',
         })
         .withMessage('if with zero does not show the contents')
         .toCompileTo('GOODBYE cruel world!');
     });
 
-    it('if with function argument', function() {
+    it('if with function argument', function () {
       var string = '{{#if goodbye}}GOODBYE {{/if}}cruel {{world}}!';
 
       expectTemplate(string)
         .withInput({
-          goodbye: function() {
+          goodbye: function () {
             return true;
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'if with function shows the contents when function returns true'
@@ -86,10 +86,10 @@ describe('builtin helpers', function() {
 
       expectTemplate(string)
         .withInput({
-          goodbye: function() {
+          goodbye: function () {
             return this.world;
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'if with function shows the contents when function returns string'
@@ -98,10 +98,10 @@ describe('builtin helpers', function() {
 
       expectTemplate(string)
         .withInput({
-          goodbye: function() {
+          goodbye: function () {
             return false;
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'if with function does not show the contents when returns false'
@@ -110,10 +110,10 @@ describe('builtin helpers', function() {
 
       expectTemplate(string)
         .withInput({
-          goodbye: function() {
+          goodbye: function () {
             return this.foo;
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'if with function does not show the contents when returns undefined'
@@ -121,61 +121,61 @@ describe('builtin helpers', function() {
         .toCompileTo('cruel world!');
     });
 
-    it('should not change the depth list', function() {
+    it('should not change the depth list', function () {
       expectTemplate(
         '{{#with foo}}{{#if goodbye}}GOODBYE cruel {{../world}}!{{/if}}{{/with}}'
       )
         .withInput({
           foo: { goodbye: true },
-          world: 'world'
+          world: 'world',
         })
         .toCompileTo('GOODBYE cruel world!');
     });
   });
 
-  describe('#with', function() {
-    it('with', function() {
+  describe('#with', function () {
+    it('with', function () {
       expectTemplate('{{#with person}}{{first}} {{last}}{{/with}}')
         .withInput({
           person: {
             first: 'Alan',
-            last: 'Johnson'
-          }
+            last: 'Johnson',
+          },
         })
         .toCompileTo('Alan Johnson');
     });
 
-    it('with with function argument', function() {
+    it('with with function argument', function () {
       expectTemplate('{{#with person}}{{first}} {{last}}{{/with}}')
         .withInput({
-          person: function() {
+          person: function () {
             return {
               first: 'Alan',
-              last: 'Johnson'
+              last: 'Johnson',
             };
-          }
+          },
         })
         .toCompileTo('Alan Johnson');
     });
 
-    it('with with else', function() {
+    it('with with else', function () {
       expectTemplate(
         '{{#with person}}Person is present{{else}}Person is not present{{/with}}'
       ).toCompileTo('Person is not present');
     });
 
-    it('with provides block parameter', function() {
+    it('with provides block parameter', function () {
       expectTemplate('{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}')
         .withInput({
           person: {
             first: 'Alan',
-            last: 'Johnson'
-          }
+            last: 'Johnson',
+          },
         })
         .toCompileTo('Alan Johnson');
     });
 
-    it('works when data is disabled', function() {
+    it('works when data is disabled', function () {
       expectTemplate('{{#with person as |foo|}}{{foo.first}} {{last}}{{/with}}')
         .withInput({ person: { first: 'Alan', last: 'Johnson' } })
         .withCompileOptions({ data: false })
@@ -183,14 +183,14 @@ describe('builtin helpers', function() {
     });
   });
 
-  describe('#each', function() {
-    beforeEach(function() {
-      handlebarsEnv.registerHelper('detectDataInsideEach', function(options) {
+  describe('#each', function () {
+    beforeEach(function () {
+      handlebarsEnv.registerHelper('detectDataInsideEach', function (options) {
         return options.data && options.data.exclaim;
       });
     });
 
-    it('each', function() {
+    it('each', function () {
       var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
 
       expectTemplate(string)
@@ -198,9 +198,9 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'each with array argument iterates over the contents when not empty'
@@ -210,21 +210,21 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbyes: [],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('each with array argument ignores the contents when empty')
         .toCompileTo('cruel world!');
     });
 
-    it('each without data', function() {
+    it('each without data', function () {
       expectTemplate('{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!')
         .withInput({
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withRuntimeOptions({ data: false })
         .withCompileOptions({ data: false })
@@ -237,13 +237,13 @@ describe('builtin helpers', function() {
         .toCompileTo('cruelworld');
     });
 
-    it('each without context', function() {
+    it('each without context', function () {
       expectTemplate('{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!')
         .withInput(undefined)
         .toCompileTo('cruel !');
     });
 
-    it('each with an object and @key', function() {
+    it('each with an object and @key', function () {
       var string =
         '{{#each goodbyes}}{{@key}}. {{text}}! {{/each}}cruel {{world}}!';
 
@@ -272,12 +272,12 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbyes: {},
-          world: 'world'
+          world: 'world',
         })
         .toCompileTo('cruel world!');
     });
 
-    it('each with @index', function() {
+    it('each with @index', function () {
       expectTemplate(
         '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!'
       )
@@ -285,15 +285,15 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @index variable is used')
         .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
     });
 
-    it('each with nested @index', function() {
+    it('each with nested @index', function () {
       expectTemplate(
         '{{#each goodbyes}}{{@index}}. {{text}}! {{#each ../goodbyes}}{{@index}} {{/each}}After {{@index}} {{/each}}{{@index}}cruel {{world}}!'
       )
@@ -301,9 +301,9 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @index variable is used')
         .toCompileTo(
@@ -311,20 +311,20 @@ describe('builtin helpers', function() {
         );
     });
 
-    it('each with block params', function() {
+    it('each with block params', function () {
       expectTemplate(
         '{{#each goodbyes as |value index|}}{{index}}. {{value.text}}! {{#each ../goodbyes as |childValue childIndex|}} {{index}} {{childIndex}}{{/each}} After {{index}} {{/each}}{{index}}cruel {{world}}!'
       )
         .withInput({
           goodbyes: [{ text: 'goodbye' }, { text: 'Goodbye' }],
-          world: 'world'
+          world: 'world',
         })
         .toCompileTo(
           '0. goodbye!  0 0 0 1 After 0 1. Goodbye!  1 0 1 1 After 1 cruel world!'
         );
     });
 
-    it('each with block params and strict compilation', function() {
+    it('each with block params and strict compilation', function () {
       expectTemplate(
         '{{#each goodbyes as |value index|}}{{index}}. {{value.text}}!{{/each}}'
       )
@@ -333,7 +333,7 @@ describe('builtin helpers', function() {
         .toCompileTo('0. goodbye!1. Goodbye!');
     });
 
-    it('each object with @index', function() {
+    it('each object with @index', function () {
       expectTemplate(
         '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!'
       )
@@ -341,15 +341,15 @@ describe('builtin helpers', function() {
           goodbyes: {
             a: { text: 'goodbye' },
             b: { text: 'Goodbye' },
-            c: { text: 'GOODBYE' }
+            c: { text: 'GOODBYE' },
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @index variable is used')
         .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
     });
 
-    it('each with @first', function() {
+    it('each with @first', function () {
       expectTemplate(
         '{{#each goodbyes}}{{#if @first}}{{text}}! {{/if}}{{/each}}cruel {{world}}!'
       )
@@ -357,15 +357,15 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @first variable is used')
         .toCompileTo('goodbye! cruel world!');
     });
 
-    it('each with nested @first', function() {
+    it('each with nested @first', function () {
       expectTemplate(
         '{{#each goodbyes}}({{#if @first}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @first}}{{text}}!{{/if}}{{/each}}{{#if @first}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!'
       )
@@ -373,9 +373,9 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @first variable is used')
         .toCompileTo(
@@ -383,19 +383,19 @@ describe('builtin helpers', function() {
         );
     });
 
-    it('each object with @first', function() {
+    it('each object with @first', function () {
       expectTemplate(
         '{{#each goodbyes}}{{#if @first}}{{text}}! {{/if}}{{/each}}cruel {{world}}!'
       )
         .withInput({
           goodbyes: { foo: { text: 'goodbye' }, bar: { text: 'Goodbye' } },
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @first variable is used')
         .toCompileTo('goodbye! cruel world!');
     });
 
-    it('each with @last', function() {
+    it('each with @last', function () {
       expectTemplate(
         '{{#each goodbyes}}{{#if @last}}{{text}}! {{/if}}{{/each}}cruel {{world}}!'
       )
@@ -403,27 +403,27 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @last variable is used')
         .toCompileTo('GOODBYE! cruel world!');
     });
 
-    it('each object with @last', function() {
+    it('each object with @last', function () {
       expectTemplate(
         '{{#each goodbyes}}{{#if @last}}{{text}}! {{/if}}{{/each}}cruel {{world}}!'
       )
         .withInput({
           goodbyes: { foo: { text: 'goodbye' }, bar: { text: 'Goodbye' } },
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @last variable is used')
         .toCompileTo('Goodbye! cruel world!');
     });
 
-    it('each with nested @last', function() {
+    it('each with nested @last', function () {
       expectTemplate(
         '{{#each goodbyes}}({{#if @last}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @last}}{{text}}!{{/if}}{{/each}}{{#if @last}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!'
       )
@@ -431,9 +431,9 @@ describe('builtin helpers', function() {
           goodbyes: [
             { text: 'goodbye' },
             { text: 'Goodbye' },
-            { text: 'GOODBYE' }
+            { text: 'GOODBYE' },
           ],
-          world: 'world'
+          world: 'world',
         })
         .withMessage('The @last variable is used')
         .toCompileTo(
@@ -441,19 +441,19 @@ describe('builtin helpers', function() {
         );
     });
 
-    it('each with function argument', function() {
+    it('each with function argument', function () {
       var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
 
       expectTemplate(string)
         .withInput({
-          goodbyes: function() {
+          goodbyes: function () {
             return [
               { text: 'goodbye' },
               { text: 'Goodbye' },
-              { text: 'GOODBYE' }
+              { text: 'GOODBYE' },
             ];
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'each with array function argument iterates over the contents when not empty'
@@ -463,7 +463,7 @@ describe('builtin helpers', function() {
       expectTemplate(string)
         .withInput({
           goodbyes: [],
-          world: 'world'
+          world: 'world',
         })
         .withMessage(
           'each with array function argument ignores the contents when empty'
@@ -471,7 +471,7 @@ describe('builtin helpers', function() {
         .toCompileTo('cruel world!');
     });
 
-    it('each object when last key is an empty string', function() {
+    it('each object when last key is an empty string', function () {
       expectTemplate(
         '{{#each goodbyes}}{{@index}}. {{text}}! {{/each}}cruel {{world}}!'
       )
@@ -479,15 +479,15 @@ describe('builtin helpers', function() {
           goodbyes: {
             a: { text: 'goodbye' },
             b: { text: 'Goodbye' },
-            '': { text: 'GOODBYE' }
+            '': { text: 'GOODBYE' },
           },
-          world: 'world'
+          world: 'world',
         })
         .withMessage('Empty string key is not skipped')
         .toCompileTo('0. goodbye! 1. Goodbye! 2. GOODBYE! cruel world!');
     });
 
-    it('data passed to helpers', function() {
+    it('data passed to helpers', function () {
       expectTemplate(
         '{{#each letters}}{{this}}{{detectDataInsideEach}}{{/each}}'
       )
@@ -495,13 +495,13 @@ describe('builtin helpers', function() {
         .withMessage('should output data')
         .withRuntimeOptions({
           data: {
-            exclaim: '!'
-          }
+            exclaim: '!',
+          },
         })
         .toCompileTo('a!b!c!');
     });
 
-    it('each on implicit context', function() {
+    it('each on implicit context', function () {
       expectTemplate('{{#each}}{{text}}! {{/each}}cruel world!').toThrow(
         handlebarsEnv.Exception,
         'Must pass iterator to #each'
@@ -509,12 +509,12 @@ describe('builtin helpers', function() {
     });
 
     if (global.Symbol && global.Symbol.iterator) {
-      it('each on iterable', function() {
+      it('each on iterable', function () {
         function Iterator(arr) {
           this.arr = arr;
           this.index = 0;
         }
-        Iterator.prototype.next = function() {
+        Iterator.prototype.next = function () {
           var value = this.arr[this.index];
           var done = this.index === this.arr.length;
           if (!done) {
@@ -525,7 +525,7 @@ describe('builtin helpers', function() {
         function Iterable(arr) {
           this.arr = arr;
         }
-        Iterable.prototype[global.Symbol.iterator] = function() {
+        Iterable.prototype[global.Symbol.iterator] = function () {
           return new Iterator(this.arr);
         };
         var string = '{{#each goodbyes}}{{text}}! {{/each}}cruel {{world}}!';
@@ -535,9 +535,9 @@ describe('builtin helpers', function() {
             goodbyes: new Iterable([
               { text: 'goodbye' },
               { text: 'Goodbye' },
-              { text: 'GOODBYE' }
+              { text: 'GOODBYE' },
             ]),
-            world: 'world'
+            world: 'world',
           })
           .withMessage(
             'each with array argument iterates over the contents when not empty'
@@ -547,7 +547,7 @@ describe('builtin helpers', function() {
         expectTemplate(string)
           .withInput({
             goodbyes: new Iterable([]),
-            world: 'world'
+            world: 'world',
           })
           .withMessage(
             'each with array argument ignores the contents when empty'
@@ -557,27 +557,27 @@ describe('builtin helpers', function() {
     }
   });
 
-  describe('#log', function() {
+  describe('#log', function () {
     /* eslint-disable no-console */
     if (typeof console === 'undefined') {
       return;
     }
 
     var $log, $info, $error;
-    beforeEach(function() {
+    beforeEach(function () {
       $log = console.log;
       $info = console.info;
       $error = console.error;
     });
-    afterEach(function() {
+    afterEach(function () {
       console.log = $log;
       console.info = $info;
       console.error = $error;
     });
 
-    it('should call logger at default level', function() {
+    it('should call logger at default level', function () {
       var levelArg, logArg;
-      handlebarsEnv.log = function(level, arg) {
+      handlebarsEnv.log = function (level, arg) {
         levelArg = level;
         logArg = arg;
       };
@@ -590,9 +590,9 @@ describe('builtin helpers', function() {
       equals('whee', logArg, "should call log with 'whee'");
     });
 
-    it('should call logger at data level', function() {
+    it('should call logger at data level', function () {
       var levelArg, logArg;
-      handlebarsEnv.log = function(level, arg) {
+      handlebarsEnv.log = function (level, arg) {
         levelArg = level;
         logArg = arg;
       };
@@ -606,16 +606,16 @@ describe('builtin helpers', function() {
       equals('whee', logArg);
     });
 
-    it('should output to info', function() {
+    it('should output to info', function () {
       var called;
 
-      console.info = function(info) {
+      console.info = function (info) {
         equals('whee', info);
         called = true;
         console.info = $info;
         console.log = $log;
       };
-      console.log = function(log) {
+      console.log = function (log) {
         equals('whee', log);
         called = true;
         console.info = $info;
@@ -628,10 +628,10 @@ describe('builtin helpers', function() {
       equals(true, called);
     });
 
-    it('should log at data level', function() {
+    it('should log at data level', function () {
       var called;
 
-      console.error = function(log) {
+      console.error = function (log) {
         equals('whee', log);
         called = true;
         console.error = $error;
@@ -645,11 +645,11 @@ describe('builtin helpers', function() {
       equals(true, called);
     });
 
-    it('should handle missing logger', function() {
+    it('should handle missing logger', function () {
       var called = false;
 
       console.error = undefined;
-      console.log = function(log) {
+      console.log = function (log) {
         equals('whee', log);
         called = true;
         console.log = $log;
@@ -663,10 +663,10 @@ describe('builtin helpers', function() {
       equals(true, called);
     });
 
-    it('should handle string log levels', function() {
+    it('should handle string log levels', function () {
       var called;
 
-      console.error = function(log) {
+      console.error = function (log) {
         equals('whee', log);
         called = true;
       };
@@ -688,10 +688,10 @@ describe('builtin helpers', function() {
       equals(true, called);
     });
 
-    it('should handle hash log levels', function() {
+    it('should handle hash log levels', function () {
       var called;
 
-      console.error = function(log) {
+      console.error = function (log) {
         equals('whee', log);
         called = true;
       };
@@ -702,13 +702,17 @@ describe('builtin helpers', function() {
       equals(true, called);
     });
 
-    it('should handle hash log levels', function() {
+    it('should handle hash log levels', function () {
       var called = false;
 
-      console.info = console.log = console.error = console.debug = function() {
-        called = true;
-        console.info = console.log = console.error = console.debug = $log;
-      };
+      console.info =
+        console.log =
+        console.error =
+        console.debug =
+          function () {
+            called = true;
+            console.info = console.log = console.error = console.debug = $log;
+          };
 
       expectTemplate('{{log blah level="debug"}}')
         .withInput({ blah: 'whee' })
@@ -716,10 +720,10 @@ describe('builtin helpers', function() {
       equals(false, called);
     });
 
-    it('should pass multiple log arguments', function() {
+    it('should pass multiple log arguments', function () {
       var called;
 
-      console.info = console.log = function(log1, log2, log3) {
+      console.info = console.log = function (log1, log2, log3) {
         equals('whee', log1);
         equals('foo', log2);
         equals(1, log3);
@@ -733,31 +737,29 @@ describe('builtin helpers', function() {
       equals(true, called);
     });
 
-    it('should pass zero log arguments', function() {
+    it('should pass zero log arguments', function () {
       var called;
 
-      console.info = console.log = function() {
+      console.info = console.log = function () {
         expect(arguments.length).to.equal(0);
         called = true;
         console.log = $log;
       };
 
-      expectTemplate('{{log}}')
-        .withInput({ blah: 'whee' })
-        .toCompileTo('');
+      expectTemplate('{{log}}').withInput({ blah: 'whee' }).toCompileTo('');
       expect(called).to.be.true();
     });
     /* eslint-enable no-console */
   });
 
-  describe('#lookup', function() {
-    it('should lookup arbitrary content', function() {
+  describe('#lookup', function () {
+    it('should lookup arbitrary content', function () {
       expectTemplate('{{#each goodbyes}}{{lookup ../data .}}{{/each}}')
         .withInput({ goodbyes: [0, 1], data: ['foo', 'bar'] })
         .toCompileTo('foobar');
     });
 
-    it('should not fail on undefined value', function() {
+    it('should not fail on undefined value', function () {
       expectTemplate('{{#each goodbyes}}{{lookup ../bar .}}{{/each}}')
         .withInput({ goodbyes: [0, 1], data: ['foo', 'bar'] })
         .toCompileTo('');

@@ -1,14 +1,14 @@
 module.exports = {
   extends: ['eslint:recommended', 'plugin:compat/recommended', 'prettier'],
   globals: {
-    self: false
+    self: false,
   },
   env: {
     node: true,
-    es2020: true
+    es2020: true,
   },
   parserOptions: {
-    sourceType: 'module'
+    sourceType: 'module',
   },
   rules: {
     'no-console': 'warn',
@@ -59,6 +59,6 @@ module.exports = {
 
     // ECMAScript 6 //
     //--------------//
-    'no-var': 'error'
-  }
+    'no-var': 'error',
+  },
 };

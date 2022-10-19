@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 var templates = fs.readdirSync(__dirname);
-templates.forEach(function(template) {
+templates.forEach(function (template) {
   if (template === 'index.js' || !/(.*)\.js$/.test(template)) {
     return;
   }

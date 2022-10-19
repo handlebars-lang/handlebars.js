@@ -3,7 +3,7 @@ const git = require('./util/git');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 const semver = require('semver');
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
   registerAsyncTask('publish-to-aws', async () => {
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
   }
 
   async function publish(suffixes) {
-    const publishPromises = suffixes.map(suffix => publishSuffix(suffix));
+    const publishPromises = suffixes.map((suffix) => publishSuffix(suffix));
     return Promise.all(publishPromises);
   }
 
@@ -57,9 +57,9 @@ module.exports = function(grunt) {
       'handlebars.js',
       'handlebars.min.js',
       'handlebars.runtime.js',
-      'handlebars.runtime.min.js'
+      'handlebars.runtime.min.js',
     ];
-    const publishPromises = filenames.map(async filename => {
+    const publishPromises = filenames.map(async (filename) => {
       const nameInBucket = getNameInBucket(filename, suffix);
       const localFile = getLocalFile(filename);
       await uploadToBucket(localFile, nameInBucket);
@@ -75,7 +75,7 @@ module.exports = function(grunt) {
     const uploadParams = {
       Bucket: bucket,
       Key: nameInBucket,
-      Body: grunt.file.read(localFile)
+      Body: grunt.file.read(localFile),
     };
     return s3PutObject(uploadParams);
   }
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 function s3PutObject(uploadParams) {
   const s3 = new AWS.S3();
   return new Promise((resolve, reject) => {
-    s3.putObject(uploadParams, err => {
+    s3.putObject(uploadParams, (err) => {
       if (err != null) {
         return reject(err);
       }

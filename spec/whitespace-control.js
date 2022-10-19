@@ -1,32 +1,22 @@
-describe('whitespace control', function() {
-  it('should strip whitespace around mustache calls', function() {
+describe('whitespace control', function () {
+  it('should strip whitespace around mustache calls', function () {
     var hash = { foo: 'bar<' };
 
-    expectTemplate(' {{~foo~}} ')
-      .withInput(hash)
-      .toCompileTo('bar&lt;');
+    expectTemplate(' {{~foo~}} ').withInput(hash).toCompileTo('bar&lt;');
 
-    expectTemplate(' {{~foo}} ')
-      .withInput(hash)
-      .toCompileTo('bar&lt; ');
+    expectTemplate(' {{~foo}} ').withInput(hash).toCompileTo('bar&lt; ');
 
-    expectTemplate(' {{foo~}} ')
-      .withInput(hash)
-      .toCompileTo(' bar&lt;');
+    expectTemplate(' {{foo~}} ').withInput(hash).toCompileTo(' bar&lt;');
 
-    expectTemplate(' {{~&foo~}} ')
-      .withInput(hash)
-      .toCompileTo('bar<');
+    expectTemplate(' {{~&foo~}} ').withInput(hash).toCompileTo('bar<');
 
-    expectTemplate(' {{~{foo}~}} ')
-      .withInput(hash)
-      .toCompileTo('bar<');
+    expectTemplate(' {{~{foo}~}} ').withInput(hash).toCompileTo('bar<');
 
     expectTemplate('1\n{{foo~}} \n\n 23\n{{bar}}4').toCompileTo('1\n23\n4');
   });
 
-  describe('blocks', function() {
-    it('should strip whitespace around simple block calls', function() {
+  describe('blocks', function () {
+    it('should strip whitespace around simple block calls', function () {
       var hash = { foo: 'bar<' };
 
       expectTemplate(' {{~#if foo~}} bar {{~/if~}} ')
@@ -54,7 +44,7 @@ describe('whitespace control', function() {
         .toCompileTo(' abara ');
     });
 
-    it('should strip whitespace around inverse block calls', function() {
+    it('should strip whitespace around inverse block calls', function () {
       expectTemplate(' {{~^if foo~}} bar {{~/if~}} ').toCompileTo('bar');
 
       expectTemplate(' {{^if foo~}} bar {{/if~}} ').toCompileTo(' bar ');
@@ -68,7 +58,7 @@ describe('whitespace control', function() {
       ).toCompileTo('bar');
     });
 
-    it('should strip whitespace around complex block calls', function() {
+    it('should strip whitespace around complex block calls', function () {
       var hash = { foo: 'bar<' };
 
       expectTemplate('{{#if foo~}} bar {{~^~}} baz {{~/if}}')
@@ -127,7 +117,7 @@ describe('whitespace control', function() {
     });
   });
 
-  it('should strip whitespace around partials', function() {
+  it('should strip whitespace around partials', function () {
     expectTemplate('foo {{~> dude~}} ')
       .withPartials({ dude: 'bar' })
       .toCompileTo('foobar');
@@ -149,7 +139,7 @@ describe('whitespace control', function() {
       .toCompileTo('foo\n bar');
   });
 
-  it('should only strip whitespace once', function() {
+  it('should only strip whitespace once', function () {
     expectTemplate(' {{~foo~}} {{foo}} {{foo}} ')
       .withInput({ foo: 'bar' })
       .toCompileTo('barbar bar ');

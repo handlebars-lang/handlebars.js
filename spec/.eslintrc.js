@@ -22,16 +22,16 @@ module.exports = {
     strictEqual: true,
     define: true,
     expect: true,
-    chai: true
+    chai: true,
   },
   env: {
-    mocha: true
+    mocha: true,
   },
   rules: {
     // Disabling for tests, for now.
     'no-path-concat': 'off',
 
     'no-var': 'off',
-    'dot-notation': 'off'
-  }
+    'dot-notation': 'off',
+  },
 };

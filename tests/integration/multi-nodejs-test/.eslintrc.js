@@ -1,6 +1,6 @@
 module.exports = {
   rules: {
     'no-console': 'off',
-    'no-var': 'off'
-  }
+    'no-var': 'off',
+  },
 };

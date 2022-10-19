@@ -16,7 +16,7 @@ var template = Handlebars.precompile(script, {
   compat: false,
   strict: true,
   trackIds: true,
-  knownHelpersOnly: false
+  knownHelpersOnly: false,
 });
 
 if (!verbose) {
@@ -28,13 +28,13 @@ if (!verbose) {
 
   console.log();
   console.log('Source:');
-  srcLines.forEach(function(source, index) {
+  srcLines.forEach(function (source, index) {
     console.log(index + 1, source);
   });
   console.log();
   console.log('Generated:');
   console.log(template.code);
-  lines.forEach(function(source, index) {
+  lines.forEach(function (source, index) {
     console.log(index + 1, source);
   });
   console.log();
@@ -67,7 +67,7 @@ if (!verbose) {
         ordered.push({
           startLine: last[lineName],
           startCol: last[colName],
-          endLine: current && current[lineName]
+          endLine: current && current[lineName],
         });
       }
       last = current;
@@ -87,7 +87,7 @@ if (!verbose) {
   );
   lines = collectSource(lines, 'generatedLine', 'generatedColumn');
 
-  consumer.eachMapping(function(mapping) {
+  consumer.eachMapping(function (mapping) {
     var originalSrc =
         srcLines[mapping.originalLine + ':' + mapping.originalColumn],
       generatedSrc =

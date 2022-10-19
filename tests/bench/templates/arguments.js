@@ -1,13 +1,13 @@
 module.exports = {
   helpers: {
-    foo: function() {
+    foo: function () {
       return '';
-    }
+    },
   },
   context: {
-    bar: true
+    bar: true,
   },
 
   handlebars:
-    '{{foo person "person" 1 true foo=bar foo="person" foo=1 foo=true}}'
+    '{{foo person "person" 1 true foo=bar foo="person" foo=1 foo=true}}',
 };
