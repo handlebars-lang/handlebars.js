@@ -2,7 +2,7 @@ import * as HandlebarsViaImport from 'handlebars';
 const HandlebarsViaRequire = require('handlebars');
 import { assertEquals } from './lib/assert';
 
-HandlebarsViaImport.registerHelper('loud', function(text) {
+HandlebarsViaImport.registerHelper('loud', function (text) {
   return text.toUpperCase();
 });
 

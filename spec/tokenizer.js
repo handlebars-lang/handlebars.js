@@ -8,7 +8,7 @@ function shouldBeToken(result, name, text) {
   equals(result.text, text);
 }
 
-describe('Tokenizer', function() {
+describe('Tokenizer', function () {
   if (!Handlebars.Parser) {
     return;
   }
@@ -32,13 +32,13 @@ describe('Tokenizer', function() {
     return out;
   }
 
-  it('tokenizes a simple mustache as "OPEN ID CLOSE"', function() {
+  it('tokenizes a simple mustache as "OPEN ID CLOSE"', function () {
     var result = tokenize('{{foo}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'foo');
   });
 
-  it('supports unescaping with &', function() {
+  it('supports unescaping with &', function () {
     var result = tokenize('{{&bar}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE']);
 
@@ -46,14 +46,14 @@ describe('Tokenizer', function() {
     shouldBeToken(result[1], 'ID', 'bar');
   });
 
-  it('supports unescaping with {{{', function() {
+  it('supports unescaping with {{{', function () {
     var result = tokenize('{{{bar}}}');
     shouldMatchTokens(result, ['OPEN_UNESCAPED', 'ID', 'CLOSE_UNESCAPED']);
 
     shouldBeToken(result[1], 'ID', 'bar');
   });
 
-  it('supports escaping delimiters', function() {
+  it('supports escaping delimiters', function () {
     var result = tokenize('{{foo}} \\{{bar}} {{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -63,14 +63,14 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     shouldBeToken(result[3], 'CONTENT', ' ');
     shouldBeToken(result[4], 'CONTENT', '{{bar}} ');
   });
 
-  it('supports escaping multiple delimiters', function() {
+  it('supports escaping multiple delimiters', function () {
     var result = tokenize('{{foo}} \\{{bar}} \\{{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -78,7 +78,7 @@ describe('Tokenizer', function() {
       'CLOSE',
       'CONTENT',
       'CONTENT',
-      'CONTENT'
+      'CONTENT',
     ]);
 
     shouldBeToken(result[3], 'CONTENT', ' ');
@@ -86,7 +86,7 @@ describe('Tokenizer', function() {
     shouldBeToken(result[5], 'CONTENT', '{{baz}}');
   });
 
-  it('supports escaping a triple stash', function() {
+  it('supports escaping a triple stash', function () {
     var result = tokenize('{{foo}} \\{{{bar}}} {{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -96,13 +96,13 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     shouldBeToken(result[4], 'CONTENT', '{{{bar}}} ');
   });
 
-  it('supports escaping escape character', function() {
+  it('supports escaping escape character', function () {
     var result = tokenize('{{foo}} \\\\{{bar}} {{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -115,14 +115,14 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     shouldBeToken(result[3], 'CONTENT', ' \\');
     shouldBeToken(result[5], 'ID', 'bar');
   });
 
-  it('supports escaping multiple escape characters', function() {
+  it('supports escaping multiple escape characters', function () {
     var result = tokenize('{{foo}} \\\\{{bar}} \\\\{{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -135,7 +135,7 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     shouldBeToken(result[3], 'CONTENT', ' \\');
@@ -144,7 +144,7 @@ describe('Tokenizer', function() {
     shouldBeToken(result[9], 'ID', 'baz');
   });
 
-  it('supports escaped mustaches after escaped escape characters', function() {
+  it('supports escaped mustaches after escaped escape characters', function () {
     var result = tokenize('{{foo}} \\\\{{bar}} \\{{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -156,7 +156,7 @@ describe('Tokenizer', function() {
       'CLOSE',
       'CONTENT',
       'CONTENT',
-      'CONTENT'
+      'CONTENT',
     ]);
 
     shouldBeToken(result[3], 'CONTENT', ' \\');
@@ -166,7 +166,7 @@ describe('Tokenizer', function() {
     shouldBeToken(result[8], 'CONTENT', '{{baz}}');
   });
 
-  it('supports escaped escape characters after escaped mustaches', function() {
+  it('supports escaped escape characters after escaped mustaches', function () {
     var result = tokenize('{{foo}} \\{{bar}} \\\\{{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -177,7 +177,7 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     shouldBeToken(result[4], 'CONTENT', '{{bar}} ');
@@ -186,7 +186,7 @@ describe('Tokenizer', function() {
     shouldBeToken(result[7], 'ID', 'baz');
   });
 
-  it('supports escaped escape character on a triple stash', function() {
+  it('supports escaped escape character on a triple stash', function () {
     var result = tokenize('{{foo}} \\\\{{{bar}}} {{baz}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -199,19 +199,19 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     shouldBeToken(result[3], 'CONTENT', ' \\');
     shouldBeToken(result[5], 'ID', 'bar');
   });
 
-  it('tokenizes a simple path', function() {
+  it('tokenizes a simple path', function () {
     var result = tokenize('{{foo/bar}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
   });
 
-  it('allows dot notation', function() {
+  it('allows dot notation', function () {
     var result = tokenize('{{foo.bar}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
 
@@ -222,16 +222,16 @@ describe('Tokenizer', function() {
       'ID',
       'SEP',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
   });
 
-  it('allows path literals with []', function() {
+  it('allows path literals with []', function () {
     var result = tokenize('{{foo.[bar]}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
   });
 
-  it('allows multiple path literals on a line with []', function() {
+  it('allows multiple path literals on a line with []', function () {
     var result = tokenize('{{foo.[bar]}}{{foo.[baz]}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -243,21 +243,21 @@ describe('Tokenizer', function() {
       'ID',
       'SEP',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
   });
 
-  it('allows escaped literals in []', function() {
+  it('allows escaped literals in []', function () {
     var result = tokenize('{{foo.[bar\\]]}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes {{.}} as OPEN ID CLOSE', function() {
+  it('tokenizes {{.}} as OPEN ID CLOSE', function () {
     var result = tokenize('{{.}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes a path as "OPEN (ID SEP)* ID CLOSE"', function() {
+  it('tokenizes a path as "OPEN (ID SEP)* ID CLOSE"', function () {
     var result = tokenize('{{../foo/bar}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -266,12 +266,12 @@ describe('Tokenizer', function() {
       'ID',
       'SEP',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'ID', '..');
   });
 
-  it('tokenizes a path with .. as a parent path', function() {
+  it('tokenizes a path with .. as a parent path', function () {
     var result = tokenize('{{../foo.bar}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -280,58 +280,58 @@ describe('Tokenizer', function() {
       'ID',
       'SEP',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'ID', '..');
   });
 
-  it('tokenizes a path with this/foo as OPEN ID SEP ID CLOSE', function() {
+  it('tokenizes a path with this/foo as OPEN ID SEP ID CLOSE', function () {
     var result = tokenize('{{this/foo}}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'SEP', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'this');
     shouldBeToken(result[3], 'ID', 'foo');
   });
 
-  it('tokenizes a simple mustache with spaces as "OPEN ID CLOSE"', function() {
+  it('tokenizes a simple mustache with spaces as "OPEN ID CLOSE"', function () {
     var result = tokenize('{{  foo  }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'foo');
   });
 
-  it('tokenizes a simple mustache with line breaks as "OPEN ID ID CLOSE"', function() {
+  it('tokenizes a simple mustache with line breaks as "OPEN ID ID CLOSE"', function () {
     var result = tokenize('{{  foo  \n   bar }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'foo');
   });
 
-  it('tokenizes raw content as "CONTENT"', function() {
+  it('tokenizes raw content as "CONTENT"', function () {
     var result = tokenize('foo {{ bar }} baz');
     shouldMatchTokens(result, ['CONTENT', 'OPEN', 'ID', 'CLOSE', 'CONTENT']);
     shouldBeToken(result[0], 'CONTENT', 'foo ');
     shouldBeToken(result[4], 'CONTENT', ' baz');
   });
 
-  it('tokenizes a partial as "OPEN_PARTIAL ID CLOSE"', function() {
+  it('tokenizes a partial as "OPEN_PARTIAL ID CLOSE"', function () {
     var result = tokenize('{{> foo}}');
     shouldMatchTokens(result, ['OPEN_PARTIAL', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes a partial with context as "OPEN_PARTIAL ID ID CLOSE"', function() {
+  it('tokenizes a partial with context as "OPEN_PARTIAL ID ID CLOSE"', function () {
     var result = tokenize('{{> foo bar }}');
     shouldMatchTokens(result, ['OPEN_PARTIAL', 'ID', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes a partial without spaces as "OPEN_PARTIAL ID CLOSE"', function() {
+  it('tokenizes a partial without spaces as "OPEN_PARTIAL ID CLOSE"', function () {
     var result = tokenize('{{>foo}}');
     shouldMatchTokens(result, ['OPEN_PARTIAL', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes a partial space at the }); as "OPEN_PARTIAL ID CLOSE"', function() {
+  it('tokenizes a partial space at the }); as "OPEN_PARTIAL ID CLOSE"', function () {
     var result = tokenize('{{>foo  }}');
     shouldMatchTokens(result, ['OPEN_PARTIAL', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes a partial space at the }); as "OPEN_PARTIAL ID CLOSE"', function() {
+  it('tokenizes a partial space at the }); as "OPEN_PARTIAL ID CLOSE"', function () {
     var result = tokenize('{{>foo/bar.baz  }}');
     shouldMatchTokens(result, [
       'OPEN_PARTIAL',
@@ -340,15 +340,15 @@ describe('Tokenizer', function() {
       'ID',
       'SEP',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
   });
 
-  it('tokenizes partial block declarations', function() {
+  it('tokenizes partial block declarations', function () {
     var result = tokenize('{{#> foo}}');
     shouldMatchTokens(result, ['OPEN_PARTIAL_BLOCK', 'ID', 'CLOSE']);
   });
-  it('tokenizes a comment as "COMMENT"', function() {
+  it('tokenizes a comment as "COMMENT"', function () {
     var result = tokenize('foo {{! this is a comment }} bar {{ baz }}');
     shouldMatchTokens(result, [
       'CONTENT',
@@ -356,12 +356,12 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'COMMENT', '{{! this is a comment }}');
   });
 
-  it('tokenizes a block comment as "COMMENT"', function() {
+  it('tokenizes a block comment as "COMMENT"', function () {
     var result = tokenize('foo {{!-- this is a {{comment}} --}} bar {{ baz }}');
     shouldMatchTokens(result, [
       'CONTENT',
@@ -369,12 +369,12 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'COMMENT', '{{!-- this is a {{comment}} --}}');
   });
 
-  it('tokenizes a block comment with whitespace as "COMMENT"', function() {
+  it('tokenizes a block comment with whitespace as "COMMENT"', function () {
     var result = tokenize(
       'foo {{!-- this is a\n{{comment}}\n--}} bar {{ baz }}'
     );
@@ -384,12 +384,12 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'COMMENT', '{{!-- this is a\n{{comment}}\n--}}');
   });
 
-  it('tokenizes open and closing blocks as OPEN_BLOCK, ID, CLOSE ..., OPEN_ENDBLOCK ID CLOSE', function() {
+  it('tokenizes open and closing blocks as OPEN_BLOCK, ID, CLOSE ..., OPEN_ENDBLOCK ID CLOSE', function () {
     var result = tokenize('{{#foo}}content{{/foo}}');
     shouldMatchTokens(result, [
       'OPEN_BLOCK',
@@ -398,11 +398,11 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN_ENDBLOCK',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
   });
 
-  it('tokenizes directives', function() {
+  it('tokenizes directives', function () {
     shouldMatchTokens(tokenize('{{#*foo}}content{{/foo}}'), [
       'OPEN_BLOCK',
       'ID',
@@ -410,30 +410,30 @@ describe('Tokenizer', function() {
       'CONTENT',
       'OPEN_ENDBLOCK',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldMatchTokens(tokenize('{{*foo}}'), ['OPEN', 'ID', 'CLOSE']);
   });
 
-  it('tokenizes inverse sections as "INVERSE"', function() {
+  it('tokenizes inverse sections as "INVERSE"', function () {
     shouldMatchTokens(tokenize('{{^}}'), ['INVERSE']);
     shouldMatchTokens(tokenize('{{else}}'), ['INVERSE']);
     shouldMatchTokens(tokenize('{{ else }}'), ['INVERSE']);
   });
 
-  it('tokenizes inverse sections with ID as "OPEN_INVERSE ID CLOSE"', function() {
+  it('tokenizes inverse sections with ID as "OPEN_INVERSE ID CLOSE"', function () {
     var result = tokenize('{{^foo}}');
     shouldMatchTokens(result, ['OPEN_INVERSE', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'foo');
   });
 
-  it('tokenizes inverse sections with ID and spaces as "OPEN_INVERSE ID CLOSE"', function() {
+  it('tokenizes inverse sections with ID and spaces as "OPEN_INVERSE ID CLOSE"', function () {
     var result = tokenize('{{^ foo  }}');
     shouldMatchTokens(result, ['OPEN_INVERSE', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'foo');
   });
 
-  it('tokenizes mustaches with params as "OPEN ID ID ID CLOSE"', function() {
+  it('tokenizes mustaches with params as "OPEN ID ID ID CLOSE"', function () {
     var result = tokenize('{{ foo bar baz }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'ID', 'CLOSE']);
     shouldBeToken(result[1], 'ID', 'foo');
@@ -441,37 +441,37 @@ describe('Tokenizer', function() {
     shouldBeToken(result[3], 'ID', 'baz');
   });
 
-  it('tokenizes mustaches with String params as "OPEN ID ID STRING CLOSE"', function() {
+  it('tokenizes mustaches with String params as "OPEN ID ID STRING CLOSE"', function () {
     var result = tokenize('{{ foo bar "baz" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[3], 'STRING', 'baz');
   });
 
-  it('tokenizes mustaches with String params using single quotes as "OPEN ID ID STRING CLOSE"', function() {
+  it('tokenizes mustaches with String params using single quotes as "OPEN ID ID STRING CLOSE"', function () {
     var result = tokenize("{{ foo bar 'baz' }}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[3], 'STRING', 'baz');
   });
 
-  it('tokenizes String params with spaces inside as "STRING"', function() {
+  it('tokenizes String params with spaces inside as "STRING"', function () {
     var result = tokenize('{{ foo bar "baz bat" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[3], 'STRING', 'baz bat');
   });
 
-  it('tokenizes String params with escapes quotes as STRING', function() {
+  it('tokenizes String params with escapes quotes as STRING', function () {
     var result = tokenize('{{ foo "bar\\"baz" }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[2], 'STRING', 'bar"baz');
   });
 
-  it('tokenizes String params using single quotes with escapes quotes as STRING', function() {
+  it('tokenizes String params using single quotes with escapes quotes as STRING', function () {
     var result = tokenize("{{ foo 'bar\\'baz' }}");
     shouldMatchTokens(result, ['OPEN', 'ID', 'STRING', 'CLOSE']);
     shouldBeToken(result[2], 'STRING', "bar'baz");
   });
 
-  it('tokenizes numbers', function() {
+  it('tokenizes numbers', function () {
     var result = tokenize('{{ foo 1 }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'NUMBER', 'CLOSE']);
     shouldBeToken(result[2], 'NUMBER', '1');
@@ -489,7 +489,7 @@ describe('Tokenizer', function() {
     shouldBeToken(result[2], 'NUMBER', '-1.1');
   });
 
-  it('tokenizes booleans', function() {
+  it('tokenizes booleans', function () {
     var result = tokenize('{{ foo true }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'BOOLEAN', 'CLOSE']);
     shouldBeToken(result[2], 'BOOLEAN', 'true');
@@ -499,14 +499,14 @@ describe('Tokenizer', function() {
     shouldBeToken(result[2], 'BOOLEAN', 'false');
   });
 
-  it('tokenizes undefined and null', function() {
+  it('tokenizes undefined and null', function () {
     var result = tokenize('{{ foo undefined null }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'UNDEFINED', 'NULL', 'CLOSE']);
     shouldBeToken(result[2], 'UNDEFINED', 'undefined');
     shouldBeToken(result[3], 'NULL', 'null');
   });
 
-  it('tokenizes hash arguments', function() {
+  it('tokenizes hash arguments', function () {
     var result = tokenize('{{ foo bar=baz }}');
     shouldMatchTokens(result, ['OPEN', 'ID', 'ID', 'EQUALS', 'ID', 'CLOSE']);
 
@@ -518,7 +518,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{ foo bar baz=1 }}');
@@ -529,7 +529,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'NUMBER',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{ foo bar baz=true }}');
@@ -540,7 +540,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'BOOLEAN',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{ foo bar baz=false }}');
@@ -551,7 +551,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'BOOLEAN',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{ foo bar\n  baz=bat }}');
@@ -562,7 +562,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{ foo bar baz="bat" }}');
@@ -573,7 +573,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'STRING',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{ foo bar baz="bat" bam=wot }}');
@@ -587,7 +587,7 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{foo omg bar=baz bat="bam"}}');
@@ -601,12 +601,12 @@ describe('Tokenizer', function() {
       'ID',
       'EQUALS',
       'STRING',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[2], 'ID', 'omg');
   });
 
-  it('tokenizes special @ identifiers', function() {
+  it('tokenizes special @ identifiers', function () {
     var result = tokenize('{{ @foo }}');
     shouldMatchTokens(result, ['OPEN', 'DATA', 'ID', 'CLOSE']);
     shouldBeToken(result[2], 'ID', 'foo');
@@ -623,20 +623,20 @@ describe('Tokenizer', function() {
       'EQUALS',
       'DATA',
       'ID',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[5], 'ID', 'baz');
   });
 
-  it('does not time out in a mustache with a single } followed by EOF', function() {
+  it('does not time out in a mustache with a single } followed by EOF', function () {
     shouldMatchTokens(tokenize('{{foo}'), ['OPEN', 'ID']);
   });
 
-  it('does not time out in a mustache when invalid ID characters are used', function() {
+  it('does not time out in a mustache when invalid ID characters are used', function () {
     shouldMatchTokens(tokenize('{{foo & }}'), ['OPEN', 'ID']);
   });
 
-  it('tokenizes subexpressions', function() {
+  it('tokenizes subexpressions', function () {
     var result = tokenize('{{foo (bar)}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -644,7 +644,7 @@ describe('Tokenizer', function() {
       'OPEN_SEXPR',
       'ID',
       'CLOSE_SEXPR',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'ID', 'foo');
     shouldBeToken(result[3], 'ID', 'bar');
@@ -657,14 +657,14 @@ describe('Tokenizer', function() {
       'ID',
       'ID',
       'CLOSE_SEXPR',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[1], 'ID', 'foo');
     shouldBeToken(result[3], 'ID', 'a-x');
     shouldBeToken(result[4], 'ID', 'b-y');
   });
 
-  it('tokenizes nested subexpressions', function() {
+  it('tokenizes nested subexpressions', function () {
     var result = tokenize('{{foo (bar (lol rofl)) (baz)}}');
     shouldMatchTokens(result, [
       'OPEN',
@@ -679,7 +679,7 @@ describe('Tokenizer', function() {
       'OPEN_SEXPR',
       'ID',
       'CLOSE_SEXPR',
-      'CLOSE'
+      'CLOSE',
     ]);
     shouldBeToken(result[3], 'ID', 'bar');
     shouldBeToken(result[5], 'ID', 'lol');
@@ -687,7 +687,7 @@ describe('Tokenizer', function() {
     shouldBeToken(result[10], 'ID', 'baz');
   });
 
-  it('tokenizes nested subexpressions: literals', function() {
+  it('tokenizes nested subexpressions: literals', function () {
     var result = tokenize(
       '{{foo (bar (lol true) false) (baz 1) (blah \'b\') (blorg "c")}}'
     );
@@ -714,11 +714,11 @@ describe('Tokenizer', function() {
       'ID',
       'STRING',
       'CLOSE_SEXPR',
-      'CLOSE'
+      'CLOSE',
     ]);
   });
 
-  it('tokenizes block params', function() {
+  it('tokenizes block params', function () {
     var result = tokenize('{{#foo as |bar|}}');
     shouldMatchTokens(result, [
       'OPEN_BLOCK',
@@ -726,7 +726,7 @@ describe('Tokenizer', function() {
       'OPEN_BLOCK_PARAMS',
       'ID',
       'CLOSE_BLOCK_PARAMS',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{#foo as |bar baz|}}');
@@ -737,7 +737,7 @@ describe('Tokenizer', function() {
       'ID',
       'ID',
       'CLOSE_BLOCK_PARAMS',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{#foo as | bar baz |}}');
@@ -748,7 +748,7 @@ describe('Tokenizer', function() {
       'ID',
       'ID',
       'CLOSE_BLOCK_PARAMS',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{#foo as as | bar baz |}}');
@@ -760,7 +760,7 @@ describe('Tokenizer', function() {
       'ID',
       'ID',
       'CLOSE_BLOCK_PARAMS',
-      'CLOSE'
+      'CLOSE',
     ]);
 
     result = tokenize('{{else foo as |bar baz|}}');
@@ -771,11 +771,11 @@ describe('Tokenizer', function() {
       'ID',
       'ID',
       'CLOSE_BLOCK_PARAMS',
-      'CLOSE'
+      'CLOSE',
     ]);
   });
 
-  it('tokenizes raw blocks', function() {
+  it('tokenizes raw blocks', function () {
     var result = tokenize(
       '{{{{a}}}} abc {{{{/a}}}} aaa {{{{a}}}} abc {{{{/a}}}}'
     );
@@ -790,7 +790,7 @@ describe('Tokenizer', function() {
       'ID',
       'CLOSE_RAW_BLOCK',
       'CONTENT',
-      'END_RAW_BLOCK'
+      'END_RAW_BLOCK',
     ]);
   });
 });

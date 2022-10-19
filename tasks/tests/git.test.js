@@ -14,8 +14,8 @@ const remoteDir = path.join(tmpDir, 'remote-repo');
 const cloneDir = path.join(tmpDir, 'clone-repo');
 const oldCwd = process.cwd();
 
-describe('utils/git', function() {
-  beforeEach(async function() {
+describe('utils/git', function () {
+  beforeEach(async function () {
     await fs.remove(tmpDir);
     await createRepositoryThatActsAsRemote();
     process.chdir(tmpDir);
@@ -33,12 +33,12 @@ describe('utils/git', function() {
     await git.commit('commit message');
   }
 
-  afterEach(function() {
+  afterEach(function () {
     process.chdir(oldCwd);
   });
 
-  describe('the "remotes"-function', function() {
-    it('should list all remotes', async function() {
+  describe('the "remotes"-function', function () {
+    it('should list all remotes', async function () {
       await git.git('remote', 'set-url', 'origin', 'https://test.org/test');
       await git.git('remote', 'add', 'second-remote', 'https://test.org/test2');
 
@@ -48,13 +48,13 @@ describe('utils/git', function() {
         'origin\thttps://test.org/test (fetch)',
         'origin\thttps://test.org/test (push)',
         'second-remote\thttps://test.org/test2 (fetch)',
-        'second-remote\thttps://test.org/test2 (push)'
+        'second-remote\thttps://test.org/test2 (push)',
       ]);
     });
   });
 
-  describe('the "branches"-function', function() {
-    it('should list all branches', async function() {
+  describe('the "branches"-function', function () {
+    it('should list all branches', async function () {
       await git.git('branch', 'test');
       await git.git('branch', 'test2');
 
@@ -64,32 +64,32 @@ describe('utils/git', function() {
         '  test',
         '  test2',
         '  remotes/origin/HEAD -> origin/master',
-        '  remotes/origin/master'
+        '  remotes/origin/master',
       ]);
     });
   });
 
-  describe('the "commitInfo"-function', function() {
-    it('should list head and master sha', async function() {
+  describe('the "commitInfo"-function', function () {
+    it('should list head and master sha', async function () {
       const result = await git.commitInfo();
       expect(result.masterSha).to.equal(result.headSha);
       expect(result.masterSha).to.match(/^[0-9a-f]+$/);
       expect(result.headSha).to.match(/^[0-9a-f]+$/);
     });
 
-    it('should have "isMaster=true" if the master branch is checked out', async function() {
+    it('should have "isMaster=true" if the master branch is checked out', async function () {
       const result = await git.commitInfo();
       expect(result.isMaster).to.be.true();
     });
 
-    it('should have "isMaster=true" if the current commit is the last commit of the master branch', async function() {
+    it('should have "isMaster=true" if the current commit is the last commit of the master branch', async function () {
       await git.git('checkout', '-b', 'new-branch');
 
       const result = await git.commitInfo();
       expect(result.isMaster).to.be.true();
     });
 
-    it('should have "isMaster=false" if the current commit is NOT the last commit of the master branch', async function() {
+    it('should have "isMaster=false" if the current commit is NOT the last commit of the master branch', async function () {
       await git.git('checkout', '-b', 'new-branch');
       fs.writeFile('new-file.txt', 'new-file');
       await git.add('new-file.txt');
@@ -99,13 +99,13 @@ describe('utils/git', function() {
       expect(result.isMaster).to.be.false();
     });
 
-    it('should show the current tag', async function() {
+    it('should show the current tag', async function () {
       await git.git('tag', 'test-tag');
       const result = await git.commitInfo();
       expect(result.tagName).to.be.equal('test-tag');
     });
 
-    it('should show a version tag rather than standard tags', async function() {
+    it('should show a version tag rather than standard tags', async function () {
       await git.git('tag', 'test-tag');
       await git.git('tag', 'v1.2');
       await git.git('tag', 'test-tag2');
@@ -113,7 +113,7 @@ describe('utils/git', function() {
       expect(result.tagName).to.be.equal('v1.2');
     });
 
-    it('should show no tag if there is no tag', async function() {
+    it('should show no tag if there is no tag', async function () {
       const result = await git.commitInfo();
       expect(result.tagName).to.be.null();
     });

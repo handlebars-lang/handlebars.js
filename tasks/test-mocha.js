@@ -2,7 +2,7 @@ const { execNodeJsScriptWithInheritedOutput } = require('./util/exec-file');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 const nodeJs = process.argv0;
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
   registerAsyncTask('test:mocha', async () =>
@@ -12,7 +12,7 @@ module.exports = function(grunt) {
   registerAsyncTask('test:cov', async () =>
     execNodeJsScriptWithInheritedOutput('node_modules/nyc/bin/nyc', [
       nodeJs,
-      './spec/env/runner.js'
+      './spec/env/runner.js',
     ])
   );
 

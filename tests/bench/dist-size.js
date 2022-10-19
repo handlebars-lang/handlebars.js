@@ -2,13 +2,13 @@ var async = require('neo-async'),
   fs = require('fs'),
   zlib = require('zlib');
 
-module.exports = function(grunt, callback) {
+module.exports = function (grunt, callback) {
   var distFiles = fs.readdirSync('dist'),
     distSizes = {};
 
   async.each(
     distFiles,
-    function(file, callback) {
+    function (file, callback) {
       var content;
       try {
         content = fs.readFileSync('dist/' + file);
@@ -24,7 +24,7 @@ module.exports = function(grunt, callback) {
       file = file.replace(/\.js/, '').replace(/\./g, '_');
       distSizes[file] = content.length;
 
-      zlib.gzip(content, function(err, data) {
+      zlib.gzip(content, function (err, data) {
         if (err) {
           throw err;
         }
@@ -33,7 +33,7 @@ module.exports = function(grunt, callback) {
         callback();
       });
     },
-    function() {
+    function () {
       grunt.log.writeln(
         'Distribution sizes: ' + JSON.stringify(distSizes, undefined, 2)
       );

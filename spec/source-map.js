@@ -7,26 +7,26 @@ try {
   /* NOP for in browser */
 }
 
-describe('source-map', function() {
+describe('source-map', function () {
   if (!Handlebars.precompile || !SourceMap) {
     return;
   }
 
-  it('should safely include source map info', function() {
+  it('should safely include source map info', function () {
     var template = Handlebars.precompile('{{hello}}', {
       destName: 'dest.js',
-      srcName: 'src.hbs'
+      srcName: 'src.hbs',
     });
 
     equal(!!template.code, true);
     equal(!!template.map, !CompilerContext.browser);
   });
-  it('should map source properly', function() {
+  it('should map source properly', function () {
     var templateSource =
         '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}',
       template = Handlebars.precompile(templateSource, {
         destName: 'dest.js',
-        srcName: 'src.hbs'
+        srcName: 'src.hbs',
       });
 
     if (template.map) {
@@ -49,7 +49,7 @@ function grepLine(token, lines) {
     if (column >= 0) {
       return {
         line: i + 1,
-        column: column
+        column: column,
       };
     }
   }

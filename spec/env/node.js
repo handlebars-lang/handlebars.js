@@ -11,13 +11,13 @@ global.sinon = require('sinon');
 global.Handlebars = require('../../lib');
 
 global.CompilerContext = {
-  compile: function(template, options) {
+  compile: function (template, options) {
     var templateSpec = handlebarsEnv.precompile(template, options);
     return handlebarsEnv.template(safeEval(templateSpec));
   },
-  compileWithPartial: function(template, options) {
+  compileWithPartial: function (template, options) {
     return handlebarsEnv.compile(template, options);
-  }
+  },
 };
 
 function safeEval(templateSpec) {

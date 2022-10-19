@@ -3,8 +3,8 @@ const fs = require('fs');
 const testFiles = fs.readdirSync('src');
 const entryPoints = {};
 testFiles
-  .filter(file => file.match(/-test.js$/))
-  .forEach(file => {
+  .filter((file) => file.match(/-test.js$/))
+  .forEach((file) => {
     entryPoints[file] = `./src/${file}`;
   });
 
@@ -13,7 +13,7 @@ module.exports = {
   mode: 'production',
   output: {
     filename: '[name]',
-    path: __dirname + '/dist'
+    path: __dirname + '/dist',
   },
   module: {
     rules: [
@@ -22,12 +22,12 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: { cacheDirectory: false }
-        }
-      }
-    ]
+          options: { cacheDirectory: false },
+        },
+      },
+    ],
   },
   optimization: {
-    minimize: false
-  }
+    minimize: false,
+  },
 };

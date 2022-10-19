@@ -1,15 +1,15 @@
-describe('compiler', function() {
+describe('compiler', function () {
   if (!Handlebars.compile) {
     return;
   }
 
-  describe('#equals', function() {
+  describe('#equals', function () {
     function compile(string) {
       var ast = Handlebars.parse(string);
       return new Handlebars.Compiler().compile(ast, {});
     }
 
-    it('should treat as equal', function() {
+    it('should treat as equal', function () {
       equal(compile('foo').equals(compile('foo')), true);
       equal(compile('{{foo}}').equals(compile('{{foo}}')), true);
       equal(compile('{{foo.bar}}').equals(compile('{{foo.bar}}')), true);
@@ -30,7 +30,7 @@ describe('compiler', function() {
         true
       );
     });
-    it('should treat as not equal', function() {
+    it('should treat as not equal', function () {
       equal(compile('foo').equals(compile('bar')), false);
       equal(compile('{{foo}}').equals(compile('{{bar}}')), false);
       equal(compile('{{foo.bar}}').equals(compile('{{bar.bar}}')), false);
@@ -59,17 +59,17 @@ describe('compiler', function() {
     });
   });
 
-  describe('#compile', function() {
-    it('should fail with invalid input', function() {
+  describe('#compile', function () {
+    it('should fail with invalid input', function () {
       shouldThrow(
-        function() {
+        function () {
           Handlebars.compile(null);
         },
         Error,
         'You must pass a string or Handlebars AST to Handlebars.compile. You passed null'
       );
       shouldThrow(
-        function() {
+        function () {
           Handlebars.compile({});
         },
         Error,
@@ -77,7 +77,7 @@ describe('compiler', function() {
       );
     });
 
-    it('should include the location in the error (row and column)', function() {
+    it('should include the location in the error (row and column)', function () {
       try {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
         equal(
@@ -101,7 +101,7 @@ describe('compiler', function() {
       }
     });
 
-    it('should include the location as enumerable property', function() {
+    it('should include the location as enumerable property', function () {
       try {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
         equal(
@@ -118,30 +118,30 @@ describe('compiler', function() {
       }
     });
 
-    it('can utilize AST instance', function() {
+    it('can utilize AST instance', function () {
       equal(
         Handlebars.compile({
           type: 'Program',
-          body: [{ type: 'ContentStatement', value: 'Hello' }]
+          body: [{ type: 'ContentStatement', value: 'Hello' }],
         })(),
         'Hello'
       );
     });
 
-    it('can pass through an empty string', function() {
+    it('can pass through an empty string', function () {
       equal(Handlebars.compile('')(), '');
     });
 
-    it('throws on desupported options', function() {
+    it('throws on desupported options', function () {
       shouldThrow(
-        function() {
+        function () {
           Handlebars.compile('Dudes', { trackIds: true });
         },
         Error,
         'TrackIds and stringParams are no longer supported. See Github #1145'
       );
       shouldThrow(
-        function() {
+        function () {
           Handlebars.compile('Dudes', { stringParams: true });
         },
         Error,
@@ -149,7 +149,7 @@ describe('compiler', function() {
       );
     });
 
-    it('should not modify the options.data property(GH-1327)', function() {
+    it('should not modify the options.data property(GH-1327)', function () {
       var options = { data: [{ a: 'foo' }, { a: 'bar' }] };
       Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
       equal(
@@ -158,7 +158,7 @@ describe('compiler', function() {
       );
     });
 
-    it('should not modify the options.knownHelpers property(GH-1327)', function() {
+    it('should not modify the options.knownHelpers property(GH-1327)', function () {
       var options = { knownHelpers: {} };
       Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
       equal(
@@ -168,17 +168,17 @@ describe('compiler', function() {
     });
   });
 
-  describe('#precompile', function() {
-    it('should fail with invalid input', function() {
+  describe('#precompile', function () {
+    it('should fail with invalid input', function () {
       shouldThrow(
-        function() {
+        function () {
           Handlebars.precompile(null);
         },
         Error,
         'You must pass a string or Handlebars AST to Handlebars.compile. You passed null'
       );
       shouldThrow(
-        function() {
+        function () {
           Handlebars.precompile({});
         },
         Error,
@@ -186,19 +186,19 @@ describe('compiler', function() {
       );
     });
 
-    it('can utilize AST instance', function() {
+    it('can utilize AST instance', function () {
       equal(
         /return "Hello"/.test(
           Handlebars.precompile({
             type: 'Program',
-            body: [{ type: 'ContentStatement', value: 'Hello' }]
+            body: [{ type: 'ContentStatement', value: 'Hello' }],
           })
         ),
         true
       );
     });
 
-    it('can pass through an empty string', function() {
+    it('can pass through an empty string', function () {
       equal(/return ""/.test(Handlebars.precompile('')), true);
     });
   });

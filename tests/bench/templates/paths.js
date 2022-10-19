@@ -3,5 +3,5 @@ module.exports = {
   handlebars:
     '{{person.name.bar.baz}}{{person.age}}{{person.foo}}{{animal.age}}',
   dust: '{person.name.bar.baz}{person.age}{person.foo}{animal.age}',
-  mustache: '{{person.name.bar.baz}}{{person.age}}{{person.foo}}{{animal.age}}'
+  mustache: '{{person.name.bar.baz}}{{person.age}}{{person.foo}}{{animal.age}}',
 };

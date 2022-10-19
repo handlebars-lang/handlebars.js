@@ -29,9 +29,12 @@ var JavaScriptCompiler = require('../../dist/cjs/handlebars/compiler/javascript-
 global.CompilerContext = {
   browser: true,
 
-  compile: function(template, options) {
+  compile: function (template, options) {
     // Hack the compiler on to the environment for these specific tests
-    handlebarsEnv.precompile = function(precompileTemplate, precompileOptions) {
+    handlebarsEnv.precompile = function (
+      precompileTemplate,
+      precompileOptions
+    ) {
       return compiler.precompile(
         precompileTemplate,
         precompileOptions,
@@ -45,9 +48,9 @@ global.CompilerContext = {
     var templateSpec = handlebarsEnv.precompile(template, options);
     return handlebarsEnv.template(safeEval(templateSpec));
   },
-  compileWithPartial: function(template, options) {
+  compileWithPartial: function (template, options) {
     // Hack the compiler on to the environment for these specific tests
-    handlebarsEnv.compile = function(compileTemplate, compileOptions) {
+    handlebarsEnv.compile = function (compileTemplate, compileOptions) {
       return compiler.compile(compileTemplate, compileOptions, handlebarsEnv);
     };
     handlebarsEnv.parse = parse;
@@ -55,7 +58,7 @@ global.CompilerContext = {
     handlebarsEnv.JavaScriptCompiler = JavaScriptCompiler;
 
     return handlebarsEnv.compile(template, options);
-  }
+  },
 };
 
 function safeEval(templateSpec) {

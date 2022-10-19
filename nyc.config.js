@@ -5,5 +5,5 @@ module.exports = {
   functions: 100,
   statements: 100,
   exclude: ['**/spec/**'],
-  reporter: 'html'
+  reporter: 'html',
 };

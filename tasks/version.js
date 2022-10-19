@@ -2,7 +2,7 @@ const git = require('./util/git');
 const semver = require('semver');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
   registerAsyncTask('version', async () => {
@@ -22,27 +22,27 @@ module.exports = function(grunt) {
       {
         path: 'lib/handlebars/base.js',
         regex: /const VERSION = ['"](.*)['"];/,
-        replacement: `const VERSION = '${version}';`
+        replacement: `const VERSION = '${version}';`,
       },
       {
         path: 'components/bower.json',
         regex: /"version":.*/,
-        replacement: `"version": "${version}",`
+        replacement: `"version": "${version}",`,
       },
       {
         path: 'components/package.json',
         regex: /"version":.*/,
-        replacement: `"version": "${version}",`
+        replacement: `"version": "${version}",`,
       },
       {
         path: 'components/handlebars.js.nuspec',
         regex: /<version>.*<\/version>/,
-        replacement: `<version>${version}</version>`
-      }
+        replacement: `<version>${version}</version>`,
+      },
     ];
 
     await Promise.all(
-      replaceSpec.map(replaceSpec =>
+      replaceSpec.map((replaceSpec) =>
         replaceAndAdd(
           replaceSpec.path,
           replaceSpec.regex,

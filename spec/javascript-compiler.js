@@ -1,19 +1,19 @@
-describe('javascript-compiler api', function() {
+describe('javascript-compiler api', function () {
   if (!Handlebars.JavaScriptCompiler) {
     return;
   }
 
-  describe('#nameLookup', function() {
+  describe('#nameLookup', function () {
     var $superName;
-    beforeEach(function() {
+    beforeEach(function () {
       $superName = handlebarsEnv.JavaScriptCompiler.prototype.nameLookup;
     });
-    afterEach(function() {
+    afterEach(function () {
       handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = $superName;
     });
 
-    it('should allow override', function() {
-      handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function(
+    it('should allow override', function () {
+      handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function (
         parent,
         name
       ) {
@@ -28,27 +28,27 @@ describe('javascript-compiler api', function() {
 
     // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases
     // to avoid errors in older browsers.
-    it('should handle reserved words', function() {
+    it('should handle reserved words', function () {
       expectTemplate('{{foo}} {{~null~}}')
         .withInput({ foo: 'food' })
         .toCompileTo('food');
     });
   });
-  describe('#compilerInfo', function() {
+  describe('#compilerInfo', function () {
     var $superCheck, $superInfo;
-    beforeEach(function() {
+    beforeEach(function () {
       $superCheck = handlebarsEnv.VM.checkRevision;
       $superInfo = handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo;
     });
-    afterEach(function() {
+    afterEach(function () {
       handlebarsEnv.VM.checkRevision = $superCheck;
       handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = $superInfo;
     });
-    it('should allow compilerInfo override', function() {
-      handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function() {
+    it('should allow compilerInfo override', function () {
+      handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function () {
         return 'crazy';
       };
-      handlebarsEnv.VM.checkRevision = function(compilerInfo) {
+      handlebarsEnv.VM.checkRevision = function (compilerInfo) {
         if (compilerInfo !== 'crazy') {
           throw new Error("It didn't work");
         }
@@ -58,30 +58,32 @@ describe('javascript-compiler api', function() {
         .toCompileTo('food ');
     });
   });
-  describe('buffer', function() {
+  describe('buffer', function () {
     var $superAppend, $superCreate;
-    beforeEach(function() {
+    beforeEach(function () {
       handlebarsEnv.JavaScriptCompiler.prototype.forceBuffer = true;
       $superAppend = handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer;
       $superCreate =
         handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer;
     });
-    afterEach(function() {
+    afterEach(function () {
       handlebarsEnv.JavaScriptCompiler.prototype.forceBuffer = false;
       handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = $superAppend;
-      handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer = $superCreate;
+      handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer =
+        $superCreate;
     });
 
-    it('should allow init buffer override', function() {
-      handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer = function() {
-        return this.quotedString('foo_');
-      };
+    it('should allow init buffer override', function () {
+      handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer =
+        function () {
+          return this.quotedString('foo_');
+        };
       expectTemplate('{{foo}} ')
         .withInput({ foo: 'food' })
         .toCompileTo('foo_food ');
     });
-    it('should allow append buffer override', function() {
-      handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function(
+    it('should allow append buffer override', function () {
+      handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function (
         string
       ) {
         return $superAppend.call(this, [string, ' + "_foo"']);
@@ -92,13 +94,13 @@ describe('javascript-compiler api', function() {
     });
   });
 
-  describe('#isValidJavaScriptVariableName', function() {
+  describe('#isValidJavaScriptVariableName', function () {
     // It is there and accessible and could be used by someone. That's why we don't remove it
     // it 4.x. But if we keep it, we add a test
     // This test should not encourage you to use the function. It is not needed any more
     // and might be removed in 5.0
-    ['test', 'abc123', 'abc_123'].forEach(function(validVariableName) {
-      it("should return true for '" + validVariableName + "'", function() {
+    ['test', 'abc123', 'abc_123'].forEach(function (validVariableName) {
+      it("should return true for '" + validVariableName + "'", function () {
         expect(
           handlebarsEnv.JavaScriptCompiler.isValidJavaScriptVariableName(
             validVariableName
@@ -106,8 +108,8 @@ describe('javascript-compiler api', function() {
         ).to.be.true();
       });
     });
-    [('123test', 'abc()', 'abc.cde')].forEach(function(invalidVariableName) {
-      it("should return true for '" + invalidVariableName + "'", function() {
+    [('123test', 'abc()', 'abc.cde')].forEach(function (invalidVariableName) {
+      it("should return true for '" + invalidVariableName + "'", function () {
         expect(
           handlebarsEnv.JavaScriptCompiler.isValidJavaScriptVariableName(
             invalidVariableName

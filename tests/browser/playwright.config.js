@@ -5,23 +5,23 @@ const config = {
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
+      use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
+      use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
-    }
+      use: { ...devices['Desktop Safari'] },
+    },
   ],
   reporter: 'list',
   webServer: {
     command: 'npm run test:serve',
     port: 9999,
-    reuseExistingServer: false
-  }
+    reuseExistingServer: false,
+  },
 };
 
 module.exports = config;

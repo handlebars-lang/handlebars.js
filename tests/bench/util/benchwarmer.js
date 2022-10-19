@@ -12,21 +12,21 @@ function BenchWarmer() {
 }
 
 BenchWarmer.prototype = {
-  winners: function(benches) {
+  winners: function (benches) {
     return Benchmark.filter(benches, 'fastest');
   },
-  suite: function(suite, fn) {
+  suite: function (suite, fn) {
     this.suiteName = suite;
     this.times[suite] = {};
     this.first = true;
 
     var self = this;
 
-    fn(function(name, benchFn) {
+    fn(function (name, benchFn) {
       self.push(name, benchFn);
     });
   },
-  push: function(name, fn) {
+  push: function (name, fn) {
     if (this.names.indexOf(name) === -1) {
       this.names.push(name);
     }
@@ -38,16 +38,16 @@ BenchWarmer.prototype = {
 
     var bench = new Benchmark(fn, {
       name: this.suiteName + ': ' + name,
-      onComplete: function() {
+      onComplete: function () {
         if (first) {
           self.startLine(suiteName);
         }
         self.writeBench(bench);
         self.currentBenches.push(bench);
       },
-      onError: function() {
+      onError: function () {
         self.errors[this.name] = this;
-      }
+      },
     });
     bench.suiteName = this.suiteName;
     bench.benchName = name;
@@ -55,24 +55,24 @@ BenchWarmer.prototype = {
     this.benchmarks.push(bench);
   },
 
-  bench: function(callback) {
+  bench: function (callback) {
     var self = this;
 
     this.printHeader('ops/msec', true);
 
     Benchmark.invoke(this.benchmarks, {
       name: 'run',
-      onComplete: function() {
+      onComplete: function () {
         self.scaleTimes();
 
         self.startLine('');
 
         console.log('\n');
         self.printHeader('scaled');
-        _.each(self.scaled, function(value, name) {
+        _.each(self.scaled, function (value, name) {
           self.startLine(name);
 
-          _.each(self.names, function(lang) {
+          _.each(self.names, function (lang) {
             self.writeValue(value[lang] || '');
           });
         });
@@ -93,7 +93,7 @@ BenchWarmer.prototype = {
 
         if (errors) {
           console.log('\n\nErrors:\n');
-          Object.keys(self.errors).forEach(function(prop) {
+          Object.keys(self.errors).forEach(function (prop) {
             if (self.errors[prop].error.message !== 'EWOT') {
               bench = self.errors[prop];
               console.log('\n' + bench.name + ':\n');
@@ -107,22 +107,22 @@ BenchWarmer.prototype = {
         }
 
         callback();
-      }
+      },
     });
 
     console.log('\n');
   },
 
-  scaleTimes: function() {
+  scaleTimes: function () {
     var scaled = (this.scaled = {});
     _.each(
       this.times,
-      function(times, name) {
+      function (times, name) {
         var output = (scaled[name] = {});
 
         _.each(
           times,
-          function(time, lang) {
+          function (time, lang) {
             output[lang] = (
               ((time - this.minimum) / (this.maximum - this.minimum)) *
               100
@@ -135,7 +135,7 @@ BenchWarmer.prototype = {
     );
   },
 
-  printHeader: function(title, winners) {
+  printHeader: function (title, winners) {
     var benchSize = 0,
       names = this.names,
       i,
@@ -168,12 +168,13 @@ BenchWarmer.prototype = {
     console.log('\n' + new Array(horSize + 1).join('-'));
   },
 
-  startLine: function(name) {
-    var winners = Benchmark.map(this.winners(this.currentBenches), function(
-      bench
-    ) {
-      return bench.name.split(': ')[1];
-    });
+  startLine: function (name) {
+    var winners = Benchmark.map(
+      this.winners(this.currentBenches),
+      function (bench) {
+        return bench.name.split(': ')[1];
+      }
+    );
 
     this.currentBenches = [];
 
@@ -184,7 +185,7 @@ BenchWarmer.prototype = {
       this.writeValue(name);
     }
   },
-  writeBench: function(bench) {
+  writeBench: function (bench) {
     var out;
 
     if (!bench.error) {
@@ -211,11 +212,11 @@ BenchWarmer.prototype = {
     this.writeValue(out);
   },
 
-  writeValue: function(out) {
+  writeValue: function (out) {
     var padding = this.benchSize - out.length + 1;
     out = out + new Array(padding).join(' ');
     console.log(out);
-  }
+  },
 };
 
 module.exports = BenchWarmer;

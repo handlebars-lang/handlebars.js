@@ -14,7 +14,7 @@ module.exports = {
       headSha,
       masterSha,
       tagName: await getTagName(),
-      isMaster: headSha === masterSha
+      isMaster: headSha === masterSha,
     };
   },
   async add(path) {
@@ -23,7 +23,7 @@ module.exports = {
   async commit(message) {
     return git('commit', '--message', message);
   },
-  git // visible for testing
+  git, // visible for testing
 };
 
 async function getHeadSha() {
@@ -52,7 +52,7 @@ async function getTagName() {
   }
 
   const tags = trimmedStdout.split(/\n|\r\n/);
-  const versionTags = tags.filter(tag => /^v/.test(tag));
+  const versionTags = tags.filter((tag) => /^v/.test(tag));
   if (versionTags[0] != null) {
     return versionTags[0];
   }
