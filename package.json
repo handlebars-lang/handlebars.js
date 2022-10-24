@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "minimist": "^1.2.5",
-    "neo-async": "^2.6.0",
+    "neo-async": "^2.6.2",
     "source-map": "^0.6.1",
     "wordwrap": "^1.0.0"
   },
@@ -30,7 +30,7 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
-    "@knappi/grunt-saucelabs": "^9.0.2",
+    "@playwright/test": "^1.17.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
@@ -49,7 +49,6 @@
     "fs-extra": "^8.1.0",
     "grunt": "^1.0.4",
     "grunt-babel": "^5.0.0",
-    "grunt-bg-shell": "^2.3.3",
     "grunt-cli": "^1",
     "grunt-contrib-clean": "^1",
     "grunt-contrib-concat": "^1",
@@ -58,6 +57,7 @@
     "grunt-contrib-requirejs": "^1",
     "grunt-contrib-uglify": "^1",
     "grunt-contrib-watch": "^1.1.0",
+    "grunt-shell": "^4.0.0",
     "grunt-webpack": "^1.0.8",
     "husky": "^3.1.0",
     "jison": "~0.3.0",
@@ -76,23 +76,25 @@
   },
   "main": "lib/index.js",
   "types": "types/index.d.ts",
-  "browser": {
-    ".": "./dist/cjs/handlebars.js",
-    "./runtime": "./dist/cjs/handlebars.runtime.js"
-  },
+  "browser": "./dist/cjs/handlebars.js",
   "bin": {
     "handlebars": "bin/handlebars"
   },
   "scripts": {
+    "build": "grunt build",
     "format": "prettier --write '**/*.js' && eslint --fix .",
-    "check-format": "prettier --check '**/*.js'",
-    "lint": "eslint --max-warnings 0 .",
-    "dtslint": "dtslint types",
-    "test": "grunt",
-    "extensive-tests-and-publish-to-aws": "npx mocha tasks/task-tests/ && grunt --stack extensive-tests-and-publish-to-aws",
-    "integration-test": "grunt integration-tests",
+    "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
+    "lint:eslint": "eslint --max-warnings 0 .",
+    "lint:prettier": "prettier --check '**/*.js'",
+    "lint:types": "dtslint types",
+    "test": "npm run test:mocha",
+    "test:mocha": "grunt build && grunt test",
+    "test:browser": "playwright test --config tests/browser/playwright.config.js tests/browser/spec.js",
+    "test:integration": "grunt integration-tests",
+    "test:serve": "grunt connect:server:keepalive",
+    "extensive-tests-and-publish-to-aws": "npx mocha tasks/tests/ && grunt --stack extensive-tests-and-publish-to-aws",
     "--- combined tasks ---": "",
-    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:dtslint npm:check-format npm:test"
+    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
   },
   "jspm": {
     "main": "handlebars",
@@ -109,7 +111,6 @@
     "dist/amd/**/*.js",
     "dist/cjs/**/*.js",
     "lib",
-    "print-script",
     "release-notes.md",
     "runtime.js",
     "types/*.d.ts",

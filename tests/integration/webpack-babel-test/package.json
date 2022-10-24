@@ -12,7 +12,7 @@
     "@roundingwellos/babel-plugin-handlebars-inline-precompile": "^3.0.1",
     "babel-loader": "^8.0.6",
     "babel-plugin-istanbul": "^5.2.0",
-    "handlebars": "file:../..",
+    "handlebars": "file:../../..",
     "handlebars-loader": "^1.7.1",
     "nyc": "^14.1.1",
     "webpack": "^4.39.3",

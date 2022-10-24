@@ -4,7 +4,6 @@
 *.sublime-project
 *.sublime-workspace
 npm-debug.log
-sauce_connect.log*
 .idea
 /yarn-error.log
 /yarn.lock
@@ -16,5 +15,5 @@ node_modules
 lib/handlebars/compiler/parser.js
 /coverage/
 /dist/
-/integration-testing/*/dist/
+/tests/integration/*/dist/
 /spec/tmp/*

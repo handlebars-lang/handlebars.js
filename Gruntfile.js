@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       'tmp',
       'dist',
       'lib/handlebars/compiler/parser.js',
-      'integration-testing/**/node_modules'
+      '/tests/integration/**/node_modules'
     ],
 
     copy: {
@@ -165,54 +165,10 @@ module.exports = function(grunt) {
         }
       }
     },
-    'saucelabs-mocha': {
-      all: {
-        options: {
-          build: process.env.TRAVIS_JOB_ID,
-          urls: [
-            'http://localhost:9999/spec/?headless=true',
-            'http://localhost:9999/spec/amd.html?headless=true'
-          ],
-          detailedError: true,
-          concurrency: 4,
-          browsers: [
-            { browserName: 'chrome' },
-            { browserName: 'firefox', platform: 'Linux' }
-            // {browserName: 'safari', version: 9, platform: 'OS X 10.11'},
-            // {browserName: 'safari', version: 8, platform: 'OS X 10.10'},
-            // {
-            //   browserName: 'internet explorer',
-            //   version: 11,
-            //   platform: 'Windows 8.1'
-            // },
-            // {
-            //   browserName: 'internet explorer',
-            //   version: 10,
-            //   platform: 'Windows 8'
-            // }
-          ]
-        }
-      },
-      sanity: {
-        options: {
-          build: process.env.TRAVIS_JOB_ID,
-          urls: [
-            'http://localhost:9999/spec/umd.html?headless=true',
-            'http://localhost:9999/spec/amd-runtime.html?headless=true',
-            'http://localhost:9999/spec/umd-runtime.html?headless=true'
-          ],
-          detailedError: true,
-          concurrency: 2,
-          browsers: [{ browserName: 'chrome' }]
-        }
-      }
-    },
 
-    bgShell: {
+    shell: {
       integrationTests: {
-        cmd: './integration-testing/run-integration-tests.sh',
-        bg: false,
-        fail: true
+        command: './tests/integration/run-integration-tests.sh'
       }
     },
 
@@ -237,23 +193,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-babel');
-  grunt.loadNpmTasks('grunt-bg-shell');
-  grunt.loadNpmTasks('@knappi/grunt-saucelabs');
+  grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-webpack');
 
   grunt.task.loadTasks('tasks');
 
-  this.registerTask(
-    'build',
-    'Builds a distributable version of the current project',
-    ['parser', 'node', 'globals']
-  );
-
-  this.registerTask('node', ['babel:cjs']);
-  this.registerTask('globals', ['webpack']);
-
-  this.registerTask('release', 'Build final packages', [
-    'amd',
+  grunt.registerTask('node', ['babel:cjs']);
+  grunt.registerTask('amd', ['babel:amd', 'requirejs']);
+  grunt.registerTask('globals', ['webpack']);
+  grunt.registerTask('release', 'Build final packages', [
     'uglify',
     'test:min',
     'copy:dist',
@@ -261,38 +209,29 @@ module.exports = function(grunt) {
     'copy:cdnjs'
   ]);
 
-  this.registerTask('amd', ['babel:amd', 'requirejs']);
-
-  this.registerTask('test', ['test:bin', 'test:cov']);
-
-  grunt.registerTask('bench', ['metrics']);
-
-  if (process.env.SAUCE_ACCESS_KEY) {
-    grunt.registerTask('sauce', ['concat:tests', 'connect', 'saucelabs-mocha']);
-  } else {
-    grunt.registerTask('sauce', []);
-  }
-
-  // Requires secret properties (saucelabs-credentials etc.) from .travis.yaml
+  // Requires secret properties from .travis.yaml
   grunt.registerTask('extensive-tests-and-publish-to-aws', [
     'default',
-    'bgShell:integrationTests',
-    'sauce',
+    'shell:integrationTests',
     'metrics',
     'publish-to-aws'
   ]);
-  grunt.registerTask('on-file-change', [
-    'build',
-    'amd',
-    'concat:tests',
-    'test'
-  ]);
+
+  grunt.registerTask('on-file-change', ['build', 'concat:tests', 'test']);
 
   // === Primary tasks ===
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
+  grunt.registerTask('test', ['test:bin', 'test:cov']);
+  grunt.registerTask('bench', ['metrics']);
+  grunt.registerTask('prepare', ['build', 'concat:tests']);
+  grunt.registerTask(
+    'build',
+    'Builds a distributable version of the current project',
+    ['parser', 'node', 'amd', 'globals']
+  );
   grunt.registerTask('integration-tests', [
     'default',
-    'bgShell:integrationTests'
+    'shell:integrationTests'
   ]);
 };
