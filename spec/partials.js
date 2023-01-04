@@ -557,8 +557,8 @@ describe('partials', function () {
     }
   });
 
-  describe('standalone partials', function () {
-    it('indented partials', function () {
+  describe('indented partials', function () {
+    it('basic indented partials', function () {
       expectTemplate('Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}')
         .withInput({
           dudes: [
@@ -603,6 +603,34 @@ describe('partials', function () {
         .toCompileTo(
           'Dudes:\n  Yehuda\n http://yehuda!\n  Alan\n http://alan!\n'
         );
+    });
+
+    it('GH-1695 indented partial-block with block helper cannot split result', function () {
+      expectTemplate('{{#>myPartial}}{{#safe}}success{{/safe}}{{/myPartial}}')
+        .withHelper('safe', function (options) {
+          return new Handlebars.SafeString(options.fn(this));
+        })
+        .withPartial('myPartial', '  {{> @partial-block }}') // must be intended
+        .toCompileTo('  success');
+    });
+
+    it('GH-1695 indented inline partial with block helper cannot split result', function () {
+      expectTemplate(
+        '{{#*inline "myPartial"}}{{#safe}}success{{/safe}}{{/inline}}\n  {{> myPartial}}'
+      )
+        .withHelper('safe', function (options) {
+          return new Handlebars.SafeString(options.fn(this));
+        })
+        .toCompileTo('\n  success');
+
+      // Any block helper option, even when not used, may affect if the result of the partial is SafeString or not.
+      expectTemplate(
+        '{{#*inline "myPartial"}}\n{{#safe foo=1}}success\n{{/safe}}\n{{/inline}}\n  {{> myPartial}}'
+      )
+        .withHelper('safe', function (options) {
+          return new Handlebars.SafeString(options.fn(this));
+        })
+        .toCompileTo('  success\n');
     });
   });
 
