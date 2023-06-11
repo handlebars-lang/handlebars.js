@@ -82,6 +82,7 @@
   },
   "scripts": {
     "build": "grunt build",
+    "prepare": "npm run build",
     "format": "prettier --write '**/*.js' && eslint --fix .",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
     "lint:eslint": "eslint --max-warnings 0 .",
