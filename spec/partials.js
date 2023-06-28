@@ -64,7 +64,10 @@ describe('partials', function () {
         return 'missing';
       })
       .withPartial('dude', '{{name}} ({{url}}) ')
-      .toThrow(Handlebars.Exception, 'The partial missing could not be found');
+      .toThrow(
+        Handlebars.Exception,
+        'The partial "missing" could not be found'
+      );
   });
 
   it('partials with context', function () {
@@ -156,7 +159,7 @@ describe('partials', function () {
   it('rendering undefined partial throws an exception', function () {
     expectTemplate('{{> whatever}}').toThrow(
       Handlebars.Exception,
-      'The partial whatever could not be found'
+      'The partial "whatever" could not be found'
     );
   });
 
@@ -174,7 +177,7 @@ describe('partials', function () {
   it('rendering template partial in vm mode throws an exception', function () {
     expectTemplate('{{> whatever}}').toThrow(
       Handlebars.Exception,
-      'The partial whatever could not be found'
+      'The partial "whatever" could not be found'
     );
   });
 
@@ -472,7 +475,7 @@ describe('partials', function () {
 
       expectTemplate(
         '{{#with .}}{{#*inline "myPartial"}}success{{/inline}}{{/with}}{{> myPartial}}'
-      ).toThrow(Error, /myPartial could not/);
+      ).toThrow(Error, /"myPartial" could not/);
     });
 
     it('should override global partials', function () {
