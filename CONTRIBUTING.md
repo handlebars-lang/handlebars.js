@@ -49,7 +49,7 @@ The `grunt dev` implements watching for tests and allows for in browser testing 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/handlebars-lang/handlebars.js/issues](http://github.com/handlebars-lang/handlebars.js/issues).
 
-##Running Tests
+## Running Tests
 
 To run tests locally, first install all dependencies.
 
@@ -86,7 +86,7 @@ You can use the following scripts to make sure that the CI job does not fail:
 - **npm run lint** will run `eslint` and fail on warnings
 - **npm run format** will run `prettier` on all files
 - **npm run check-before-pull-request** will perform all most checks that our CI job does in its build-job, excluding the "integration-test".
-- **npm run integration-test** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
+- **npm run test:integration** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
   These tests only work on a Linux-machine with `nvm` installed (for running tests in multiple versions of NodeJS).
 
 ## Releasing the latest version
@@ -101,17 +101,74 @@ Before attempting the release Handlebars, please make sure that you have the fol
 
 _When releasing a previous version of Handlebars, please look into the CONTRIBUNG.md in the corresponding branch._
 
-A full release may be completed with the following:
+A full release via Docker may be completed with the following:
 
-```
-npm ci
-npx grunt
-npm publish
+1. Create a `Dockerfile` in this folder for releasing
+    ```Dockerfile
+    FROM node:10-slim
+    
+    ENV EDITOR=vim
+    
+    # Update stretch repositories
+    RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' \
+    -e 's|security.debian.org|archive.debian.org/|g' \
+    -e '/stretch-updates/d' /etc/apt/sources.list
+    
+    # Install release dependencies
+    RUN apt-get update
+    RUN apt-get install -y git vim
+    
+    # Work around deprecated npm dependency install via unauthenticated git-protocol:
+    # https://github.com/kpdecker/generator-release/blob/87aab9b84c9f083635c3fcc822f18acce1f48736/package.json#L31
+    RUN git config --system url."https://github.com/".insteadOf git://github.com/
+    
+    # Configure git
+    RUN git config --system user.email "release@handlebarsjs.com"
+    RUN git config --system user.name "handlebars-lang"
+    
+    RUN mkdir /home/node/.config
+    RUN mkdir /home/node/.ssh
+    RUN mkdir /home/node/tmp
+    
+    # Generate config for yo generator-release:
+    # https://github.com/kpdecker/generator-release#example
+    # You have to add a valid GitHub OAuth token!
+    RUN echo "module.exports = {\n  auth: 'oauth',\n  token: 'GitHub OAuth token'\n};" > /home/node/.config/generator-release
+    RUN chown -R node:node /home/node/.config
+    
+    # Add the generated key to GitHub: https://github.com/settings/keys
+    RUN ssh-keygen -q -t ed25519 -N '' -f /home/node/.ssh/id_ed25519 -C "release@handlebarsjs.com"
+    RUN chmod 0600 /home/node/.ssh/id_ed25519*
+    RUN chown node:node /home/node/.ssh/id_ed25519*
+    ```
+2. Build and run the Docker image
+    ```bash
+    docker build --tag handlebars:release .
+    docker run --rm --interactive --tty \
+      --volume $PWD:/app \
+      --workdir /app \
+      --user $(id -u):$(id -g) \
+      --env NPM_CONFIG_PREFIX=/home/node/.npm-global \
+      handlebars:release bash -c 'export PATH=$PATH:/home/node/.npm-global/bin; bash'
+    ```
+3. Add SSH key to GitHub: `cat /home/node/.ssh/id_ed25519.pub` (https://github.com/settings/keys)
+4. Add GitHub API token: `vi /home/node/.config/generator-release`
+5. Execute the following steps:
+    ```bash
+    npm ci
+    npm install -g yo@1 grunt@1 generator-release
+    npm run release
+    yo release
+    npm login
+    npm publish
+    yo release:publish components handlebars.js dist/components/
+    
+    cd dist/components/
+    gem build handlebars-source.gemspec
+    gem push handlebars-source-*.gem
+    ```
 
-cd dist/components/
-gem build handlebars-source.gemspec
-gem push handlebars-source-*.gem
-```
+### After the release
 
 After the release, you should check that all places have really been updated. Especially verify that the `latest`-tags
 in those places still point to the latest version

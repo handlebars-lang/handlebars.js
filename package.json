@@ -1,7 +1,7 @@
 {
   "name": "handlebars",
   "barename": "handlebars",
-  "version": "4.7.7",
+  "version": "4.7.8",
   "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
   "homepage": "https://www.handlebarsjs.com/",
   "keywords": [
@@ -82,6 +82,7 @@
   },
   "scripts": {
     "build": "grunt build",
+    "release": "npm run build && grunt release",
     "format": "prettier --write '**/*.js' && eslint --fix .",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
     "lint:eslint": "eslint --max-warnings 0 .",
