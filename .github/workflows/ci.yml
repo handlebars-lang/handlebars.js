@@ -33,7 +33,7 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest', 'windows-latest']
         # https://nodejs.org/en/about/releases/
-        node-version: ['10', '12', '14', '16', '18']
+        node-version: ['10', '12', '14', '16', '18', '20']
 
     steps:
       - name: Checkout
@@ -54,7 +54,7 @@ jobs:
 
       - name: Test (Integration)
         # https://github.com/webpack/webpack/issues/14532
-        if: ${{ matrix.node-version != '18' }}
+        if: ${{ matrix.node-version != '18' && matrix.node-version != '20' }}
         run: |
           cd ./tests/integration/rollup-test && ./test.sh && cd -
           cd ./tests/integration/webpack-babel-test && ./test.sh && cd -
@@ -62,7 +62,7 @@ jobs:
 
   browser:
     name: Test (Browser)
-    runs-on: 'ubuntu-latest'
+    runs-on: 'ubuntu-20.04'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
