@@ -1,16 +1,16 @@
 # How to Contribute
 
-## Reporting security issues
+## Reporting Security Issues
 
-Please don't open issues for security issues. Instead, file a report at https://www.npmjs.com/advisories/report?package=handlebars
+Please refer to our [Security Policy](https://github.com/handlebars-lang/handlebars.js/blob/master/SECURITY.md).
 
 ## Reporting Issues
 
-Please see our [FAQ](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
+Please refer to our [FAQ](https://github.com/handlebars-lang/handlebars.js/blob/master/FAQ.md) for common issues that people run into.
 
 Should you run into other issues with the project, please don't hesitate to let us know by filing an [issue][issue]!
 
-In general we are going to ask for an **example** of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle **[template][jsfiddle]** to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here).
+In general, we are going to ask for an **example** of the problem failing, which can be as simple as a jsfiddle/jsbin/etc. We've put together a jsfiddle **[template][jsfiddle]** to ease this. (We will keep this link up to date as new releases occur, so feel free to check back here).
 
 Pull requests containing only failing tests demonstrating the issue are welcomed and this also helps ensure that your issue won't regress in the future once it's fixed.
 
@@ -94,7 +94,7 @@ You can use the following scripts to make sure that the CI job does not fail:
 - **npm run lint** will run `eslint` and fail on warnings
 - **npm run format** will run `prettier` on all files
 - **npm run check-before-pull-request** will perform all most checks that our CI job does in its build-job, excluding the "integration-test".
-- **npm run integration-test** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
+- **npm run test:integration** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
   These tests only work on a Linux-machine with `nvm` installed (for running tests in multiple versions of NodeJS).
 
 ## Releasing the latest version
