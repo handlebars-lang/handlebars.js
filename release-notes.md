@@ -2,7 +2,18 @@
 
 ## Development
 
-[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.7...master)
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.8...master)
+
+## v4.7.8 - July 27th, 2023
+
+- Make library compatible with workers (#1894) - 3d3796c
+- Don't rely on Node.js global object (#1776) - 2954e7e
+- Fix compiling of each block params in strict mode (#1855) - 30dbf04
+- Fix rollup warning when importing Handlebars as ESM - 03d387b
+- Fix bundler issue with webpack 5 (#1862) - c6c6bbb
+- Use https instead of git for mustache submodule - 88ac068
+
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.7...v4.7.8)
 
 ## v4.7.7 - February 15th, 2021
 
