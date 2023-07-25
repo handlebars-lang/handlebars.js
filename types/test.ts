@@ -4,8 +4,7 @@
  * https://github.com/DefinitelyTyped/DefinitelyTyped/commits/1ce60bdc07f10e0b076778c6c953271c072bc894/types/handlebars/handlebars-tests.ts
  */
 
-import Handlebars from 'handlebars';
-import { HandlebarsTemplateDelegate, hbs } from 'handlebars';
+import Handlebars, { TemplateDelegate } from 'handlebars';
 
 const context = {
   author: { firstName: 'Alan', lastName: 'Johnson' },
@@ -37,7 +36,7 @@ Handlebars.registerHelper('link_to', (context: typeof post) => {
 const post = { url: "/hello-world", body: "Hello World!" };
 const context2 = { posts: [post] };
 const source2 = '<ul>{{#posts}}<li>{{{link_to this}}}</li>{{/posts}}</ul>';
-const template2: HandlebarsTemplateDelegate<{ posts: { url: string, body: string }[] }> = Handlebars.compile(source2);
+const template2: TemplateDelegate<{ posts: { url: string, body: string }[] }> = Handlebars.compile(source2);
 template2(context2);
 
 Handlebars.registerHelper('link_to', (title: string, context: typeof post) => {
@@ -93,7 +92,7 @@ const parsedTmplWithoutOptions = Handlebars.parse('<p>Hello, my name is {{name}}
 
 // Custom partial resolution.
 const originalResolvePartial = Handlebars.VM.resolvePartial;
-Handlebars.VM.resolvePartial = <T>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: Handlebars.ResolvePartialOptions): HandlebarsTemplateDelegate<T> => {
+Handlebars.VM.resolvePartial = <T>(partial: TemplateDelegate<T> | undefined, context: any, options: Handlebars.ResolvePartialOptions): TemplateDelegate<T> => {
   const name = options.name.replace(/my/,'your');
   // transform name.
   options.name = name;
