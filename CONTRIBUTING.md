@@ -93,11 +93,11 @@ You can use the following scripts to make sure that the CI job does not fail:
 
 Before attempting the release Handlebars, please make sure that you have the following authorizations:
 
-- Push-access to `handlebars-lang/handlebars.js`
-- Publishing rights on npmjs.com for the `handlebars` package
-- Publishing rights on gemfury for the `handlebars-source` package
-- Push-access to the repo for legacy package managers: `components/handlebars`
-- Push-access to the production-repo of the handlebars site: `handlebars-lang/handlebarsjs.com-github-pages`
+- Push-access to [handlebars-lang/handlebars.js](https://github.com/handlebars-lang/handlebars.js/)
+- Publishing rights on npmjs.com for the [handlebars](https://www.npmjs.com/package/handlebars) package
+- Publishing rights on rubygems for the [handlebars-source](https://rubygems.org/gems/handlebars-source) package
+- Push-access to the repo for legacy package managers: [components/handlebars.js](https://github.com/components/handlebars.js)
+- Push-access to the production-repo of the handlebars site: [handlebars-lang/docs](https://github.com/handlebars-lang/docs)
 
 _When releasing a previous version of Handlebars, please look into the CONTRIBUNG.md in the corresponding branch._
 
