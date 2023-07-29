@@ -79,6 +79,8 @@
   },
   "scripts": {
     "build": "grunt build",
+    "release": "grunt release",
+    "publish:aws": "npm run test:tasks && grunt && grunt publish-to-aws",
     "format": "prettier --write '**/*.js' && eslint --fix .",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
     "lint:eslint": "eslint --max-warnings 0 .",
@@ -86,10 +88,10 @@
     "lint:types": "dtslint types",
     "test": "npm run test:mocha",
     "test:mocha": "grunt build && grunt test",
+    "test:tasks": "mocha tasks/tests/",
     "test:browser": "playwright test --config tests/browser/playwright.config.js",
     "test:integration": "grunt integration-tests",
     "test:serve": "grunt connect:server:keepalive",
-    "extensive-tests-and-publish-to-aws": "npx mocha tasks/tests/ && grunt --stack extensive-tests-and-publish-to-aws",
     "--- combined tasks ---": "",
     "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
   },
