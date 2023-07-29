@@ -9,4 +9,4 @@ Generally we like to see pull requests that
 - [ ] Have tests
 - [ ] Have the [typings](https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html) (lib/handlebars.d.ts) updated on every API change. If you need help, updating those, please mention that in the PR description.
 - [ ] Don't significantly decrease the current code coverage (see coverage/lcov-report/index.html)
-- [ ] Currently, the `4.x`-branch contains the latest version. Please target that branch in the PR. 
+- [ ] Currently, the `4.x`-branch contains the latest version. Please target that branch in the PR.
