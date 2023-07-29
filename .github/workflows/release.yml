@@ -24,7 +24,10 @@ jobs:
         run: npm ci
 
       - name: Publish
-        run: npm run publish:aws
+        run: |
+          git config --global user.email "release@handlebarsjs.com"
+          git config --global user.name "handlebars-lang"
+          npm run publish:aws
         env:
           # Note: the environment secrets `S3_ACCESS_KEY_ID`
           #       and `S3_SECRET_ACCESS_KEY` have to be set!
