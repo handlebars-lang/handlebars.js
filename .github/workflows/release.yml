@@ -11,6 +11,7 @@ jobs:
   publish-aws-s3:
     name: Publish to AWS S3
     runs-on: 'ubuntu-latest'
+    environment: 'builds.handlebarsjs.com.s3.amazonaws.com'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -31,6 +32,6 @@ jobs:
           git config --global user.name "handlebars-lang"
           npm run publish:aws
         env:
-          # Note: the environment secrets `S3_ACCESS_KEY_ID`
-          #       and `S3_SECRET_ACCESS_KEY` have to be set!
           S3_BUCKET_NAME: "builds.handlebarsjs.com"
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
