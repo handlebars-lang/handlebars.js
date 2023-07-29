@@ -34,8 +34,8 @@ let ast = Handlebars.parseWithoutProcessing(myTemplate);
 
 `Handlebars.parse` will parse the template with `parseWithoutProcessing` (see above) then it will update the AST to strip extraneous whitespace. The whitespace stripping functionality handles two distinct situations:
 
-* Removes whitespace around dynamic statements that are on a line by themselves (aka "stand alone")
-* Applies "whitespace control" characters (i.e. `~`) by truncating the `ContentStatement` `value` property appropriately (e.g. `\n\n{{~foo}}` would have a `ContentStatement` with a `value` of `''`)
+- Removes whitespace around dynamic statements that are on a line by themselves (aka "stand alone")
+- Applies "whitespace control" characters (i.e. `~`) by truncating the `ContentStatement` `value` property appropriately (e.g. `\n\n{{~foo}}` would have a `ContentStatement` with a `value` of `''`)
 
 `Handlebars.parse` is used internally by `Handlebars.precompile` and `Handlebars.compile`.
 
@@ -71,7 +71,7 @@ interface Position {
 interface Program <: Node {
     type: "Program";
     body: [ Statement ];
-    
+
     blockParams: [ string ];
 }
 ```
@@ -132,7 +132,6 @@ interface PartialBlockStatement <: Statement {
 
 `name` will be a `SubExpression` when tied to a dynamic partial, i.e. `{{> (foo) }}`, otherwise this is a path or literal whose `original` value is used to lookup the desired partial.
 
-
 ```java
 interface ContentStatement <: Statement {
     type: "ContentStatement";
@@ -147,7 +146,6 @@ interface CommentStatement <: Statement {
     strip: StripFlags | null;
 }
 ```
-
 
 ```java
 interface Decorator <: Statement {
@@ -209,7 +207,6 @@ interface PathExpression <: Expression {
 - `parts` is an array of the names in the path. `foo.bar` would be `['foo', 'bar']`. Scope references, `.`, `..`, and `this` should be omitted from this array.
 - `original` is the path as entered by the user. Separator and scope references are left untouched.
 
-
 ##### Literals
 
 ```java
@@ -241,7 +238,6 @@ interface NullLiteral <: Literal {
     type: "NullLiteral";
 }
 ```
-
 
 ### Miscellaneous
 
@@ -279,8 +275,8 @@ function ImportScanner() {
 }
 ImportScanner.prototype = new Visitor();
 
-ImportScanner.prototype.PartialStatement = function(partial) {
-  this.partials.push({request: partial.name.original});
+ImportScanner.prototype.PartialStatement = function (partial) {
+  this.partials.push({ request: partial.name.original });
 
   Visitor.prototype.PartialStatement.call(this, partial);
 };
@@ -309,27 +305,26 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
   Note that this does not impact dynamic partials, which implementors need to be aware of. Overriding `VM.resolvePartial` may be required to support dynamic cases.
 
 - `depthedLookup(name)`
-  Used to generate code that resolves parameters within any context in the stack. Is only used in `compat` mode. 
+  Used to generate code that resolves parameters within any context in the stack. Is only used in `compat` mode.
 
 - `compilerInfo()`
   Allows for custom compiler flags used in the runtime version checking logic.
 
 - `appendToBuffer(source, location, explicit)`
-    Allows for code buffer emitting code. Defaults behavior is string concatenation.
+  Allows for code buffer emitting code. Defaults behavior is string concatenation.
 
-    - `source` is the source code whose result is to be appending
-    - `location` is the location of the source in the source map.
-    - `explicit` is a flag signaling that the emit operation must occur, vs. the lazy evaled options otherwise.
+  - `source` is the source code whose result is to be appending
+  - `location` is the location of the source in the source map.
+  - `explicit` is a flag signaling that the emit operation must occur, vs. the lazy evaled options otherwise.
 
 - `initializeBuffer()`
-    Allows for buffers other than the default string buffer to be used. Generally needs to be paired with a custom `appendToBuffer` implementation.
+  Allows for buffers other than the default string buffer to be used. Generally needs to be paired with a custom `appendToBuffer` implementation.
 
 ### Example for the compiler api.
 
 This example changes all lookups of properties are performed by a helper (`lookupLowerCase`) which looks for `test` if `{{Test}}` occurs in the template. This is just to illustrate how compiler behavior can be change.
 
 There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/162/) if you want to play around with it.
-
 
 ```javascript
 function MyCompiler() {
@@ -338,29 +333,35 @@ function MyCompiler() {
 MyCompiler.prototype = new Handlebars.JavaScriptCompiler();
 
 // Use this compile to compile BlockStatment-Blocks
-MyCompiler.prototype.compiler = MyCompiler
+MyCompiler.prototype.compiler = MyCompiler;
 
-MyCompiler.prototype.nameLookup = function(parent, name, type) {
+MyCompiler.prototype.nameLookup = function (parent, name, type) {
   if (type === 'context') {
-    return this.source.functionCall('helpers.lookupLowerCase', '', [parent, JSON.stringify(name)])
+    return this.source.functionCall('helpers.lookupLowerCase', '', [
+      parent,
+      JSON.stringify(name),
+    ]);
   } else {
-    return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(this, parent, name, type);
+    return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(
+      this,
+      parent,
+      name,
+      type
+    );
   }
-}
+};
 
 var env = Handlebars.create();
-env.registerHelper('lookupLowerCase', function(parent, name) {
-  return parent[name.toLowerCase()]
-})
+env.registerHelper('lookupLowerCase', function (parent, name) {
+  return parent[name.toLowerCase()];
+});
 
 env.JavaScriptCompiler = MyCompiler;
 
 var template = env.compile('{{#each Test}} ({{Value}}) {{/each}}');
-console.log(template({
-  test: [ 
-    {value: 'a'},
-    {value: 'b'},
-    {value: 'c'}
-    ]
-}));
+console.log(
+  template({
+    test: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
+  })
+);
 ```

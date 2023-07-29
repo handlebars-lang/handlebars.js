@@ -5,7 +5,7 @@ We recommend always using the latest versions of Handlebars and its official com
 ## Supported Versions
 
 | Version | Supported          |
-|---------| ------------------ |
+| ------- | ------------------ |
 | 5.0.x   | :white_check_mark: |
 | 4.7.x   | :white_check_mark: |
 | < 4.7   | :x:                |
