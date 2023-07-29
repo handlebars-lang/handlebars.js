@@ -156,14 +156,6 @@ module.exports = function (grunt) {
     'copy:components',
   ]);
 
-  // Requires secret properties from .travis.yaml
-  grunt.registerTask('extensive-tests-and-publish-to-aws', [
-    'default',
-    'shell:integrationTests',
-    'metrics',
-    'publish-to-aws',
-  ]);
-
   grunt.registerTask('on-file-change', ['build', 'concat:tests', 'test']);
 
   // === Primary tasks ===
