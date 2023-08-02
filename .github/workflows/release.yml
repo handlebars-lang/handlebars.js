@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+
+jobs:
+  publish-aws-s3:
+    name: Publish to AWS S3
+    runs-on: 'ubuntu-latest'
+    environment: 'builds.handlebarsjs.com.s3.amazonaws.com'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish
+        run: |
+          git config --global user.email "release@handlebarsjs.com"
+          git config --global user.name "handlebars-lang"
+          npm run publish:aws
+        env:
+          S3_BUCKET_NAME: "builds.handlebarsjs.com"
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
