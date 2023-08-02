@@ -151,22 +151,32 @@ A full release via Docker may be completed with the following:
       --env NPM_CONFIG_PREFIX=/home/node/.npm-global \
       handlebars:release bash -c 'export PATH=$PATH:/home/node/.npm-global/bin; bash'
     ```
-3. Add SSH key to GitHub: `cat /home/node/.ssh/id_ed25519.pub` (https://github.com/settings/keys)
-4. Add GitHub API token: `vi /home/node/.config/generator-release`
-5. Execute the following steps:
+   * Add SSH key to GitHub: `cat /home/node/.ssh/id_ed25519.pub` (https://github.com/settings/keys)
+   * Add GitHub API token: `vi /home/node/.config/generator-release`
+   * Execute the following steps:
+     ```bash
+     npm ci
+     npm install -g yo@1 grunt@1 generator-release
+     npm run release
+     yo release
+     npm login
+     npm publish
+     yo release:publish components handlebars.js dist/components/
+     ```
+6. Publish Ruby `handlebars-source` gem:
     ```bash
-    npm ci
-    npm install -g yo@1 grunt@1 generator-release
-    npm run release
-    yo release
-    npm login
-    npm publish
-    yo release:publish components handlebars.js dist/components/
-    
-    cd dist/components/
-    gem build handlebars-source.gemspec
-    gem push handlebars-source-*.gem
+    docker run --rm --interactive --tty \
+     --volume $PWD:/app \
+     --workdir /app \
+     --user $(id -u):$(id -g) \
+     ruby:3.2-slim bash
     ```
+   * Execute the following steps:
+     ```bash
+     cd dist/components/
+     gem build handlebars-source.gemspec
+     gem push handlebars-source-*.gem
+     ```
 
 ### After the release
 
