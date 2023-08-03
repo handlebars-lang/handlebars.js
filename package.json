@@ -36,7 +36,6 @@
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
     "chai": "^4.2.0",
-    "chai-diff": "^1.0.1",
     "concurrently": "^5.0.0",
     "dirty-chai": "^2.0.1",
     "dtslint": "^0.5.5",

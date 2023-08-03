@@ -1,6 +1,5 @@
 Precompile handlebar templates.
 Usage: handlebars [template|directory]...
-
 Options:
   -f, --output         Output File                                                                              [string]
   --map                Source Map File                                                                          [string]

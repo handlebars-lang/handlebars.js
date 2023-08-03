@@ -34,6 +34,7 @@ describe('javascript-compiler api', function() {
         .toCompileTo('food');
     });
   });
+
   describe('#compilerInfo', function() {
     var $superCheck, $superInfo;
     beforeEach(function() {
@@ -58,6 +59,7 @@ describe('javascript-compiler api', function() {
         .toCompileTo('food ');
     });
   });
+
   describe('buffer', function() {
     var $superAppend, $superCreate;
     beforeEach(function() {
@@ -114,6 +116,15 @@ describe('javascript-compiler api', function() {
           )
         ).to.be.false();
       });
+    });
+  });
+
+  describe('options', function() {
+    it('should append `noEscape` statements as string', function() {
+      expectTemplate('{{a}}{{b}}')
+        .withCompileOptions({ noEscape: true })
+        .withInput({ a: 1, b: 1 })
+        .toCompileTo('11');
     });
   });
 });
