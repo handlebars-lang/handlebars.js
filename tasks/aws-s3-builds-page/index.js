@@ -1,3 +1,5 @@
-const { listBucketFiles } = require('./list-bucket-files');
+const { listFiles } = require('./listFiles');
+const { uploadFile } = require('./uploadFile');
+const { deleteFile } = require('./deleteFile');
 
-module.exports = { listBucketFiles };
+module.exports = { listFiles, uploadFile, deleteFile };
