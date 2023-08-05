@@ -1,8 +1,6 @@
 const { ListObjectsV2Command } = require('@aws-sdk/client-s3');
-const { createS3Client } = require('./createS3Client');
 
-async function listFiles() {
-  const { s3Client, bucket } = createS3Client();
+async function listFiles(s3Client, bucket) {
   const command = new ListObjectsV2Command({
     Bucket: bucket
   });

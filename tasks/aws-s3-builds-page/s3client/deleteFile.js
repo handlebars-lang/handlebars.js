@@ -1,11 +1,9 @@
-const { createS3Client } = require('./createS3Client');
 const { DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
-async function deleteFile(name) {
-  const { s3Client, bucket } = createS3Client();
+async function deleteFile(s3Client, bucket, remoteName) {
   const command = new DeleteObjectCommand({
     Bucket: bucket,
-    Key: name
+    Key: remoteName
   });
   await s3Client.send(command);
 }
