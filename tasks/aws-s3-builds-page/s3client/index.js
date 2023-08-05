@@ -1,5 +1,5 @@
 const { listFiles } = require('./listFiles');
-const { uploadFile } = require('./uploadFile');
+const { uploadFile, uploadData } = require('./uploadFile');
 const { deleteFile } = require('./deleteFile');
 const { S3Client } = require('@aws-sdk/client-s3');
 const { requireEnvVar } = require('./requireEnvVar');
@@ -21,8 +21,13 @@ function createS3Client() {
     async listFiles() {
       return listFiles(s3Client, bucket);
     },
-    async uploadFile(localName, remoteName) {
-      await uploadFile(s3Client, bucket, localName, remoteName);
+    async uploadFile(localName, remoteName, { contentType } = {}) {
+      await uploadFile(s3Client, bucket, localName, remoteName, {
+        contentType
+      });
+    },
+    async uploadData(data, remoteName, { contentType } = {}) {
+      await uploadData(s3Client, bucket, data, remoteName, { contentType });
     },
     async deleteFile(remoteName) {
       await deleteFile(s3Client, bucket, remoteName);

@@ -29,6 +29,23 @@ runTest(async ({ log }) => {
   log(`Check contents of "${filename}"`);
   const uploadedContents = await client.fetchFile(filename);
   expectStringContains('"name": "handlebars"', uploadedContents);
+  await expectContentType(filename, 'application/octet-stream');
+
+  log(`Uploading with content type "${filename}"`);
+  await client.uploadFile('package.json', filename, {
+    contentType: 'text/html'
+  });
+  log('Checking content-type');
+  await expectContentType(filename, 'text/html');
+
+  log('Upload data as text/plain');
+  await client.uploadData('Hello world', filename, {
+    contentType: 'text/plain'
+  });
+  log('Checking content-type');
+  await expectContentType(filename, 'text/plain');
+  log(`Check contents of "${filename}"`);
+  expectStringContains('Hello world', await client.fetchFile(filename));
 
   log(`Delete "${filename}"`);
   await client.deleteFile(filename);
@@ -43,5 +60,16 @@ runTest(async ({ log }) => {
 function expectStringContains(needle, haystack) {
   if (!haystack.includes(needle)) {
     throw new Error(`Expecting to find "${needle}" in string "${haystack}"`);
+  }
+}
+
+async function expectContentType(remoteName, expectedContentType) {
+  const contentType = (await fetch(client.fileUrl(remoteName))).headers.get(
+    'Content-Type'
+  );
+  if (contentType !== expectedContentType) {
+    throw new Error(
+      `Expecting to find content-type "${expectedContentType}" but found "${contentType}"`
+    );
   }
 }

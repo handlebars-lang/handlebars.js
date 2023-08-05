@@ -6,6 +6,9 @@ const s3Client = createS3Client();
 function runTest(asyncFn) {
   asyncFn({ log: console.log.bind(console) })
     .finally(detectSurplusFiles)
+    .then(() => {
+      console.log('DONE');
+    })
     .catch(error => {
       console.error(error);
       process.exit(1);
@@ -27,7 +30,6 @@ async function detectSurplusFiles() {
   if (surplusFileDetected) {
     console.log(`run with --delete-surplus to delete surplus files`);
   }
-  console.log('DONE');
 }
 
 module.exports = { runTest };
