@@ -3,7 +3,7 @@ const fs = require('fs');
 const testFiles = fs.readdirSync('src');
 const entryPoints = {};
 testFiles
-  .filter(file => file.match(/-cli.js$/))
+  .filter(file => file.match(/-test.js$/))
   .forEach(file => {
     entryPoints[file] = `./src/${file}`;
   });
