@@ -2,6 +2,7 @@ const git = require('./util/git');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 const semver = require('semver');
 const { publishWithSuffixes } = require('./aws-s3-builds-page/publish');
+const { generateFileList } = require('./aws-s3-builds-page/generateFileList');
 
 module.exports = function(grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
@@ -28,6 +29,7 @@ module.exports = function(grunt) {
 
     if (suffixes.length > 0) {
       await publishWithSuffixes(suffixes);
+      await generateFileList('index');
     }
   });
 };

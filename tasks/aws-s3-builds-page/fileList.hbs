@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        table {
+            column-gap: 1rem;
+        }
+        thead {
+            position: sticky;
+            top: 0;
+            background: #efefef;
+        }
+
+        th:not(:last-child), td:not(:last-child) {
+            margin-right: 1rem;
+        }
+
+        th {
+            text-align: left;
+        }
+    </style>
+    <title>Handlebars.js Builds</title>
+</head>
+<body>
+ <h1>Handlebars.js builds</h1>
+ <p>See <a href="https://handlebarsjs.com">https://handlebarsjs.com</a> for documentation.</p>
+ <p>Machine-readable version: <a href="{{jsonListUrl}}">{{jsonListUrl}}</a></p>
+ <table>
+     <thead>
+         <tr>
+             <th data-col="key"><a href="#" onclick="return toggleSort('key')">Name</a></th>
+             <th data-col="size"><a href="#" onclick="return toggleSort('size')">Size</a></th>
+             <th data-col="lastModified"><a href="#" onclick="return toggleSort('lastModified')">Last-Modified</a></th>
+         </tr>
+     </thead>
+     <tbody id="files">
+         {{#each fileList as | file |}}
+             <tr>
+                 <td data-col="key"><a href="{{file.key}}">{{key}}</a></td>
+                 <td data-col="size">{{file.size}}</td>
+                 <td data-col="lastModified">{{file.lastModified}}</td>
+             </tr>
+         {{/each}}
+     </tbody>
+
+ </table>
+ <script type="application/javascript">
+     const files = {{{json fileList}}};
+     const fileElements = Array.from(document.querySelectorAll("#files > tr"));
+
+
+     applyNewOrder()
+
+     function getSearchParams() {
+         return new URLSearchParams(window.location.hash.slice(1));
+     }
+
+     function toggleSort(newSortProperty) {
+         const params = getSearchParams()
+
+         const oldSortProperty = params.get("sort");
+         if (oldSortProperty === newSortProperty) {
+             const newDir = params.get("dir") === "asc" ? "desc" : "asc"
+             window.location.hash = "sort=" + newSortProperty + "&dir=" + newDir
+         } else {
+             window.location.hash = "sort=" + newSortProperty
+
+         }
+         setTimeout(() => applyNewOrder())
+
+
+         return false
+     }
+
+     function applyNewOrder() {
+         const params = getSearchParams()
+         const sortProperty = params.get("sort") ?? "lastModified"
+         const ascending = params.get("dir") === "asc"
+         sortFilesArray(sortProperty, ascending);
+         updateRows();
+     }
+
+     function sortFilesArray(propertyName, ascending) {
+
+         files.sort(compareByProp(propertyName))
+         if (!ascending) {
+             files.reverse()
+         }
+     }
+
+     function compareByProp(propertyName) {
+         return (file1, file2) => {
+             if (file1[propertyName] === file2[propertyName]) {
+                 return 0
+             }
+             if (file1[propertyName] > file2[propertyName]) {
+                 return 1
+             }
+             return -1
+         }
+     }
+
+     function updateRows() {
+         let index = 0;
+         for (const rowElement of fileElements) {
+             update(rowElement, files[index++])
+         }
+     }
+
+     function update(rowElement, file) {
+         const link = rowElement.querySelector('[data-col="key"] a')
+         link.setAttribute("href", file.key)
+         link.innerText = file.key
+
+         const size = rowElement.querySelector('[data-col="size"]')
+         size.innerText = file.size
+
+         const lastModified = rowElement.querySelector('[data-col="lastModified"]')
+         lastModified.innerText = file.lastModified
+     }
+ </script>
+</body>
+</html>

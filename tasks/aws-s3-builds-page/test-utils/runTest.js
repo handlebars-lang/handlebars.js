@@ -18,8 +18,10 @@ function runTest(asyncFn) {
 async function detectSurplusFiles() {
   const listing = await s3Client.listFiles();
   let surplusFileDetected = false;
-  const testFilesInBucket = listing.filter(name => name.includes('test-file'));
-  for (const filename of testFilesInBucket) {
+  const testFilesInBucket = listing.filter(name =>
+    name.key.includes('test-file')
+  );
+  for (const { key: filename } of testFilesInBucket) {
     if (process.argv[2] === '--delete-surplus') {
       await s3Client.deleteFile(filename);
     } else {

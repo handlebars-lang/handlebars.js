@@ -2,6 +2,7 @@
 const { createS3Client } = require('./index');
 const crypto = require('crypto');
 const { runTest } = require('../test-utils/runTest');
+const assert = require('node:assert');
 
 // This is a test file. It is intended to be run manually
 // with the proper environment variables set
@@ -11,6 +12,8 @@ const { runTest } = require('../test-utils/runTest');
 // Run it from the project root using "node tasks/aws-s3-builds-page/s3client/s3-test.js"
 
 const client = createS3Client();
+
+const ISO_DATE = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/;
 
 runTest(async ({ log }) => {
   const uuid = crypto.randomUUID();
@@ -22,7 +25,7 @@ runTest(async ({ log }) => {
 
   log(`Check if uploaded "${filename}"`);
   const listing = await client.listFiles();
-  if (!listing.includes(filename)) {
+  if (!listing.find(s3obj => s3obj.key === filename)) {
     throw new Error(`File "${filename}" has not been uploaded`);
   }
 
@@ -46,13 +49,24 @@ runTest(async ({ log }) => {
   await expectContentType(filename, 'text/plain');
   log(`Check contents of "${filename}"`);
   expectStringContains('Hello world', await client.fetchFile(filename));
+  const helloWorldObj = (await client.listFiles()).find(
+    s3obj => s3obj.key === filename
+  );
+  assert.equal(helloWorldObj.size, 11, 'Checking file size of hello world');
+  assert.match(
+    helloWorldObj.lastModified,
+    ISO_DATE,
+    'Last modified must be an iso-date'
+  );
 
   log(`Delete "${filename}"`);
   await client.deleteFile(filename);
 
   log(`Check if deleted "${filename}"`);
-  const listingAfterDelete = await client.listFiles();
-  if (listingAfterDelete.includes(filename)) {
+  const foundFile = (await client.listFiles()).find(
+    s3obj => s3obj.key === filename
+  );
+  if (foundFile != null) {
     throw new Error(`File "${filename}" has not been deleted`);
   }
 });

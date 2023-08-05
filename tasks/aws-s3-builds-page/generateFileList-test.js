@@ -13,12 +13,18 @@ const s3Client = createS3Client();
 
 runTest(async ({ log }) => {
   log('Generate file list');
-  const filename = `test-file-list${crypto.randomUUID()}`;
+  const filename = `test-file-list-${crypto.randomUUID()}`;
   await generateFileList(filename);
 
   log(`Checking JSON at ${s3Client.fileUrl(`${filename}.json`)}`);
   const jsonList = JSON.parse(await s3Client.fetchFile(`${filename}.json`));
-  assert(jsonList.includes('handlebars-v4.7.7.js'));
+  assert(jsonList.find(s3obj => s3obj.key === 'handlebars-v4.7.7.js'));
+
+  log(`Checking HTML at ${s3Client.fileUrl(`${filename}.html`)}`);
+  const htmlList = await s3Client.fetchFile(`${filename}.html`);
+  assert(htmlList.includes('handlebars-v4.7.7.js'));
+  assert(htmlList.includes('handlebarsjs.com'));
+  assert(!htmlList.includes('index.html'));
 
   log(`Deleting file ${filename}.json`);
   await s3Client.deleteFile(`${filename}.json`);
