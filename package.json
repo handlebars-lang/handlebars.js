@@ -81,6 +81,7 @@
     "handlebars": "bin/handlebars"
   },
   "scripts": {
+    "prepare": "$(npm bin)/grunt build",
     "build": "grunt build",
     "release": "npm run build && grunt release",
     "format": "prettier --write '**/*.js' && eslint --fix .",
