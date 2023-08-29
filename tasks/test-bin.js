@@ -4,7 +4,6 @@ const os = require('os');
 const path = require('path');
 
 const chai = require('chai');
-chai.use(require('chai-diff'));
 const expect = chai.expect;
 
 const testCases = [
@@ -192,11 +191,9 @@ module.exports = function(grunt) {
           fs.unlinkSync(outputLocation);
         }
 
-        expect(normalizedOutput).not.to.be.differentFrom(
+        expect(normalizedOutput).to.be.equal(
           normalizedExpectedOutput,
-          {
-            relaxedSpace: true
-          }
+          `Failed on ${expectedOutputSpec}`
         );
       }
     );
@@ -226,7 +223,7 @@ function addPathToNodeJs(pathEnvironment) {
 
 function normalizeCrlf(string) {
   if (typeof string === 'string') {
-    return string.replace(/\r\n/g, '\n');
+    return string.replace(/\r\n/g, '\n').trim();
   }
   return string;
 }

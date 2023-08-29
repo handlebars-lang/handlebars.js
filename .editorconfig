@@ -5,6 +5,9 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[spec/expected/*.js]
+insert_final_newline = false
+
 [*.yml]
 indent_size = 2
 insert_final_newline = true
