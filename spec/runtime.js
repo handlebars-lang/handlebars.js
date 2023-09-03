@@ -91,13 +91,13 @@ describe('runtime', function() {
     it('should expose child template', function() {
       var template = Handlebars.compile('{{#foo}}bar{{/foo}}');
       // Calling twice to hit the non-compiled case.
-      equal(template._child(1)(), 'bar');
-      equal(template._child(1)(), 'bar');
+      equal(template._child(0)(), 'bar');
+      equal(template._child(0)(), 'bar');
     });
     it('should render depthed content', function() {
       var template = Handlebars.compile('{{#foo}}{{../bar}}{{/foo}}');
       // Calling twice to hit the non-compiled case.
-      equal(template._child(1, undefined, [], [{ bar: 'baz' }])(), 'baz');
+      equal(template._child(0, undefined, [], [{ bar: 'baz' }])(), 'baz');
     });
   });
 
