@@ -123,6 +123,8 @@ declare namespace Handlebars {
       export function toString(obj: any): string;
       export function isArray(obj: any): boolean;
       export function isFunction(obj: any): boolean;
+      export function isMap(obj: any): boolean;
+      export function isSet(obj: any): boolean;
   }
 
   export namespace AST {
