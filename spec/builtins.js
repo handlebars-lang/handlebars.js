@@ -508,6 +508,50 @@ describe('builtin helpers', function () {
       );
     });
 
+    it('each on Map', function () {
+      var map = new Map([
+        [1, 'one'],
+        [2, 'two'],
+        [3, 'three'],
+      ]);
+
+      expectTemplate('{{#each map}}{{@key}}(i{{@index}}) {{.}} {{/each}}')
+        .withInput({ map: map })
+        .toCompileTo('1(i0) one 2(i1) two 3(i2) three ');
+
+      expectTemplate('{{#each map}}{{#if @first}}{{.}}{{/if}}{{/each}}')
+        .withInput({ map: map })
+        .toCompileTo('one');
+
+      expectTemplate('{{#each map}}{{#if @last}}{{.}}{{/if}}{{/each}}')
+        .withInput({ map: map })
+        .toCompileTo('three');
+
+      expectTemplate('{{#each map}}{{.}}{{/each}}not-in-each')
+        .withInput({ map: new Map() })
+        .toCompileTo('not-in-each');
+    });
+
+    it('each on Set', function () {
+      var set = new Set([1, 2, 3]);
+
+      expectTemplate('{{#each set}}{{@key}}(i{{@index}}) {{.}} {{/each}}')
+        .withInput({ set: set })
+        .toCompileTo('0(i0) 1 1(i1) 2 2(i2) 3 ');
+
+      expectTemplate('{{#each set}}{{#if @first}}{{.}}{{/if}}{{/each}}')
+        .withInput({ set: set })
+        .toCompileTo('1');
+
+      expectTemplate('{{#each set}}{{#if @last}}{{.}}{{/if}}{{/each}}')
+        .withInput({ set: set })
+        .toCompileTo('3');
+
+      expectTemplate('{{#each set}}{{.}}{{/each}}not-in-each')
+        .withInput({ set: new Set() })
+        .toCompileTo('not-in-each');
+    });
+
     if (global.Symbol && global.Symbol.iterator) {
       it('each on iterable', function () {
         function Iterator(arr) {

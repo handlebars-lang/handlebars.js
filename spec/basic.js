@@ -387,6 +387,13 @@ describe('basic context', function () {
       .toCompileTo('Goodbye beautiful world!');
   });
 
+  it('nested paths with Map', function () {
+    expectTemplate('Goodbye {{alan/expression}} world!')
+      .withInput({ alan: new Map([['expression', 'beautiful']]) })
+      .withMessage('Nested paths access nested objects')
+      .toCompileTo('Goodbye beautiful world!');
+  });
+
   it('nested paths with empty string value', function () {
     expectTemplate('Goodbye {{alan/expression}} world!')
       .withInput({ alan: { expression: '' } })

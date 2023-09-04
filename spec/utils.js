@@ -86,4 +86,21 @@ describe('utils', function () {
       equals(b.b, 2);
     });
   });
+
+  describe('#isType', function () {
+    it('should check if variable is type Array', function () {
+      expect(Handlebars.Utils.isArray('string')).to.equal(false);
+      expect(Handlebars.Utils.isArray([])).to.equal(true);
+    });
+
+    it('should check if variable is type Map', function () {
+      expect(Handlebars.Utils.isMap('string')).to.equal(false);
+      expect(Handlebars.Utils.isMap(new Map())).to.equal(true);
+    });
+
+    it('should check if variable is type Set', function () {
+      expect(Handlebars.Utils.isSet('string')).to.equal(false);
+      expect(Handlebars.Utils.isSet(new Set())).to.equal(true);
+    });
+  });
 });
