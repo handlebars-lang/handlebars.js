@@ -39,7 +39,7 @@ declare namespace Handlebars {
   export interface HelperOptions {
       fn: TemplateDelegate;
       inverse: TemplateDelegate;
-      hash: any;
+      hash: Record<string, any>;
       data?: any;
   }
 
