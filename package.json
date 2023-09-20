@@ -17,7 +17,7 @@
   "license": "MIT",
   "readmeFilename": "README.markdown",
   "engines": {
-    "node": ">=12"
+    "node": ">=18"
   },
   "dependencies": {
     "@handlebars/parser": "^2.1.0",
