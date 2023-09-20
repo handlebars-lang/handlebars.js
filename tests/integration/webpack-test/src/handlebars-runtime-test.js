@@ -1,4 +1,4 @@
-import * as Handlebars from 'handlebars/runtime';
+import Handlebars from 'handlebars/runtime';
 import { assertEquals } from './lib/assert';
 
 const template = Handlebars.template({
