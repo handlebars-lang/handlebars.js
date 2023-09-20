@@ -14,7 +14,7 @@ cd "$( dirname "$( readlink -f "$0" )" )" || exit 1
 unset npm_config_prefix
 
 echo "Handlebars should be able to run in various versions of NodeJS"
-for node_version_to_test in 12 14 16 18; do
+for node_version_to_test in 18 20; do
 
     rm target node_modules package-lock.json -rf
     mkdir target
