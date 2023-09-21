@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars/lib/handlebars';
+import Handlebars from 'handlebars';
 
 const template = Handlebars.compile('Author: {{author}}');
 const result = template({ author: 'Yehuda' });

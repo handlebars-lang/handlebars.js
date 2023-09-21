@@ -71,9 +71,30 @@
     "webpack": "^1.12.6",
     "webpack-dev-server": "^1.12.1"
   },
-  "main": "lib/index.js",
+  "imports": {
+    "#source-map": {
+      "node": "source-map",
+      "default": "./lib/handlebars/compiler/source-map.js"
+    }
+  },
+  "exports": {
+    ".": {
+      "node": {
+        "import": "./lib/index.js",
+        "require": "./lib/index.cjs"
+      },
+      "default": "./lib/handlebars/index.js"
+    },
+    "./runtime": {
+      "node": {
+        "import": "./lib/handlebars/index.runtime.js",
+        "require": "./lib/index.runtime.cjs"
+      },
+      "default": "./lib/handlebars/index.runtime.js"
+    }
+  },
+  "main": "./lib/index.cjs",
   "types": "types/index.d.ts",
-  "browser": "./dist/cjs/handlebars.js",
   "bin": {
     "handlebars": "bin/handlebars.js"
   },

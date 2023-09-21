@@ -3,7 +3,7 @@ var _ = require('underscore'),
 
 module.exports = function (grunt, callback) {
   // Deferring to here in case we have a build for parser, etc as part of this grunt exec
-  var Handlebars = require('../../lib');
+  var Handlebars = require('../..');
 
   var templateSizes = {};
   _.each(templates, function (info, template) {

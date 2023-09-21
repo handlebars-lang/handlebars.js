@@ -23,20 +23,22 @@ var files = fs
   });
 
 if (global.minimizedTest) {
-  run('./runtime', function () {
-    run('./browser', function () {
+  run('./runtime.js', function () {
+    run('./browser.js', function () {
       /* eslint-disable no-process-exit */
       process.exit(errors);
       /* eslint-enable no-process-exit */
     });
   });
 } else {
-  run('./runtime', function () {
-    run('./browser', function () {
-      run('./node', function () {
-        /* eslint-disable no-process-exit */
-        process.exit(errors);
-        /* eslint-enable no-process-exit */
+  run('./runtime.js', function () {
+    run('./browser.js', function () {
+      run('./node.js', function () {
+        run('./node-esm.mjs', function () {
+          /* eslint-disable no-process-exit */
+          process.exit(errors);
+          /* eslint-enable no-process-exit */
+        });
       });
     });
   });
@@ -55,9 +57,10 @@ function run(env, callback) {
   });
 
   console.log('Running env: ' + env);
-  require(env);
-  mocha.run(function (errorCount) {
-    errors += errorCount;
-    callback();
+  import(env).then(() => {
+    mocha.run(function (errorCount) {
+      errors += errorCount;
+      callback();
+    });
   });
 }

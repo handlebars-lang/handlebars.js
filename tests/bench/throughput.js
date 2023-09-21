@@ -122,7 +122,7 @@ function makeSuite(bench, name, template, handlebarsOnly) {
 
 module.exports = function (grunt, callback) {
   // Deferring load in case we are being run inline with the grunt build
-  Handlebars = require('../../lib');
+  Handlebars = require('../..');
 
   console.log('Execution Throughput');
   runner(grunt, makeSuite, function (times, scaled) {

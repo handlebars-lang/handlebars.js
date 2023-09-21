@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "imports": {
+    "#source-map": {
+      "node": "source-map",
+      "default": "./handlebars/compiler/source-map.js"
+    }
+  }
+}

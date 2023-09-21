@@ -4,7 +4,7 @@
 var script = process.argv[2].replace(/\\n/g, '\n'),
   verbose = process.argv[3] === '-v';
 
-var Handlebars = require('./../lib'),
+var Handlebars = require('..'),
   SourceMap = require('source-map'),
   SourceMapConsumer = SourceMap.SourceMapConsumer;
 

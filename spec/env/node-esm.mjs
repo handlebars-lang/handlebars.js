@@ -1,23 +1,26 @@
-require('./common');
+import './common.js';
 
-var chai = require('chai');
-var dirtyChai = require('dirty-chai');
+import chai from 'chai';
+import dirtyChai from 'dirty-chai';
+import sinon from 'sinon';
+
+import Handlebars from '../../lib/index.js';
 
 chai.use(dirtyChai);
 global.expect = chai.expect;
 
-global.sinon = require('sinon');
+global.sinon = sinon;
 
-global.Handlebars = require('../..');
+global.Handlebars = Handlebars;
 
 global.CompilerContext = {
-  compile: function (template, options) {
+  compile: function(template, options) {
     var templateSpec = handlebarsEnv.precompile(template, options);
     return handlebarsEnv.template(safeEval(templateSpec));
   },
-  compileWithPartial: function (template, options) {
+  compileWithPartial: function(template, options) {
     return handlebarsEnv.compile(template, options);
-  },
+  }
 };
 
 function safeEval(templateSpec) {

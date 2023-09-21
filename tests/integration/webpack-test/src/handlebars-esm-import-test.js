@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars/lib/handlebars';
+import Handlebars from 'handlebars';
 import { assertEquals } from './lib/assert';
 
 const template = Handlebars.compile('Author: {{author}}');
