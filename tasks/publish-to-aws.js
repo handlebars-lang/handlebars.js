@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 const fs = require('fs');
 const AWS = require('aws-sdk');
+
+const { S3 } = require('@aws-sdk/client-s3');
+
 const git = require('./util/git');
 const semver = require('semver');
 
@@ -75,7 +78,12 @@ async function uploadToBucket(localFile, nameInBucket) {
 }
 
 function s3PutObject(uploadParams) {
-  const s3 = new AWS.S3();
+  const s3 = new S3({
+    credentials: {
+      accessKeyId: key,
+      secretAccessKey: secret,
+    },
+  });
   return new Promise((resolve, reject) => {
     s3.putObject(uploadParams, (err) => {
       if (err != null) {
