@@ -1,4 +1,7 @@
 const AWS = require('aws-sdk');
+
+const { S3 } = require('@aws-sdk/client-s3');
+
 const git = require('./util/git');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 const semver = require('semver');
@@ -44,6 +47,9 @@ module.exports = function (grunt) {
       throw new Error('Missing S3 config values');
     }
 
+    // JS SDK v3 does not support global configuration.
+    // Codemod has attempted to pass values to each service client in this file.
+    // You may need to update clients outside of this file, if they use global config.
     AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
   }
 
@@ -82,7 +88,12 @@ module.exports = function (grunt) {
 };
 
 function s3PutObject(uploadParams) {
-  const s3 = new AWS.S3();
+  const s3 = new S3({
+    credentials: {
+      accessKeyId: key,
+      secretAccessKey: secret,
+    },
+  });
   return new Promise((resolve, reject) => {
     s3.putObject(uploadParams, (err) => {
       if (err != null) {
