@@ -80,8 +80,8 @@ async function uploadToBucket(localFile, nameInBucket) {
 function s3PutObject(uploadParams) {
   const s3 = new S3({
     credentials: {
-      accessKeyId: key,
-      secretAccessKey: secret,
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     },
   });
   return new Promise((resolve, reject) => {
