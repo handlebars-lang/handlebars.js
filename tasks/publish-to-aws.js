@@ -1,9 +1,4 @@
-/* eslint-disable no-console */
-const fs = require('fs');
-const AWS = require('aws-sdk');
-
 const { S3 } = require('@aws-sdk/client-s3');
-
 const git = require('./util/git');
 const semver = require('semver');
 
@@ -42,8 +37,6 @@ function initSDK() {
   if (!bucket || !key || !secret) {
     throw new Error('Missing S3 config values');
   }
-
-  AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
 }
 
 async function publish(suffixes) {
