@@ -1,0 +1,1 @@
+{{#if goodbye includeZero=true}}GOODBYE {{/if}}cruel {{world}}!
