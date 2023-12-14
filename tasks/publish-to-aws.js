@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk');
+const { S3 } = require('@aws-sdk/client-s3');
 const git = require('./util/git');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 const semver = require('semver');
@@ -43,8 +43,6 @@ module.exports = function (grunt) {
     if (!bucket || !key || !secret) {
       throw new Error('Missing S3 config values');
     }
-
-    AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
   }
 
   async function publish(suffixes) {
@@ -82,7 +80,12 @@ module.exports = function (grunt) {
 };
 
 function s3PutObject(uploadParams) {
-  const s3 = new AWS.S3();
+  const s3 = new S3({
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    },
+  });
   return new Promise((resolve, reject) => {
     s3.putObject(uploadParams, (err) => {
       if (err != null) {
