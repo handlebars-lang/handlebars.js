@@ -134,6 +134,7 @@ Handlebars in the Wild
 * [handlebars-layouts](https://github.com/shannonmoeller/handlebars-layouts) is a set of helpers which implement extendible and embeddable layout blocks as seen in other popular templating languages.
 * [hbs](http://github.com/donpark/hbs): An Express.js view engine adapter for Handlebars.js,
   from Don Park.
+* [hbs-ast-to-str](https://github.com/satyajitnayk/handlebar-ast-to-str) A well tested library that converts Handlebars Abstract Syntax Tree (AST) back to template string with optional processing.
 * [koa-hbs](https://github.com/jwilm/koa-hbs): [koa](https://github.com/koajs/koa) generator based
   renderer for Handlebars.js.
 * [jblotus](http://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com)
