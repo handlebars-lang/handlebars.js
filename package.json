@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@definitelytyped/dtslint": "^0.0.100",
+    "@jazzer.js/core": "^2.1.0",
     "@playwright/test": "^1.36.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",

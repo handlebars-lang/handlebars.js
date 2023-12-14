@@ -1,0 +1,1 @@
+{{#with person}}Person is present{{else}}Person is not present{{/with}}'

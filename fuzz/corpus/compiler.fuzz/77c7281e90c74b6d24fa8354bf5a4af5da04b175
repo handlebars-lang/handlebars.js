@@ -1,0 +1,1 @@
+{{#people}}\n{{name}}\n{{^}}\n{{none}}\n{{/people}}\n'

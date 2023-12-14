@@ -58,6 +58,10 @@ jobs:
           cd ./tests/integration/webpack-babel-test && ./test.sh && cd -
           cd ./tests/integration/webpack-test && ./test.sh && cd -
 
+      - name: Fuzz Test
+        # Runs for 2 minutes
+        run: cd ./fuzz && ./test.sh 120 && cd -
+
   browser:
     name: Test (Browser)
     runs-on: 'ubuntu-22.04'

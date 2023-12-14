@@ -1,0 +1,1 @@
+{{#each data}}{{@index}}:{{a}} {{/each}}

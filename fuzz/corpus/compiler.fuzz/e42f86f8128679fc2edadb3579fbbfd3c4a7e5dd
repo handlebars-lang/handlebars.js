@@ -1,0 +1,1 @@
+{{#each goodbyes}}{{@key}}. {{text}}! {{/each}}cruel {{world}}!

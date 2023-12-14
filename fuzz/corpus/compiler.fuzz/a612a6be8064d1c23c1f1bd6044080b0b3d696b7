@@ -1,0 +1,1 @@
+{{#each person}}{{#with .}}{{first}} {{last}}{{/with}}{{/each}}
