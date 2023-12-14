@@ -289,6 +289,17 @@ describe('security issues', function() {
           })
           .toCompileTo('abc');
       });
+
+      it('should call an allowed proto method', function() {
+        expectTemplate('{{aString.trim}}')
+          .withInput({ aString: '  abc  ' })
+          .withRuntimeOptions({
+            allowedProtoMethods: {
+              trim: true
+            }
+          })
+          .toCompileTo('abc');
+      });
     });
 
     describe('control access to prototype non-methods via "allowedProtoProperties" and "allowProtoPropertiesByDefault', function() {
