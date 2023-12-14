@@ -131,6 +131,7 @@ Handlebars in the Wild
   from Les Hill (@leshill).
 * [handlebars-helpers](https://github.com/assemble/handlebars-helpers) is an extensive library
   with 100+ handlebars helpers.
+* [fumanchu](https://github.com/jaredwray/fumanchu) - Handlebars + Handlebar Helpers in a single package that is maintained and 100% code coverage.
 * [handlebars-layouts](https://github.com/shannonmoeller/handlebars-layouts) is a set of helpers which implement extendible and embeddable layout blocks as seen in other popular templating languages.
 * [hbs](http://github.com/donpark/hbs): An Express.js view engine adapter for Handlebars.js,
   from Don Park.
