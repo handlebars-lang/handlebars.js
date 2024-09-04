@@ -24,7 +24,8 @@ vm.runInThisContext(
 
 var parse = require('@handlebars/parser').parse;
 var compiler = require('../../dist/cjs/handlebars/compiler/compiler');
-var JavaScriptCompiler = require('../../dist/cjs/handlebars/compiler/javascript-compiler');
+var JavaScriptCompiler =
+  require('../../dist/cjs/handlebars/compiler/javascript-compiler').default;
 
 global.CompilerContext = {
   browser: true,

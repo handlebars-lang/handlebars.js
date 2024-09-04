@@ -41,10 +41,16 @@ module.exports = function (grunt) {
     babel: {
       options: {
         sourceMaps: 'inline',
-        loose: ['es6.modules'],
-        auxiliaryCommentBefore: 'istanbul ignore next',
       },
       cjs: {
+        options: {
+          plugins: [
+            [
+              '@babel/plugin-transform-modules-commonjs',
+              { importInterop: 'none' },
+            ],
+          ],
+        },
         files: [
           {
             cwd: 'lib/',
@@ -57,11 +63,25 @@ module.exports = function (grunt) {
     },
     webpack: {
       options: {
+        mode: 'production',
+        optimization: { minimize: false },
+        target: 'web',
         context: __dirname,
+        module: {
+          rules: [
+            {
+              test: /\.js$/,
+              enforce: 'pre',
+              use: ['source-map-loader'],
+            },
+          ],
+        },
         output: {
-          path: 'dist/',
+          path: __dirname + '/dist/',
           library: 'Handlebars',
           libraryTarget: 'umd',
+          libraryExport: 'default',
+          globalObject: 'this',
         },
       },
       handlebars: {
