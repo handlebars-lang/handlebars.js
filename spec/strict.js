@@ -48,7 +48,6 @@ describe('strict', function () {
       });
 
       xt.toThrow(Error);
-
       xt.withRuntimeOptions({ data: { hello: 'foo' } }).toCompileTo('foo');
     });
 
@@ -87,9 +86,7 @@ describe('strict', function () {
 
     it('should allow undefined hash when passed to helpers', function () {
       expectTemplate('{{helper value=@foo}}')
-        .withCompileOptions({
-          strict: true,
-        })
+        .withCompileOptions({ strict: true })
         .withHelpers({
           helper: function (options) {
             equals('value' in options.hash, true);
@@ -98,6 +95,13 @@ describe('strict', function () {
           },
         })
         .toCompileTo('success');
+    });
+
+    it('should allow compat-mode combined with strict-mode', function () {
+      expectTemplate('Foo {{bar}}')
+        .withCompileOptions({ compat: true, strict: true })
+        .withInput({ bar: 'baz' })
+        .toCompileTo('Foo baz');
     });
 
     it('should show error location on missing property lookup', function () {
