@@ -136,6 +136,7 @@ Handlebars in the Wild
 * [handlebars-helpers](https://github.com/assemble/handlebars-helpers) is an extensive library with 100+ handlebars helpers.
 * [handlebars-layouts](https://github.com/shannonmoeller/handlebars-layouts) is a set of helpers which implement extensible and embeddable layout blocks as seen in other popular templating languages.
 * [handlebars-loader](https://github.com/pcardune/handlebars-loader) A handlebars template loader for webpack.
+* [handlebars-rust](https://github.com/sunng87/handlebars-rust) Rust templating with Handlebars.
 * [handlebars-wax](https://github.com/shannonmoeller/handlebars-wax) The missing Handlebars API. Effortless registration of data, partials, helpers, and decorators using file-system globs, modules, and plain-old JavaScript objects.
 * [hbs](https://github.com/pillarjs/hbs) An Express.js view engine adapter for Handlebars.js, from Don Park.
 * [html-bundler-webpack-plugin](https://github.com/webdiscus/html-bundler-webpack-plugin) The webpack plugin to compile templates, [supports Handlebars](https://github.com/webdiscus/html-bundler-webpack-plugin#using-template-handlebars).
