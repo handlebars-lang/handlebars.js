@@ -14,14 +14,16 @@
  */
 // TypeScript Version: 2.3
 
-declare namespace Handlebars {
-  export interface TemplateDelegate<T = any> {
+declare global { // global for backwards compatibility
+
+  namespace Handlebars {
+    export interface TemplateDelegate<T = any> {
       (context: T, options?: RuntimeOptions): string;
-  }
+    }
 
-  export type Template<T = any> = TemplateDelegate<T>|string;
+    export type Template<T = any> = TemplateDelegate<T>|string;
 
-  export interface RuntimeOptions {
+    export interface RuntimeOptions {
       partial?: boolean;
       depths?: any[];
       helpers?: { [name: string]: Function };
@@ -34,65 +36,65 @@ declare namespace Handlebars {
       allowedProtoMethods?: { [name: string]: boolean };
       allowProtoPropertiesByDefault?: boolean;
       allowProtoMethodsByDefault?: boolean;
-  }
+    }
 
-  export interface HelperOptions {
+    export interface HelperOptions {
       fn: TemplateDelegate;
       inverse: TemplateDelegate;
       hash: Record<string, any>;
       data?: any;
-  }
+    }
 
-  export interface HelperDelegate {
+    export interface HelperDelegate {
       (context?: any, arg1?: any, arg2?: any, arg3?: any, arg4?: any, arg5?: any, options?: HelperOptions): any;
-  }
-  export interface HelperDeclareSpec {
+    }
+    export interface HelperDeclareSpec {
       [key: string]: HelperDelegate;
-  }
+    }
 
-  export interface ParseOptions {
+    export interface ParseOptions {
       srcName?: string;
       ignoreStandalone?: boolean;
-  }
+    }
 
-  export function registerHelper(name: string, fn: HelperDelegate): void;
-  export function registerHelper(name: HelperDeclareSpec): void;
-  export function unregisterHelper(name: string): void;
+    export function registerHelper(name: string, fn: HelperDelegate): void;
+    export function registerHelper(name: HelperDeclareSpec): void;
+    export function unregisterHelper(name: string): void;
 
-  export function registerPartial(name: string, fn: Template): void;
-  export function registerPartial(spec: { [name: string]: Template }): void;
-  export function unregisterPartial(name: string): void;
+    export function registerPartial(name: string, fn: Template): void;
+    export function registerPartial(spec: { [name: string]: Template }): void;
+    export function unregisterPartial(name: string): void;
 
-  // TODO: replace Function with actual signature
-  export function registerDecorator(name: string, fn: Function): void;
-  export function unregisterDecorator(name: string): void;
+    // TODO: replace Function with actual signature
+    export function registerDecorator(name: string, fn: Function): void;
+    export function unregisterDecorator(name: string): void;
 
-  export function K(): void;
-  export function createFrame(object: any): any;
-  export function blockParams(obj: any[], ids: any[]): any[];
-  export function log(level: number, obj: any): void;
-  export function parse(input: string, options?: ParseOptions): hbs.AST.Program;
-  export function parseWithoutProcessing(input: string, options?: ParseOptions): hbs.AST.Program;
-  export function compile<T = any>(input: any, options?: CompileOptions): HandlebarsTemplateDelegate<T>;
-  export function precompile(input: any, options?: PrecompileOptions): TemplateSpecification;
-  export function template<T = any>(precompilation: TemplateSpecification): HandlebarsTemplateDelegate<T>;
+    export function K(): void;
+    export function createFrame(object: any): any;
+    export function blockParams(obj: any[], ids: any[]): any[];
+    export function log(level: number, obj: any): void;
+    export function parse(input: string, options?: ParseOptions): hbs.AST.Program;
+    export function parseWithoutProcessing(input: string, options?: ParseOptions): hbs.AST.Program;
+    export function compile<T = any>(input: any, options?: CompileOptions): HandlebarsTemplateDelegate<T>;
+    export function precompile(input: any, options?: PrecompileOptions): TemplateSpecification;
+    export function template<T = any>(precompilation: TemplateSpecification): HandlebarsTemplateDelegate<T>;
 
-  export function create(): typeof Handlebars;
+    export function create(): typeof Handlebars;
 
-  export const escapeExpression: typeof Utils.escapeExpression;
-  //export const Utils: typeof hbs.Utils;
-  export const logger: Logger;
-  export const templates: HandlebarsTemplates;
-  export const helpers: { [name: string]: HelperDelegate };
-  export const partials: { [name: string]: any };
-  // TODO: replace Function with actual signature
-  export const decorators: { [name: string]: Function };
+    export const escapeExpression: typeof Utils.escapeExpression;
+    //export const Utils: typeof hbs.Utils;
+    export const logger: Logger;
+    export const templates: HandlebarsTemplates;
+    export const helpers: { [name: string]: HelperDelegate };
+    export const partials: { [name: string]: any };
+    // TODO: replace Function with actual signature
+    export const decorators: { [name: string]: Function };
 
-  export const VERSION: string;
+    export const VERSION: string;
 
-  export function noConflict(): typeof Handlebars;
+    export function noConflict(): typeof Handlebars;
 
-  export class Exception {
+    export class Exception {
       constructor(message: string, node?: hbs.AST.Node);
       description: string;
       fileName: string;
@@ -104,15 +106,15 @@ declare namespace Handlebars {
       stack?: string;
       column?: any;
       endColumn?: any;
-  }
+    }
 
-  export class SafeString {
+    export class SafeString {
       constructor(str: string);
       toString(): string;
       toHTML(): string;
-  }
+    }
 
-  export namespace Utils {
+    export namespace Utils {
       export function escapeExpression(str: string): string;
       export function createFrame(object: any): any;
       export function blockParams(obj: any[], ids: any[]): any[];
@@ -121,13 +123,13 @@ declare namespace Handlebars {
       export function toString(obj: any): string;
       export function isArray(obj: any): boolean;
       export function isFunction(obj: any): boolean;
-  }
+    }
 
-  export namespace AST {
+    export namespace AST {
       export const helpers: hbs.AST.helpers;
-  }
+    }
 
-  interface ICompiler {
+    interface ICompiler {
       accept(node: hbs.AST.Node): void;
       Program(program: hbs.AST.Program): void;
       BlockStatement(block: hbs.AST.BlockStatement): void;
@@ -146,9 +148,9 @@ declare namespace Handlebars {
       UndefinedLiteral(): void;
       NullLiteral(): void;
       Hash(hash: hbs.AST.Hash): void;
-  }
+    }
 
-  export class Visitor implements ICompiler {
+    export class Visitor implements ICompiler {
       accept(node: hbs.AST.Node): void;
       acceptKey(node: hbs.AST.Node, name: string): void;
       acceptArray(arr: hbs.AST.Expression[]): void;
@@ -169,103 +171,103 @@ declare namespace Handlebars {
       UndefinedLiteral(): void;
       NullLiteral(): void;
       Hash(hash: hbs.AST.Hash): void;
+    }
+
+
+    export interface ResolvePartialOptions {
+      name: string;
+      helpers?: { [name: string]: Function };
+      partials?: { [name: string]: HandlebarsTemplateDelegate };
+      decorators?: { [name: string]: Function };
+      data?: any;
+    }
+
+    export namespace VM {
+      /**
+       * @deprecated
+       */
+      export function resolvePartial<T = any>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: ResolvePartialOptions): HandlebarsTemplateDelegate<T>;
+    }
   }
 
-
-  export interface ResolvePartialOptions {
-    name: string;
-    helpers?: { [name: string]: Function };
-    partials?: { [name: string]: HandlebarsTemplateDelegate };
-    decorators?: { [name: string]: Function };
-    data?: any;
+  /**
+   * Implement this interface on your MVW/MVVM/MVC views such as Backbone.View
+   **/
+  interface HandlebarsTemplatable {
+    template: HandlebarsTemplateDelegate;
   }
 
-  export namespace VM {
-    /**
-     * @deprecated
-     */
-    export function resolvePartial<T = any>(partial: HandlebarsTemplateDelegate<T> | undefined, context: any, options: ResolvePartialOptions): HandlebarsTemplateDelegate<T>;
+  // NOTE: for backward compatibility of this typing
+  type HandlebarsTemplateDelegate<T = any> = Handlebars.TemplateDelegate<T>;
+
+  interface HandlebarsTemplates {
+    [index: string]: HandlebarsTemplateDelegate;
   }
-}
 
-/**
-* Implement this interface on your MVW/MVVM/MVC views such as Backbone.View
-**/
-interface HandlebarsTemplatable {
-  template: HandlebarsTemplateDelegate;
-}
+  interface TemplateSpecification {
 
-// NOTE: for backward compatibility of this typing
-type HandlebarsTemplateDelegate<T = any> = Handlebars.TemplateDelegate<T>;
+  }
 
-interface HandlebarsTemplates {
-  [index: string]: HandlebarsTemplateDelegate;
-}
-
-interface TemplateSpecification {
-
-}
-
-// for backward compatibility of this typing
-type RuntimeOptions = Handlebars.RuntimeOptions;
-
-interface CompileOptions {
-  data?: boolean;
-  compat?: boolean;
-  knownHelpers?: KnownHelpers;
-  knownHelpersOnly?: boolean;
-  noEscape?: boolean;
-  strict?: boolean;
-  assumeObjects?: boolean;
-  preventIndent?: boolean;
-  ignoreStandalone?: boolean;
-  explicitPartialContext?: boolean;
-}
-
-type KnownHelpers = {
-  [name in BuiltinHelperName | CustomHelperName]: boolean;
-};
-
-type BuiltinHelperName =
-  "helperMissing"|
-  "blockHelperMissing"|
-  "each"|
-  "if"|
-  "unless"|
-  "with"|
-  "log"|
-  "lookup";
-
-type CustomHelperName = string;
-
-interface PrecompileOptions extends CompileOptions {
-  srcName?: string;
-  destName?: string;
-}
-
-declare namespace hbs {
   // for backward compatibility of this typing
-  type SafeString = Handlebars.SafeString;
+  type RuntimeOptions = Handlebars.RuntimeOptions;
 
-  type Utils = typeof Handlebars.Utils;
-}
+  interface CompileOptions {
+    data?: boolean;
+    compat?: boolean;
+    knownHelpers?: KnownHelpers;
+    knownHelpersOnly?: boolean;
+    noEscape?: boolean;
+    strict?: boolean;
+    assumeObjects?: boolean;
+    preventIndent?: boolean;
+    ignoreStandalone?: boolean;
+    explicitPartialContext?: boolean;
+  }
 
-interface Logger {
-  DEBUG: number;
-  INFO: number;
-  WARN: number;
-  ERROR: number;
-  level: number;
+  type KnownHelpers = {
+    [name in BuiltinHelperName | CustomHelperName]: boolean;
+  };
 
-  methodMap: { [level: number]: string };
+  type BuiltinHelperName =
+    "helperMissing"|
+    "blockHelperMissing"|
+    "each"|
+    "if"|
+    "unless"|
+    "with"|
+    "log"|
+    "lookup";
 
-  log(level: number, obj: string): void;
-}
+  type CustomHelperName = string;
 
-type CompilerInfo = [number/* revision */, string /* versions */];
+  interface PrecompileOptions extends CompileOptions {
+    srcName?: string;
+    destName?: string;
+  }
 
-declare namespace hbs {
-  namespace AST {
+  namespace hbs {
+    // for backward compatibility of this typing
+    type SafeString = Handlebars.SafeString;
+
+    type Utils = typeof Handlebars.Utils;
+  }
+
+  interface Logger {
+    DEBUG: number;
+    INFO: number;
+    WARN: number;
+    ERROR: number;
+    level: number;
+
+    methodMap: { [level: number]: string };
+
+    log(level: number, obj: string): void;
+  }
+
+  type CompilerInfo = [number/* revision */, string /* versions */];
+
+  namespace hbs {
+    namespace AST {
       interface Node {
           type: string;
           loc: SourceLocation;
@@ -410,13 +412,9 @@ declare namespace hbs {
           scopeId(path: PathExpression): boolean;
           simpleId(path: PathExpression): boolean;
       }
+    }
   }
+
 }
 
-declare module "handlebars" {
-  export = Handlebars;
-}
-
-declare module "handlebars/runtime" {
-  export = Handlebars;
-}
+export = Handlebars;
