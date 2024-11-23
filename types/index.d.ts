@@ -250,14 +250,20 @@ declare namespace hbs {
   type Utils = typeof Handlebars.Utils;
 }
 
+type LoggerLevel =
+  'debug'|
+  'info'|
+  'warn'|
+  'error';
+
 interface Logger {
   DEBUG: number;
   INFO: number;
   WARN: number;
   ERROR: number;
-  level: number;
+  level: number | LoggerLevel;
 
-  methodMap: { [level: number]: string };
+  methodMap: { [level: number]: LoggerLevel };
 
   log(level: number, obj: string): void;
 }
