@@ -220,6 +220,7 @@ interface CompileOptions {
   preventIndent?: boolean;
   ignoreStandalone?: boolean;
   explicitPartialContext?: boolean;
+  allowedVariables?: string[];
 }
 
 type KnownHelpers = {
