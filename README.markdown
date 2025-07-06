@@ -17,7 +17,7 @@ Checkout the official Handlebars docs site at
 Installing
 ----------
 
-See our [installation documentation](https://handlebarsjs.com/installation/).
+See our [installation documentation](https://handlebarsjs.com/guide/installation/).
 
 Usage
 -----
@@ -52,7 +52,7 @@ Full documentation and more examples are at [handlebarsjs.com](https://handlebar
 Precompiling Templates
 ----------------------
 
-Handlebars allows templates to be precompiled and included as javascript code rather than the handlebars template allowing for faster startup time. Full details are located [here](https://handlebarsjs.com/installation/precompilation.html).
+Handlebars allows templates to be precompiled and included as javascript code rather than the handlebars template allowing for faster startup time. Full details are located [here](https://handlebarsjs.com/guide/installation/precompilation.html).
 
 Differences Between Handlebars.js and Mustache
 ----------------------------------------------
