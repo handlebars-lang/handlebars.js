@@ -22,6 +22,12 @@ const yargs = require('yargs')
     alias: 'commonjs',
     default: null,
   })
+  .option('esm', {
+    type: 'string',
+    description: 'Exports ES Modules style, path to Handlebars module',
+    alias: 'module',
+    default: null,
+  })
   .option('h', {
     type: 'string',
     description: 'Path to handlebar.js (only valid for amd-style)',
