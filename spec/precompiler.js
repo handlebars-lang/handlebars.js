@@ -201,8 +201,17 @@ describe('precompiler', function () {
     Handlebars.precompile = function () {
       return 'commonjs';
     };
-    Precompiler.cli({ templates: [emptyTemplate], commonjs: true });
+    Precompiler.cli({ templates: [emptyTemplate], commonjs: 'handlebars' });
     equal(/template\(commonjs\)/.test(log), true);
+    equal(log.indexOf('var Handlebars = require("handlebars");') > -1, true);
+  });
+  it('should output esm templates', function () {
+    Handlebars.precompile = function () {
+      return 'esm';
+    };
+    Precompiler.cli({ templates: [emptyTemplate], esm: 'handlebars' });
+    equal(/template\(esm\)/.test(log), true);
+    equal(log.indexOf('import Handlebars from "handlebars";') > -1, true);
   });
 
   it('should set data flag', function () {
