@@ -140,7 +140,6 @@ Handlebars in the Wild
 * [hbs](https://github.com/pillarjs/hbs) An Express.js view engine adapter for Handlebars.js, from Don Park.
 * [html-bundler-webpack-plugin](https://github.com/webdiscus/html-bundler-webpack-plugin) The webpack plugin to compile templates, [supports Handlebars](https://github.com/webdiscus/html-bundler-webpack-plugin#using-template-handlebars).
 * [incremental-bars](https://github.com/atomictag/incremental-bars) adds support for [incremental-dom](https://github.com/google/incremental-dom) as template target to Handlebars.
-* [jblotus](https://github.com/jblotus) created [http://tryhandlebarsjs.com](http://tryhandlebarsjs.com) for anyone who would like to try out Handlebars.js in their browser.
 * [jQuery plugin](https://71104.github.io/jquery-handlebars/) allows you to use Handlebars.js with [jQuery](http://jquery.com/).
 * [just-handlebars-helpers](https://github.com/leapfrogtechnology/just-handlebars-helpers) A fully tested lightweight package with common Handlebars helpers.
 * [koa-hbs](https://github.com/jwilm/koa-hbs) [koa](https://github.com/koajs/koa) generator based renderer for Handlebars.js.
