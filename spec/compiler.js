@@ -149,6 +149,22 @@ describe('compiler', function() {
         JSON.stringify({ knownHelpers: {} }, 0, 2)
       );
     });
+
+    it('should compile and render templates containing a null character(GH-2059)', function() {
+      var nul = String.fromCharCode(0);
+      var templateSource = 'Hello ' + nul + ' {{name}}';
+      var template = Handlebars.compile(templateSource);
+      equal(template({ name: 'World' }), 'Hello ' + nul + ' World');
+    });
+
+    it('should compile and render templates containing a null character in a mustache expression(GH-2059)', function() {
+      var nul = String.fromCharCode(0);
+      var templateSource = 'Hello ' + '{{foo' + nul + 'bar}}';
+      var context = {};
+      context['foo' + nul + 'bar'] = 'World';
+      var template = Handlebars.compile(templateSource);
+      equal(template(context), 'Hello World');
+    });
   });
 
   describe('#precompile', function() {

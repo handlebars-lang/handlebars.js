@@ -28,7 +28,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
 
 %%
 
-[^\x00]*?/("{{")                {
+[\s\S]*?/("{{")                {
                                    if(yytext.slice(-2) === "\\\\") {
                                      strip(0,1);
                                      this.begin("mu");
@@ -41,10 +41,10 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                    if(yytext) return 'CONTENT';
                                  }
 
-[^\x00]+                         return 'CONTENT';
+[\s\S]+                         return 'CONTENT';
 
 // marks CONTENT up to the next mustache or escaped mustache
-<emu>[^\x00]{2,}?/("{{"|"\\{{"|"\\\\{{"|<<EOF>>) {
+<emu>[\s\S]{2,}?/("{{"|"\\{{"|"\\\\{{"|<<EOF>>) {
                                    this.popState();
                                    return 'CONTENT';
                                  }
@@ -63,7 +63,7 @@ ID    [^\s!"#%-,\.\/;->@\[-\^`\{-~]+/{LOOKAHEAD}
                                     return 'END_RAW_BLOCK';
                                   }
                                  }
-<raw>[^\x00]+?/("{{{{")          { return 'CONTENT'; }
+<raw>[\s\S]+?/("{{{{")          { return 'CONTENT'; }
 
 <com>[\s\S]*?"--"{RIGHT_STRIP}?"}}" {
   this.popState();
