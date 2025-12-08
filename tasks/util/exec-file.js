@@ -23,7 +23,8 @@ async function execFileWithInheritedOutput(command, args) {
   return new Promise((resolve, reject) => {
     const resolvedCommand = preferLocalDependencies(command);
     const child = childProcess.spawn(resolvedCommand, args, {
-      stdio: 'inherit'
+      stdio: 'inherit',
+      shell: true
     });
     child.on('exit', code => {
       if (code !== 0) {
