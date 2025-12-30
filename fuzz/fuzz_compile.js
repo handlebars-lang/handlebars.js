@@ -6,8 +6,26 @@ const Handlebars = require('../lib/index.js');
 module.exports.fuzz = function (data) {
   try {
     const template = data.toString();
-    Handlebars.compile(template);
+    const render = Handlebars.compile(template);
+    const result = render({});
+
+    // Check if we managed to access a prototype property that returns a function signature
+    if (
+      result.includes('[native code]') ||
+      result.includes('function Object') ||
+      result.includes('function Function') ||
+      result.includes('function anonymous') ||
+      (result.includes('function') && !template.includes('function'))
+    ) {
+      throw new Error('Prototype Access Detected: ' + result);
+    }
   } catch (error) {
-    // Ignore compilation errors as they are expected for invalid templates
+    if (
+      error.message &&
+      error.message.startsWith('Prototype Access Detected')
+    ) {
+      throw error;
+    }
+    // Ignore other errors
   }
 };
