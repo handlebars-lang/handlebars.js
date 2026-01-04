@@ -30,11 +30,13 @@
   },
   "devDependencies": {
     "@definitelytyped/dtslint": "^0.0.100",
+    "@jazzer.js/core": "^2.1.0",
     "@playwright/test": "^1.36.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
+    "bindings": "^1.5.0",
     "chai": "^4.2.0",
     "chai-diff": "^1.0.1",
     "concurrently": "^5.0.0",
@@ -93,7 +95,8 @@
     "test:integration": "grunt integration-tests",
     "test:serve": "grunt connect:server:keepalive",
     "--- combined tasks ---": "",
-    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
+    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test",
+    "fuzz": "jazzer fuzz/fuzz_compile.js"
   },
   "jspm": {
     "main": "handlebars",

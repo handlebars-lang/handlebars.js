@@ -1,0 +1,7 @@
+kw1="{{"
+kw2="}}"
+kw3="constructor"
+kw4="prototype"
+kw5="name"
+kw6=".__proto__"
+kw7=".constructor"
