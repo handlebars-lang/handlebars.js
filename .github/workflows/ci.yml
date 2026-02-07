@@ -33,7 +33,7 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest', 'windows-latest']
         # https://nodejs.org/en/about/releases/
-        node-version: ['10', '12', '14', '16', '18', '20']
+        node-version: ['16', '18', '20', '22']
 
     steps:
       - name: Checkout
@@ -54,7 +54,7 @@ jobs:
 
       - name: Test (Integration)
         # https://github.com/webpack/webpack/issues/14532
-        if: ${{ matrix.node-version != '18' && matrix.node-version != '20' }}
+        if: ${{ matrix.node-version == '16' }}
         run: |
           cd ./tests/integration/rollup-test && ./test.sh && cd -
           cd ./tests/integration/webpack-babel-test && ./test.sh && cd -

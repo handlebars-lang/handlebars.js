@@ -24,7 +24,7 @@ async function execFileWithInheritedOutput(command, args) {
     const resolvedCommand = preferLocalDependencies(command);
     const child = childProcess.spawn(resolvedCommand, args, {
       stdio: 'inherit',
-      shell: true
+      shell: process.platform === 'win32' // Workaround for CVE-2024-27980
     });
     child.on('exit', code => {
       if (code !== 0) {
