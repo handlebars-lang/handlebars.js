@@ -85,4 +85,6 @@ jobs:
         run: npx grunt prepare
 
       - name: Test
-        run: npm run test:browser-smoke
+        run: |
+          npm run test:browser-smoke
+          npm run test:browser

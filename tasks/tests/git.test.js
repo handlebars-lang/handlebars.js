@@ -17,6 +17,8 @@ describe('utils/git', function () {
     process.chdir(tmpDir);
     await git.git('clone', 'remote-repo', 'clone-repo');
     process.chdir(cloneDir);
+    await git.git('config', 'user.email', 'test@test.com');
+    await git.git('config', 'user.name', 'Test');
   });
 
   async function createRepositoryThatActsAsRemote() {
@@ -24,6 +26,8 @@ describe('utils/git', function () {
     process.chdir(remoteDir);
 
     await git.git('init');
+    await git.git('config', 'user.email', 'test@test.com');
+    await git.git('config', 'user.name', 'Test');
     await fs.writeFile('testfile.txt', 'Testfile');
     await git.add('testfile.txt');
     await git.commit('commit message');

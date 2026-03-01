@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright';
 
 export default defineConfig({
   test: {
@@ -17,6 +18,30 @@ export default defineConfig({
           name: 'tasks',
           include: ['tasks/tests/*.test.js'],
           globals: true,
+        },
+      },
+      {
+        test: {
+          name: 'browser',
+          include: ['spec/*.js'],
+          exclude: [
+            'spec/env/**',
+            'spec/.eslintrc.js',
+            'spec/precompiler.js',
+            'spec/spec.js',
+            'spec/require.js',
+            'spec/source-map.js',
+          ],
+          setupFiles: [
+            'spec/env/browser-vitest-pre.js',
+            'spec/env/browser-vitest.js',
+          ],
+          globals: true,
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            instances: [{ browser: 'chromium' }],
+          },
         },
       },
     ],

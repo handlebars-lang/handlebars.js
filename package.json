@@ -30,6 +30,7 @@
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@vitest/browser": "^4.0.18",
+    "@vitest/browser-playwright": "^4.0.18",
     "@vitest/coverage-v8": "^4.0.18",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
@@ -81,7 +82,8 @@
     "lint:eslint": "eslint --max-warnings 0 .",
     "lint:prettier": "prettier --check '**/*.js'",
     "lint:types": "tsc --noEmit --project types",
-    "test": "grunt build && vitest run",
+    "test": "grunt build && vitest run --project node --project tasks",
+    "test:browser": "vitest run --project browser",
     "test:unit": "vitest run --project node",
     "test:tasks": "vitest run --project tasks",
     "test:browser-smoke": "playwright test --config tests/browser/playwright.config.js",

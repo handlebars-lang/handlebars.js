@@ -34,30 +34,35 @@ describe('javascript-compiler api', function () {
         .toCompileTo('food');
     });
   });
-  describe('#compilerInfo', function () {
-    var $superCheck, $superInfo;
-    beforeEach(function () {
-      $superCheck = handlebarsEnv.VM.checkRevision;
-      $superInfo = handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo;
-    });
-    afterEach(function () {
-      handlebarsEnv.VM.checkRevision = $superCheck;
-      handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = $superInfo;
-    });
-    it('should allow compilerInfo override', function () {
-      handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function () {
-        return 'crazy';
-      };
-      handlebarsEnv.VM.checkRevision = function (compilerInfo) {
-        if (compilerInfo !== 'crazy') {
-          throw new Error("It didn't work");
-        }
-      };
-      expectTemplate('{{foo}} ')
-        .withInput({ foo: 'food' })
-        .toCompileTo('food ');
-    });
-  });
+  // Monkey-patching VM.checkRevision is not possible when VM is an ESM
+  // namespace object (browser mode), so skip these tests in that context.
+  (CompilerContext.browser ? describe.skip : describe)(
+    '#compilerInfo',
+    function () {
+      var $superCheck, $superInfo;
+      beforeEach(function () {
+        $superCheck = handlebarsEnv.VM.checkRevision;
+        $superInfo = handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo;
+      });
+      afterEach(function () {
+        handlebarsEnv.VM.checkRevision = $superCheck;
+        handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = $superInfo;
+      });
+      it('should allow compilerInfo override', function () {
+        handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function () {
+          return 'crazy';
+        };
+        handlebarsEnv.VM.checkRevision = function (compilerInfo) {
+          if (compilerInfo !== 'crazy') {
+            throw new Error("It didn't work");
+          }
+        };
+        expectTemplate('{{foo}} ')
+          .withInput({ foo: 'food' })
+          .toCompileTo('food ');
+      });
+    }
+  );
   describe('buffer', function () {
     var $superAppend, $superCreate;
     beforeEach(function () {
