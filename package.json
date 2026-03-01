@@ -29,7 +29,6 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
-    "@definitelytyped/dtslint": "^0.0.100",
     "@playwright/test": "^1.36.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
@@ -85,7 +84,7 @@
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
     "lint:eslint": "eslint --max-warnings 0 .",
     "lint:prettier": "prettier --check '**/*.js'",
-    "lint:types": "dtslint types",
+    "lint:types": "tsc --noEmit --project types",
     "test": "npm run test:mocha",
     "test:mocha": "grunt build && grunt test",
     "test:tasks": "mocha tasks/tests/",
