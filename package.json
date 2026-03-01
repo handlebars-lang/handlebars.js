@@ -15,7 +15,6 @@
   },
   "author": "Yehuda Katz",
   "license": "MIT",
-  "readmeFilename": "README.markdown",
   "engines": {
     "node": ">=20"
   },
@@ -29,7 +28,7 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
-    "@playwright/test": "^1.36.1",
+    "@playwright/test": "^1.58.2",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
