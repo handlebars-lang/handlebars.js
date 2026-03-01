@@ -49,10 +49,10 @@ export default defineConfig({
       provider: 'v8',
       include: ['dist/cjs/**/*.js'],
       thresholds: {
-        statements: 99,
+        statements: 100,
         branches: 93,
         functions: 100,
-        lines: 99,
+        lines: 100,
       },
     },
   },
