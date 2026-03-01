@@ -53,7 +53,7 @@ describe('helpers', function () {
       runWithIdentityHelper('{{{{identity}}}}{{{{/identity}}}}', '');
     });
 
-    xit('helper for nested raw block works if nested raw blocks are broken', function () {
+    it.skip('helper for nested raw block works if nested raw blocks are broken', function () {
       // This test was introduced in 4.4.4, but it was not the actual problem that lead to the patch release
       // The test is deactivated, because in 3.x this template cases an exception and it also does not work in 4.4.3
       // If anyone can make this template work without breaking everything else, then go for it,

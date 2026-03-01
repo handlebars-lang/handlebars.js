@@ -1,22 +1,4 @@
-var global = (function () {
-  return this;
-})();
-
-var AssertError;
-if (Error.captureStackTrace) {
-  AssertError = function AssertError(message, caller) {
-    Error.prototype.constructor.call(this, message);
-    this.message = message;
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, caller || AssertError);
-    }
-  };
-
-  AssertError.prototype = new Error();
-} else {
-  AssertError = Error;
-}
+var global = globalThis;
 
 /**
  * @deprecated Use "expectTemplate(template)...toCompileTo(output)" instead
@@ -33,15 +15,10 @@ global.shouldCompileToWithPartials = function shouldCompileToWithPartials(
   hashOrArray,
   partials,
   expected,
-  message
+  message // eslint-disable-line no-unused-vars
 ) {
   var result = compileWithPartials(string, hashOrArray, partials);
-  if (result !== expected) {
-    throw new AssertError(
-      "'" + result + "' should === '" + expected + "': " + message,
-      shouldCompileToWithPartials
-    );
-  }
+  expect(result).toBe(expected);
 };
 
 /**
@@ -76,21 +53,15 @@ global.compileWithPartials = function (string, hashOrArray, partials) {
 };
 
 /**
- * @deprecated Use chai's expect-style API instead (`expect(actualValue).to.equal(expectedValue)`)
- * @see https://www.chaijs.com/api/bdd/
+ * @deprecated Use vitest's expect API instead
  */
+// eslint-disable-next-line no-unused-vars
 global.equals = global.equal = function equals(a, b, msg) {
-  if (a !== b) {
-    throw new AssertError(
-      "'" + a + "' should === '" + b + "'" + (msg ? ': ' + msg : ''),
-      equals
-    );
-  }
+  expect(a).toBe(b);
 };
 
 /**
- * @deprecated Use chai's expect-style API instead (`expect(actualValue).to.equal(expectedValue)`)
- * @see https://www.chaijs.com/api/bdd/#method_throw
+ * @deprecated Use vitest's expect API instead
  */
 global.shouldThrow = function (callback, type, msg) {
   var failed;
@@ -99,25 +70,24 @@ global.shouldThrow = function (callback, type, msg) {
     failed = true;
   } catch (caught) {
     if (type && !(caught instanceof type)) {
-      throw new AssertError('Type failure: ' + caught);
+      throw new Error('Type failure: ' + caught);
     }
     if (
       msg &&
       !(msg.test ? msg.test(caught.message) : msg === caught.message)
     ) {
-      throw new AssertError(
+      throw new Error(
         'Throw mismatch: Expected ' +
           caught.message +
           ' to match ' +
           msg +
           '\n\n' +
-          caught.stack,
-        shouldThrow
+          caught.stack
       );
     }
   }
   if (failed) {
-    throw new AssertError('It failed to throw', shouldThrow);
+    throw new Error('It failed to throw');
   }
 };
 
@@ -200,18 +170,20 @@ HandlebarsTestBench.prototype.withMessage = function (message) {
 };
 
 HandlebarsTestBench.prototype.toCompileTo = function (expectedOutputAsString) {
-  expect(this._compileAndExecute()).to.equal(
-    expectedOutputAsString,
-    this.message
-  );
+  expect(this._compileAndExecute()).toBe(expectedOutputAsString);
 };
 
-// see chai "to.throw" (https://www.chaijs.com/api/bdd/#method_throw)
 HandlebarsTestBench.prototype.toThrow = function (errorLike, errMsgMatcher) {
   var self = this;
-  expect(function () {
-    self._compileAndExecute();
-  }).to.throw(errorLike, errMsgMatcher, this.message);
+  if (errMsgMatcher) {
+    expect(function () {
+      self._compileAndExecute();
+    }).toThrowError(errMsgMatcher);
+  } else {
+    expect(function () {
+      self._compileAndExecute();
+    }).toThrow();
+  }
 };
 
 HandlebarsTestBench.prototype._compileAndExecute = function () {
@@ -237,3 +209,7 @@ HandlebarsTestBench.prototype._combineRuntimeOptions = function () {
   combinedRuntimeOptions.decorators = this.decorators;
   return combinedRuntimeOptions;
 };
+
+beforeEach(function () {
+  global.handlebarsEnv = Handlebars.create();
+});

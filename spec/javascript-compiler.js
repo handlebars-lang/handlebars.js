@@ -105,7 +105,7 @@ describe('javascript-compiler api', function () {
           handlebarsEnv.JavaScriptCompiler.isValidJavaScriptVariableName(
             validVariableName
           )
-        ).to.be.true();
+        ).toBe(true);
       });
     });
     [('123test', 'abc()', 'abc.cde')].forEach(function (invalidVariableName) {
@@ -114,7 +114,7 @@ describe('javascript-compiler api', function () {
           handlebarsEnv.JavaScriptCompiler.isValidJavaScriptVariableName(
             invalidVariableName
           )
-        ).to.be.false();
+        ).toBe(false);
       });
     });
   });

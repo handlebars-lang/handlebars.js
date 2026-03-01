@@ -3,10 +3,6 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const chai = require('chai');
-chai.use(require('chai-diff'));
-const expect = chai.expect;
-
 const testCases = [
   {
     binInputParameters: ['-a', 'spec/artifacts/empty.handlebars'],
@@ -74,7 +70,7 @@ const testCases = [
   {
     binInputParameters: ['-v'],
     outputLocation: 'stdout',
-    expectedOutput: require('../package.json').version,
+    expectedOutput: require('../../package.json').version,
   },
   {
     binInputParameters: [
@@ -177,15 +173,46 @@ const testCases = [
   },
 ];
 
-module.exports = function (grunt) {
-  grunt.registerTask('test:bin', function () {
-    testCases.forEach(
-      ({
+expect.extend({
+  toEqualWithRelaxedSpace(received, expected) {
+    const normalize = (str) =>
+      typeof str === 'string'
+        ? str
+            .replace(/\r\n/g, '\n')
+            .split('\n')
+            .map((line) => line.replace(/\s+/g, ' ').trim())
+            .filter((line) => line.length > 0)
+            .join('\n')
+            .trim()
+        : str;
+
+    const normalizedReceived = normalize(received);
+    const normalizedExpected = normalize(expected);
+    const pass = normalizedReceived === normalizedExpected;
+
+    return {
+      pass,
+      message: () =>
+        `Expected output to match with relaxed whitespace.\n\n` +
+        `Expected:\n${normalizedExpected}\n\nReceived:\n${normalizedReceived}`,
+    };
+  },
+});
+
+describe('bin/handlebars', function () {
+  testCases.forEach(
+    (
+      {
         binInputParameters,
         outputLocation,
         expectedOutputSpec,
         expectedOutput,
-      }) => {
+      },
+      index
+    ) => {
+      it(`test case ${index}: handlebars ${binInputParameters.join(
+        ' '
+      )}`, function () {
         const stdout = executeBinHandlebars(...binInputParameters);
 
         if (!expectedOutput && expectedOutputSpec) {
@@ -193,25 +220,19 @@ module.exports = function (grunt) {
         }
 
         const useStdout = outputLocation === 'stdout';
-        const normalizedOutput = normalizeCrlf(
-          useStdout ? stdout : fs.readFileSync(outputLocation, 'utf-8')
-        );
-        const normalizedExpectedOutput = normalizeCrlf(expectedOutput);
+        const actualOutput = useStdout
+          ? stdout
+          : fs.readFileSync(outputLocation, 'utf-8');
 
         if (!useStdout) {
           fs.unlinkSync(outputLocation);
         }
 
-        expect(normalizedOutput).not.to.be.differentFrom(
-          normalizedExpectedOutput,
-          {
-            relaxedSpace: true,
-          }
-        );
-      }
-    );
-  });
-};
+        expect(actualOutput).toEqualWithRelaxedSpace(expectedOutput);
+      });
+    }
+  );
+});
 
 // helper functions
 
@@ -232,11 +253,4 @@ function execFilesSyncUtf8(command, args) {
 
 function addPathToNodeJs(pathEnvironment) {
   return path.dirname(process.argv0) + path.delimiter + pathEnvironment;
-}
-
-function normalizeCrlf(string) {
-  if (typeof string === 'string') {
-    return string.replace(/\r\n/g, '\n');
-  }
-  return string;
 }

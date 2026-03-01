@@ -89,18 +89,18 @@ describe('utils', function () {
 
   describe('#isType', function () {
     it('should check if variable is type Array', function () {
-      expect(Handlebars.Utils.isArray('string')).to.equal(false);
-      expect(Handlebars.Utils.isArray([])).to.equal(true);
+      expect(Handlebars.Utils.isArray('string')).toBe(false);
+      expect(Handlebars.Utils.isArray([])).toBe(true);
     });
 
     it('should check if variable is type Map', function () {
-      expect(Handlebars.Utils.isMap('string')).to.equal(false);
-      expect(Handlebars.Utils.isMap(new Map())).to.equal(true);
+      expect(Handlebars.Utils.isMap('string')).toBe(false);
+      expect(Handlebars.Utils.isMap(new Map())).toBe(true);
     });
 
     it('should check if variable is type Set', function () {
-      expect(Handlebars.Utils.isSet('string')).to.equal(false);
-      expect(Handlebars.Utils.isSet(new Set())).to.equal(true);
+      expect(Handlebars.Utils.isSet('string')).toBe(false);
+      expect(Handlebars.Utils.isSet(new Set())).toBe(true);
     });
   });
 });

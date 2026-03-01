@@ -57,8 +57,8 @@ describe('security issues', function () {
               functionCalls.push('called');
             },
           });
-        }).to.throw(Error);
-        expect(functionCalls.length).to.equal(0);
+        }).toThrow();
+        expect(functionCalls.length).toBe(0);
       });
 
       it('should throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function () {
@@ -111,7 +111,7 @@ describe('security issues', function () {
   describe('GH-1563', function () {
     it('should not allow to access constructor after overriding via __defineGetter__', function () {
       if ({}.__defineGetter__ == null || {}.__lookupGetter__ == null) {
-        return this.skip(); // Browser does not support this exploit anyway
+        return; // Browser does not support this exploit anyway
       }
       expectTemplate(
         '{{__defineGetter__ "undefined" valueOf }}' +
@@ -169,7 +169,7 @@ describe('security issues', function () {
     });
 
     afterEach(function () {
-      sinon.restore();
+      vi.restoreAllMocks();
     });
 
     describe('control access to prototype methods via "allowedProtoMethods"', function () {
@@ -181,19 +181,25 @@ describe('security issues', function () {
 
       function checkProtoMethodAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expect(spy.calledOnce).to.be.true();
-          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+          expect(spy).toHaveBeenCalledTimes(1);
+          expect(spy.mock.calls[0][0]).toMatch(
+            /Handlebars: Access has been denied/
+          );
         });
 
         it('should only log the warning once', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
@@ -205,12 +211,16 @@ describe('security issues', function () {
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expect(spy.calledOnce).to.be.true();
-          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+          expect(spy).toHaveBeenCalledTimes(1);
+          expect(spy.mock.calls[0][0]).toMatch(
+            /Handlebars: Access has been denied/
+          );
         });
 
         it('can be allowed, which disables the warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
@@ -222,11 +232,13 @@ describe('security issues', function () {
             })
             .toCompileTo('returnValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(spy).not.toHaveBeenCalled();
         });
 
         it('can be turned on by default, which disables the warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
@@ -236,11 +248,13 @@ describe('security issues', function () {
             })
             .toCompileTo('returnValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(spy).not.toHaveBeenCalled();
         });
 
         it('can be turned off by default, which disables the warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aMethod}}')
             .withInput(new TestClass())
@@ -250,7 +264,7 @@ describe('security issues', function () {
             })
             .toCompileTo('');
 
-          expect(spy.callCount).to.equal(0);
+          expect(spy).not.toHaveBeenCalled();
         });
 
         it('can be turned off, if turned on by default', function () {
@@ -300,19 +314,25 @@ describe('security issues', function () {
 
       function checkProtoPropertyAccess(compileOptions) {
         it('should be prohibited by default and log a warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expect(spy.calledOnce).to.be.true();
-          expect(spy.args[0][0]).to.match(/Handlebars: Access has been denied/);
+          expect(spy).toHaveBeenCalledTimes(1);
+          expect(spy.mock.calls[0][0]).toMatch(
+            /Handlebars: Access has been denied/
+          );
         });
 
         it('can be explicitly prohibited by default, which disables the warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
@@ -322,11 +342,13 @@ describe('security issues', function () {
             })
             .toCompileTo('');
 
-          expect(spy.callCount).to.equal(0);
+          expect(spy).not.toHaveBeenCalled();
         });
 
         it('can be turned on, which disables the warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
@@ -338,11 +360,13 @@ describe('security issues', function () {
             })
             .toCompileTo('propertyValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(spy).not.toHaveBeenCalled();
         });
 
         it('can be turned on by default, which disables the warning', function () {
-          var spy = sinon.spy(console, 'error');
+          var spy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(function () {});
 
           expectTemplate('{{aProperty}}')
             .withInput(new TestClass())
@@ -352,7 +376,7 @@ describe('security issues', function () {
             })
             .toCompileTo('propertyValue');
 
-          expect(spy.callCount).to.equal(0);
+          expect(spy).not.toHaveBeenCalled();
         });
 
         it('can be turned off, if turned on by default', function () {
@@ -373,14 +397,16 @@ describe('security issues', function () {
     describe('compatibility with old runtimes, that do not provide the function "container.lookupProperty"', function () {
       beforeEach(function simulateRuntimeWithoutLookupProperty() {
         var oldTemplateMethod = handlebarsEnv.template;
-        sinon.replace(handlebarsEnv, 'template', function (templateSpec) {
-          templateSpec.main = wrapToAdjustContainer(templateSpec.main);
-          return oldTemplateMethod.call(this, templateSpec);
-        });
+        vi.spyOn(handlebarsEnv, 'template').mockImplementation(
+          function (templateSpec) {
+            templateSpec.main = wrapToAdjustContainer(templateSpec.main);
+            return oldTemplateMethod.call(this, templateSpec);
+          }
+        );
       });
 
       afterEach(function () {
-        sinon.restore();
+        vi.restoreAllMocks();
       });
 
       it('should work with simple properties', function () {

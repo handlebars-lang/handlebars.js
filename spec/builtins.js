@@ -785,13 +785,13 @@ describe('builtin helpers', function () {
       var called;
 
       console.info = console.log = function () {
-        expect(arguments.length).to.equal(0);
+        expect(arguments.length).toBe(0);
         called = true;
         console.log = $log;
       };
 
       expectTemplate('{{log}}').withInput({ blah: 'whee' }).toCompileTo('');
-      expect(called).to.be.true();
+      expect(called).toBe(true);
     });
     /* eslint-enable no-console */
   });

@@ -57,11 +57,10 @@ describe('runtime', function () {
   });
 
   describe('#noConflict', function () {
-    if (!CompilerContext.browser) {
-      return;
-    }
-
     it('should reset on no conflict', function () {
+      if (!CompilerContext.browser) {
+        return;
+      }
       var reset = Handlebars;
       Handlebars.noConflict();
       equal(Handlebars, 'no-conflict');
