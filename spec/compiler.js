@@ -67,7 +67,7 @@ describe('compiler', function () {
     it('should include the location in the error (row and column)', function () {
       try {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
-        expect(true).toBe(false);
+        expect.unreachable('Statement must throw exception');
       } catch (err) {
         expect(err.message).toBe("if doesn't match def - 2:5");
         if (Object.getOwnPropertyDescriptor(err, 'column').writable) {
@@ -83,7 +83,7 @@ describe('compiler', function () {
     it('should include the location as enumerable property', function () {
       try {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
-        expect(true).toBe(false);
+        expect.unreachable('Statement must throw exception');
       } catch (err) {
         expect(Object.prototype.propertyIsEnumerable.call(err, 'column')).toBe(
           true
@@ -120,17 +120,13 @@ describe('compiler', function () {
     it('should not modify the options.data property(GH-1327)', function () {
       var options = { data: [{ a: 'foo' }, { a: 'bar' }] };
       Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
-      expect(JSON.stringify(options, 0, 2)).toBe(
-        JSON.stringify({ data: [{ a: 'foo' }, { a: 'bar' }] }, 0, 2)
-      );
+      expect(options).toStrictEqual({ data: [{ a: 'foo' }, { a: 'bar' }] });
     });
 
     it('should not modify the options.knownHelpers property(GH-1327)', function () {
       var options = { knownHelpers: {} };
       Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
-      expect(JSON.stringify(options, 0, 2)).toBe(
-        JSON.stringify({ knownHelpers: {} }, 0, 2)
-      );
+      expect(options).toStrictEqual({ knownHelpers: {} });
     });
   });
 
@@ -150,17 +146,15 @@ describe('compiler', function () {
 
     it('can utilize AST instance', function () {
       expect(
-        /return "Hello"/.test(
-          Handlebars.precompile({
-            type: 'Program',
-            body: [{ type: 'ContentStatement', value: 'Hello' }],
-          })
-        )
-      ).toBe(true);
+        Handlebars.precompile({
+          type: 'Program',
+          body: [{ type: 'ContentStatement', value: 'Hello' }],
+        })
+      ).toMatch(/return "Hello"/);
     });
 
     it('can pass through an empty string', function () {
-      expect(/return ""/.test(Handlebars.precompile(''))).toBe(true);
+      expect(Handlebars.precompile('')).toMatch(/return ""/);
     });
   });
 });

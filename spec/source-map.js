@@ -18,8 +18,12 @@ describe('source-map', function () {
       srcName: 'src.hbs',
     });
 
-    expect(!!template.code).toBe(true);
-    expect(!!template.map).toBe(!CompilerContext.browser);
+    expect(template.code).toBeTruthy();
+    if (CompilerContext.browser) {
+      expect(template.map).toBeFalsy();
+    } else {
+      expect(template.map).toBeTruthy();
+    }
   });
   it('should map source properly', function () {
     var templateSource =

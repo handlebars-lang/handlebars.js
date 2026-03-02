@@ -392,7 +392,7 @@ describe('helpers', function () {
         return 'fail';
       });
       handlebarsEnv.unregisterHelper('foo');
-      expect(handlebarsEnv.helpers.foo).toBe(undefined);
+      expect(handlebarsEnv.helpers.foo).toBeUndefined();
     });
 
     it('allows multiple globals', function () {

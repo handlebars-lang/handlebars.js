@@ -394,7 +394,7 @@ describe('blocks', function () {
       var run;
       expectTemplate('{{*decorator foo}}')
         .withDecorator('decorator', function (fn, props, container, options) {
-          expect(options.args[0]).toBe(undefined);
+          expect(options.args[0]).toBeUndefined();
           run = true;
           return fn;
         })
@@ -411,9 +411,9 @@ describe('blocks', function () {
           return 'fail';
         });
 
-        expect(!!handlebarsEnv.decorators.foo).toBe(true);
+        expect(handlebarsEnv.decorators.foo).toBeTruthy();
         handlebarsEnv.unregisterDecorator('foo');
-        expect(handlebarsEnv.decorators.foo).toBe(undefined);
+        expect(handlebarsEnv.decorators.foo).toBeUndefined();
       });
 
       it('allows multiple globals', function () {
@@ -424,12 +424,12 @@ describe('blocks', function () {
           bar: function () {},
         });
 
-        expect(!!handlebarsEnv.decorators.foo).toBe(true);
-        expect(!!handlebarsEnv.decorators.bar).toBe(true);
+        expect(handlebarsEnv.decorators.foo).toBeTruthy();
+        expect(handlebarsEnv.decorators.bar).toBeTruthy();
         handlebarsEnv.unregisterDecorator('foo');
         handlebarsEnv.unregisterDecorator('bar');
-        expect(handlebarsEnv.decorators.foo).toBe(undefined);
-        expect(handlebarsEnv.decorators.bar).toBe(undefined);
+        expect(handlebarsEnv.decorators.foo).toBeUndefined();
+        expect(handlebarsEnv.decorators.bar).toBeUndefined();
       });
 
       it('fails with multiple and args', function () {

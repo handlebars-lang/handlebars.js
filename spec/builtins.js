@@ -263,7 +263,7 @@ describe('builtin helpers', function () {
       var expected2 =
         '2. GOODBYE! &lt;b&gt;#1&lt;/b&gt;. goodbye! cruel world!';
 
-      expect(actual === expected1 || actual === expected2).toBe(true);
+      expect([expected1, expected2]).toContain(actual);
 
       expectTemplate(string)
         .withInput({

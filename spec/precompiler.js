@@ -142,7 +142,7 @@ describe('precompiler', function () {
       return 'amd';
     };
     Precompiler.cli({ templates: [emptyTemplate], amd: true });
-    expect(/template\(amd\)/.test(log)).toBe(true);
+    expect(log).toMatch(/template\(amd\)/);
   });
   it('should output multiple amd', function () {
     Handlebars.precompile = function () {
@@ -153,17 +153,17 @@ describe('precompiler', function () {
       amd: true,
       namespace: 'foo',
     });
-    expect(/templates = foo = foo \|\|/.test(log)).toBe(true);
-    expect(/return templates/.test(log)).toBe(true);
-    expect(/template\(amd\)/.test(log)).toBe(true);
+    expect(log).toMatch(/templates = foo = foo \|\|/);
+    expect(log).toMatch(/return templates/);
+    expect(log).toMatch(/template\(amd\)/);
   });
   it('should output amd partials', function () {
     Handlebars.precompile = function () {
       return 'amd';
     };
     Precompiler.cli({ templates: [emptyTemplate], amd: true, partial: true });
-    expect(/return Handlebars\.partials\['empty'\]/.test(log)).toBe(true);
-    expect(/template\(amd\)/.test(log)).toBe(true);
+    expect(log).toMatch(/return Handlebars\.partials\['empty'\]/);
+    expect(log).toMatch(/template\(amd\)/);
   });
   it('should output multiple amd partials', function () {
     Handlebars.precompile = function () {
@@ -174,15 +174,15 @@ describe('precompiler', function () {
       amd: true,
       partial: true,
     });
-    expect(/return Handlebars\.partials\[/.test(log)).toBe(false);
-    expect(/template\(amd\)/.test(log)).toBe(true);
+    expect(log).not.toMatch(/return Handlebars\.partials\[/);
+    expect(log).toMatch(/template\(amd\)/);
   });
   it('should output commonjs templates', function () {
     Handlebars.precompile = function () {
       return 'commonjs';
     };
     Precompiler.cli({ templates: [emptyTemplate], commonjs: true });
-    expect(/template\(commonjs\)/.test(log)).toBe(true);
+    expect(log).toMatch(/template\(commonjs\)/);
   });
 
   it('should set data flag', function () {
@@ -236,9 +236,9 @@ describe('precompiler', function () {
         return 'amd';
       };
       Precompiler.cli({ templates: [emptyTemplate], min: true });
-      expect(/template\(amd\)/.test(log)).toBe(true);
-      expect(/\n/.test(log)).toBe(true);
-      expect(/Code minimization is disabled/.test(errorLog)).toBe(true);
+      expect(log).toMatch(/template\(amd\)/);
+      expect(log).toMatch(/\n/);
+      expect(errorLog).toMatch(/Code minimization is disabled/);
     });
   });
 
@@ -339,7 +339,7 @@ describe('precompiler', function () {
 
     it('should accept string inputs', async function () {
       var opts = await loadTemplatesAsync({ string: '' });
-      expect(opts.templates[0].name).toBe(undefined);
+      expect(opts.templates[0].name).toBeUndefined();
       expect(opts.templates[0].source).toBe('');
     });
     it('should accept string array inputs', async function () {

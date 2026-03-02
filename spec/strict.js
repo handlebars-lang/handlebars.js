@@ -93,7 +93,7 @@ describe('strict', function () {
         .withHelpers({
           helper: function (options) {
             expect(options.hash).toHaveProperty('value');
-            expect(options.hash.value).toBe(undefined);
+            expect(options.hash.value).toBeUndefined();
             return 'success';
           },
         })

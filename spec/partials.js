@@ -229,7 +229,7 @@ describe('partials', function () {
       .toCompileTo('Dudes: Jeepers Creepers');
 
     handlebarsEnv.unregisterPartial('globalTest');
-    expect(handlebarsEnv.partials.globalTest).toBe(undefined);
+    expect(handlebarsEnv.partials.globalTest).toBeUndefined();
   });
 
   it('Multiple partial registration', function () {
