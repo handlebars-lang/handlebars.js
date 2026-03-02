@@ -1,5 +1,10 @@
 module.exports = {
-  env: {
-    mocha: true,
+  globals: {
+    describe: true,
+    it: true,
+    expect: true,
+    beforeEach: true,
+    afterEach: true,
+    vi: true,
   },
 };

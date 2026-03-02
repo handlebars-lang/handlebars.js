@@ -297,112 +297,109 @@ describe('precompiler', function () {
   });
 
   describe('#loadTemplates', function () {
-    it('should throw on missing template', function (done) {
-      Precompiler.loadTemplates({ files: ['foo'] }, function (err) {
-        equal(err.message, 'Unable to open template file "foo"');
-        done();
+    function loadTemplatesAsync(inputOpts) {
+      // eslint-disable-next-line compat/compat
+      return new Promise(function (resolve, reject) {
+        Precompiler.loadTemplates(inputOpts, function (err, opts) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(opts);
+          }
+        });
       });
-    });
-    it('should enumerate directories by extension', function (done) {
-      Precompiler.loadTemplates(
-        { files: [__dirname + '/artifacts'], extension: 'hbs' },
-        function (err, opts) {
-          equal(opts.templates.length, 2);
-          equal(opts.templates[0].name, 'example_2');
+    }
 
-          done(err);
-        }
-      );
+    it('should throw on missing template', async function () {
+      try {
+        await loadTemplatesAsync({ files: ['foo'] });
+        throw new Error('should have thrown');
+      } catch (err) {
+        equal(err.message, 'Unable to open template file "foo"');
+      }
     });
-    it('should enumerate all templates by extension', function (done) {
-      Precompiler.loadTemplates(
-        { files: [__dirname + '/artifacts'], extension: 'handlebars' },
-        function (err, opts) {
-          equal(opts.templates.length, 5);
-          equal(opts.templates[0].name, 'bom');
-          equal(opts.templates[1].name, 'empty');
-          equal(opts.templates[2].name, 'example_1');
-          done(err);
-        }
-      );
+    it('should enumerate directories by extension', async function () {
+      var opts = await loadTemplatesAsync({
+        files: [__dirname + '/artifacts'],
+        extension: 'hbs',
+      });
+      equal(opts.templates.length, 2);
+      equal(opts.templates[0].name, 'example_2');
     });
-    it('should handle regular expression characters in extensions', function (done) {
-      Precompiler.loadTemplates(
-        { files: [__dirname + '/artifacts'], extension: 'hb(s' },
-        function (err) {
-          // Success is not throwing
-          done(err);
-        }
-      );
+    it('should enumerate all templates by extension', async function () {
+      var opts = await loadTemplatesAsync({
+        files: [__dirname + '/artifacts'],
+        extension: 'handlebars',
+      });
+      equal(opts.templates.length, 5);
+      equal(opts.templates[0].name, 'bom');
+      equal(opts.templates[1].name, 'empty');
+      equal(opts.templates[2].name, 'example_1');
     });
-    it('should handle BOM', function (done) {
-      var opts = {
+    it('should handle regular expression characters in extensions', async function () {
+      await loadTemplatesAsync({
+        files: [__dirname + '/artifacts'],
+        extension: 'hb(s',
+      });
+      // Success is not throwing
+    });
+    it('should handle BOM', async function () {
+      var opts = await loadTemplatesAsync({
         files: [__dirname + '/artifacts/bom.handlebars'],
         extension: 'handlebars',
         bom: true,
-      };
-      Precompiler.loadTemplates(opts, function (err, opts) {
-        equal(opts.templates[0].source, 'a');
-        done(err);
       });
+      equal(opts.templates[0].source, 'a');
     });
 
-    it('should handle different root', function (done) {
-      var opts = {
+    it('should handle different root', async function () {
+      var opts = await loadTemplatesAsync({
         files: [__dirname + '/artifacts/empty.handlebars'],
         simple: true,
         root: 'foo/',
-      };
-      Precompiler.loadTemplates(opts, function (err, opts) {
-        equal(opts.templates[0].name, __dirname + '/artifacts/empty');
-        done(err);
       });
+      equal(opts.templates[0].name, __dirname + '/artifacts/empty');
     });
 
-    it('should accept string inputs', function (done) {
-      var opts = { string: '' };
-      Precompiler.loadTemplates(opts, function (err, opts) {
-        equal(opts.templates[0].name, undefined);
-        equal(opts.templates[0].source, '');
-        done(err);
-      });
+    it('should accept string inputs', async function () {
+      var opts = await loadTemplatesAsync({ string: '' });
+      equal(opts.templates[0].name, undefined);
+      equal(opts.templates[0].source, '');
     });
-    it('should accept string array inputs', function (done) {
-      var opts = { string: ['', 'bar'], name: ['beep', 'boop'] };
-      Precompiler.loadTemplates(opts, function (err, opts) {
-        equal(opts.templates[0].name, 'beep');
-        equal(opts.templates[0].source, '');
-        equal(opts.templates[1].name, 'boop');
-        equal(opts.templates[1].source, 'bar');
-        done(err);
+    it('should accept string array inputs', async function () {
+      var opts = await loadTemplatesAsync({
+        string: ['', 'bar'],
+        name: ['beep', 'boop'],
       });
+      equal(opts.templates[0].name, 'beep');
+      equal(opts.templates[0].source, '');
+      equal(opts.templates[1].name, 'boop');
+      equal(opts.templates[1].source, 'bar');
     });
-    it('should accept stdin input', function (done) {
+    it('should accept stdin input', async function () {
       var stdin = require('mock-stdin').stdin();
-      Precompiler.loadTemplates({ string: '-' }, function (err, opts) {
-        equal(opts.templates[0].source, 'foo');
-        done(err);
-      });
+      var promise = loadTemplatesAsync({ string: '-' });
       stdin.send('fo');
       stdin.send('o');
       stdin.end();
+      var opts = await promise;
+      equal(opts.templates[0].source, 'foo');
     });
-    it('error on name missing', function (done) {
-      var opts = { string: ['', 'bar'] };
-      Precompiler.loadTemplates(opts, function (err) {
+    it('error on name missing', async function () {
+      try {
+        await loadTemplatesAsync({ string: ['', 'bar'] });
+        throw new Error('should have thrown');
+      } catch (err) {
         equal(
           err.message,
           'Number of names did not match the number of string inputs'
         );
-        done();
-      });
+      }
     });
 
-    it('should complete when no args are passed', function (done) {
-      Precompiler.loadTemplates({}, function (err, opts) {
-        equal(opts.templates.length, 0);
-        done(err);
-      });
+    it('should complete when no args are passed', async function () {
+      var opts = await loadTemplatesAsync({});
+      equal(opts.templates.length, 0);
     });
   });
 });

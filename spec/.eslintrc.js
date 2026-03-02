@@ -18,14 +18,14 @@ module.exports = {
     start: true,
     stop: true,
     ok: true,
-    sinon: true,
+    vi: true,
     strictEqual: true,
     define: true,
     expect: true,
-    chai: true,
-  },
-  env: {
-    mocha: true,
+    beforeEach: true,
+    afterEach: true,
+    describe: true,
+    it: true,
   },
   rules: {
     // Disabling for tests, for now.

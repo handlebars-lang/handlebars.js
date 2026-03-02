@@ -403,7 +403,7 @@ describe('Regressions', function () {
           property: 'a',
           test: { a: 'b' },
         })
-      ).to.equal('b');
+      ).toBe('b');
     });
 
     function registerTemplate(Handlebars, compileTemplate) {
@@ -479,19 +479,19 @@ describe('Regressions', function () {
       newHandlebarsInstance = Handlebars.create();
     });
     afterEach(function () {
-      sinon.restore();
+      vi.restoreAllMocks();
     });
 
     it('should only compile global partials once', function () {
-      var templateSpy = sinon.spy(newHandlebarsInstance, 'template');
+      var templateSpy = vi.spyOn(newHandlebarsInstance, 'template');
       newHandlebarsInstance.registerPartial({
         dude: 'I am a partial',
       });
       var string = 'Dudes: {{> dude}} {{> dude}}';
       newHandlebarsInstance.compile(string)(); // This should compile template + partial once
       newHandlebarsInstance.compile(string)(); // This should only compile template
-      equal(templateSpy.callCount, 3);
-      sinon.restore();
+      expect(templateSpy).toHaveBeenCalledTimes(3);
+      vi.restoreAllMocks();
     });
   });
 

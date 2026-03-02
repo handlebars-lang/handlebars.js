@@ -1,12 +1,8 @@
 const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
-const chai = require('chai');
-chai.use(require('dirty-chai'));
 
 const git = require('../util/git');
-
-const expect = chai.expect;
 
 const tmpBaseDir = path.join(os.tmpdir(), 'handlebars-task-tests');
 const tmpDir = path.join(tmpBaseDir, Date.now().toString(36));
@@ -21,6 +17,8 @@ describe('utils/git', function () {
     process.chdir(tmpDir);
     await git.git('clone', 'remote-repo', 'clone-repo');
     process.chdir(cloneDir);
+    await git.git('config', 'user.email', 'test@test.com');
+    await git.git('config', 'user.name', 'Test');
   });
 
   async function createRepositoryThatActsAsRemote() {
@@ -28,6 +26,8 @@ describe('utils/git', function () {
     process.chdir(remoteDir);
 
     await git.git('init');
+    await git.git('config', 'user.email', 'test@test.com');
+    await git.git('config', 'user.name', 'Test');
     await fs.writeFile('testfile.txt', 'Testfile');
     await git.add('testfile.txt');
     await git.commit('commit message');
@@ -44,7 +44,7 @@ describe('utils/git', function () {
 
       const result = await git.remotes();
 
-      expect(result.trim().split('\n')).to.deep.equal([
+      expect(result.trim().split('\n')).toEqual([
         'origin\thttps://test.org/test (fetch)',
         'origin\thttps://test.org/test (push)',
         'second-remote\thttps://test.org/test2 (fetch)',
@@ -59,7 +59,7 @@ describe('utils/git', function () {
       await git.git('branch', 'test2');
 
       const result = await git.branches();
-      expect(result.trim().split('\n')).to.deep.equal([
+      expect(result.trim().split('\n')).toEqual([
         '* master',
         '  test',
         '  test2',
@@ -72,21 +72,21 @@ describe('utils/git', function () {
   describe('the "commitInfo"-function', function () {
     it('should list head and master sha', async function () {
       const result = await git.commitInfo();
-      expect(result.masterSha).to.equal(result.headSha);
-      expect(result.masterSha).to.match(/^[0-9a-f]+$/);
-      expect(result.headSha).to.match(/^[0-9a-f]+$/);
+      expect(result.masterSha).toBe(result.headSha);
+      expect(result.masterSha).toMatch(/^[0-9a-f]+$/);
+      expect(result.headSha).toMatch(/^[0-9a-f]+$/);
     });
 
     it('should have "isMaster=true" if the master branch is checked out', async function () {
       const result = await git.commitInfo();
-      expect(result.isMaster).to.be.true();
+      expect(result.isMaster).toBe(true);
     });
 
     it('should have "isMaster=true" if the current commit is the last commit of the master branch', async function () {
       await git.git('checkout', '-b', 'new-branch');
 
       const result = await git.commitInfo();
-      expect(result.isMaster).to.be.true();
+      expect(result.isMaster).toBe(true);
     });
 
     it('should have "isMaster=false" if the current commit is NOT the last commit of the master branch', async function () {
@@ -96,13 +96,13 @@ describe('utils/git', function () {
       await git.commit('added new file');
 
       const result = await git.commitInfo();
-      expect(result.isMaster).to.be.false();
+      expect(result.isMaster).toBe(false);
     });
 
     it('should show the current tag', async function () {
       await git.git('tag', 'test-tag');
       const result = await git.commitInfo();
-      expect(result.tagName).to.be.equal('test-tag');
+      expect(result.tagName).toBe('test-tag');
     });
 
     it('should show a version tag rather than standard tags', async function () {
@@ -110,12 +110,12 @@ describe('utils/git', function () {
       await git.git('tag', 'v1.2');
       await git.git('tag', 'test-tag2');
       const result = await git.commitInfo();
-      expect(result.tagName).to.be.equal('v1.2');
+      expect(result.tagName).toBe('v1.2');
     });
 
     it('should show no tag if there is no tag', async function () {
       const result = await git.commitInfo();
-      expect(result.tagName).to.be.null();
+      expect(result.tagName).toBeNull();
     });
   });
 });

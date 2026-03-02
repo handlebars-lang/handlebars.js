@@ -151,17 +151,15 @@ module.exports = function (grunt) {
   grunt.registerTask('globals', ['webpack']);
   grunt.registerTask('release', 'Build final packages', [
     'uglify',
-    'test:min',
     'copy:dist',
     'copy:components',
   ]);
 
-  grunt.registerTask('on-file-change', ['build', 'concat:tests', 'test']);
+  grunt.registerTask('on-file-change', ['build', 'concat:tests']);
 
   // === Primary tasks ===
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
-  grunt.registerTask('default', ['clean', 'build', 'test', 'release']);
-  grunt.registerTask('test', ['test:bin', 'test:cov']);
+  grunt.registerTask('default', ['clean', 'build', 'release']);
   grunt.registerTask('bench', ['metrics']);
   grunt.registerTask('prepare', ['build', 'concat:tests']);
   grunt.registerTask(

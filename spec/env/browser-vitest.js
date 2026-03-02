@@ -1,8 +1,11 @@
-require('./common');
+import './common.js';
+import Handlebars from '../../lib/handlebars.js';
 
-global.Handlebars = require('../../lib');
+globalThis.Handlebars = Handlebars;
 
-global.CompilerContext = {
+globalThis.CompilerContext = {
+  browser: true,
+
   compile: function (template, options) {
     var templateSpec = handlebarsEnv.precompile(template, options);
     return handlebarsEnv.template(safeEval(templateSpec));
