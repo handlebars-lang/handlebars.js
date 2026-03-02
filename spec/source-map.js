@@ -18,8 +18,8 @@ describe('source-map', function () {
       srcName: 'src.hbs',
     });
 
-    equal(!!template.code, true);
-    equal(!!template.map, !CompilerContext.browser);
+    expect(!!template.code).toBe(true);
+    expect(!!template.map).toBe(!CompilerContext.browser);
   });
   it('should map source properly', function () {
     var templateSource =
@@ -37,8 +37,8 @@ describe('source-map', function () {
         source = grepLine('  b', srcLines);
 
       var mapped = consumer.originalPositionFor(generated);
-      equal(mapped.line, source.line);
-      equal(mapped.column, source.column);
+      expect(mapped.line).toBe(source.line);
+      expect(mapped.column).toBe(source.column);
     }
   });
 });

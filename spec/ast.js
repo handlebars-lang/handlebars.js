@@ -7,102 +7,100 @@ describe('ast', function () {
 
   describe('BlockStatement', function () {
     it('should throw on mustache mismatch', function () {
-      shouldThrow(
-        function () {
-          handlebarsEnv.parse('\n  {{#foo}}{{/bar}}');
-        },
-        Handlebars.Exception,
-        "foo doesn't match bar - 2:5"
-      );
+      expect(function () {
+        handlebarsEnv.parse('\n  {{#foo}}{{/bar}}');
+      }).toThrow("foo doesn't match bar - 2:5");
     });
   });
 
   describe('helpers', function () {
     describe('#helperExpression', function () {
       it('should handle mustache statements', function () {
-        equals(
+        expect(
           AST.helpers.helperExpression({
             type: 'MustacheStatement',
             params: [],
             hash: undefined,
-          }),
-          false
-        );
-        equals(
+          })
+        ).toBe(false);
+        expect(
           AST.helpers.helperExpression({
             type: 'MustacheStatement',
             params: [1],
             hash: undefined,
-          }),
-          true
-        );
-        equals(
+          })
+        ).toBe(true);
+        expect(
           AST.helpers.helperExpression({
             type: 'MustacheStatement',
             params: [],
             hash: {},
-          }),
-          true
-        );
+          })
+        ).toBe(true);
       });
       it('should handle block statements', function () {
-        equals(
+        expect(
           AST.helpers.helperExpression({
             type: 'BlockStatement',
             params: [],
             hash: undefined,
-          }),
-          false
-        );
-        equals(
+          })
+        ).toBe(false);
+        expect(
           AST.helpers.helperExpression({
             type: 'BlockStatement',
             params: [1],
             hash: undefined,
-          }),
-          true
-        );
-        equals(
+          })
+        ).toBe(true);
+        expect(
           AST.helpers.helperExpression({
             type: 'BlockStatement',
             params: [],
             hash: {},
-          }),
+          })
+        ).toBe(true);
+      });
+      it('should handle subexpressions', function () {
+        expect(AST.helpers.helperExpression({ type: 'SubExpression' })).toBe(
           true
         );
       });
-      it('should handle subexpressions', function () {
-        equals(AST.helpers.helperExpression({ type: 'SubExpression' }), true);
-      });
       it('should work with non-helper nodes', function () {
-        equals(AST.helpers.helperExpression({ type: 'Program' }), false);
+        expect(AST.helpers.helperExpression({ type: 'Program' })).toBe(false);
 
-        equals(
-          AST.helpers.helperExpression({ type: 'PartialStatement' }),
+        expect(AST.helpers.helperExpression({ type: 'PartialStatement' })).toBe(
           false
         );
-        equals(
-          AST.helpers.helperExpression({ type: 'ContentStatement' }),
+        expect(AST.helpers.helperExpression({ type: 'ContentStatement' })).toBe(
           false
         );
-        equals(
-          AST.helpers.helperExpression({ type: 'CommentStatement' }),
+        expect(AST.helpers.helperExpression({ type: 'CommentStatement' })).toBe(
           false
         );
 
-        equals(AST.helpers.helperExpression({ type: 'PathExpression' }), false);
-
-        equals(AST.helpers.helperExpression({ type: 'StringLiteral' }), false);
-        equals(AST.helpers.helperExpression({ type: 'NumberLiteral' }), false);
-        equals(AST.helpers.helperExpression({ type: 'BooleanLiteral' }), false);
-        equals(
-          AST.helpers.helperExpression({ type: 'UndefinedLiteral' }),
+        expect(AST.helpers.helperExpression({ type: 'PathExpression' })).toBe(
           false
         );
-        equals(AST.helpers.helperExpression({ type: 'NullLiteral' }), false);
 
-        equals(AST.helpers.helperExpression({ type: 'Hash' }), false);
-        equals(AST.helpers.helperExpression({ type: 'HashPair' }), false);
+        expect(AST.helpers.helperExpression({ type: 'StringLiteral' })).toBe(
+          false
+        );
+        expect(AST.helpers.helperExpression({ type: 'NumberLiteral' })).toBe(
+          false
+        );
+        expect(AST.helpers.helperExpression({ type: 'BooleanLiteral' })).toBe(
+          false
+        );
+        expect(AST.helpers.helperExpression({ type: 'UndefinedLiteral' })).toBe(
+          false
+        );
+        expect(AST.helpers.helperExpression({ type: 'NullLiteral' })).toBe(
+          false
+        );
+
+        expect(AST.helpers.helperExpression({ type: 'Hash' })).toBe(false);
+        expect(AST.helpers.helperExpression({ type: 'HashPair' })).toBe(false);
       });
     });
   });
@@ -111,10 +109,10 @@ describe('ast', function () {
     var ast, body;
 
     function testColumns(node, firstLine, lastLine, firstColumn, lastColumn) {
-      equals(node.loc.start.line, firstLine);
-      equals(node.loc.start.column, firstColumn);
-      equals(node.loc.end.line, lastLine);
-      equals(node.loc.end.column, lastColumn);
+      expect(node.loc.start.line).toBe(firstLine);
+      expect(node.loc.start.column).toBe(firstColumn);
+      expect(node.loc.end.line).toBe(lastLine);
+      expect(node.loc.end.column).toBe(lastColumn);
     }
 
     /* eslint-disable no-multi-spaces */

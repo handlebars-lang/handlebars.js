@@ -1,11 +1,11 @@
 function shouldMatchTokens(result, tokens) {
   for (var index = 0; index < result.length; index++) {
-    equals(result[index].name, tokens[index]);
+    expect(result[index].name).toBe(tokens[index]);
   }
 }
 function shouldBeToken(result, name, text) {
-  equals(result.name, name);
-  equals(result.text, text);
+  expect(result.name).toBe(name);
+  expect(result.text).toBe(text);
 }
 
 describe('Tokenizer', function () {

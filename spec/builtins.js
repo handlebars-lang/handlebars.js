@@ -257,17 +257,13 @@ describe('builtin helpers', function () {
       // Object property iteration order is undefined according to ECMA spec,
       // so we need to check both possible orders
       // @see http://stackoverflow.com/questions/280713/elements-order-in-a-for-in-loop
-      var actual = compileWithPartials(string, hash);
+      var actual = CompilerContext.compile(string)(hash);
       var expected1 =
         '&lt;b&gt;#1&lt;/b&gt;. goodbye! 2. GOODBYE! cruel world!';
       var expected2 =
         '2. GOODBYE! &lt;b&gt;#1&lt;/b&gt;. goodbye! cruel world!';
 
-      equals(
-        actual === expected1 || actual === expected2,
-        true,
-        'each with object argument iterates over the contents when not empty'
-      );
+      expect(actual === expected1 || actual === expected2).toBe(true);
 
       expectTemplate(string)
         .withInput({
@@ -630,8 +626,8 @@ describe('builtin helpers', function () {
         .withInput({ blah: 'whee' })
         .withMessage('log should not display')
         .toCompileTo('');
-      equals(1, levelArg, 'should call log with 1');
-      equals('whee', logArg, "should call log with 'whee'");
+      expect(levelArg).toBe(1);
+      expect(logArg).toBe('whee');
     });
 
     it('should call logger at data level', function () {
@@ -646,21 +642,21 @@ describe('builtin helpers', function () {
         .withRuntimeOptions({ data: { level: '03' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
-      equals('03', levelArg);
-      equals('whee', logArg);
+      expect(levelArg).toBe('03');
+      expect(logArg).toBe('whee');
     });
 
     it('should output to info', function () {
       var called;
 
       console.info = function (info) {
-        equals('whee', info);
+        expect(info).toBe('whee');
         called = true;
         console.info = $info;
         console.log = $log;
       };
       console.log = function (log) {
-        equals('whee', log);
+        expect(log).toBe('whee');
         called = true;
         console.info = $info;
         console.log = $log;
@@ -669,14 +665,14 @@ describe('builtin helpers', function () {
       expectTemplate('{{log blah}}')
         .withInput({ blah: 'whee' })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
     });
 
     it('should log at data level', function () {
       var called;
 
       console.error = function (log) {
-        equals('whee', log);
+        expect(log).toBe('whee');
         called = true;
         console.error = $error;
       };
@@ -686,7 +682,7 @@ describe('builtin helpers', function () {
         .withRuntimeOptions({ data: { level: '03' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
     });
 
     it('should handle missing logger', function () {
@@ -694,7 +690,7 @@ describe('builtin helpers', function () {
 
       console.error = undefined;
       console.log = function (log) {
-        equals('whee', log);
+        expect(log).toBe('whee');
         called = true;
         console.log = $log;
       };
@@ -704,14 +700,14 @@ describe('builtin helpers', function () {
         .withRuntimeOptions({ data: { level: '03' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
     });
 
     it('should handle string log levels', function () {
       var called;
 
       console.error = function (log) {
-        equals('whee', log);
+        expect(log).toBe('whee');
         called = true;
       };
 
@@ -720,7 +716,7 @@ describe('builtin helpers', function () {
         .withRuntimeOptions({ data: { level: 'error' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
 
       called = false;
 
@@ -729,21 +725,21 @@ describe('builtin helpers', function () {
         .withRuntimeOptions({ data: { level: 'ERROR' } })
         .withCompileOptions({ data: true })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
     });
 
     it('should handle hash log levels', function () {
       var called;
 
       console.error = function (log) {
-        equals('whee', log);
+        expect(log).toBe('whee');
         called = true;
       };
 
       expectTemplate('{{log blah level="error"}}')
         .withInput({ blah: 'whee' })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
     });
 
     it('should handle hash log levels', function () {
@@ -761,16 +757,16 @@ describe('builtin helpers', function () {
       expectTemplate('{{log blah level="debug"}}')
         .withInput({ blah: 'whee' })
         .toCompileTo('');
-      equals(false, called);
+      expect(called).toBe(false);
     });
 
     it('should pass multiple log arguments', function () {
       var called;
 
       console.info = console.log = function (log1, log2, log3) {
-        equals('whee', log1);
-        equals('foo', log2);
-        equals(1, log3);
+        expect(log1).toBe('whee');
+        expect(log2).toBe('foo');
+        expect(log3).toBe(1);
         called = true;
         console.log = $log;
       };
@@ -778,7 +774,7 @@ describe('builtin helpers', function () {
       expectTemplate('{{log blah "foo" 1}}')
         .withInput({ blah: 'whee' })
         .toCompileTo('');
-      equals(true, called);
+      expect(called).toBe(true);
     });
 
     it('should pass zero log arguments', function () {

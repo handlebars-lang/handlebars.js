@@ -392,7 +392,7 @@ describe('helpers', function () {
         return 'fail';
       });
       handlebarsEnv.unregisterHelper('foo');
-      equals(handlebarsEnv.helpers.foo, undefined);
+      expect(handlebarsEnv.helpers.foo).toBe(undefined);
     });
 
     it('allows multiple globals', function () {
@@ -417,23 +417,19 @@ describe('helpers', function () {
     });
 
     it('fails with multiple and args', function () {
-      shouldThrow(
-        function () {
-          handlebarsEnv.registerHelper(
-            {
-              world: function () {
-                return 'world!';
-              },
-              testHelper: function () {
-                return 'found it!';
-              },
+      expect(function () {
+        handlebarsEnv.registerHelper(
+          {
+            world: function () {
+              return 'world!';
             },
-            {}
-          );
-        },
-        Error,
-        'Arg not supported with multiple helpers'
-      );
+            testHelper: function () {
+              return 'found it!';
+            },
+          },
+          {}
+        );
+      }).toThrow('Arg not supported with multiple helpers');
     });
   });
 
@@ -920,7 +916,7 @@ describe('helpers', function () {
       expectTemplate('{{#goodbyes as |value|}}{{value}}{{/goodbyes}}{{value}}')
         .withInput({ value: 'foo' })
         .withHelper('goodbyes', function (options) {
-          equals(options.fn.blockParams, 1);
+          expect(options.fn.blockParams).toBe(1);
           return options.fn({ value: 'bar' }, { blockParams: [1, 2] });
         })
         .toCompileTo('1foo');
@@ -932,7 +928,7 @@ describe('helpers', function () {
           return 'foo';
         })
         .withHelper('goodbyes', function (options) {
-          equals(options.fn.blockParams, 1);
+          expect(options.fn.blockParams).toBe(1);
           return options.fn({}, { blockParams: [1, 2] });
         })
         .toCompileTo('1foo');
@@ -947,7 +943,7 @@ describe('helpers', function () {
           return 'foo';
         })
         .withHelper('goodbyes', function (options) {
-          equals(options.fn.blockParams, 1);
+          expect(options.fn.blockParams).toBe(1);
           return options.fn(this, { blockParams: [1, 2] });
         })
         .toCompileTo('barfoo');
@@ -977,7 +973,7 @@ describe('helpers', function () {
       )
         .withInput({ value: 'foo' })
         .withHelper('goodbyes', function (options) {
-          equals(options.fn.blockParams, 1);
+          expect(options.fn.blockParams).toBe(1);
           return options.fn({ value: 'bar' }, { blockParams: [1, 2] });
         })
         .toCompileTo('1foo');

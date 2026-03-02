@@ -5,11 +5,7 @@ describe('utils', function () {
       if (!(safe instanceof Handlebars.SafeString)) {
         throw new Error('Must be instance of SafeString');
       }
-      equals(
-        safe.toString(),
-        'testing 1, 2, 3',
-        'SafeString is equivalent to its underlying string'
-      );
+      expect(safe.toString()).toBe('testing 1, 2, 3');
     });
 
     it('it should not escape SafeString properties', function () {
@@ -23,51 +19,50 @@ describe('utils', function () {
 
   describe('#escapeExpression', function () {
     it('should escape html', function () {
-      equals(
-        Handlebars.Utils.escapeExpression('foo<&"\'>'),
+      expect(Handlebars.Utils.escapeExpression('foo<&"\'>')).toBe(
         'foo&lt;&amp;&quot;&#x27;&gt;'
       );
-      equals(Handlebars.Utils.escapeExpression('foo='), 'foo&#x3D;');
+      expect(Handlebars.Utils.escapeExpression('foo=')).toBe('foo&#x3D;');
     });
     it('should not escape SafeString', function () {
       var string = new Handlebars.SafeString('foo<&"\'>');
-      equals(Handlebars.Utils.escapeExpression(string), 'foo<&"\'>');
+      expect(Handlebars.Utils.escapeExpression(string)).toBe('foo<&"\'>');
 
       var obj = {
         toHTML: function () {
           return 'foo<&"\'>';
         },
       };
-      equals(Handlebars.Utils.escapeExpression(obj), 'foo<&"\'>');
+      expect(Handlebars.Utils.escapeExpression(obj)).toBe('foo<&"\'>');
     });
     it('should handle falsy', function () {
-      equals(Handlebars.Utils.escapeExpression(''), '');
-      equals(Handlebars.Utils.escapeExpression(undefined), '');
-      equals(Handlebars.Utils.escapeExpression(null), '');
+      expect(Handlebars.Utils.escapeExpression('')).toBe('');
+      expect(Handlebars.Utils.escapeExpression(undefined)).toBe('');
+      expect(Handlebars.Utils.escapeExpression(null)).toBe('');
 
-      equals(Handlebars.Utils.escapeExpression(false), 'false');
-      equals(Handlebars.Utils.escapeExpression(0), '0');
+      expect(Handlebars.Utils.escapeExpression(false)).toBe('false');
+      expect(Handlebars.Utils.escapeExpression(0)).toBe('0');
     });
     it('should handle empty objects', function () {
-      equals(Handlebars.Utils.escapeExpression({}), {}.toString());
-      equals(Handlebars.Utils.escapeExpression([]), [].toString());
+      expect(Handlebars.Utils.escapeExpression({})).toBe({}.toString());
+      expect(Handlebars.Utils.escapeExpression([])).toBe([].toString());
     });
   });
 
   describe('#isEmpty', function () {
     it('should not be empty', function () {
-      equals(Handlebars.Utils.isEmpty(undefined), true);
-      equals(Handlebars.Utils.isEmpty(null), true);
-      equals(Handlebars.Utils.isEmpty(false), true);
-      equals(Handlebars.Utils.isEmpty(''), true);
-      equals(Handlebars.Utils.isEmpty([]), true);
+      expect(Handlebars.Utils.isEmpty(undefined)).toBe(true);
+      expect(Handlebars.Utils.isEmpty(null)).toBe(true);
+      expect(Handlebars.Utils.isEmpty(false)).toBe(true);
+      expect(Handlebars.Utils.isEmpty('')).toBe(true);
+      expect(Handlebars.Utils.isEmpty([])).toBe(true);
     });
 
     it('should be empty', function () {
-      equals(Handlebars.Utils.isEmpty(0), false);
-      equals(Handlebars.Utils.isEmpty([1]), false);
-      equals(Handlebars.Utils.isEmpty('foo'), false);
-      equals(Handlebars.Utils.isEmpty({ bar: 1 }), false);
+      expect(Handlebars.Utils.isEmpty(0)).toBe(false);
+      expect(Handlebars.Utils.isEmpty([1])).toBe(false);
+      expect(Handlebars.Utils.isEmpty('foo')).toBe(false);
+      expect(Handlebars.Utils.isEmpty({ bar: 1 })).toBe(false);
     });
   });
 
@@ -82,8 +77,8 @@ describe('utils', function () {
 
       Handlebars.Utils.extend(b, new A());
 
-      equals(b.a, 1);
-      equals(b.b, 2);
+      expect(b.a).toBe(1);
+      expect(b.b).toBe(2);
     });
   });
 
