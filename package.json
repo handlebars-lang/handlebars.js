@@ -76,7 +76,7 @@
   "scripts": {
     "build": "grunt build",
     "release": "grunt release",
-    "publish:aws": "npm run test:tasks && grunt && grunt publish-to-aws",
+    "publish:aws": "grunt && npm run test:tasks && grunt publish-to-aws",
     "format": "prettier --write '**/*.{js,css,json,md}' && eslint --fix .",
     "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
     "lint:eslint": "eslint --max-warnings 0 .",
