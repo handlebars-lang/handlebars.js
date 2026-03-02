@@ -18,6 +18,7 @@ export default defineConfig({
           name: 'tasks',
           include: ['tasks/tests/*.test.js'],
           globals: true,
+          pool: 'forks',
         },
       },
       {

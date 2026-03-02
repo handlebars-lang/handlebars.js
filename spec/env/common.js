@@ -175,14 +175,23 @@ HandlebarsTestBench.prototype.toCompileTo = function (expectedOutputAsString) {
 
 HandlebarsTestBench.prototype.toThrow = function (errorLike, errMsgMatcher) {
   var self = this;
-  if (errMsgMatcher) {
-    expect(function () {
-      self._compileAndExecute();
-    }).toThrowError(errMsgMatcher);
-  } else {
-    expect(function () {
-      self._compileAndExecute();
-    }).toThrow();
+  var caught;
+  try {
+    self._compileAndExecute();
+  } catch (e) {
+    caught = e;
+  }
+
+  expect(caught).toBeDefined();
+
+  if (typeof errorLike === 'function') {
+    expect(caught).toBeInstanceOf(errorLike);
+    if (errMsgMatcher) {
+      expect(caught.message).toMatch(errMsgMatcher);
+    }
+  } else if (errorLike) {
+    // errorLike is a string or regex message matcher (single-argument form)
+    expect(caught.message).toMatch(errorLike);
   }
 };
 
