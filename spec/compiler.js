@@ -10,69 +10,56 @@ describe('compiler', function () {
     }
 
     it('should treat as equal', function () {
-      equal(compile('foo').equals(compile('foo')), true);
-      equal(compile('{{foo}}').equals(compile('{{foo}}')), true);
-      equal(compile('{{foo.bar}}').equals(compile('{{foo.bar}}')), true);
-      equal(
+      expect(compile('foo').equals(compile('foo'))).toBe(true);
+      expect(compile('{{foo}}').equals(compile('{{foo}}'))).toBe(true);
+      expect(compile('{{foo.bar}}').equals(compile('{{foo.bar}}'))).toBe(true);
+      expect(
         compile('{{foo.bar baz "foo" true false bat=1}}').equals(
           compile('{{foo.bar baz "foo" true false bat=1}}')
-        ),
-        true
-      );
-      equal(
+        )
+      ).toBe(true);
+      expect(
         compile('{{foo.bar (baz bat=1)}}').equals(
           compile('{{foo.bar (baz bat=1)}}')
-        ),
-        true
-      );
-      equal(
-        compile('{{#foo}} {{/foo}}').equals(compile('{{#foo}} {{/foo}}')),
-        true
-      );
+        )
+      ).toBe(true);
+      expect(
+        compile('{{#foo}} {{/foo}}').equals(compile('{{#foo}} {{/foo}}'))
+      ).toBe(true);
     });
     it('should treat as not equal', function () {
-      equal(compile('foo').equals(compile('bar')), false);
-      equal(compile('{{foo}}').equals(compile('{{bar}}')), false);
-      equal(compile('{{foo.bar}}').equals(compile('{{bar.bar}}')), false);
-      equal(
+      expect(compile('foo').equals(compile('bar'))).toBe(false);
+      expect(compile('{{foo}}').equals(compile('{{bar}}'))).toBe(false);
+      expect(compile('{{foo.bar}}').equals(compile('{{bar.bar}}'))).toBe(false);
+      expect(
         compile('{{foo.bar baz bat=1}}').equals(
           compile('{{foo.bar bar bat=1}}')
-        ),
-        false
-      );
-      equal(
+        )
+      ).toBe(false);
+      expect(
         compile('{{foo.bar (baz bat=1)}}').equals(
           compile('{{foo.bar (bar bat=1)}}')
-        ),
-        false
-      );
-      equal(
-        compile('{{#foo}} {{/foo}}').equals(compile('{{#bar}} {{/bar}}')),
-        false
-      );
-      equal(
-        compile('{{#foo}} {{/foo}}').equals(
-          compile('{{#foo}} {{foo}}{{/foo}}')
-        ),
-        false
-      );
+        )
+      ).toBe(false);
+      expect(
+        compile('{{#foo}} {{/foo}}').equals(compile('{{#bar}} {{/bar}}'))
+      ).toBe(false);
+      expect(
+        compile('{{#foo}} {{/foo}}').equals(compile('{{#foo}} {{foo}}{{/foo}}'))
+      ).toBe(false);
     });
   });
 
   describe('#compile', function () {
     it('should fail with invalid input', function () {
-      shouldThrow(
-        function () {
-          Handlebars.compile(null);
-        },
-        Error,
+      expect(function () {
+        Handlebars.compile(null);
+      }).toThrow(
         'You must pass a string or Handlebars AST to Handlebars.compile. You passed null'
       );
-      shouldThrow(
-        function () {
-          Handlebars.compile({});
-        },
-        Error,
+      expect(function () {
+        Handlebars.compile({});
+      }).toThrow(
         'You must pass a string or Handlebars AST to Handlebars.compile. You passed [object Object]'
       );
     });
@@ -80,71 +67,52 @@ describe('compiler', function () {
     it('should include the location in the error (row and column)', function () {
       try {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
-        equal(
-          true,
-          false,
-          'Statement must throw exception. This line should not be executed.'
-        );
+        expect.unreachable('Statement must throw exception');
       } catch (err) {
-        equal(
-          err.message,
-          "if doesn't match def - 2:5",
-          'Checking error message'
-        );
+        expect(err.message).toBe("if doesn't match def - 2:5");
         if (Object.getOwnPropertyDescriptor(err, 'column').writable) {
           // In Safari 8, the column-property is read-only. This means that even if it is set with defineProperty,
           // its value won't change (https://github.com/jquery/esprima/issues/1290#issuecomment-132455482)
           // Since this was neither working in Handlebars 3 nor in 4.0.5, we only check the column for other browsers.
-          equal(err.column, 5, 'Checking error column');
+          expect(err.column).toBe(5);
         }
-        equal(err.lineNumber, 2, 'Checking error row');
+        expect(err.lineNumber).toBe(2);
       }
     });
 
     it('should include the location as enumerable property', function () {
       try {
         Handlebars.compile(' \n  {{#if}}\n{{/def}}')();
-        equal(
-          true,
-          false,
-          'Statement must throw exception. This line should not be executed.'
-        );
+        expect.unreachable('Statement must throw exception');
       } catch (err) {
-        equal(
-          Object.prototype.propertyIsEnumerable.call(err, 'column'),
-          true,
-          'Checking error column'
+        expect(Object.prototype.propertyIsEnumerable.call(err, 'column')).toBe(
+          true
         );
       }
     });
 
     it('can utilize AST instance', function () {
-      equal(
+      expect(
         Handlebars.compile({
           type: 'Program',
           body: [{ type: 'ContentStatement', value: 'Hello' }],
-        })(),
-        'Hello'
-      );
+        })()
+      ).toBe('Hello');
     });
 
     it('can pass through an empty string', function () {
-      equal(Handlebars.compile('')(), '');
+      expect(Handlebars.compile('')()).toBe('');
     });
 
     it('throws on desupported options', function () {
-      shouldThrow(
-        function () {
-          Handlebars.compile('Dudes', { trackIds: true });
-        },
-        Error,
+      expect(function () {
+        Handlebars.compile('Dudes', { trackIds: true });
+      }).toThrow(
         'TrackIds and stringParams are no longer supported. See Github #1145'
       );
-      shouldThrow(
-        function () {
-          Handlebars.compile('Dudes', { stringParams: true });
-        },
-        Error,
+      expect(function () {
+        Handlebars.compile('Dudes', { stringParams: true });
+      }).toThrow(
         'TrackIds and stringParams are no longer supported. See Github #1145'
       );
     });
@@ -152,54 +120,41 @@ describe('compiler', function () {
     it('should not modify the options.data property(GH-1327)', function () {
       var options = { data: [{ a: 'foo' }, { a: 'bar' }] };
       Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
-      equal(
-        JSON.stringify(options, 0, 2),
-        JSON.stringify({ data: [{ a: 'foo' }, { a: 'bar' }] }, 0, 2)
-      );
+      expect(options).toStrictEqual({ data: [{ a: 'foo' }, { a: 'bar' }] });
     });
 
     it('should not modify the options.knownHelpers property(GH-1327)', function () {
       var options = { knownHelpers: {} };
       Handlebars.compile('{{#each data}}{{@index}}:{{a}} {{/each}}', options)();
-      equal(
-        JSON.stringify(options, 0, 2),
-        JSON.stringify({ knownHelpers: {} }, 0, 2)
-      );
+      expect(options).toStrictEqual({ knownHelpers: {} });
     });
   });
 
   describe('#precompile', function () {
     it('should fail with invalid input', function () {
-      shouldThrow(
-        function () {
-          Handlebars.precompile(null);
-        },
-        Error,
+      expect(function () {
+        Handlebars.precompile(null);
+      }).toThrow(
         'You must pass a string or Handlebars AST to Handlebars.compile. You passed null'
       );
-      shouldThrow(
-        function () {
-          Handlebars.precompile({});
-        },
-        Error,
+      expect(function () {
+        Handlebars.precompile({});
+      }).toThrow(
         'You must pass a string or Handlebars AST to Handlebars.compile. You passed [object Object]'
       );
     });
 
     it('can utilize AST instance', function () {
-      equal(
-        /return "Hello"/.test(
-          Handlebars.precompile({
-            type: 'Program',
-            body: [{ type: 'ContentStatement', value: 'Hello' }],
-          })
-        ),
-        true
-      );
+      expect(
+        Handlebars.precompile({
+          type: 'Program',
+          body: [{ type: 'ContentStatement', value: 'Hello' }],
+        })
+      ).toMatch(/return "Hello"/);
     });
 
     it('can pass through an empty string', function () {
-      equal(/return ""/.test(Handlebars.precompile('')), true);
+      expect(Handlebars.precompile('')).toMatch(/return ""/);
     });
   });
 });

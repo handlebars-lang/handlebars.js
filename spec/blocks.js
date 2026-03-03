@@ -381,26 +381,26 @@ describe('blocks', function () {
       var run;
       expectTemplate('{{*decorator "success"}}')
         .withDecorator('decorator', function (fn, props, container, options) {
-          equals(options.args[0], 'success');
+          expect(options.args[0]).toBe('success');
           run = true;
           return fn;
         })
         .withInput({ foo: 'success' })
         .toCompileTo('');
-      equals(run, true);
+      expect(run).toBe(true);
     });
 
     it('should fail when accessing variables from root', function () {
       var run;
       expectTemplate('{{*decorator foo}}')
         .withDecorator('decorator', function (fn, props, container, options) {
-          equals(options.args[0], undefined);
+          expect(options.args[0]).toBeUndefined();
           run = true;
           return fn;
         })
         .withInput({ foo: 'fail' })
         .toCompileTo('');
-      equals(run, true);
+      expect(run).toBe(true);
     });
 
     describe('registration', function () {
@@ -411,9 +411,9 @@ describe('blocks', function () {
           return 'fail';
         });
 
-        equals(!!handlebarsEnv.decorators.foo, true);
+        expect(handlebarsEnv.decorators.foo).toBeTruthy();
         handlebarsEnv.unregisterDecorator('foo');
-        equals(handlebarsEnv.decorators.foo, undefined);
+        expect(handlebarsEnv.decorators.foo).toBeUndefined();
       });
 
       it('allows multiple globals', function () {
@@ -424,32 +424,28 @@ describe('blocks', function () {
           bar: function () {},
         });
 
-        equals(!!handlebarsEnv.decorators.foo, true);
-        equals(!!handlebarsEnv.decorators.bar, true);
+        expect(handlebarsEnv.decorators.foo).toBeTruthy();
+        expect(handlebarsEnv.decorators.bar).toBeTruthy();
         handlebarsEnv.unregisterDecorator('foo');
         handlebarsEnv.unregisterDecorator('bar');
-        equals(handlebarsEnv.decorators.foo, undefined);
-        equals(handlebarsEnv.decorators.bar, undefined);
+        expect(handlebarsEnv.decorators.foo).toBeUndefined();
+        expect(handlebarsEnv.decorators.bar).toBeUndefined();
       });
 
       it('fails with multiple and args', function () {
-        shouldThrow(
-          function () {
-            handlebarsEnv.registerDecorator(
-              {
-                world: function () {
-                  return 'world!';
-                },
-                testHelper: function () {
-                  return 'found it!';
-                },
+        expect(function () {
+          handlebarsEnv.registerDecorator(
+            {
+              world: function () {
+                return 'world!';
               },
-              {}
-            );
-          },
-          Error,
-          'Arg not supported with multiple decorators'
-        );
+              testHelper: function () {
+                return 'found it!';
+              },
+            },
+            {}
+          );
+        }).toThrow('Arg not supported with multiple decorators');
       });
     });
   });

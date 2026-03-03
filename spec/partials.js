@@ -164,12 +164,10 @@ describe('partials', function () {
   });
 
   it('registering undefined partial throws an exception', function () {
-    shouldThrow(
-      function () {
-        var undef;
-        handlebarsEnv.registerPartial('undefined_test', undef);
-      },
-      Handlebars.Exception,
+    expect(function () {
+      var undef;
+      handlebarsEnv.registerPartial('undefined_test', undef);
+    }).toThrow(
       'Attempting to register a partial called "undefined_test" as undefined'
     );
   });
@@ -231,7 +229,7 @@ describe('partials', function () {
       .toCompileTo('Dudes: Jeepers Creepers');
 
     handlebarsEnv.unregisterPartial('globalTest');
-    equals(handlebarsEnv.partials.globalTest, undefined);
+    expect(handlebarsEnv.partials.globalTest).toBeUndefined();
   });
 
   it('Multiple partial registration', function () {
@@ -556,7 +554,7 @@ describe('partials', function () {
       var env = Handlebars.create();
       env.registerPartial('partial', '{{foo}}');
       var template = env.compile('{{foo}} {{> partial}}', { noEscape: true });
-      equal(template({ foo: '<' }), '< <');
+      expect(template({ foo: '<' })).toBe('< <');
     }
   });
 

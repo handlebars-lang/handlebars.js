@@ -96,7 +96,7 @@ describe('security issues', function () {
           },
           { allowCallsToHelperMissing: true }
         );
-        equals(functionCalls.length, 1);
+        expect(functionCalls.length).toBe(1);
       });
 
       it('should not throw an exception when calling  "{{#blockHelperMissing .}}{{/blockHelperMissing}}"', function () {

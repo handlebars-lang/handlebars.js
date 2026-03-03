@@ -18,8 +18,12 @@ describe('source-map', function () {
       srcName: 'src.hbs',
     });
 
-    equal(!!template.code, true);
-    equal(!!template.map, !CompilerContext.browser);
+    expect(template.code).toBeTruthy();
+    if (CompilerContext.browser) {
+      expect(template.map).toBeFalsy();
+    } else {
+      expect(template.map).toBeTruthy();
+    }
   });
   it('should map source properly', function () {
     var templateSource =
@@ -37,8 +41,8 @@ describe('source-map', function () {
         source = grepLine('  b', srcLines);
 
       var mapped = consumer.originalPositionFor(generated);
-      equal(mapped.line, source.line);
-      equal(mapped.column, source.column);
+      expect(mapped.line).toBe(source.line);
+      expect(mapped.column).toBe(source.column);
     }
   });
 });

@@ -92,8 +92,8 @@ describe('strict', function () {
         })
         .withHelpers({
           helper: function (options) {
-            equals('value' in options.hash, true);
-            equals(options.hash.value, undefined);
+            expect(options.hash).toHaveProperty('value');
+            expect(options.hash.value).toBeUndefined();
             return 'success';
           },
         })
@@ -113,10 +113,10 @@ describe('strict', function () {
         });
         template({});
       } catch (error) {
-        equals(error.lineNumber, 4);
-        equals(error.endLineNumber, 4);
-        equals(error.column, 5);
-        equals(error.endColumn, 10);
+        expect(error.lineNumber).toBe(4);
+        expect(error.endLineNumber).toBe(4);
+        expect(error.column).toBe(5);
+        expect(error.endColumn).toBe(10);
       }
     });
   });

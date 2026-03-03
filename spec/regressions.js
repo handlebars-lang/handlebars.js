@@ -337,7 +337,10 @@ describe('Regressions', function () {
       },
     };
 
-    shouldCompileTo('{{helpa length="foo"}}', [obj, helpers], 'foo');
+    expectTemplate('{{helpa length="foo"}}')
+      .withInput(obj)
+      .withHelpers(helpers)
+      .toCompileTo('foo');
   });
 
   it('GH-1319: "unless" breaks when "each" value equals "null"', function () {
@@ -373,20 +376,16 @@ describe('Regressions', function () {
       var result = newHandlebarsInstance.templates['test.hbs']({
         name: 'yehuda',
       });
-      equals(result.trim(), 'YEHUDA');
+      expect(result.trim()).toBe('YEHUDA');
     });
 
     it('should call "helperMissing" if a helper is missing', function () {
       var newHandlebarsInstance = Handlebars.create();
 
-      shouldThrow(
-        function () {
-          registerTemplate(newHandlebarsInstance, compiledTemplateVersion7());
-          newHandlebarsInstance.templates['test.hbs']({});
-        },
-        Handlebars.Exception,
-        'Missing helper: "loud"'
-      );
+      expect(function () {
+        registerTemplate(newHandlebarsInstance, compiledTemplateVersion7());
+        newHandlebarsInstance.templates['test.hbs']({});
+      }).toThrow('Missing helper: "loud"');
     });
 
     it('should pass "options.lookupProperty" to "lookup"-helper, even with old templates', function () {
