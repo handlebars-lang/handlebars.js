@@ -4,11 +4,11 @@
     {{#each items}}
       {{#if current}}
         <li><strong>{{name}}</strong></li>
-      {{^}}
+      {{else}}
         <li><a href="{{url}}">{{name}}</a></li>
       {{/if}}
     {{/each}}
   </ul>
-{{^}}
+{{else}}
   <p>The list is empty.</p>
 {{/if}}

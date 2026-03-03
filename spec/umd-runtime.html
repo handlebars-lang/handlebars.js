@@ -2,15 +2,15 @@
 <html>
   <head>
     <title>Handlebars Runtime UMD Smoke Test</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <h1>Handlebars Runtime UMD Smoke Test</h1>
     <pre id="results"></pre>
     <script src="/spec/vendor/require.js"></script>
     <script>
-      var results = document.getElementById('results');
+      var results = document.getElementById("results");
       var failures = 0;
       var tests = 0;
 
@@ -18,29 +18,39 @@
         tests++;
         if (!condition) {
           failures++;
-          results.textContent += 'FAIL: ' + message + '\n';
+          results.textContent += "FAIL: " + message + "\n";
         } else {
-          results.textContent += 'PASS: ' + message + '\n';
+          results.textContent += "PASS: " + message + "\n";
         }
       }
 
       requirejs.config({
         paths: {
-          'handlebars.runtime': '/dist/handlebars.runtime'
-        }
+          "handlebars.runtime": "/dist/handlebars.runtime",
+        },
       });
 
-      require(['handlebars.runtime'], function(Handlebars) {
+      require(["handlebars.runtime"], function (Handlebars) {
         try {
-          assert(typeof Handlebars !== 'undefined', 'Handlebars runtime loaded via RequireJS');
-          assert(typeof Handlebars.template === 'function', 'Handlebars.template exists');
-          assert(typeof Handlebars.VERSION === 'string', 'Handlebars.VERSION exists');
+          assert(
+            typeof Handlebars !== "undefined",
+            "Handlebars runtime loaded via RequireJS",
+          );
+          assert(
+            typeof Handlebars.template === "function",
+            "Handlebars.template exists",
+          );
+          assert(
+            typeof Handlebars.VERSION === "string",
+            "Handlebars.VERSION exists",
+          );
         } catch (e) {
           failures++;
-          results.textContent += 'ERROR: ' + e.message + '\n';
+          results.textContent += "ERROR: " + e.message + "\n";
         }
 
-        results.textContent += '\n' + tests + ' tests, ' + failures + ' failures\n';
+        results.textContent +=
+          "\n" + tests + " tests, " + failures + " failures\n";
         window.mochaResults = { passes: tests - failures, failures: failures };
       });
     </script>

@@ -1,4 +1,4 @@
-const childProcess = require('child_process');
+const childProcess = require("child_process");
 
 module.exports = {
   execNodeJsScriptWithInheritedOutput,
@@ -6,8 +6,8 @@ module.exports = {
 
 async function execNodeJsScriptWithInheritedOutput(command, args) {
   return new Promise((resolve, reject) => {
-    const child = childProcess.fork(command, args, { stdio: 'inherit' });
-    child.on('close', (code) => {
+    const child = childProcess.fork(command, args, { stdio: "inherit" });
+    child.on("close", (code) => {
       if (code !== 0) {
         reject(new Error(`Child process failed with exit-code ${code}`));
       }

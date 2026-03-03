@@ -1,5 +1,5 @@
-var _ = require('underscore'),
-  Benchmark = require('benchmark');
+var _ = require("underscore"),
+  Benchmark = require("benchmark");
 
 function BenchWarmer() {
   this.benchmarks = [];
@@ -13,7 +13,7 @@ function BenchWarmer() {
 
 BenchWarmer.prototype = {
   winners: function (benches) {
-    return Benchmark.filter(benches, 'fastest');
+    return Benchmark.filter(benches, "fastest");
   },
   suite: function (suite, fn) {
     this.suiteName = suite;
@@ -37,7 +37,7 @@ BenchWarmer.prototype = {
     this.first = false;
 
     var bench = new Benchmark(fn, {
-      name: this.suiteName + ': ' + name,
+      name: this.suiteName + ": " + name,
       onComplete: function () {
         if (first) {
           self.startLine(suiteName);
@@ -58,25 +58,25 @@ BenchWarmer.prototype = {
   bench: function (callback) {
     var self = this;
 
-    this.printHeader('ops/msec', true);
+    this.printHeader("ops/msec", true);
 
     Benchmark.invoke(this.benchmarks, {
-      name: 'run',
+      name: "run",
       onComplete: function () {
         self.scaleTimes();
 
-        self.startLine('');
+        self.startLine("");
 
-        console.log('\n');
-        self.printHeader('scaled');
+        console.log("\n");
+        self.printHeader("scaled");
         _.each(self.scaled, function (value, name) {
           self.startLine(name);
 
           _.each(self.names, function (lang) {
-            self.writeValue(value[lang] || '');
+            self.writeValue(value[lang] || "");
           });
         });
-        console.log('\n');
+        console.log("\n");
 
         var errors = false,
           prop,
@@ -84,7 +84,7 @@ BenchWarmer.prototype = {
         for (prop in self.errors) {
           if (
             Object.prototype.hasOwnProperty.call(self, prop) &&
-            self.errors[prop].error.message !== 'EWOT'
+            self.errors[prop].error.message !== "EWOT"
           ) {
             errors = true;
             break;
@@ -92,16 +92,16 @@ BenchWarmer.prototype = {
         }
 
         if (errors) {
-          console.log('\n\nErrors:\n');
+          console.log("\n\nErrors:\n");
           Object.keys(self.errors).forEach(function (prop) {
-            if (self.errors[prop].error.message !== 'EWOT') {
+            if (self.errors[prop].error.message !== "EWOT") {
               bench = self.errors[prop];
-              console.log('\n' + bench.name + ':\n');
+              console.log("\n" + bench.name + ":\n");
               console.log(bench.error.message);
               if (bench.error.stack) {
-                console.log(bench.error.stack.join('\n'));
+                console.log(bench.error.stack.join("\n"));
               }
-              console.log('\n');
+              console.log("\n");
             }
           });
         }
@@ -110,7 +110,7 @@ BenchWarmer.prototype = {
       },
     });
 
-    console.log('\n');
+    console.log("\n");
   },
 
   scaleTimes: function () {
@@ -128,10 +128,10 @@ BenchWarmer.prototype = {
               100
             ).toFixed(2);
           },
-          this
+          this,
         );
       },
-      this
+      this,
     );
   },
 
@@ -161,25 +161,25 @@ BenchWarmer.prototype = {
     }
 
     if (winners) {
-      console.log('WINNER(S)');
-      horSize = horSize + 'WINNER(S)'.length;
+      console.log("WINNER(S)");
+      horSize = horSize + "WINNER(S)".length;
     }
 
-    console.log('\n' + new Array(horSize + 1).join('-'));
+    console.log("\n" + "-".repeat(horSize));
   },
 
   startLine: function (name) {
     var winners = Benchmark.map(
       this.winners(this.currentBenches),
       function (bench) {
-        return bench.name.split(': ')[1];
-      }
+        return bench.name.split(": ")[1];
+      },
     );
 
     this.currentBenches = [];
 
-    console.log(winners.join(', '));
-    console.log('\n');
+    console.log(winners.join(", "));
+    console.log("\n");
 
     if (name) {
       this.writeValue(name);
@@ -199,22 +199,22 @@ BenchWarmer.prototype = {
       minimum = count - moe;
       maximum = count + moe;
 
-      out = count + ' ±' + moe + ' (' + bench.cycles + ')';
+      out = count + " ±" + moe + " (" + bench.cycles + ")";
 
       this.times[bench.suiteName][bench.benchName] = count;
       this.minimum = Math.min(this.minimum, minimum);
       this.maximum = Math.max(this.maximum, maximum);
-    } else if (bench.error.message === 'EWOT') {
-      out = 'NA';
+    } else if (bench.error.message === "EWOT") {
+      out = "NA";
     } else {
-      out = 'E';
+      out = "E";
     }
     this.writeValue(out);
   },
 
   writeValue: function (out) {
     var padding = this.benchSize - out.length + 1;
-    out = out + new Array(padding).join(' ');
+    out = out + " ".repeat(Math.max(0, padding - 1));
     console.log(out);
   },
 };

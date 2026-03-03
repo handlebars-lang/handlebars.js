@@ -1,10 +1,10 @@
-import { assertEquals } from './lib/assert';
+import { assertEquals } from "./lib/assert";
 
-import testTemplate from './test-template.handlebars';
-assertEquals(testTemplate({ author: 'Yehuda' }).trim(), 'Author: Yehuda');
+import testTemplate from "./test-template.handlebars";
+assertEquals(testTemplate({ author: "Yehuda" }).trim(), "Author: Yehuda");
 
-const testTemplateRequire = require('./test-template.handlebars');
+const testTemplateRequire = require("./test-template.handlebars");
 assertEquals(
-  testTemplateRequire({ author: 'Yehuda' }).trim(),
-  'Author: Yehuda'
+  testTemplateRequire({ author: "Yehuda" }).trim(),
+  "Author: Yehuda",
 );

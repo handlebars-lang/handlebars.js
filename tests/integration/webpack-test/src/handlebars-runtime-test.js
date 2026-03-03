@@ -1,8 +1,8 @@
-import * as Handlebars from 'handlebars/runtime';
-import { assertEquals } from './lib/assert';
+import * as Handlebars from "handlebars/runtime";
+import { assertEquals } from "./lib/assert";
 
 const template = Handlebars.template({
-  compiler: [8, '>= 4.3.0'],
+  compiler: [8, ">= 4.3.0"],
   main: function (container, depth0, helpers, partials, data) {
     var helper,
       lookupProperty =
@@ -15,18 +15,18 @@ const template = Handlebars.template({
         };
 
     return (
-      'Author: ' +
+      "Author: " +
       container.escapeExpression(
         ((helper =
           (helper =
-            lookupProperty(helpers, 'author') ||
-            (depth0 != null ? lookupProperty(depth0, 'author') : depth0)) !=
+            lookupProperty(helpers, "author") ||
+            (depth0 != null ? lookupProperty(depth0, "author") : depth0)) !=
           null
             ? helper
             : container.hooks.helperMissing),
-        typeof helper === 'function'
+        typeof helper === "function"
           ? helper.call(depth0 != null ? depth0 : container.nullContext || {}, {
-              name: 'author',
+              name: "author",
               hash: {},
               data: data,
               loc: {
@@ -34,10 +34,10 @@ const template = Handlebars.template({
                 end: { line: 1, column: 18 },
               },
             })
-          : helper)
+          : helper),
       )
     );
   },
   useData: true,
 });
-assertEquals(template({ author: 'Yehuda' }), 'Author: Yehuda');
+assertEquals(template({ author: "Yehuda" }), "Author: Yehuda");

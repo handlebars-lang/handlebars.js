@@ -6,13 +6,13 @@ on:
     branches:
       - master
     tags:
-      - '*'
+      - "*"
 
 jobs:
   publish-aws-s3:
     name: Publish to AWS S3
-    runs-on: 'ubuntu-latest'
-    environment: 'builds.handlebarsjs.com.s3.amazonaws.com'
+    runs-on: "ubuntu-latest"
+    environment: "builds.handlebarsjs.com.s3.amazonaws.com"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: "24"
 
       - name: Install dependencies
         run: npm ci

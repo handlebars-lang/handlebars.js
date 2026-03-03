@@ -1,6 +1,6 @@
-const fs = require('fs');
+const fs = require("fs");
 
-const testFiles = fs.readdirSync('src');
+const testFiles = fs.readdirSync("src");
 const entryPoints = {};
 testFiles
   .filter((file) => file.match(/-test.js$/))
@@ -10,11 +10,11 @@ testFiles
 
 module.exports = {
   entry: entryPoints,
-  mode: 'production',
-  target: 'web',
+  mode: "production",
+  target: "web",
   output: {
-    filename: '[name]',
-    path: __dirname + '/dist',
+    filename: "[name]",
+    path: __dirname + "/dist",
   },
   module: {
     rules: [
@@ -22,7 +22,7 @@ module.exports = {
         test: /\.js?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: { cacheDirectory: false },
         },
       },

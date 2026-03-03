@@ -1,7 +1,7 @@
 module.exports = {
   helpers: {
     foo: function () {
-      return '';
+      return "";
     },
   },
   context: {

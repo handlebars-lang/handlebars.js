@@ -1,34 +1,34 @@
 var Exception = Handlebars.Exception;
 
-describe('strict', function () {
-  describe('strict mode', function () {
-    it('should error on missing property lookup', function () {
-      expectTemplate('{{hello}}')
+describe("strict", function () {
+  describe("strict mode", function () {
+    it("should error on missing property lookup", function () {
+      expectTemplate("{{hello}}")
         .withCompileOptions({ strict: true })
         .toThrow(Exception, /"hello" not defined in/);
     });
 
-    it('should error on missing child', function () {
-      expectTemplate('{{hello.bar}}')
+    it("should error on missing child", function () {
+      expectTemplate("{{hello.bar}}")
         .withCompileOptions({ strict: true })
-        .withInput({ hello: { bar: 'foo' } })
-        .toCompileTo('foo');
+        .withInput({ hello: { bar: "foo" } })
+        .toCompileTo("foo");
 
-      expectTemplate('{{hello.bar}}')
+      expectTemplate("{{hello.bar}}")
         .withCompileOptions({ strict: true })
         .withInput({ hello: {} })
         .toThrow(Exception, /"bar" not defined in/);
     });
 
-    it('should handle explicit undefined', function () {
-      expectTemplate('{{hello.bar}}')
+    it("should handle explicit undefined", function () {
+      expectTemplate("{{hello.bar}}")
         .withCompileOptions({ strict: true })
         .withInput({ hello: { bar: undefined } })
-        .toCompileTo('');
+        .toCompileTo("");
     });
 
-    it('should error on missing property lookup in known helpers mode', function () {
-      expectTemplate('{{hello}}')
+    it("should error on missing property lookup in known helpers mode", function () {
+      expectTemplate("{{hello}}")
         .withCompileOptions({
           strict: true,
           knownHelpersOnly: true,
@@ -36,79 +36,79 @@ describe('strict', function () {
         .toThrow(Exception, /"hello" not defined in/);
     });
 
-    it('should error on missing context', function () {
-      expectTemplate('{{hello}}')
+    it("should error on missing context", function () {
+      expectTemplate("{{hello}}")
         .withCompileOptions({ strict: true })
         .toThrow(Error);
     });
 
-    it('should error on missing data lookup', function () {
-      var xt = expectTemplate('{{@hello}}').withCompileOptions({
+    it("should error on missing data lookup", function () {
+      var xt = expectTemplate("{{@hello}}").withCompileOptions({
         strict: true,
       });
 
       xt.toThrow(Error);
 
-      xt.withRuntimeOptions({ data: { hello: 'foo' } }).toCompileTo('foo');
+      xt.withRuntimeOptions({ data: { hello: "foo" } }).toCompileTo("foo");
     });
 
-    it('should not run helperMissing for helper calls', function () {
-      expectTemplate('{{hello foo}}')
+    it("should not run helperMissing for helper calls", function () {
+      expectTemplate("{{hello foo}}")
         .withCompileOptions({ strict: true })
         .withInput({ foo: true })
         .toThrow(Exception, /"hello" not defined in/);
 
-      expectTemplate('{{#hello foo}}{{/hello}}')
+      expectTemplate("{{#hello foo}}{{/hello}}")
         .withCompileOptions({ strict: true })
         .withInput({ foo: true })
         .toThrow(Exception, /"hello" not defined in/);
     });
 
-    it('should throw on ambiguous blocks', function () {
-      expectTemplate('{{#hello}}{{/hello}}')
+    it("should throw on ambiguous blocks", function () {
+      expectTemplate("{{#hello}}{{/hello}}")
         .withCompileOptions({ strict: true })
         .toThrow(Exception, /"hello" not defined in/);
 
-      expectTemplate('{{^hello}}{{/hello}}')
+      expectTemplate("{{^hello}}{{/hello}}")
         .withCompileOptions({ strict: true })
         .toThrow(Exception, /"hello" not defined in/);
 
-      expectTemplate('{{#hello.bar}}{{/hello.bar}}')
+      expectTemplate("{{#hello.bar}}{{/hello.bar}}")
         .withCompileOptions({ strict: true })
         .withInput({ hello: {} })
         .toThrow(Exception, /"bar" not defined in/);
     });
 
-    it('should allow undefined parameters when passed to helpers', function () {
-      expectTemplate('{{#unless foo}}success{{/unless}}')
+    it("should allow undefined parameters when passed to helpers", function () {
+      expectTemplate("{{#unless foo}}success{{/unless}}")
         .withCompileOptions({ strict: true })
-        .toCompileTo('success');
+        .toCompileTo("success");
     });
 
-    it('should allow undefined hash when passed to helpers', function () {
-      expectTemplate('{{helper value=@foo}}')
+    it("should allow undefined hash when passed to helpers", function () {
+      expectTemplate("{{helper value=@foo}}")
         .withCompileOptions({
           strict: true,
         })
         .withHelpers({
           helper: function (options) {
-            expect(options.hash).toHaveProperty('value');
+            expect(options.hash).toHaveProperty("value");
             expect(options.hash.value).toBeUndefined();
-            return 'success';
+            return "success";
           },
         })
-        .toCompileTo('success');
+        .toCompileTo("success");
     });
 
-    it('should show error location on missing property lookup', function () {
-      expectTemplate('\n\n\n   {{hello}}')
+    it("should show error location on missing property lookup", function () {
+      expectTemplate("\n\n\n   {{hello}}")
         .withCompileOptions({ strict: true })
         .toThrow(Exception, '"hello" not defined in [object Object] - 4:5');
     });
 
-    it('should error contains correct location properties on missing property lookup', function () {
+    it("should error contains correct location properties on missing property lookup", function () {
       try {
-        var template = CompilerContext.compile('\n\n\n   {{hello}}', {
+        var template = CompilerContext.compile("\n\n\n   {{hello}}", {
           strict: true,
         });
         template({});
@@ -121,44 +121,44 @@ describe('strict', function () {
     });
   });
 
-  describe('assume objects', function () {
-    it('should ignore missing property', function () {
-      expectTemplate('{{hello}}')
+  describe("assume objects", function () {
+    it("should ignore missing property", function () {
+      expectTemplate("{{hello}}")
         .withCompileOptions({ assumeObjects: true })
-        .toCompileTo('');
+        .toCompileTo("");
     });
 
-    it('should ignore missing child', function () {
-      expectTemplate('{{hello.bar}}')
+    it("should ignore missing child", function () {
+      expectTemplate("{{hello.bar}}")
         .withCompileOptions({ assumeObjects: true })
         .withInput({ hello: {} })
-        .toCompileTo('');
+        .toCompileTo("");
     });
 
-    it('should error on missing object', function () {
-      expectTemplate('{{hello.bar}}')
+    it("should error on missing object", function () {
+      expectTemplate("{{hello.bar}}")
         .withCompileOptions({ assumeObjects: true })
         .toThrow(Error);
     });
 
-    it('should error on missing context', function () {
-      expectTemplate('{{hello}}')
+    it("should error on missing context", function () {
+      expectTemplate("{{hello}}")
         .withCompileOptions({ assumeObjects: true })
         .withInput(undefined)
         .toThrow(Error);
     });
 
-    it('should error on missing data lookup', function () {
-      expectTemplate('{{@hello.bar}}')
+    it("should error on missing data lookup", function () {
+      expectTemplate("{{@hello.bar}}")
         .withCompileOptions({ assumeObjects: true })
         .withInput(undefined)
         .toThrow(Error);
     });
 
-    it('should execute blockHelperMissing', function () {
-      expectTemplate('{{^hello}}foo{{/hello}}')
+    it("should execute blockHelperMissing", function () {
+      expectTemplate("{{^hello}}foo{{/hello}}")
         .withCompileOptions({ assumeObjects: true })
-        .toCompileTo('foo');
+        .toCompileTo("foo");
     });
   });
 });

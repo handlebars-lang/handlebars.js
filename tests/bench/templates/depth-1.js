@@ -1,13 +1,13 @@
 module.exports = {
   context: {
     names: [
-      { name: 'Moe' },
-      { name: 'Larry' },
-      { name: 'Curly' },
-      { name: 'Shemp' },
+      { name: "Moe" },
+      { name: "Larry" },
+      { name: "Curly" },
+      { name: "Shemp" },
     ],
-    foo: 'bar',
+    foo: "bar",
   },
-  handlebars: '{{#each names}}{{../foo}}{{/each}}',
-  mustache: '{{#names}}{{foo}}{{/names}}',
+  handlebars: "{{#each names}}{{../foo}}{{/each}}",
+  mustache: "{{#names}}{{foo}}{{/names}}",
 };

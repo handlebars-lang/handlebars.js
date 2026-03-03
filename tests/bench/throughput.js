@@ -1,23 +1,23 @@
-var _ = require('underscore'),
-  runner = require('./util/template-runner'),
+var _ = require("underscore"),
+  runner = require("./util/template-runner"),
   dust,
   Handlebars,
   Mustache;
 
 try {
-  dust = require('dustjs-linkedin');
-} catch (err) {
+  dust = require("dustjs-linkedin");
+} catch {
   /* NOP */
 }
 
 try {
-  Mustache = require('mustache');
-} catch (err) {
+  Mustache = require("mustache");
+} catch {
   /* NOP */
 }
 
 function error() {
-  throw new Error('EWOT');
+  throw new Error("EWOT");
 }
 
 function makeSuite(bench, name, template, handlebarsOnly) {
@@ -41,18 +41,18 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     function (partial, partialName) {
       Handlebars.registerPartial(
         partialName,
-        Handlebars.compile(partial, { data: false })
+        Handlebars.compile(partial, { data: false }),
       );
-    }
+    },
   );
 
   handlebarsOut = handlebar(context, options);
-  bench('handlebars', function () {
+  bench("handlebars", function () {
     handlebar(context, options);
   });
 
   compatOut = compat(context, options);
-  bench('compat', function () {
+  bench("compat", function () {
     compat(context, options);
   });
 
@@ -69,11 +69,11 @@ function makeSuite(bench, name, template, handlebarsOnly) {
         dustOut = out;
       });
 
-      bench('dust', function () {
+      bench("dust", function () {
         dust.render(templateName, context, function () {});
       });
     } else {
-      bench('dust', error);
+      bench("dust", error);
     }
   }
 
@@ -84,47 +84,47 @@ function makeSuite(bench, name, template, handlebarsOnly) {
     if (mustacheSource) {
       mustacheOut = Mustache.to_html(mustacheSource, context, mustachePartials);
 
-      bench('mustache', function () {
+      bench("mustache", function () {
         Mustache.to_html(mustacheSource, context, mustachePartials);
       });
     } else {
-      bench('mustache', error);
+      bench("mustache", error);
     }
   }
 
   // Hack around whitespace until we have whitespace control
-  handlebarsOut = handlebarsOut.replace(/\s/g, '');
+  handlebarsOut = handlebarsOut.replace(/\s/g, "");
   function compare(b, lang) {
     if (b == null) {
       return;
     }
 
-    b = b.replace(/\s/g, '');
+    b = b.replace(/\s/g, "");
 
     if (handlebarsOut !== b) {
       throw new Error(
-        'Template output mismatch: ' +
+        "Template output mismatch: " +
           name +
-          '\n\nHandlebars: ' +
+          "\n\nHandlebars: " +
           handlebarsOut +
-          '\n\n' +
+          "\n\n" +
           lang +
-          ': ' +
-          b
+          ": " +
+          b,
       );
     }
   }
 
-  compare(compatOut, 'compat');
-  compare(dustOut, 'dust');
-  compare(mustacheOut, 'mustache');
+  compare(compatOut, "compat");
+  compare(dustOut, "dust");
+  compare(mustacheOut, "mustache");
 }
 
 module.exports = function (grunt, callback) {
   // Deferring load in case we are being run inline with the grunt build
-  Handlebars = require('../../lib');
+  Handlebars = require("../../lib");
 
-  console.log('Execution Throughput');
+  console.log("Execution Throughput");
   runner(grunt, makeSuite, function (times, scaled) {
     callback(scaled);
   });

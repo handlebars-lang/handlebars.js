@@ -1,36 +1,36 @@
-const os = require('os');
-const path = require('path');
-const fs = require('fs-extra');
+const os = require("os");
+const path = require("path");
+const fs = require("fs-extra");
 
-const git = require('../util/git');
+const git = require("../util/git");
 
-const tmpBaseDir = path.join(os.tmpdir(), 'handlebars-task-tests');
+const tmpBaseDir = path.join(os.tmpdir(), "handlebars-task-tests");
 const tmpDir = path.join(tmpBaseDir, Date.now().toString(36));
-const remoteDir = path.join(tmpDir, 'remote-repo');
-const cloneDir = path.join(tmpDir, 'clone-repo');
+const remoteDir = path.join(tmpDir, "remote-repo");
+const cloneDir = path.join(tmpDir, "clone-repo");
 const oldCwd = process.cwd();
 
-describe('utils/git', function () {
+describe("utils/git", function () {
   beforeEach(async function () {
     await fs.remove(tmpDir);
     await createRepositoryThatActsAsRemote();
     process.chdir(tmpDir);
-    await git.git('clone', 'remote-repo', 'clone-repo');
+    await git.git("clone", "remote-repo", "clone-repo");
     process.chdir(cloneDir);
-    await git.git('config', 'user.email', 'test@test.com');
-    await git.git('config', 'user.name', 'Test');
+    await git.git("config", "user.email", "test@test.com");
+    await git.git("config", "user.name", "Test");
   });
 
   async function createRepositoryThatActsAsRemote() {
     await fs.mkdirp(remoteDir);
     process.chdir(remoteDir);
 
-    await git.git('init');
-    await git.git('config', 'user.email', 'test@test.com');
-    await git.git('config', 'user.name', 'Test');
-    await fs.writeFile('testfile.txt', 'Testfile');
-    await git.add('testfile.txt');
-    await git.commit('commit message');
+    await git.git("init");
+    await git.git("config", "user.email", "test@test.com");
+    await git.git("config", "user.name", "Test");
+    await fs.writeFile("testfile.txt", "Testfile");
+    await git.add("testfile.txt");
+    await git.commit("commit message");
   }
 
   afterEach(function () {
@@ -38,39 +38,39 @@ describe('utils/git', function () {
   });
 
   describe('the "remotes"-function', function () {
-    it('should list all remotes', async function () {
-      await git.git('remote', 'set-url', 'origin', 'https://test.org/test');
-      await git.git('remote', 'add', 'second-remote', 'https://test.org/test2');
+    it("should list all remotes", async function () {
+      await git.git("remote", "set-url", "origin", "https://test.org/test");
+      await git.git("remote", "add", "second-remote", "https://test.org/test2");
 
       const result = await git.remotes();
 
-      expect(result.trim().split('\n')).toEqual([
-        'origin\thttps://test.org/test (fetch)',
-        'origin\thttps://test.org/test (push)',
-        'second-remote\thttps://test.org/test2 (fetch)',
-        'second-remote\thttps://test.org/test2 (push)',
+      expect(result.trim().split("\n")).toEqual([
+        "origin\thttps://test.org/test (fetch)",
+        "origin\thttps://test.org/test (push)",
+        "second-remote\thttps://test.org/test2 (fetch)",
+        "second-remote\thttps://test.org/test2 (push)",
       ]);
     });
   });
 
   describe('the "branches"-function', function () {
-    it('should list all branches', async function () {
-      await git.git('branch', 'test');
-      await git.git('branch', 'test2');
+    it("should list all branches", async function () {
+      await git.git("branch", "test");
+      await git.git("branch", "test2");
 
       const result = await git.branches();
-      expect(result.trim().split('\n')).toEqual([
-        '* master',
-        '  test',
-        '  test2',
-        '  remotes/origin/HEAD -> origin/master',
-        '  remotes/origin/master',
+      expect(result.trim().split("\n")).toEqual([
+        "* master",
+        "  test",
+        "  test2",
+        "  remotes/origin/HEAD -> origin/master",
+        "  remotes/origin/master",
       ]);
     });
   });
 
   describe('the "commitInfo"-function', function () {
-    it('should list head and master sha', async function () {
+    it("should list head and master sha", async function () {
       const result = await git.commitInfo();
       expect(result.masterSha).toBe(result.headSha);
       expect(result.masterSha).toMatch(/^[0-9a-f]+$/);
@@ -83,37 +83,37 @@ describe('utils/git', function () {
     });
 
     it('should have "isMaster=true" if the current commit is the last commit of the master branch', async function () {
-      await git.git('checkout', '-b', 'new-branch');
+      await git.git("checkout", "-b", "new-branch");
 
       const result = await git.commitInfo();
       expect(result.isMaster).toBe(true);
     });
 
     it('should have "isMaster=false" if the current commit is NOT the last commit of the master branch', async function () {
-      await git.git('checkout', '-b', 'new-branch');
-      fs.writeFile('new-file.txt', 'new-file');
-      await git.add('new-file.txt');
-      await git.commit('added new file');
+      await git.git("checkout", "-b", "new-branch");
+      fs.writeFile("new-file.txt", "new-file");
+      await git.add("new-file.txt");
+      await git.commit("added new file");
 
       const result = await git.commitInfo();
       expect(result.isMaster).toBe(false);
     });
 
-    it('should show the current tag', async function () {
-      await git.git('tag', 'test-tag');
+    it("should show the current tag", async function () {
+      await git.git("tag", "test-tag");
       const result = await git.commitInfo();
-      expect(result.tagName).toBe('test-tag');
+      expect(result.tagName).toBe("test-tag");
     });
 
-    it('should show a version tag rather than standard tags', async function () {
-      await git.git('tag', 'test-tag');
-      await git.git('tag', 'v1.2');
-      await git.git('tag', 'test-tag2');
+    it("should show a version tag rather than standard tags", async function () {
+      await git.git("tag", "test-tag");
+      await git.git("tag", "v1.2");
+      await git.git("tag", "test-tag2");
       const result = await git.commitInfo();
-      expect(result.tagName).toBe('v1.2');
+      expect(result.tagName).toBe("v1.2");
     });
 
-    it('should show no tag if there is no tag', async function () {
+    it("should show no tag if there is no tag", async function () {
       const result = await git.commitInfo();
       expect(result.tagName).toBeNull();
     });

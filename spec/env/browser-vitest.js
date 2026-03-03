@@ -1,5 +1,5 @@
-import './common.js';
-import Handlebars from '../../lib/handlebars.js';
+import "./common.js";
+import Handlebars from "../../lib/handlebars.js";
 
 globalThis.Handlebars = Handlebars;
 
@@ -18,7 +18,7 @@ globalThis.CompilerContext = {
 function safeEval(templateSpec) {
   /* eslint-disable no-eval, no-console */
   try {
-    return eval('(' + templateSpec + ')');
+    return eval("(" + templateSpec + ")");
   } catch (err) {
     console.error(templateSpec);
     throw err;
