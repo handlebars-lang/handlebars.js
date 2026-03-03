@@ -6,13 +6,13 @@ var _ = require('underscore'),
 
 try {
   dust = require('dustjs-linkedin');
-} catch (err) {
+} catch {
   /* NOP */
 }
 
 try {
   Mustache = require('mustache');
-} catch (err) {
+} catch {
   /* NOP */
 }
 

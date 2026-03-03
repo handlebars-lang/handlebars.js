@@ -9,7 +9,7 @@ module.exports = function (grunt) {
     const events = {};
 
     const promises = Object.keys(metrics).map(async (name) => {
-      if (/^_/.test(name)) {
+      if (name.startsWith('_')) {
         return;
       }
       if (onlyExecuteName != null && name !== onlyExecuteName) {

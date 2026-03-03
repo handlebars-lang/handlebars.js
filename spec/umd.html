@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Handlebars UMD Module Smoke Test</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <h1>Handlebars UMD Module Smoke Test</h1>
@@ -26,16 +26,28 @@
 
       requirejs.config({
         paths: {
-          handlebars: '/dist/handlebars'
-        }
+          handlebars: '/dist/handlebars',
+        },
       });
 
-      require(['handlebars'], function(Handlebars) {
+      require(['handlebars'], function (Handlebars) {
         try {
-          assert(typeof Handlebars !== 'undefined', 'Handlebars loaded via RequireJS');
-          assert(typeof Handlebars.compile === 'function', 'Handlebars.compile exists');
-          assert(typeof Handlebars.template === 'function', 'Handlebars.template exists');
-          assert(typeof Handlebars.VERSION === 'string', 'Handlebars.VERSION exists');
+          assert(
+            typeof Handlebars !== 'undefined',
+            'Handlebars loaded via RequireJS'
+          );
+          assert(
+            typeof Handlebars.compile === 'function',
+            'Handlebars.compile exists'
+          );
+          assert(
+            typeof Handlebars.template === 'function',
+            'Handlebars.template exists'
+          );
+          assert(
+            typeof Handlebars.VERSION === 'string',
+            'Handlebars.VERSION exists'
+          );
 
           var template = Handlebars.compile('Hello {{name}}!');
           var output = template({ name: 'UMD' });
@@ -45,7 +57,8 @@
           results.textContent += 'ERROR: ' + e.message + '\n';
         }
 
-        results.textContent += '\n' + tests + ' tests, ' + failures + ' failures\n';
+        results.textContent +=
+          '\n' + tests + ' tests, ' + failures + ' failures\n';
         window.mochaResults = { passes: tests - failures, failures: failures };
       });
     </script>

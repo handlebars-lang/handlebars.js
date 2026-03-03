@@ -165,8 +165,7 @@ describe('partials', function () {
 
   it('registering undefined partial throws an exception', function () {
     expect(function () {
-      var undef;
-      handlebarsEnv.registerPartial('undefined_test', undef);
+      handlebarsEnv.registerPartial('undefined_test', undefined);
     }).toThrow(
       'Attempting to register a partial called "undefined_test" as undefined'
     );

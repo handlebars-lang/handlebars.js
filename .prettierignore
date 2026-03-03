@@ -1,3 +1,4 @@
+# Ignore patterns for oxfmt (reads .prettierignore by default)
 .rvmrc
 .DS_Store
 /tmp/
@@ -18,4 +19,9 @@ node_modules
 
 # Third-party or files that must remain unchanged
 /spec/expected/
+/spec/mustache
 /spec/vendor
+
+# Handlebars template files (not JavaScript)
+*.handlebars
+*.hbs

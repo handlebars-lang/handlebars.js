@@ -52,7 +52,7 @@ async function getTagName() {
   }
 
   const tags = trimmedStdout.split(/\n|\r\n/);
-  const versionTags = tags.filter((tag) => /^v/.test(tag));
+  const versionTags = tags.filter((tag) => tag.startsWith('v'));
   if (versionTags[0] != null) {
     return versionTags[0];
   }

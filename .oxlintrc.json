@@ -1,0 +1,150 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "node", "vitest"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-console": "warn",
+    "no-func-assign": "off",
+    "no-sparse-arrays": "off",
+
+    "default-case": "warn",
+    "guard-for-in": "warn",
+    "no-alert": "error",
+    "no-caller": "error",
+    "no-div-regex": "warn",
+    "no-eval": "error",
+    "no-extend-native": "error",
+    "no-extra-bind": "error",
+    "no-implied-eval": "error",
+    "no-iterator": "error",
+    "no-labels": "error",
+    "no-lone-blocks": "error",
+    "no-loop-func": "error",
+    "no-multi-str": "warn",
+    "no-global-assign": "error",
+    "no-new": "error",
+    "no-new-func": "error",
+    "no-new-wrappers": "error",
+    "no-proto": "error",
+    "no-return-assign": "error",
+    "no-script-url": "error",
+    "no-self-compare": "error",
+    "no-sequences": "error",
+    "no-throw-literal": "error",
+    "no-unused-expressions": "error",
+    "no-warning-comments": "warn",
+    "no-with": "error",
+    "radix": "error",
+
+    "no-label-var": "error",
+    "no-use-before-define": ["error", { "functions": false }],
+
+    "no-var": "error",
+
+    "node/no-process-env": "error"
+  },
+  "ignorePatterns": [
+    "tmp/",
+    "dist/",
+    "coverage/",
+    "tests/integration/*/dist/",
+    "spec/expected/",
+    "spec/mustache",
+    "spec/vendor",
+    "node_modules",
+    "src/*.js",
+    "types/"
+  ],
+  "overrides": [
+    {
+      "files": ["lib/**/*.js"],
+      "env": {
+        "node": false,
+        "browser": true
+      }
+    },
+    {
+      "files": ["spec/**/*.js"],
+      "globals": {
+        "CompilerContext": "readonly",
+        "Handlebars": "writable",
+        "handlebarsEnv": "readonly",
+        "expectTemplate": "readonly",
+        "suite": "readonly",
+        "test": "readonly",
+        "testBoth": "readonly",
+        "raises": "readonly",
+        "deepEqual": "readonly",
+        "start": "readonly",
+        "stop": "readonly",
+        "ok": "readonly",
+        "vi": "readonly",
+        "strictEqual": "readonly",
+        "define": "readonly",
+        "expect": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "describe": "readonly",
+        "it": "readonly"
+      },
+      "rules": {
+        "no-var": "off",
+        "dot-notation": "off",
+        "vitest/no-conditional-tests": "off"
+      }
+    },
+    {
+      "files": ["tasks/**/*.js"],
+      "rules": {
+        "node/no-process-env": "off",
+        "prefer-const": "warn",
+        "dot-notation": "error"
+      }
+    },
+    {
+      "files": ["tasks/tests/**/*.js"],
+      "globals": {
+        "describe": "readonly",
+        "it": "readonly",
+        "expect": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "vi": "readonly"
+      }
+    },
+    {
+      "files": ["tests/bench/**/*.js"],
+      "rules": {
+        "no-console": "off",
+        "no-var": "off"
+      }
+    },
+    {
+      "files": ["tests/integration/multi-nodejs-test/**/*.js"],
+      "rules": {
+        "no-console": "off",
+        "no-var": "off"
+      }
+    },
+    {
+      "files": ["tests/browser/**/*.js"],
+      "env": {
+        "browser": true
+      }
+    },
+    {
+      "files": [
+        "tests/integration/webpack-babel-test/src/**/*.js",
+        "tests/integration/webpack-test/src/**/*.js"
+      ],
+      "env": {
+        "browser": true
+      },
+      "rules": {
+        "no-var": "off"
+      }
+    }
+  ]
+}

@@ -356,7 +356,6 @@ Breaking changes:
 Compatibility notes:
 
 - Compiler revision increased - 06b7224
-
   - This means that template compiled with versions prior to 4.3.0 will not work with runtimes >= 4.3.0
     The increase was done because the "helperMissing" and "blockHelperMissing" are now moved from the helpers
     to the internal "container.hooks" object, so old templates will not be able to call them anymore. We suggest

@@ -1,0 +1,8 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicolo-ribaudo/oxfmt-config-schema/refs/heads/main/schema.json",
+  "singleQuote": true,
+  "tabWidth": 2,
+  "semi": true,
+  "trailingComma": "es5",
+  "printWidth": 80
+}

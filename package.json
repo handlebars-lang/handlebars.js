@@ -2,30 +2,59 @@
   "name": "handlebars",
   "version": "5.0.0-alpha.1",
   "description": "Handlebars provides the power necessary to let you build semantic templates effectively with no frustration",
-  "homepage": "https://handlebarsjs.com/",
   "keywords": [
     "handlebars",
+    "html",
     "mustache",
-    "template",
-    "html"
+    "template"
   ],
+  "homepage": "https://handlebarsjs.com/",
+  "license": "MIT",
+  "author": "Yehuda Katz",
   "repository": {
     "type": "git",
     "url": "https://github.com/handlebars-lang/handlebars.js.git"
   },
-  "author": "Yehuda Katz",
-  "license": "MIT",
-  "engines": {
-    "node": ">=20"
+  "bin": {
+    "handlebars": "bin/handlebars.js"
+  },
+  "files": [
+    "bin",
+    "dist/*.js",
+    "dist/cjs/**/*.js",
+    "lib",
+    "release-notes.md",
+    "runtime.js",
+    "types/*.d.ts",
+    "runtime.d.ts"
+  ],
+  "main": "lib/index.js",
+  "browser": "./dist/cjs/handlebars.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "grunt build",
+    "release": "grunt release",
+    "publish:aws": "grunt && npm run test:tasks && grunt publish-to-aws",
+    "format": "oxfmt --write . && oxlint --fix .",
+    "lint": "npm run lint:oxlint && npm run lint:format && npm run lint:types",
+    "lint:oxlint": "oxlint --max-warnings 0 .",
+    "lint:format": "oxfmt --check .",
+    "lint:types": "tsc --noEmit --project types",
+    "test": "grunt build && vitest run --project node --project tasks --coverage",
+    "test:browser": "vitest run --project browser",
+    "test:unit": "vitest run --project node",
+    "test:tasks": "vitest run --project tasks",
+    "test:browser-smoke": "playwright test --config tests/browser/playwright.config.js",
+    "test:integration": "grunt integration-tests",
+    "test:serve": "grunt connect:server:keepalive",
+    "--- combined tasks ---": "",
+    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
   },
   "dependencies": {
     "@handlebars/parser": "^2.1.0",
     "neo-async": "^2.6.2",
     "source-map": "^0.6.1",
     "yargs": "^16.2.0"
-  },
-  "peerDependencies": {
-    "uglify-js": "^3.1.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
@@ -38,9 +67,6 @@
     "benchmark": "~1.0",
     "concurrently": "^5.0.0",
     "dustjs-linkedin": "^2.0.2",
-    "eslint": "^8.25.0",
-    "eslint-config-prettier": "^8.9.0",
-    "eslint-plugin-compat": "4.0",
     "fs-extra": "^8.1.0",
     "grunt": "^1.0.4",
     "grunt-babel": "^5.0.0",
@@ -55,10 +81,11 @@
     "grunt-shell": "^4.0.0",
     "grunt-webpack": "^1.0.8",
     "husky": "^3.1.0",
-    "lint-staged": "^9.5.0",
+    "lint-staged": "^16.3.2",
     "mock-stdin": "^0.3.0",
     "mustache": "^2.1.3",
-    "prettier": "^3.0.0",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0",
     "semver": "^5.0.1",
     "typescript": "^3.4.3",
     "uglify-js": "^3.1.4",
@@ -67,30 +94,31 @@
     "webpack": "^1.12.6",
     "webpack-dev-server": "^1.12.1"
   },
-  "main": "lib/index.js",
-  "types": "types/index.d.ts",
-  "browser": "./dist/cjs/handlebars.js",
-  "bin": {
-    "handlebars": "bin/handlebars.js"
+  "peerDependencies": {
+    "uglify-js": "^3.1.4"
   },
-  "scripts": {
-    "build": "grunt build",
-    "release": "grunt release",
-    "publish:aws": "grunt && npm run test:tasks && grunt publish-to-aws",
-    "format": "prettier --write '**/*.{js,css,json,md}' && eslint --fix .",
-    "lint": "npm run lint:eslint && npm run lint:prettier && npm run lint:types",
-    "lint:eslint": "eslint --max-warnings 0 .",
-    "lint:prettier": "prettier --check '**/*.js'",
-    "lint:types": "tsc --noEmit --project types",
-    "test": "grunt build && vitest run --project node --project tasks --coverage",
-    "test:browser": "vitest run --project browser",
-    "test:unit": "vitest run --project node",
-    "test:tasks": "vitest run --project tasks",
-    "test:browser-smoke": "playwright test --config tests/browser/playwright.config.js",
-    "test:integration": "grunt integration-tests",
-    "test:serve": "grunt connect:server:keepalive",
-    "--- combined tasks ---": "",
-    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "oxfmt --write"
+    ],
+    "*.js": [
+      "oxlint --fix"
+    ]
+  },
+  "browserslist": [
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead",
+    "not IE 11",
+    "maintained node versions"
+  ],
+  "engines": {
+    "node": ">=20"
   },
   "jspm": {
     "main": "handlebars",
@@ -100,37 +128,5 @@
     "buildConfig": {
       "minify": true
     }
-  },
-  "files": [
-    "bin",
-    "dist/*.js",
-    "dist/cjs/**/*.js",
-    "lib",
-    "release-notes.md",
-    "runtime.js",
-    "types/*.d.ts",
-    "runtime.d.ts"
-  ],
-  "browserslist": [
-    "last 2 versions",
-    "Firefox ESR",
-    "not dead",
-    "not IE 11",
-    "maintained node versions"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,css,json,md}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
   }
 }
