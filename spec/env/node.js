@@ -1,6 +1,6 @@
-require("./common");
+require('./common');
 
-global.Handlebars = require("../../lib");
+global.Handlebars = require('../../lib');
 
 global.CompilerContext = {
   compile: function (template, options) {
@@ -15,7 +15,7 @@ global.CompilerContext = {
 function safeEval(templateSpec) {
   /* eslint-disable no-eval, no-console */
   try {
-    return eval("(" + templateSpec + ")");
+    return eval('(' + templateSpec + ')');
   } catch (err) {
     console.error(templateSpec);
     throw err;

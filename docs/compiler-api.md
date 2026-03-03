@@ -334,8 +334,8 @@ MyCompiler.prototype = new Handlebars.JavaScriptCompiler();
 MyCompiler.prototype.compiler = MyCompiler;
 
 MyCompiler.prototype.nameLookup = function (parent, name, type) {
-  if (type === "context") {
-    return this.source.functionCall("helpers.lookupLowerCase", "", [
+  if (type === 'context') {
+    return this.source.functionCall('helpers.lookupLowerCase', '', [
       parent,
       JSON.stringify(name),
     ]);
@@ -344,22 +344,22 @@ MyCompiler.prototype.nameLookup = function (parent, name, type) {
       this,
       parent,
       name,
-      type,
+      type
     );
   }
 };
 
 var env = Handlebars.create();
-env.registerHelper("lookupLowerCase", function (parent, name) {
+env.registerHelper('lookupLowerCase', function (parent, name) {
   return parent[name.toLowerCase()];
 });
 
 env.JavaScriptCompiler = MyCompiler;
 
-var template = env.compile("{{#each Test}} ({{Value}}) {{/each}}");
+var template = env.compile('{{#each Test}} ({{Value}}) {{/each}}');
 console.log(
   template({
-    test: [{ value: "a" }, { value: "b" }, { value: "c" }],
-  }),
+    test: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
+  })
 );
 ```

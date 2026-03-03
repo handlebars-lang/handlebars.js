@@ -1,9 +1,9 @@
-describe("javascript-compiler api", function () {
+describe('javascript-compiler api', function () {
   if (!Handlebars.JavaScriptCompiler) {
     return;
   }
 
-  describe("#nameLookup", function () {
+  describe('#nameLookup', function () {
     var $superName;
     beforeEach(function () {
       $superName = handlebarsEnv.JavaScriptCompiler.prototype.nameLookup;
@@ -12,32 +12,32 @@ describe("javascript-compiler api", function () {
       handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = $superName;
     });
 
-    it("should allow override", function () {
+    it('should allow override', function () {
       handlebarsEnv.JavaScriptCompiler.prototype.nameLookup = function (
         parent,
-        name,
+        name
       ) {
-        return parent + ".bar_" + name;
+        return parent + '.bar_' + name;
       };
       /* eslint-disable camelcase */
-      expectTemplate("{{foo}}")
-        .withInput({ bar_foo: "food" })
-        .toCompileTo("food");
+      expectTemplate('{{foo}}')
+        .withInput({ bar_foo: 'food' })
+        .toCompileTo('food');
       /* eslint-enable camelcase */
     });
 
     // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases
     // to avoid errors in older browsers.
-    it("should handle reserved words", function () {
-      expectTemplate("{{foo}} {{~null~}}")
-        .withInput({ foo: "food" })
-        .toCompileTo("food");
+    it('should handle reserved words', function () {
+      expectTemplate('{{foo}} {{~null~}}')
+        .withInput({ foo: 'food' })
+        .toCompileTo('food');
     });
   });
   // Monkey-patching VM.checkRevision is not possible when VM is an ESM
   // namespace object (browser mode), so skip these tests in that context.
   (CompilerContext.browser ? describe.skip : describe)(
-    "#compilerInfo",
+    '#compilerInfo',
     function () {
       var $superCheck, $superInfo;
       beforeEach(function () {
@@ -48,22 +48,22 @@ describe("javascript-compiler api", function () {
         handlebarsEnv.VM.checkRevision = $superCheck;
         handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = $superInfo;
       });
-      it("should allow compilerInfo override", function () {
+      it('should allow compilerInfo override', function () {
         handlebarsEnv.JavaScriptCompiler.prototype.compilerInfo = function () {
-          return "crazy";
+          return 'crazy';
         };
         handlebarsEnv.VM.checkRevision = function (compilerInfo) {
-          if (compilerInfo !== "crazy") {
+          if (compilerInfo !== 'crazy') {
             throw new Error("It didn't work");
           }
         };
-        expectTemplate("{{foo}} ")
-          .withInput({ foo: "food" })
-          .toCompileTo("food ");
+        expectTemplate('{{foo}} ')
+          .withInput({ foo: 'food' })
+          .toCompileTo('food ');
       });
-    },
+    }
   );
-  describe("buffer", function () {
+  describe('buffer', function () {
     var $superAppend, $superCreate;
     beforeEach(function () {
       handlebarsEnv.JavaScriptCompiler.prototype.forceBuffer = true;
@@ -78,47 +78,47 @@ describe("javascript-compiler api", function () {
         $superCreate;
     });
 
-    it("should allow init buffer override", function () {
+    it('should allow init buffer override', function () {
       handlebarsEnv.JavaScriptCompiler.prototype.initializeBuffer =
         function () {
-          return this.quotedString("foo_");
+          return this.quotedString('foo_');
         };
-      expectTemplate("{{foo}} ")
-        .withInput({ foo: "food" })
-        .toCompileTo("foo_food ");
+      expectTemplate('{{foo}} ')
+        .withInput({ foo: 'food' })
+        .toCompileTo('foo_food ');
     });
-    it("should allow append buffer override", function () {
+    it('should allow append buffer override', function () {
       handlebarsEnv.JavaScriptCompiler.prototype.appendToBuffer = function (
-        string,
+        string
       ) {
         return $superAppend.call(this, [string, ' + "_foo"']);
       };
-      expectTemplate("{{foo}}")
-        .withInput({ foo: "food" })
-        .toCompileTo("food_foo");
+      expectTemplate('{{foo}}')
+        .withInput({ foo: 'food' })
+        .toCompileTo('food_foo');
     });
   });
 
-  describe("#isValidJavaScriptVariableName", function () {
+  describe('#isValidJavaScriptVariableName', function () {
     // It is there and accessible and could be used by someone. That's why we don't remove it
     // it 4.x. But if we keep it, we add a test
     // This test should not encourage you to use the function. It is not needed any more
     // and might be removed in 5.0
-    ["test", "abc123", "abc_123"].forEach(function (validVariableName) {
+    ['test', 'abc123', 'abc_123'].forEach(function (validVariableName) {
       it("should return true for '" + validVariableName + "'", function () {
         expect(
           handlebarsEnv.JavaScriptCompiler.isValidJavaScriptVariableName(
-            validVariableName,
-          ),
+            validVariableName
+          )
         ).toBe(true);
       });
     });
-    [("123test", "abc()", "abc.cde")].forEach(function (invalidVariableName) {
+    [('123test', 'abc()', 'abc.cde')].forEach(function (invalidVariableName) {
       it("should return true for '" + invalidVariableName + "'", function () {
         expect(
           handlebarsEnv.JavaScriptCompiler.isValidJavaScriptVariableName(
-            invalidVariableName,
-          ),
+            invalidVariableName
+          )
         ).toBe(false);
       });
     });

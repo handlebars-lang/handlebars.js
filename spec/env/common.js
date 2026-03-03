@@ -11,7 +11,7 @@ function HandlebarsTestBench(templateAsString) {
   this.decorators = {};
   this.input = {};
   this.message =
-    "Template" + templateAsString + " does not evaluate to expected output";
+    'Template' + templateAsString + ' does not evaluate to expected output';
   this.compileOptions = {};
   this.runtimeOptions = {};
 }
@@ -49,7 +49,7 @@ HandlebarsTestBench.prototype.withPartials = function (partials) {
 
 HandlebarsTestBench.prototype.withDecorator = function (
   name,
-  decoratorFunction,
+  decoratorFunction
 ) {
   this.decorators[name] = decoratorFunction;
   return this;
@@ -93,7 +93,7 @@ HandlebarsTestBench.prototype.toThrow = function (errorLike, errMsgMatcher) {
 
   expect(caught).toBeDefined();
 
-  if (typeof errorLike === "function") {
+  if (typeof errorLike === 'function') {
     expect(caught).toBeInstanceOf(errorLike);
     if (errMsgMatcher) {
       expect(caught.message).toMatch(errMsgMatcher);

@@ -188,7 +188,7 @@ Compatibility notes:
 
 ```js
 {
-  __proto__: "some string";
+  __proto__: 'some string';
 }
 ```
 

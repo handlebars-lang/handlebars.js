@@ -1,13 +1,13 @@
 module.exports = {
   helpers: {
     echo: function (value) {
-      return "foo " + value;
+      return 'foo ' + value;
     },
     header: function () {
-      return "Colors";
+      return 'Colors';
     },
   },
-  handlebars: "{{echo (header)}}",
+  handlebars: '{{echo (header)}}',
 };
 
 module.exports.context = module.exports.helpers;

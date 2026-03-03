@@ -1,41 +1,41 @@
-const git = require("./util/git");
-const semver = require("semver");
-const { createRegisterAsyncTaskFn } = require("./util/async-grunt-task");
+const git = require('./util/git');
+const semver = require('semver');
+const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
 
 module.exports = function (grunt) {
   const registerAsyncTask = createRegisterAsyncTaskFn(grunt);
 
-  registerAsyncTask("version", async () => {
-    const pkg = grunt.config("pkg");
-    const version = grunt.option("ver");
+  registerAsyncTask('version', async () => {
+    const pkg = grunt.config('pkg');
+    const version = grunt.option('ver');
     if (!semver.valid(version)) {
       throw new Error(
-        "Must provide a version number (Ex: --ver=1.0.0):\n\t" +
+        'Must provide a version number (Ex: --ver=1.0.0):\n\t' +
           version +
-          "\n\n",
+          '\n\n'
       );
     }
     pkg.version = version;
-    grunt.config("pkg", pkg);
+    grunt.config('pkg', pkg);
 
     const replaceSpec = [
       {
-        path: "lib/handlebars/base.js",
+        path: 'lib/handlebars/base.js',
         regex: /const VERSION = ['"](.*)['"];/,
         replacement: `const VERSION = '${version}';`,
       },
       {
-        path: "components/bower.json",
+        path: 'components/bower.json',
         regex: /"version":.*/,
         replacement: `"version": "${version}",`,
       },
       {
-        path: "components/package.json",
+        path: 'components/package.json',
         regex: /"version":.*/,
         replacement: `"version": "${version}",`,
       },
       {
-        path: "components/handlebars.js.nuspec",
+        path: 'components/handlebars.js.nuspec',
         regex: /<version>.*<\/version>/,
         replacement: `<version>${version}</version>`,
       },
@@ -46,11 +46,11 @@ module.exports = function (grunt) {
         replaceAndAdd(
           replaceSpec.path,
           replaceSpec.regex,
-          replaceSpec.replacement,
-        ),
-      ),
+          replaceSpec.replacement
+        )
+      )
     );
-    grunt.task.run(["default"]);
+    grunt.task.run(['default']);
   });
 
   async function replaceAndAdd(path, regex, value) {

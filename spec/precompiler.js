@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
-describe("precompiler", function () {
+describe('precompiler', function () {
   // NOP Under non-node environments
-  if (typeof process === "undefined") {
+  if (typeof process === 'undefined') {
     return;
   }
 
-  var Handlebars = require("../lib"),
-    Precompiler = require("../dist/cjs/precompiler"),
-    fs = require("fs"),
-    uglify = require("uglify-js");
+  var Handlebars = require('../lib'),
+    Precompiler = require('../dist/cjs/precompiler'),
+    fs = require('fs'),
+    uglify = require('uglify-js');
 
   var log,
     logFunction,
@@ -17,9 +17,9 @@ describe("precompiler", function () {
     precompile,
     minify,
     emptyTemplate = {
-      path: __dirname + "/artifacts/empty.handlebars",
-      name: "empty",
-      source: "",
+      path: __dirname + '/artifacts/empty.handlebars',
+      name: 'empty',
+      source: '',
     },
     file,
     content,
@@ -34,12 +34,12 @@ describe("precompiler", function () {
    * @param {function} callback a callback-function to run when the mock is active.
    */
   function mockRequireUglify(loadError, callback) {
-    var Module = require("module");
+    var Module = require('module');
     var _resolveFilename = Module._resolveFilename;
-    delete require.cache[require.resolve("uglify-js")];
-    delete require.cache[require.resolve("../dist/cjs/precompiler")];
+    delete require.cache[require.resolve('uglify-js')];
+    delete require.cache[require.resolve('../dist/cjs/precompiler')];
     Module._resolveFilename = function (request, mod) {
-      if (request === "uglify-js") {
+      if (request === 'uglify-js') {
         throw loadError;
       }
       return _resolveFilename.call(this, request, mod);
@@ -48,8 +48,8 @@ describe("precompiler", function () {
       callback();
     } finally {
       Module._resolveFilename = _resolveFilename;
-      delete require.cache[require.resolve("uglify-js")];
-      delete require.cache[require.resolve("../dist/cjs/precompiler")];
+      delete require.cache[require.resolve('uglify-js')];
+      delete require.cache[require.resolve('../dist/cjs/precompiler')];
     }
   }
 
@@ -60,14 +60,14 @@ describe("precompiler", function () {
 
     // Mock stdout and stderr
     logFunction = console.log;
-    log = "";
+    log = '';
     console.log = function () {
-      log += Array.prototype.join.call(arguments, "");
+      log += Array.prototype.join.call(arguments, '');
     };
     errorLogFunction = console.error;
-    errorLog = "";
+    errorLog = '';
     console.error = function () {
-      errorLog += Array.prototype.join.call(arguments, "");
+      errorLog += Array.prototype.join.call(arguments, '');
     };
 
     fs.writeFileSync = function (_file, _content) {
@@ -83,91 +83,91 @@ describe("precompiler", function () {
     console.error = errorLogFunction;
   });
 
-  it("should output version", function () {
+  it('should output version', function () {
     Precompiler.cli({ templates: [], version: true });
     expect(log).toBe(Handlebars.VERSION);
   });
-  it("should throw if lacking templates", function () {
+  it('should throw if lacking templates', function () {
     expect(function () {
       Precompiler.cli({ templates: [] });
-    }).toThrow("Must define at least one template or directory.");
+    }).toThrow('Must define at least one template or directory.');
   });
-  it("should handle empty/filtered directories", function () {
+  it('should handle empty/filtered directories', function () {
     Precompiler.cli({ hasDirectory: true, templates: [] });
     // Success is not throwing
   });
-  it("should throw when combining simple and minimized", function () {
+  it('should throw when combining simple and minimized', function () {
     expect(function () {
       Precompiler.cli({ templates: [__dirname], simple: true, min: true });
-    }).toThrow("Unable to minimize simple output");
+    }).toThrow('Unable to minimize simple output');
   });
-  it("should throw when combining simple and multiple templates", function () {
+  it('should throw when combining simple and multiple templates', function () {
     expect(function () {
       Precompiler.cli({
         templates: [
-          __dirname + "/artifacts/empty.handlebars",
-          __dirname + "/artifacts/empty.handlebars",
+          __dirname + '/artifacts/empty.handlebars',
+          __dirname + '/artifacts/empty.handlebars',
         ],
         simple: true,
       });
-    }).toThrow("Unable to output multiple templates in simple mode");
+    }).toThrow('Unable to output multiple templates in simple mode');
   });
-  it("should throw when missing name", function () {
+  it('should throw when missing name', function () {
     expect(function () {
-      Precompiler.cli({ templates: [{ source: "" }], amd: true });
-    }).toThrow("Name missing for template");
+      Precompiler.cli({ templates: [{ source: '' }], amd: true });
+    }).toThrow('Name missing for template');
   });
-  it("should throw when combining simple and directories", function () {
+  it('should throw when combining simple and directories', function () {
     expect(function () {
       Precompiler.cli({ hasDirectory: true, templates: [1], simple: true });
-    }).toThrow("Unable to output multiple templates in simple mode");
+    }).toThrow('Unable to output multiple templates in simple mode');
   });
 
-  it("should output simple templates", function () {
+  it('should output simple templates', function () {
     Handlebars.precompile = function () {
-      return "simple";
+      return 'simple';
     };
     Precompiler.cli({ templates: [emptyTemplate], simple: true });
-    expect(log).toBe("simple\n");
+    expect(log).toBe('simple\n');
   });
-  it("should default to simple templates", function () {
+  it('should default to simple templates', function () {
     Handlebars.precompile = function () {
-      return "simple";
+      return 'simple';
     };
-    Precompiler.cli({ templates: [{ source: "" }] });
-    expect(log).toBe("simple\n");
+    Precompiler.cli({ templates: [{ source: '' }] });
+    expect(log).toBe('simple\n');
   });
-  it("should output amd templates", function () {
+  it('should output amd templates', function () {
     Handlebars.precompile = function () {
-      return "amd";
+      return 'amd';
     };
     Precompiler.cli({ templates: [emptyTemplate], amd: true });
     expect(log).toMatch(/template\(amd\)/);
   });
-  it("should output multiple amd", function () {
+  it('should output multiple amd', function () {
     Handlebars.precompile = function () {
-      return "amd";
+      return 'amd';
     };
     Precompiler.cli({
       templates: [emptyTemplate, emptyTemplate],
       amd: true,
-      namespace: "foo",
+      namespace: 'foo',
     });
     expect(log).toMatch(/templates = foo = foo \|\|/);
     expect(log).toMatch(/return templates/);
     expect(log).toMatch(/template\(amd\)/);
   });
-  it("should output amd partials", function () {
+  it('should output amd partials', function () {
     Handlebars.precompile = function () {
-      return "amd";
+      return 'amd';
     };
     Precompiler.cli({ templates: [emptyTemplate], amd: true, partial: true });
     expect(log).toMatch(/return Handlebars\.partials\['empty'\]/);
     expect(log).toMatch(/template\(amd\)/);
   });
-  it("should output multiple amd partials", function () {
+  it('should output multiple amd partials', function () {
     Handlebars.precompile = function () {
-      return "amd";
+      return 'amd';
     };
     Precompiler.cli({
       templates: [emptyTemplate, emptyTemplate],
@@ -177,63 +177,63 @@ describe("precompiler", function () {
     expect(log).not.toMatch(/return Handlebars\.partials\[/);
     expect(log).toMatch(/template\(amd\)/);
   });
-  it("should output commonjs templates", function () {
+  it('should output commonjs templates', function () {
     Handlebars.precompile = function () {
-      return "commonjs";
+      return 'commonjs';
     };
     Precompiler.cli({ templates: [emptyTemplate], commonjs: true });
     expect(log).toMatch(/template\(commonjs\)/);
   });
 
-  it("should set data flag", function () {
+  it('should set data flag', function () {
     Handlebars.precompile = function (data, options) {
       expect(options.data).toBe(true);
-      return "simple";
+      return 'simple';
     };
     Precompiler.cli({ templates: [emptyTemplate], simple: true, data: true });
-    expect(log).toBe("simple\n");
+    expect(log).toBe('simple\n');
   });
 
-  it("should set known helpers", function () {
+  it('should set known helpers', function () {
     Handlebars.precompile = function (data, options) {
       expect(options.knownHelpers.foo).toBe(true);
-      return "simple";
+      return 'simple';
     };
-    Precompiler.cli({ templates: [emptyTemplate], simple: true, known: "foo" });
-    expect(log).toBe("simple\n");
+    Precompiler.cli({ templates: [emptyTemplate], simple: true, known: 'foo' });
+    expect(log).toBe('simple\n');
   });
-  it("should output to file system", function () {
+  it('should output to file system', function () {
     Handlebars.precompile = function () {
-      return "simple";
+      return 'simple';
     };
     Precompiler.cli({
       templates: [emptyTemplate],
       simple: true,
-      output: "file!",
+      output: 'file!',
     });
-    expect(file).toBe("file!");
-    expect(content).toBe("simple\n");
-    expect(log).toBe("");
+    expect(file).toBe('file!');
+    expect(content).toBe('simple\n');
+    expect(log).toBe('');
   });
 
-  it("should output minimized templates", function () {
+  it('should output minimized templates', function () {
     Handlebars.precompile = function () {
-      return "amd";
+      return 'amd';
     };
     uglify.minify = function () {
-      return { code: "min" };
+      return { code: 'min' };
     };
     Precompiler.cli({ templates: [emptyTemplate], min: true });
-    expect(log).toBe("min");
+    expect(log).toBe('min');
   });
 
-  it("should omit minimization gracefully, if uglify-js is missing", function () {
+  it('should omit minimization gracefully, if uglify-js is missing', function () {
     var error = new Error("Cannot find module 'uglify-js'");
-    error.code = "MODULE_NOT_FOUND";
+    error.code = 'MODULE_NOT_FOUND';
     mockRequireUglify(error, function () {
-      var Precompiler = require("../dist/cjs/precompiler");
+      var Precompiler = require('../dist/cjs/precompiler');
       Handlebars.precompile = function () {
-        return "amd";
+        return 'amd';
       };
       Precompiler.cli({ templates: [emptyTemplate], min: true });
       expect(log).toMatch(/template\(amd\)/);
@@ -242,37 +242,37 @@ describe("precompiler", function () {
     });
   });
 
-  it("should fail on errors (other than missing module) while loading uglify-js", function () {
-    mockRequireUglify(new Error("Mock Error"), function () {
+  it('should fail on errors (other than missing module) while loading uglify-js', function () {
+    mockRequireUglify(new Error('Mock Error'), function () {
       expect(function () {
-        var Precompiler = require("../dist/cjs/precompiler");
+        var Precompiler = require('../dist/cjs/precompiler');
         Handlebars.precompile = function () {
-          return "amd";
+          return 'amd';
         };
         Precompiler.cli({ templates: [emptyTemplate], min: true });
-      }).toThrow("Mock Error");
+      }).toThrow('Mock Error');
     });
   });
 
-  it("should output map", function () {
-    Precompiler.cli({ templates: [emptyTemplate], map: "foo.js.map" });
+  it('should output map', function () {
+    Precompiler.cli({ templates: [emptyTemplate], map: 'foo.js.map' });
 
-    expect(file).toBe("foo.js.map");
+    expect(file).toBe('foo.js.map');
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
   });
 
-  it("should output map", function () {
+  it('should output map', function () {
     Precompiler.cli({
       templates: [emptyTemplate],
       min: true,
-      map: "foo.js.map",
+      map: 'foo.js.map',
     });
 
-    expect(file).toBe("foo.js.map");
+    expect(file).toBe('foo.js.map');
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
   });
 
-  describe("#loadTemplates", function () {
+  describe('#loadTemplates', function () {
     function loadTemplatesAsync(inputOpts) {
       // eslint-disable-next-line compat/compat
       return new Promise(function (resolve, reject) {
@@ -286,93 +286,93 @@ describe("precompiler", function () {
       });
     }
 
-    it("should throw on missing template", async function () {
+    it('should throw on missing template', async function () {
       try {
-        await loadTemplatesAsync({ files: ["foo"] });
-        throw new Error("should have thrown");
+        await loadTemplatesAsync({ files: ['foo'] });
+        throw new Error('should have thrown');
       } catch (err) {
         expect(err.message).toBe('Unable to open template file "foo"');
       }
     });
-    it("should enumerate directories by extension", async function () {
+    it('should enumerate directories by extension', async function () {
       var opts = await loadTemplatesAsync({
-        files: [__dirname + "/artifacts"],
-        extension: "hbs",
+        files: [__dirname + '/artifacts'],
+        extension: 'hbs',
       });
       expect(opts.templates.length).toBe(2);
-      expect(opts.templates[0].name).toBe("example_2");
+      expect(opts.templates[0].name).toBe('example_2');
     });
-    it("should enumerate all templates by extension", async function () {
+    it('should enumerate all templates by extension', async function () {
       var opts = await loadTemplatesAsync({
-        files: [__dirname + "/artifacts"],
-        extension: "handlebars",
+        files: [__dirname + '/artifacts'],
+        extension: 'handlebars',
       });
       expect(opts.templates.length).toBe(5);
-      expect(opts.templates[0].name).toBe("bom");
-      expect(opts.templates[1].name).toBe("empty");
-      expect(opts.templates[2].name).toBe("example_1");
+      expect(opts.templates[0].name).toBe('bom');
+      expect(opts.templates[1].name).toBe('empty');
+      expect(opts.templates[2].name).toBe('example_1');
     });
-    it("should handle regular expression characters in extensions", async function () {
+    it('should handle regular expression characters in extensions', async function () {
       await loadTemplatesAsync({
-        files: [__dirname + "/artifacts"],
-        extension: "hb(s",
+        files: [__dirname + '/artifacts'],
+        extension: 'hb(s',
       });
       // Success is not throwing
     });
-    it("should handle BOM", async function () {
+    it('should handle BOM', async function () {
       var opts = await loadTemplatesAsync({
-        files: [__dirname + "/artifacts/bom.handlebars"],
-        extension: "handlebars",
+        files: [__dirname + '/artifacts/bom.handlebars'],
+        extension: 'handlebars',
         bom: true,
       });
-      expect(opts.templates[0].source).toBe("a");
+      expect(opts.templates[0].source).toBe('a');
     });
 
-    it("should handle different root", async function () {
+    it('should handle different root', async function () {
       var opts = await loadTemplatesAsync({
-        files: [__dirname + "/artifacts/empty.handlebars"],
+        files: [__dirname + '/artifacts/empty.handlebars'],
         simple: true,
-        root: "foo/",
+        root: 'foo/',
       });
-      expect(opts.templates[0].name).toBe(__dirname + "/artifacts/empty");
+      expect(opts.templates[0].name).toBe(__dirname + '/artifacts/empty');
     });
 
-    it("should accept string inputs", async function () {
-      var opts = await loadTemplatesAsync({ string: "" });
+    it('should accept string inputs', async function () {
+      var opts = await loadTemplatesAsync({ string: '' });
       expect(opts.templates[0].name).toBeUndefined();
-      expect(opts.templates[0].source).toBe("");
+      expect(opts.templates[0].source).toBe('');
     });
-    it("should accept string array inputs", async function () {
+    it('should accept string array inputs', async function () {
       var opts = await loadTemplatesAsync({
-        string: ["", "bar"],
-        name: ["beep", "boop"],
+        string: ['', 'bar'],
+        name: ['beep', 'boop'],
       });
-      expect(opts.templates[0].name).toBe("beep");
-      expect(opts.templates[0].source).toBe("");
-      expect(opts.templates[1].name).toBe("boop");
-      expect(opts.templates[1].source).toBe("bar");
+      expect(opts.templates[0].name).toBe('beep');
+      expect(opts.templates[0].source).toBe('');
+      expect(opts.templates[1].name).toBe('boop');
+      expect(opts.templates[1].source).toBe('bar');
     });
-    it("should accept stdin input", async function () {
-      var stdin = require("mock-stdin").stdin();
-      var promise = loadTemplatesAsync({ string: "-" });
-      stdin.send("fo");
-      stdin.send("o");
+    it('should accept stdin input', async function () {
+      var stdin = require('mock-stdin').stdin();
+      var promise = loadTemplatesAsync({ string: '-' });
+      stdin.send('fo');
+      stdin.send('o');
       stdin.end();
       var opts = await promise;
-      expect(opts.templates[0].source).toBe("foo");
+      expect(opts.templates[0].source).toBe('foo');
     });
-    it("error on name missing", async function () {
+    it('error on name missing', async function () {
       try {
-        await loadTemplatesAsync({ string: ["", "bar"] });
-        throw new Error("should have thrown");
+        await loadTemplatesAsync({ string: ['', 'bar'] });
+        throw new Error('should have thrown');
       } catch (err) {
         expect(err.message).toBe(
-          "Number of names did not match the number of string inputs",
+          'Number of names did not match the number of string inputs'
         );
       }
     });
 
-    it("should complete when no args are passed", async function () {
+    it('should complete when no args are passed', async function () {
       var opts = await loadTemplatesAsync({});
       expect(opts.templates.length).toBe(0);
     });

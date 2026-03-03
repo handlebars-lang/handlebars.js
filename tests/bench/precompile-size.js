@@ -1,9 +1,9 @@
-var _ = require("underscore"),
-  templates = require("./templates");
+var _ = require('underscore'),
+  templates = require('./templates');
 
 module.exports = function (grunt, callback) {
   // Deferring to here in case we have a build for parser, etc as part of this grunt exec
-  var Handlebars = require("../../lib");
+  var Handlebars = require('../../lib');
 
   var templateSizes = {};
   _.each(templates, function (info, template) {
@@ -15,10 +15,10 @@ module.exports = function (grunt, callback) {
       });
 
     templateSizes[template] = compiled.length;
-    templateSizes["knownOnly_" + template] = knownHelpers.length;
+    templateSizes['knownOnly_' + template] = knownHelpers.length;
   });
   grunt.log.writeln(
-    "Precompiled sizes: " + JSON.stringify(templateSizes, undefined, 2),
+    'Precompiled sizes: ' + JSON.stringify(templateSizes, undefined, 2)
   );
   callback([templateSizes]);
 };

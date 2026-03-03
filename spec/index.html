@@ -10,7 +10,7 @@
     <pre id="results"></pre>
     <script src="/dist/handlebars.js"></script>
     <script>
-      var results = document.getElementById("results");
+      var results = document.getElementById('results');
       var failures = 0;
       var tests = 0;
 
@@ -18,37 +18,37 @@
         tests++;
         if (!condition) {
           failures++;
-          results.textContent += "FAIL: " + message + "\n";
+          results.textContent += 'FAIL: ' + message + '\n';
         } else {
-          results.textContent += "PASS: " + message + "\n";
+          results.textContent += 'PASS: ' + message + '\n';
         }
       }
 
       try {
-        assert(typeof Handlebars !== "undefined", "Handlebars is defined");
+        assert(typeof Handlebars !== 'undefined', 'Handlebars is defined');
         assert(
-          typeof Handlebars.compile === "function",
-          "Handlebars.compile exists",
+          typeof Handlebars.compile === 'function',
+          'Handlebars.compile exists'
         );
         assert(
-          typeof Handlebars.template === "function",
-          "Handlebars.template exists",
+          typeof Handlebars.template === 'function',
+          'Handlebars.template exists'
         );
         assert(
-          typeof Handlebars.VERSION === "string",
-          "Handlebars.VERSION exists",
+          typeof Handlebars.VERSION === 'string',
+          'Handlebars.VERSION exists'
         );
 
-        var template = Handlebars.compile("Hello {{name}}!");
-        var output = template({ name: "World" });
-        assert(output === "Hello World!", "Basic compilation works: " + output);
+        var template = Handlebars.compile('Hello {{name}}!');
+        var output = template({ name: 'World' });
+        assert(output === 'Hello World!', 'Basic compilation works: ' + output);
       } catch (e) {
         failures++;
-        results.textContent += "ERROR: " + e.message + "\n";
+        results.textContent += 'ERROR: ' + e.message + '\n';
       }
 
       results.textContent +=
-        "\n" + tests + " tests, " + failures + " failures\n";
+        '\n' + tests + ' tests, ' + failures + ' failures\n';
       window.mochaResults = { passes: tests - failures, failures: failures };
     </script>
   </body>

@@ -18,7 +18,7 @@ import {
   parseWithoutProcessing,
   ParseOptions,
   AST,
-} from "@handlebars/parser";
+} from '@handlebars/parser';
 
 declare namespace Handlebars {
   export interface TemplateDelegate<T = any> {
@@ -57,7 +57,7 @@ declare namespace Handlebars {
       arg3?: any,
       arg4?: any,
       arg5?: any,
-      options?: HelperOptions,
+      options?: HelperOptions
     ): any;
   }
   export interface HelperDeclareSpec {
@@ -85,14 +85,14 @@ declare namespace Handlebars {
 
   export function compile<T = any>(
     input: any,
-    options?: CompileOptions,
+    options?: CompileOptions
   ): HandlebarsTemplateDelegate<T>;
   export function precompile(
     input: any,
-    options?: PrecompileOptions,
+    options?: PrecompileOptions
   ): TemplateSpecification;
   export function template<T = any>(
-    precompilation: TemplateSpecification,
+    precompilation: TemplateSpecification
   ): HandlebarsTemplateDelegate<T>;
 
   export function create(): typeof Handlebars;
@@ -206,7 +206,7 @@ declare namespace Handlebars {
     export function resolvePartial<T = any>(
       partial: HandlebarsTemplateDelegate<T> | undefined,
       context: any,
-      options: ResolvePartialOptions,
+      options: ResolvePartialOptions
     ): HandlebarsTemplateDelegate<T>;
   }
 }
@@ -249,14 +249,14 @@ export type KnownHelpers = {
 };
 
 export type BuiltinHelperName =
-  | "helperMissing"
-  | "blockHelperMissing"
-  | "each"
-  | "if"
-  | "unless"
-  | "with"
-  | "log"
-  | "lookup";
+  | 'helperMissing'
+  | 'blockHelperMissing'
+  | 'each'
+  | 'if'
+  | 'unless'
+  | 'with'
+  | 'log'
+  | 'lookup';
 
 export type CustomHelperName = string;
 
@@ -288,7 +288,7 @@ export interface Logger {
 
 export type CompilerInfo = [number /* revision */, string /* versions */];
 
-declare module "handlebars/runtime" {
+declare module 'handlebars/runtime' {
   export = Handlebars;
 }
 

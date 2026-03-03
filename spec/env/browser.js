@@ -1,14 +1,14 @@
-require("./common");
+require('./common');
 
-var fs = require("fs"),
-  vm = require("vm");
+var fs = require('fs'),
+  vm = require('vm');
 
-global.Handlebars = "no-conflict";
+global.Handlebars = 'no-conflict';
 
-var filename = "dist/handlebars.js";
+var filename = 'dist/handlebars.js';
 var distHandlebars = fs.readFileSync(
-  require.resolve("../../" + filename),
-  "utf-8",
+  require.resolve('../../' + filename),
+  'utf-8'
 );
 vm.runInThisContext(distHandlebars, filename);
 
@@ -27,7 +27,7 @@ global.CompilerContext = {
 function safeEval(templateSpec) {
   /* eslint-disable no-eval, no-console */
   try {
-    return eval("(" + templateSpec + ")");
+    return eval('(' + templateSpec + ')');
   } catch (err) {
     console.error(templateSpec);
     throw err;

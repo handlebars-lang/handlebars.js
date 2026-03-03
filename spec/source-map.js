@@ -1,21 +1,21 @@
 try {
-  if (typeof define !== "function" || !define.amd) {
-    var SourceMap = require("source-map"),
+  if (typeof define !== 'function' || !define.amd) {
+    var SourceMap = require('source-map'),
       SourceMapConsumer = SourceMap.SourceMapConsumer;
   }
 } catch {
   /* NOP for in browser */
 }
 
-describe("source-map", function () {
+describe('source-map', function () {
   if (!Handlebars.precompile || !SourceMap) {
     return;
   }
 
-  it("should safely include source map info", function () {
-    var template = Handlebars.precompile("{{hello}}", {
-      destName: "dest.js",
-      srcName: "src.hbs",
+  it('should safely include source map info', function () {
+    var template = Handlebars.precompile('{{hello}}', {
+      destName: 'dest.js',
+      srcName: 'src.hbs',
     });
 
     expect(template.code).toBeTruthy();
@@ -25,20 +25,20 @@ describe("source-map", function () {
       expect(template.map).toBeTruthy();
     }
   });
-  it("should map source properly", function () {
+  it('should map source properly', function () {
     var templateSource =
-        "  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}",
+        '  b{{hello}}  \n  {{bar}}a {{#block arg hash=(subex 1 subval)}}{{/block}}',
       template = Handlebars.precompile(templateSource, {
-        destName: "dest.js",
-        srcName: "src.hbs",
+        destName: 'dest.js',
+        srcName: 'src.hbs',
       });
 
     if (template.map) {
       var consumer = new SourceMapConsumer(template.map),
-        lines = template.code.split("\n"),
-        srcLines = templateSource.split("\n"),
+        lines = template.code.split('\n'),
+        srcLines = templateSource.split('\n'),
         generated = grepLine('"  b"', lines),
-        source = grepLine("  b", srcLines);
+        source = grepLine('  b', srcLines);
 
       var mapped = consumer.originalPositionFor(generated);
       expect(mapped.line).toBe(source.line);
