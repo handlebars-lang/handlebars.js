@@ -13,23 +13,23 @@ module.exports.fuzz = function (data) {
     const runtimeOptions = {
       allowProtoPropertiesByDefault: !!(flags & 1),
       allowProtoMethodsByDefault: !!(flags & 2),
-      allowedProtoMethods: flags & 4 ? { constructor: true } : undefined, // Also fuzz unsafe constructor access? maybe dangerous high noise.
     };
 
-    // We keep constructor check strictly out of the fuzzing for now unless we want to catch if it leaks DESPITE being false?
     // Defaults blacklist constructor. "allowProtoMethodsByDefault" should NOT unblock constructor unless "allowedProtoMethods" explicitly allows it.
     // Let's stick to fuzzing the ByDefault options first.
 
     const render = Handlebars.compile(template);
     const result = render({}, runtimeOptions);
 
-    // Check if we managed to access a prototype property that returns a function signature
+    // Check if we managed to access a prototype property that returns a function signature or an object
     if (
       result.includes('[native code]') ||
       result.includes('function Object') ||
       result.includes('function Function') ||
       result.includes('function anonymous') ||
-      (result.includes('function') && !template.includes('function'))
+      (result.includes('function') && !template.includes('function')) ||
+      (result.includes('[object Object]') &&
+        !template.includes('[object Object]'))
     ) {
       throw new Error('Prototype Access Detected: ' + result);
     }
@@ -40,6 +40,15 @@ module.exports.fuzz = function (data) {
     ) {
       throw error;
     }
-    // Ignore other errors
+    // Only ignore expected template compilation/rendering errors (Handlebars.Exception).
+    if (
+      error.name === 'Error' ||
+      error.name === 'Handlebars.Exception' ||
+      error instanceof Handlebars.Exception
+    ) {
+      return;
+    }
+    // Rethrow unexpected crashes (e.g., TypeError, RangeError) so Jazzer flags them
+    throw error;
   }
 };
