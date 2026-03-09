@@ -19,11 +19,9 @@ describe('javascript-compiler api', function () {
       ) {
         return parent + '.bar_' + name;
       };
-      /* eslint-disable camelcase */
       expectTemplate('{{foo}}')
         .withInput({ bar_foo: 'food' })
         .toCompileTo('food');
-      /* eslint-enable camelcase */
     });
 
     // Tests nameLookup dot vs. bracket behavior.  Bracket is required in certain cases
