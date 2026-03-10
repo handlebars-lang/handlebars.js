@@ -49,6 +49,7 @@
     "test:unit": "vitest run --project node",
     "test:tasks": "vitest run --project tasks",
     "test:browser-smoke": "playwright test --config tests/browser/playwright.config.js",
+    "test:serve": "npx serve -l 9999 .",
     "test:integration": "npm run build && ./tests/integration/run-integration-tests.sh",
     "--- combined tasks ---": "",
     "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
