@@ -16,7 +16,10 @@ describe('rspack build output', () => {
   beforeAll(() => {
     // Ensure build has been run
     if (!fs.existsSync(path.join(distDir, 'handlebars.js'))) {
-      execSync('npm run build', { cwd: path.resolve(__dirname, '../..') });
+      execSync('npm run build', {
+        cwd: path.resolve(__dirname, '../..'),
+        stdio: 'inherit',
+      });
     }
   });
 

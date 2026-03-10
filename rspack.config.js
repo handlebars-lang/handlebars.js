@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 const pkg = require('./package.json');
-const license = fs.readFileSync('./LICENSE', 'utf8');
+const license = fs.readFileSync(path.resolve(__dirname, 'LICENSE'), 'utf8');
 const banner = `/*!
 
  @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&dn=expat.txt Expat

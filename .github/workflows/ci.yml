@@ -54,9 +54,7 @@ jobs:
 
       - name: Test (Integration)
         if: matrix.operating-system == 'ubuntu-latest'
-        run: |
-          cd ./tests/integration/rollup-test && ./test.sh && cd -
-          cd ./tests/integration/webpack-test && ./test.sh && cd -
+        run: npm run test:integration
 
   browser:
     name: Test (Browser)
