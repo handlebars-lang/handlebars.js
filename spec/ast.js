@@ -115,7 +115,6 @@ describe('ast', function () {
       expect(node.loc.end.column).toBe(lastColumn);
     }
 
-    /* eslint-disable no-multi-spaces */
     ast = Handlebars.parse(
       'line 1 {{line1Token}}\n' + // 1
         ' line 2 {{line2token}}\n' + // 2
@@ -129,7 +128,6 @@ describe('ast', function () {
         '{{else}}\n' + // 10
         '{{/open}}'
     ); // 11
-    /* eslint-enable no-multi-spaces */
     body = ast.body;
 
     it('gets ContentNode line numbers', function () {

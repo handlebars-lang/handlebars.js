@@ -274,7 +274,6 @@ describe('precompiler', function () {
 
   describe('#loadTemplates', function () {
     function loadTemplatesAsync(inputOpts) {
-      // eslint-disable-next-line compat/compat
       return new Promise(function (resolve, reject) {
         Precompiler.loadTemplates(inputOpts, function (err, opts) {
           if (err) {

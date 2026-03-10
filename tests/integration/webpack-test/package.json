@@ -1,8 +1,8 @@
 {
   "name": "webpack-test",
-  "description": "Various tests with Handlebars and multiple webpack versions",
   "version": "1.0.0",
   "private": true,
+  "description": "Various tests with Handlebars and multiple webpack versions",
   "scripts": {
     "build": "webpack --config webpack.config.js"
   },

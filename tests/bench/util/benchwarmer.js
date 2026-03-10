@@ -165,7 +165,7 @@ BenchWarmer.prototype = {
       horSize = horSize + 'WINNER(S)'.length;
     }
 
-    console.log('\n' + new Array(horSize + 1).join('-'));
+    console.log('\n' + '-'.repeat(horSize));
   },
 
   startLine: function (name) {
@@ -214,7 +214,7 @@ BenchWarmer.prototype = {
 
   writeValue: function (out) {
     var padding = this.benchSize - out.length + 1;
-    out = out + new Array(padding).join(' ');
+    out = out + ' '.repeat(Math.max(0, padding - 1));
     console.log(out);
   },
 };

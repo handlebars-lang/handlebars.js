@@ -3,7 +3,7 @@ try {
     var SourceMap = require('source-map'),
       SourceMapConsumer = SourceMap.SourceMapConsumer;
   }
-} catch (err) {
+} catch {
   /* NOP for in browser */
 }
 

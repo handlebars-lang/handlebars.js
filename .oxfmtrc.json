@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nicolo-ribaudo/oxfmt-config-schema/refs/heads/main/schema.json",
+  "singleQuote": true,
+  "tabWidth": 2,
+  "semi": true,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "ignorePatterns": [
+    ".rvmrc",
+    ".DS_Store",
+    "/tmp/",
+    "*.sublime-project",
+    "*.sublime-workspace",
+    "npm-debug.log",
+    "sauce_connect.log*",
+    ".idea",
+    "yarn-error.log",
+    "/coverage/",
+    ".nyc_output/",
+    "/dist/",
+    "/tests/integration/*/dist/",
+    "/spec/expected/",
+    "/spec/mustache",
+    "/spec/vendor",
+    "*.handlebars",
+    "*.hbs"
+  ]
+}

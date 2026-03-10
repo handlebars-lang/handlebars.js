@@ -1,11 +1,11 @@
 {
   "name": "rollup-test",
-  "description": "Various tests with Handlebars and rollup",
   "version": "1.0.0",
+  "private": true,
+  "description": "Various tests with Handlebars and rollup",
   "scripts": {
     "build": "rollup --config rollup.config.js"
   },
-  "private": true,
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.1.1",
     "handlebars": "file:../../..",
