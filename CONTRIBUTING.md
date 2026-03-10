@@ -18,11 +18,8 @@ Documentation issues on the [handlebarsjs.com](https://handlebarsjs.com) site sh
 
 ## Branches
 
-- The branch `4.x` contains the currently released version. Bugfixes should be made in this branch.
-- The branch `master` contains the next version. A release date is not yet specified. Maintainers
-  should merge the branch `4.x` into the master branch regularly.
-- The branch `3.x` contains the legacy version `3.x`. Bugfixes are applied separately (if needed). The branch will not
-  be merged with any of the other branches.
+- The branch `master` contains the current development version (v5).
+- The branch `4.x` contains the previous stable version. Only critical bugfixes are backported there.
 
 ## Pull Requests
 
@@ -38,21 +35,13 @@ Generally we like to see pull requests that
 
 ## Building
 
-To build Handlebars.js you'll need a few things installed.
-
-- Node.js
-- [Grunt](http://gruntjs.com/getting-started)
+To build Handlebars.js you'll need Node.js installed.
 
 Before building, you need to make sure that the Git submodule `spec/mustache` is included (i.e. the directory `spec/mustache` should not be empty). To include it, if using Git version 1.6.5 or newer, use `git clone --recursive` rather than `git clone`. Or, if you already cloned without `--recursive`, use `git submodule update --init`.
 
 Project dependencies may be installed via `npm install`.
 
-To build Handlebars.js from scratch, you'll want to run `grunt`
-in the root of the project. That will build Handlebars and output the
-results to the dist/ folder. To re-run tests, run `grunt test` or `npm test`.
-You can also run our set of benchmarks with `grunt bench`.
-
-The `grunt dev` implements watching for tests and allows for in browser testing at `http://localhost:9999/spec/`.
+To build Handlebars.js from scratch, run `npm run build` in the root of the project. That will compile CJS modules via SWC and bundle UMD distributions via rspack, outputting results to the dist/ folder. To run tests, use `npm test`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/handlebars-lang/handlebars.js/issues](http://github.com/handlebars-lang/handlebars.js/issues).
@@ -81,21 +70,16 @@ npm test
 
 ## Linting and Formatting
 
-Handlebars uses `eslint` to enforce best-practices and `prettier` to auto-format files.
-We do linting and formatting in two phases:
-
-- Committed files are linted and formatted in a pre-commit hook. In this stage eslint-errors are forbidden,
-  while warnings are allowed.
-- The GitHub CI job also lints all files and checks if they are formatted correctly. In this stage, warnings
-  are forbidden.
+Handlebars uses `oxlint` for linting, `oxfmt` for formatting, and `eslint` (with `eslint-plugin-compat`) for browser API compatibility checks.
+Committed files are linted and formatted in a pre-commit hook.
 
 You can use the following scripts to make sure that the CI job does not fail:
 
-- **npm run lint** will run `eslint` and fail on warnings
-- **npm run format** will run `prettier` on all files
-- **npm run check-before-pull-request** will perform all most checks that our CI job does in its build-job, excluding the "integration-test".
-- **npm run test:integration** will run integration tests (using old NodeJS versions and integrations with webpack, babel and so on)
-  These tests only work on a Linux-machine with `nvm` installed (for running tests in multiple versions of NodeJS).
+- **npm run lint** will run all linters and fail on warnings
+- **npm run format** will format all files
+- **npm run check-before-pull-request** will perform all checks that our CI job does, excluding integration tests.
+- **npm run test:integration** will run integration tests (bundler compatibility with webpack, rollup, etc.)
+  These tests only work on Linux.
 
 ## Releasing the latest version
 
@@ -113,12 +97,8 @@ A full release may be completed with the following:
 
 ```
 npm ci
-npx grunt
+npm run build
 npm publish
-
-cd dist/components/
-gem build handlebars-source.gemspec
-gem push handlebars-source-*.gem
 ```
 
 After the release, you should check that all places have really been updated. Especially verify that the `latest`-tags

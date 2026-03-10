@@ -7,15 +7,14 @@
     "build": "webpack --config webpack.config.js"
   },
   "dependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/core": "^7.27.0",
+    "@babel/preset-env": "^7.27.0",
     "@roundingwellos/babel-plugin-handlebars-inline-precompile": "^3.0.1",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-istanbul": "^6.1.1",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-istanbul": "^7.0.0",
     "handlebars": "file:../../..",
     "handlebars-loader": "^1.7.1",
-    "nyc": "^15.1.0",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack": "^5.99.0",
+    "webpack-cli": "^6.0.0"
   }
 }

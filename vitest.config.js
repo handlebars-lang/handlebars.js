@@ -23,6 +23,13 @@ export default defineConfig({
       },
       {
         test: {
+          name: 'rspack',
+          include: ['tests/rspack/*.test.js'],
+          globals: true,
+        },
+      },
+      {
+        test: {
           name: 'browser',
           include: ['spec/*.js'],
           exclude: [
