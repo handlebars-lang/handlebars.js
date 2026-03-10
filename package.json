@@ -44,7 +44,7 @@
     "lint:format": "oxfmt --check .",
     "lint:types": "tsc --noEmit --project types",
     "lint:compat": "eslint",
-    "test": "npm run build && vitest run --project node --project tasks --coverage",
+    "test": "npm run build && vitest run --project node --project tasks --project rspack --coverage",
     "test:browser": "vitest run --project browser",
     "test:unit": "vitest run --project node",
     "test:tasks": "vitest run --project tasks",
