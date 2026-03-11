@@ -14,8 +14,11 @@ const EXPECTED_BUNDLES = [
 
 describe('rspack build output', () => {
   beforeAll(() => {
-    // Ensure build has been run
-    if (!fs.existsSync(path.join(distDir, 'handlebars.js'))) {
+    // Ensure full build has been run (bundles + CJS)
+    if (
+      !fs.existsSync(path.join(distDir, 'handlebars.js')) ||
+      !fs.existsSync(path.join(distDir, 'cjs/handlebars.js'))
+    ) {
       execSync('npm run build', {
         cwd: path.resolve(__dirname, '../..'),
         stdio: 'inherit',
