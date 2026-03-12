@@ -79,21 +79,14 @@ module.exports = function (grunt) {
   }
 };
 
-function s3PutObject(uploadParams) {
+async function s3PutObject(uploadParams) {
   const s3 = new S3({
     credentials: {
       accessKeyId: process.env.S3_ACCESS_KEY_ID,
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     },
   });
-  return new Promise((resolve, reject) => {
-    s3.putObject(uploadParams, (err) => {
-      if (err != null) {
-        return reject(err);
-      }
-      resolve();
-    });
-  });
+  return s3.putObject(uploadParams);
 }
 
 function getNameInBucket(filename, suffix) {
