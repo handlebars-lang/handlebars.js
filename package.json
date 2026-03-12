@@ -58,11 +58,11 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1007.0",
     "@playwright/test": "^1.58.2",
     "@vitest/browser": "^4.0.18",
     "@vitest/browser-playwright": "^4.0.18",
     "@vitest/coverage-v8": "^4.0.18",
-    "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
     "benchmark": "~1.0",
