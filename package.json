@@ -48,6 +48,8 @@
     "test:browser-smoke": "playwright test --config tests/browser/playwright.config.js",
     "test:integration": "grunt integration-tests",
     "test:serve": "grunt connect:server:keepalive",
+    "bench": "node bench/perf.mjs",
+    "bench:compare": "node bench/compare.mjs",
     "--- combined tasks ---": "",
     "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
   },
@@ -90,6 +92,7 @@
     "oxfmt": "^0.36.0",
     "oxlint": "^1.51.0",
     "semver": "^5.0.1",
+    "tinybench": "^6.0.0",
     "typescript": "^3.4.3",
     "uglify-js": "^3.1.4",
     "underscore": "^1.5.1",

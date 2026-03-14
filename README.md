@@ -104,6 +104,36 @@ does have some big performance advantages. Justin Marney, a.k.a.
 rewritten Handlebars (current version) is faster than the old version,
 with many performance tests being 5 to 7 times faster than the Mustache equivalent.
 
+### Benchmarks
+
+The project includes a comprehensive benchmark suite (powered by [tinybench](https://github.com/tinylibs/tinybench)) that measures compilation, execution, precompilation, and end-to-end performance across templates of varying size and complexity.
+
+```bash
+# Run benchmarks (auto-labels with current git branch)
+npm run bench
+
+# Run with a custom label
+npm run bench -- --label my-optimization
+
+# Compare results
+npm run bench:compare
+
+# Or specify files explicitly
+npm run bench:compare -- bench/results/bench-*-main.md bench/results/bench-*-feat.md
+```
+
+Results are saved as timestamped Markdown files in `bench/results/`. Each report includes ops/sec, avg latency, p50/p75/p99 percentiles, and sample counts.
+
+Typical workflow for comparing branches:
+
+```bash
+git checkout main && npm run bench
+git checkout my-feature && npm run bench
+npm run bench:compare
+```
+
+When run without arguments, `bench:compare` auto-selects two result files: if a file labelled "main" exists it is always used as the baseline, otherwise the older file is the baseline. The comparison uses p75 latency for the diff to filter outliers, and marks changes with `!` (>2%) and `!!` (>5%).
+
 ## Upgrading
 
 See [release-notes.md](https://github.com/handlebars-lang/handlebars.js/blob/master/release-notes.md) for upgrade notes.

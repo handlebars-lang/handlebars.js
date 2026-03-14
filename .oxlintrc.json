@@ -123,6 +123,12 @@
       }
     },
     {
+      "files": ["bench/**/*.mjs"],
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
       "files": ["tests/integration/multi-nodejs-test/**/*.js"],
       "rules": {
         "no-console": "off",
