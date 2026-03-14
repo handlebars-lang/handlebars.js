@@ -33,10 +33,15 @@ const labelIdx = args.indexOf('--label');
 const label = labelIdx !== -1 ? args[labelIdx + 1] : getGitBranch();
 
 const grepIdx = args.indexOf('--grep');
-const grepPattern =
-  grepIdx !== -1 && args[grepIdx + 1]
-    ? new RegExp(args[grepIdx + 1], 'i')
-    : null;
+let grepPattern = null;
+if (grepIdx !== -1 && args[grepIdx + 1]) {
+  try {
+    grepPattern = new RegExp(args[grepIdx + 1], 'i');
+  } catch (e) {
+    console.error(`Invalid --grep pattern: ${e.message}`);
+    process.exit(1);
+  }
+}
 
 // ─── Filter templates ───────────────────────────────────────────────────────
 

@@ -1,5 +1,8 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // ─── Formatting ──────────────────────────────────────────────────────────────
 
@@ -76,7 +79,7 @@ export function printSectionHeader(title) {
 // ─── Markdown report ─────────────────────────────────────────────────────────
 
 export function saveMarkdownReport(sections, { label, config, date }) {
-  const resultsDir = join(import.meta.dirname, 'results');
+  const resultsDir = join(__dirname, 'results');
   mkdirSync(resultsDir, { recursive: true });
 
   const timestamp = date.toISOString().replace(/[:.]/g, '-').slice(0, 19);

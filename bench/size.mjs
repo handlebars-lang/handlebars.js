@@ -1,5 +1,8 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 import { gzip } from 'node:zlib';
 import { promisify } from 'node:util';
 import Handlebars from '../lib/index.js';
@@ -10,7 +13,7 @@ const gzipAsync = promisify(gzip);
 // ─── Dist sizes ──────────────────────────────────────────────────────────────
 
 async function measureDistSizes() {
-  const distDir = join(import.meta.dirname, '..', 'dist');
+  const distDir = join(__dirname, '..', 'dist');
   let files;
   try {
     files = readdirSync(distDir).filter((f) => {

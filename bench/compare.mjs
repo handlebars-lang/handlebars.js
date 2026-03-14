@@ -1,5 +1,14 @@
-import { readFileSync, readdirSync, writeFileSync, statSync } from 'node:fs';
-import { join, basename } from 'node:path';
+import {
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+  statSync,
+} from 'node:fs';
+import { basename, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 import { formatOps } from './report.mjs';
 
 // ─── Resolve files ───────────────────────────────────────────────────────────
@@ -10,7 +19,7 @@ let baselinePath, currentPath;
 if (args.length >= 2) {
   [baselinePath, currentPath] = args;
 } else {
-  const resultsDir = join(import.meta.dirname, 'results');
+  const resultsDir = join(__dirname, 'results');
   let files;
   try {
     files = readdirSync(resultsDir)
@@ -173,18 +182,19 @@ mdLines.push(`- **Current:** ${curLabel} (${currentPath})`);
 mdLines.push(`- **Legend:** ! = >2% change, !! = >5% change`);
 mdLines.push('');
 
-const allSections = new Set([
-  ...Object.keys(baseline.sections),
-  ...Object.keys(current.sections),
-]);
+const allSections = [
+  ...new Set([
+    ...Object.keys(baseline.sections),
+    ...Object.keys(current.sections),
+  ]),
+].sort();
 
 for (const section of allSections) {
   const baseBenches = baseline.sections[section] || {};
   const curBenches = current.sections[section] || {};
-  const allNames = new Set([
-    ...Object.keys(baseBenches),
-    ...Object.keys(curBenches),
-  ]);
+  const allNames = [
+    ...new Set([...Object.keys(baseBenches), ...Object.keys(curBenches)]),
+  ].sort();
 
   if (allNames.size === 0) continue;
 
@@ -228,7 +238,8 @@ for (const section of allSections) {
   mdLines.push('');
 }
 
-const resultsDir = join(import.meta.dirname, 'results');
+const resultsDir = join(__dirname, 'results');
+mkdirSync(resultsDir, { recursive: true });
 const curLabelSlug = curLabel.replace(/[^a-zA-Z0-9-_]/g, '_');
 const baseLabelSlug = baseLabel.replace(/[^a-zA-Z0-9-_]/g, '_');
 const outPath = join(
