@@ -116,10 +116,9 @@
       }
     },
     {
-      "files": ["tests/bench/**/*.js"],
+      "files": ["bench/**/*.mjs"],
       "rules": {
-        "no-console": "off",
-        "no-var": "off"
+        "no-console": "off"
       }
     },
     {
