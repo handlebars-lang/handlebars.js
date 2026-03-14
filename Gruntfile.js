@@ -160,7 +160,6 @@ module.exports = function (grunt) {
   // === Primary tasks ===
   grunt.registerTask('dev', ['clean', 'connect', 'watch']);
   grunt.registerTask('default', ['clean', 'build', 'release']);
-  grunt.registerTask('bench', ['metrics']);
   grunt.registerTask('prepare', ['build', 'concat:tests']);
   grunt.registerTask(
     'build',

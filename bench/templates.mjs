@@ -18,6 +18,41 @@ export const templates = {
     context: { person: { name: 'Larry', age: 45 } },
   },
 
+  // --- Arguments & mustache-style ---
+  'arguments (positional + hash)': {
+    template:
+      '{{foo person "person" 1 true foo=bar foo="person" foo=1 foo=true}}',
+    context: { bar: true },
+    helpers: { foo: () => '' },
+  },
+  'depth-1 (../)': {
+    template: '{{#each names}}{{../foo}}{{/each}}',
+    context: {
+      names: [
+        { name: 'Moe' },
+        { name: 'Larry' },
+        { name: 'Curly' },
+        { name: 'Shemp' },
+      ],
+      foo: 'bar',
+    },
+  },
+  'mustache-style section (array)': {
+    template: '{{#names}}{{name}}{{/names}}',
+    context: {
+      names: [
+        { name: 'Moe' },
+        { name: 'Larry' },
+        { name: 'Curly' },
+        { name: 'Shemp' },
+      ],
+    },
+  },
+  'mustache-style section (object)': {
+    template: '{{#person}}{{name}}{{age}}{{/person}}',
+    context: { person: { name: 'Larry', age: 45 } },
+  },
+
   // --- Medium templates ---
   'each (small array, 4 items)': {
     template: '{{#each names}}{{name}}{{/each}}',

@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import { Bench } from 'tinybench';
 import Handlebars from '../lib/index.js';
-import { templates } from './templates.mjs';
+import { templates as allTemplates } from './templates.mjs';
 import {
   printResults,
   printSectionHeader,
@@ -31,6 +31,34 @@ function getGitBranch() {
 const args = process.argv.slice(2);
 const labelIdx = args.indexOf('--label');
 const label = labelIdx !== -1 ? args[labelIdx + 1] : getGitBranch();
+
+const grepIdx = args.indexOf('--grep');
+const grepPattern =
+  grepIdx !== -1 && args[grepIdx + 1]
+    ? new RegExp(args[grepIdx + 1], 'i')
+    : null;
+
+// ─── Filter templates ───────────────────────────────────────────────────────
+
+const templates = Object.fromEntries(
+  Object.entries(allTemplates).filter(
+    ([name]) => !grepPattern || grepPattern.test(name)
+  )
+);
+
+if (Object.keys(templates).length === 0) {
+  console.error(
+    `No templates match --grep ${grepPattern}. Available: ${Object.keys(allTemplates).join(', ')}`
+  );
+  process.exit(1);
+}
+
+if (grepPattern) {
+  console.log(
+    `Filtering templates: ${Object.keys(templates).length}/${Object.keys(allTemplates).length} match /${grepPattern.source}/i`
+  );
+  console.log();
+}
 
 // ─── Bench helpers ───────────────────────────────────────────────────────────
 
@@ -79,26 +107,55 @@ async function run() {
 
   const allSections = [];
 
+  // ─── COMPILATION ────────────────────────────────────────────────────────────
+
   allSections.push(
     await runSection('COMPILATION (Handlebars.compile)', (bench) => {
       for (const [name, def] of Object.entries(templates)) {
+        const hb = createEnv(def);
         bench.add(`compile: ${name}`, () => {
-          Handlebars.create().compile(def.template);
+          hb.compile(def.template);
         });
       }
     })
   );
 
+  // ─── EXECUTION + output verification ────────────────────────────────────────
+
+  const expectedOutputs = {};
+
   allSections.push(
     await runSection('EXECUTION (template rendering)', (bench) => {
       for (const [name, def] of Object.entries(templates)) {
         const compiled = createEnv(def).compile(def.template);
+        expectedOutputs[name] = compiled(def.context);
         bench.add(`exec: ${name}`, () => {
           compiled(def.context);
         });
       }
     })
   );
+
+  // Verify outputs haven't changed during benchmarking
+  let verifyFails = 0;
+  for (const [name, def] of Object.entries(templates)) {
+    const compiled = createEnv(def).compile(def.template);
+    const actual = compiled(def.context);
+    if (actual !== expectedOutputs[name]) {
+      console.warn(
+        `  WARNING: output mismatch for "${name}"\n    expected: ${JSON.stringify(expectedOutputs[name])}\n    actual:   ${JSON.stringify(actual)}`
+      );
+      verifyFails++;
+    }
+  }
+  if (verifyFails === 0) {
+    console.log('Output verification: all templates OK');
+  } else {
+    console.warn(`Output verification: ${verifyFails} mismatch(es)`);
+  }
+  console.log();
+
+  // ─── PRECOMPILATION ─────────────────────────────────────────────────────────
 
   allSections.push(
     await runSection('PRECOMPILATION (Handlebars.precompile)', (bench) => {
@@ -109,6 +166,8 @@ async function run() {
       }
     })
   );
+
+  // ─── END-TO-END ─────────────────────────────────────────────────────────────
 
   allSections.push(
     await runSection('END-TO-END (compile + render)', (bench) => {
@@ -122,10 +181,12 @@ async function run() {
     })
   );
 
+  // ─── COMPILE OPTIONS ───────────────────────────────────────────────────────
+
   allSections.push(
     await runSection('COMPILE OPTIONS COMPARISON', (bench) => {
-      const src = templates['complex (if/each/helpers)'].template;
-      const ctx = templates['complex (if/each/helpers)'].context;
+      const src = allTemplates['complex (if/each/helpers)'].template;
+      const ctx = allTemplates['complex (if/each/helpers)'].context;
 
       const defaultFn = Handlebars.compile(src);
       bench.add('exec: default options', () => defaultFn(ctx));
@@ -144,6 +205,12 @@ async function run() {
         knownHelpersOnly: false,
       });
       bench.add('exec: knownHelpers', () => knownFn(ctx));
+
+      const compatFn = Handlebars.compile(src, { compat: true });
+      bench.add('exec: compat=true', () => compatFn(ctx));
+
+      const noDataFn = Handlebars.compile(src, { data: false });
+      bench.add('exec: data=false', () => noDataFn(ctx));
     })
   );
 

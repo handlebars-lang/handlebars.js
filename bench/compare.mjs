@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, writeFileSync, statSync } from 'node:fs';
 import { join, basename } from 'node:path';
+import { formatOps } from './report.mjs';
 
 // ─── Resolve files ───────────────────────────────────────────────────────────
 
@@ -137,12 +138,6 @@ function pctChange(baseline, current) {
 function formatPct(pct) {
   const sign = pct > 0 ? '+' : '';
   return `${sign}${pct.toFixed(1)}%`;
-}
-
-function formatOps(ops) {
-  if (ops >= 1_000_000) return `${(ops / 1_000_000).toFixed(2)}M`;
-  if (ops >= 1000) return `${(ops / 1000).toFixed(2)}K`;
-  return ops.toFixed(0);
 }
 
 function indicator(pct, higherIsBetter) {
