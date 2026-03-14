@@ -1,3 +1,4 @@
+const { execSync } = require('child_process');
 const git = require('./util/git');
 const semver = require('semver');
 const { createRegisterAsyncTaskFn } = require('./util/async-grunt-task');
@@ -50,7 +51,7 @@ module.exports = function (grunt) {
         )
       )
     );
-    grunt.task.run(['default']);
+    execSync('npm run build', { stdio: 'inherit' });
   });
 
   async function replaceAndAdd(path, regex, value) {

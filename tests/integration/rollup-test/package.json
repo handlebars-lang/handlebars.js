@@ -7,8 +7,8 @@
     "build": "rollup --config rollup.config.js"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@rollup/plugin-node-resolve": "^16.0.0",
     "handlebars": "file:../../..",
-    "rollup": "^2.61.1"
+    "rollup": "^4.40.0"
   }
 }
