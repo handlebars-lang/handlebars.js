@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+const fs = require('fs');
 const { S3 } = require('@aws-sdk/client-s3');
 const git = require('./util/git');
 const semver = require('semver');
