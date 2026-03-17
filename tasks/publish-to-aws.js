@@ -23,13 +23,13 @@ async function main() {
   }
 
   if (suffixes.length > 0) {
-    initSDK();
+    validateS3Env();
     console.log('publishing file-suffixes: ' + JSON.stringify(suffixes));
     await publish(suffixes);
   }
 }
 
-function initSDK() {
+function validateS3Env() {
   const bucket = process.env.S3_BUCKET_NAME,
     key = process.env.S3_ACCESS_KEY_ID,
     secret = process.env.S3_SECRET_ACCESS_KEY;
