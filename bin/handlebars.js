@@ -118,6 +118,10 @@ Precompiler.loadTemplates(argv, function (err, opts) {
   if (opts.help || (!opts.templates.length && !opts.version)) {
     yargs.showHelp();
   } else {
-    Precompiler.cli(opts);
+    Promise.resolve(Precompiler.cli(opts)).catch((error) => {
+      process.nextTick(() => {
+        throw error;
+      });
+    });
   }
 });

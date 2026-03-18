@@ -39,7 +39,12 @@ function createConfig(entry, filename, minimize) {
       rules: [
         {
           test: /\.js$/,
-          exclude: /node_modules/,
+          exclude: (modulePath) => {
+            return (
+              /node_modules/.test(modulePath) &&
+              !/node_modules[\\/]source-map[\\/]/.test(modulePath)
+            );
+          },
           use: {
             loader: 'builtin:swc-loader',
             options: {
@@ -50,6 +55,11 @@ function createConfig(entry, filename, minimize) {
           },
         },
       ],
+    },
+    resolve: {
+      fallback: {
+        url: false,
+      },
     },
     optimization: {
       minimize,

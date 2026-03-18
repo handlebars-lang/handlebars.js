@@ -254,15 +254,15 @@ describe('precompiler', function () {
     });
   });
 
-  it('should output map', function () {
-    Precompiler.cli({ templates: [emptyTemplate], map: 'foo.js.map' });
+  it('should output map', async function () {
+    await Precompiler.cli({ templates: [emptyTemplate], map: 'foo.js.map' });
 
     expect(file).toBe('foo.js.map');
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
   });
 
-  it('should output map', function () {
-    Precompiler.cli({
+  it('should output map when minified', async function () {
+    await Precompiler.cli({
       templates: [emptyTemplate],
       min: true,
       map: 'foo.js.map',
@@ -270,6 +270,21 @@ describe('precompiler', function () {
 
     expect(file).toBe('foo.js.map');
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
+  });
+
+  it('should set data flag when outputting map', async function () {
+    Handlebars.precompile = function (data, options) {
+      expect(options.data).toBe(true);
+      return precompile(data, options);
+    };
+
+    await Precompiler.cli({
+      templates: [emptyTemplate],
+      map: 'foo.js.map',
+      data: true,
+    });
+
+    expect(file).toBe('foo.js.map');
   });
 
   describe('#loadTemplates', function () {

@@ -2,6 +2,17 @@
 
 ## Development
 
+Chore/Build:
+
+- Upgrade `source-map` from `^0.6.1` to `^0.7.6`
+
+BREAKING CHANGES:
+
+- `source-map` 0.7 uses an async `SourceMapConsumer` API. As a consequence,
+  `Precompiler.cli(opts)` is now async when `opts.map` is set and returns a
+  `Promise`. Direct programmatic callers that pass `map` must await the result.
+  The `bin/handlebars.js` CLI entrypoint now handles this internally.
+
 [Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.7...master)
 
 ## v4.7.7 - February 15th, 2021
