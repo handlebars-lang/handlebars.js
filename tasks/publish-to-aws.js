@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 const fs = require('fs');
-const AWS = require('aws-sdk');
+const { S3, PutObjectCommand } = require('@aws-sdk/client-s3');
 const git = require('./util/git');
 const semver = require('semver');
+
+let s3Client;
 
 async function main() {
   console.log('remotes: ' + (await git.remotes()));
@@ -25,13 +27,13 @@ async function main() {
   }
 
   if (suffixes.length > 0) {
-    initSDK();
+    validateS3Env();
     console.log('publishing file-suffixes: ' + JSON.stringify(suffixes));
     await publish(suffixes);
   }
 }
 
-function initSDK() {
+function validateS3Env() {
   const bucket = process.env.S3_BUCKET_NAME,
     key = process.env.S3_ACCESS_KEY_ID,
     secret = process.env.S3_SECRET_ACCESS_KEY;
@@ -39,8 +41,6 @@ function initSDK() {
   if (!bucket || !key || !secret) {
     throw new Error('Missing S3 config values');
   }
-
-  AWS.config.update({ accessKeyId: key, secretAccessKey: secret });
 }
 
 async function publish(suffixes) {
@@ -65,25 +65,27 @@ async function publishSuffix(suffix) {
 }
 
 async function uploadToBucket(localFile, nameInBucket) {
-  const bucket = process.env.S3_BUCKET_NAME;
-  const uploadParams = {
-    Bucket: bucket,
-    Key: nameInBucket,
-    Body: fs.readFileSync(localFile, 'utf8'),
-  };
-  return s3PutObject(uploadParams);
+  const s3 = getS3Client();
+
+  return s3.send(
+    new PutObjectCommand({
+      Bucket: process.env.S3_BUCKET_NAME,
+      Key: nameInBucket,
+      Body: fs.readFileSync(localFile, 'utf8'),
+    })
+  );
 }
 
-function s3PutObject(uploadParams) {
-  const s3 = new AWS.S3();
-  return new Promise((resolve, reject) => {
-    s3.putObject(uploadParams, (err) => {
-      if (err != null) {
-        return reject(err);
-      }
-      resolve();
+function getS3Client() {
+  if (!s3Client) {
+    s3Client = new S3({
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      },
     });
-  });
+  }
+  return s3Client;
 }
 
 function getNameInBucket(filename, suffix) {
