@@ -1,6 +1,7 @@
 const os = require('os');
 const path = require('path');
 const fs = require('fs-extra');
+const { spawnSync } = require('child_process');
 
 const git = require('../util/git');
 
@@ -9,8 +10,9 @@ const tmpDir = path.join(tmpBaseDir, Date.now().toString(36));
 const remoteDir = path.join(tmpDir, 'remote-repo');
 const cloneDir = path.join(tmpDir, 'clone-repo');
 const oldCwd = process.cwd();
+const gitInstalled = spawnSync('git', ['-v'], { stdio: 'ignore' }).status === 0;
 
-describe('utils/git', function () {
+describe.runIf(gitInstalled)('utils/git', function () {
   beforeEach(async function () {
     await fs.remove(tmpDir);
     await createRepositoryThatActsAsRemote();
