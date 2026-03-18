@@ -35,10 +35,11 @@ async function main() {
 
 function validateS3Env() {
   const bucket = process.env.S3_BUCKET_NAME,
+    region = process.env.S3_REGION,
     key = process.env.S3_ACCESS_KEY_ID,
     secret = process.env.S3_SECRET_ACCESS_KEY;
 
-  if (!bucket || !key || !secret) {
+  if (!bucket || !region || !key || !secret) {
     throw new Error('Missing S3 config values');
   }
 }
@@ -79,6 +80,7 @@ async function uploadToBucket(localFile, nameInBucket) {
 function getS3Client() {
   if (!s3Client) {
     s3Client = new S3({
+      region: process.env.S3_REGION,
       credentials: {
         accessKeyId: process.env.S3_ACCESS_KEY_ID,
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
