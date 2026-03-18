@@ -11,10 +11,11 @@ const yargs = require('yargs')
     type: 'string',
     description: 'Source Map File',
   })
-  .option('a', {
-    type: 'boolean',
-    description: 'Exports amd style (require.js)',
-    alias: 'amd',
+  .option('esm', {
+    type: 'string',
+    description:
+      'Exports ECMAScript module style, path to Handlebars module (eg. "handlebars/lib/handlebars")',
+    default: null,
   })
   .option('c', {
     type: 'string',
@@ -22,11 +23,18 @@ const yargs = require('yargs')
     alias: 'commonjs',
     default: null,
   })
+  .option('a', {
+    type: 'boolean',
+    description: 'Exports AMD style (require.js)',
+    alias: 'amd',
+    deprecated: true,
+  })
   .option('h', {
     type: 'string',
-    description: 'Path to handlebar.js (only valid for amd-style)',
+    description: 'Path to handlebar.js (only valid for AMD-style)',
     alias: 'handlebarPath',
     default: '',
+    deprecated: true,
   })
   .option('k', {
     type: 'string',

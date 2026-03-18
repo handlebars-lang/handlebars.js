@@ -177,6 +177,13 @@ describe('precompiler', function () {
     expect(log).not.toMatch(/return Handlebars\.partials\[/);
     expect(log).toMatch(/template\(amd\)/);
   });
+  it('should output es module templates', function () {
+    Handlebars.precompile = function () {
+      return 'esm';
+    };
+    Precompiler.cli({ templates: [emptyTemplate], esm: true });
+    equal(/template\(esm\)/.test(log), true);
+  });
   it('should output commonjs templates', function () {
     Handlebars.precompile = function () {
       return 'commonjs';
