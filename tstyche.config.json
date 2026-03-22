@@ -1,4 +1,0 @@
-{
-  "testFileMatch": ["types/__typetests__/**/*.tst.ts"],
-  "tsconfig": "./types/tsconfig.json"
-}
