@@ -42,7 +42,7 @@
     "lint": "npm run lint:oxlint && npm run lint:format && npm run lint:types && npm run lint:compat",
     "lint:oxlint": "oxlint --max-warnings 0 .",
     "lint:format": "oxfmt --check .",
-    "lint:types": "tsc --noEmit --project types && tstyche",
+    "lint:types": "tstyche",
     "lint:compat": "eslint",
     "test": "npm run build && vitest run --project node --project tasks --project rspack --coverage",
     "test:browser": "vitest run --project browser",
