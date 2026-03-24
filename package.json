@@ -30,7 +30,7 @@
     "uglify-js": "^3.1.4"
   },
   "devDependencies": {
-    "@playwright/test": "^1.17.1",
+    "@playwright/test": "1.44.1",
     "aws-sdk": "^2.1.49",
     "babel-loader": "^5.0.0",
     "babel-runtime": "^5.1.10",
@@ -91,7 +91,6 @@
     "test:mocha": "grunt build && grunt test",
     "test:browser": "playwright test --config tests/browser/playwright.config.js tests/browser/spec.js",
     "test:integration": "grunt integration-tests",
-    "test:serve": "grunt connect:server:keepalive",
     "extensive-tests-and-publish-to-aws": "npx mocha tasks/tests/ && grunt --stack extensive-tests-and-publish-to-aws",
     "--- combined tasks ---": "",
     "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"

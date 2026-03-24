@@ -2,6 +2,10 @@ const { devices } = require('@playwright/test');
 
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 const config = {
+  testMatch: ['spec.js'],
+  use: {
+    baseURL: 'http://localhost:9999'
+  },
   projects: [
     {
       name: 'chromium',
@@ -18,7 +22,7 @@ const config = {
   ],
   reporter: 'list',
   webServer: {
-    command: 'npm run test:serve',
+    command: 'node server.js',
     port: 9999,
     reuseExistingServer: false
   }
