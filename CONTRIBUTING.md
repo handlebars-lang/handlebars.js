@@ -132,9 +132,11 @@ A full release via Docker may be completed with the following:
     
     # Generate config for yo generator-release:
     # https://github.com/kpdecker/generator-release#example
-    # You have to add a valid GitHub OAuth token!
-    RUN echo "module.exports = {\n  auth: 'oauth',\n  token: 'GitHub OAuth token'\n};" > /home/node/.config/generator-release
+    # You have to add a valid GitHub access token! (Used for reading issues and pull requests.)
+    RUN echo "module.exports = {\n  auth: 'oauth',\n  token: 'GitHub personal access token'\n};" > /home/node/.config/generator-release
     RUN chown -R node:node /home/node/.config
+    RUN chown -R node:node /home/node/.ssh
+    RUN chown -R node:node /home/node/tmp
     
     # Add the generated key to GitHub: https://github.com/settings/keys
     RUN ssh-keygen -q -t ed25519 -N '' -f /home/node/.ssh/id_ed25519 -C "release@handlebarsjs.com"
@@ -155,9 +157,12 @@ A full release via Docker may be completed with the following:
    * Add GitHub API token: `vi /home/node/.config/generator-release`
    * Execute the following steps:
      ```bash
-     npm ci
+     npm install
      npm install -g yo@1 grunt@1 generator-release
      npm run release
+     # Warning! This step will collect data from GitHub, bump the version,
+     # create a new commit, create a new tag and push it to GitHub.
+     # https://github.com/kpdecker/generator-release?tab=readme-ov-file#usage
      yo release
      npm login
      npm publish
