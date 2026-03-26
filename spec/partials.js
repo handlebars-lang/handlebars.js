@@ -589,6 +589,14 @@ describe('partials', function() {
           'Dudes:\n  Yehuda\n   http://yehuda!\n  Alan\n   http://alan!\n'
         );
     });
+    it('indented partials dont indent blank lines', function() {
+      var string = 'Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}';
+      var dude = '{{name}}\n  {{> code}}';
+      var code = '{{code}}\n';
+      var hash = {dudes: [{name: 'Yehuda', code: 'function() {\n  // line1\n\n  // line2\n}'}, {name: 'Alan', code: 'function() { }'}]};
+      shouldCompileToWithPartials(string, [hash, {}, {dude: dude, code: code}], true,
+            'Dudes:\n  Yehuda\n    function() {\n      // line1\n\n      // line2\n    }\n  Alan\n    function() { }\n');
+    });
 
     it('prevent nested indented partials', function() {
       expectTemplate('Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}')
