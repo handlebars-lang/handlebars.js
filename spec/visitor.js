@@ -51,6 +51,89 @@ describe('Visitor', function() {
     );
   });
 
+  describe('custom node types', function() {
+    function CustomVisitor() {
+      this.seen = [];
+    }
+    CustomVisitor.prototype = new Handlebars.Visitor();
+    CustomVisitor.prototype.constructor = CustomVisitor;
+    CustomVisitor.prototype.Custom = function(node) {
+      this.seen.push(node.name);
+      equal(this.parents[0].type, 'Program');
+    };
+
+    function programWith(type) {
+      return { type: 'Program', body: [{ type: type, name: 'custom' }] };
+    }
+
+    it('should dispatch to handlers defined by a subclass', function() {
+      var visitor = new CustomVisitor();
+      visitor.accept(programWith('Custom'));
+      equals(visitor.seen.join(), 'custom');
+    });
+
+    it('should dispatch to handlers defined on the instance', function() {
+      var visitor = new Handlebars.Visitor();
+      visitor.Custom = function(node) {
+        this.seen = node.name;
+      };
+      visitor.accept(programWith('Custom'));
+      equals(visitor.seen, 'custom');
+    });
+
+    it('should accept custom nodes returned when mutating', function() {
+      var visitor = new CustomVisitor();
+      visitor.mutating = true;
+      visitor.ContentStatement = function() {
+        return { type: 'Custom', name: 'replaced' };
+      };
+      var ast = Handlebars.parse('content');
+      visitor.accept(ast);
+      equals(ast.body[0].type, 'Custom');
+      equals(visitor.seen.join(), '');
+    });
+
+    it('should not dispatch to unhandled types', function() {
+      shouldThrow(
+        function() {
+          new CustomVisitor().accept(programWith('Other'));
+        },
+        Error,
+        'Unknown type: Other'
+      );
+    });
+
+    it('should not dispatch to non-function properties', function() {
+      shouldThrow(
+        function() {
+          new CustomVisitor().accept(programWith('seen'));
+        },
+        Error,
+        'Unknown type: seen'
+      );
+    });
+
+    it('should not dispatch to methods of Visitor or Object', function() {
+      [
+        'accept',
+        'acceptKey',
+        'acceptArray',
+        'acceptRequired',
+        'constructor',
+        'hasOwnProperty',
+        '__proto__'
+      ].forEach(function(type) {
+        shouldThrow(
+          function() {
+            new CustomVisitor().accept(programWith(type));
+          },
+          Error,
+          'Unknown type: ' + type
+        );
+      });
+    });
+  });
+
   describe('mutating', function() {
     describe('fields', function() {
       it('should replace value', function() {
