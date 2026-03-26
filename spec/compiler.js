@@ -128,121 +128,317 @@ describe('compiler', function() {
       );
     });
 
-    it('should reject AST with invalid PathExpression depth', function() {
+    function createPathExpressionAST(depth, parts) {
+      return {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: depth,
+              parts: parts,
+              original: 'this'
+            },
+            params: []
+          }
+        ]
+      };
+    }
+
+    function shouldRejectAst(ast, message) {
       shouldThrow(
         function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: '0',
-                  parts: ['this'],
-                  original: 'this'
-                },
-                params: []
-              }
-            ]
-          })();
+          Handlebars.compile(ast)();
         },
         Error,
-        'Invalid AST: PathExpression.depth must be an integer'
+        message
+      );
+    }
+
+    it('should treat a missing PathExpression depth as 0', function() {
+      equal(
+        Handlebars.compile(createPathExpressionAST(undefined, ['name']))({
+          name: 'ok'
+        }),
+        'ok'
+      );
+    });
+
+    it('should reject AST with non-integer PathExpression depth', function() {
+      shouldRejectAst(
+        createPathExpressionAST('0', ['this']),
+        'Invalid AST: PathExpression depth must be a non-negative integer'
+      );
+    });
+
+    it('should reject AST with negative PathExpression depth', function() {
+      shouldRejectAst(
+        createPathExpressionAST(-1, ['this']),
+        'Invalid AST: PathExpression depth must be a non-negative integer'
+      );
+    });
+
+    it('should reject AST with fractional PathExpression depth', function() {
+      shouldRejectAst(
+        createPathExpressionAST(0.5, ['this']),
+        'Invalid AST: PathExpression depth must be a non-negative integer'
       );
     });
 
     it('should reject AST with non-array PathExpression parts', function() {
+      shouldRejectAst(
+        createPathExpressionAST(0, 'this'),
+        'Invalid AST: PathExpression parts must be an array'
+      );
+    });
+
+    it('should reject AST with non-array PathExpression parts in trackIds mode', function() {
+      // With trackIds, pushParam reads the parts of a param before the
+      // PathExpression handler validates them.
       shouldThrow(
         function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: 0,
-                  parts: 'this',
-                  original: 'this'
-                },
-                params: []
-              }
-            ]
-          })();
+          Handlebars.compile(
+            {
+              type: 'Program',
+              body: [
+                {
+                  type: 'MustacheStatement',
+                  escaped: true,
+                  strip: { open: false, close: false },
+                  path: {
+                    type: 'PathExpression',
+                    data: false,
+                    depth: 0,
+                    parts: ['helper'],
+                    original: 'helper'
+                  },
+                  params: [
+                    {
+                      type: 'PathExpression',
+                      data: false,
+                      depth: 0,
+                      parts: 'abc',
+                      original: 'abc'
+                    }
+                  ]
+                }
+              ]
+            },
+            { trackIds: true }
+          )();
         },
         Error,
-        'Invalid AST: PathExpression.parts must be an array'
+        'Invalid AST: PathExpression parts must be an array'
       );
     });
 
     it('should reject AST with non-string PathExpression part', function() {
-      shouldThrow(
-        function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: 0,
-                  parts: [1],
-                  original: 'this'
-                },
-                params: []
-              }
-            ]
-          })();
-        },
-        Error,
-        'Invalid AST: PathExpression.parts must only contain strings'
+      shouldRejectAst(
+        createPathExpressionAST(0, [1]),
+        'Invalid AST: PathExpression parts must only contain strings'
       );
     });
 
-    it('should reject AST with invalid BooleanLiteral value type', function() {
-      shouldThrow(
-        function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: 0,
-                  parts: ['if'],
-                  original: 'if'
-                },
-                params: [
-                  {
-                    type: 'BooleanLiteral',
-                    value: 'true',
-                    original: true
-                  }
+    it('should reject AST with non-boolean BooleanLiteral value', function() {
+      shouldRejectAst(
+        {
+          type: 'Program',
+          body: [
+            {
+              type: 'MustacheStatement',
+              escaped: true,
+              strip: { open: false, close: false },
+              path: {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: ['if'],
+                original: 'if'
+              },
+              params: [
+                { type: 'BooleanLiteral', value: 'true', original: true }
+              ]
+            }
+          ]
+        },
+        'Invalid AST: BooleanLiteral value must be a boolean'
+      );
+    });
+
+    it('should reject AST with non-string StringLiteral value', function() {
+      shouldRejectAst(
+        {
+          type: 'Program',
+          body: [
+            {
+              type: 'MustacheStatement',
+              escaped: true,
+              strip: { open: false, close: false },
+              path: {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: ['lookup'],
+                original: 'lookup'
+              },
+              params: [{ type: 'StringLiteral', value: 1, original: 1 }]
+            }
+          ]
+        },
+        'Invalid AST: StringLiteral value must be a string'
+      );
+    });
+
+    it('should reject AST with non-string ContentStatement value', function() {
+      shouldRejectAst(
+        {
+          type: 'Program',
+          body: [{ type: 'ContentStatement', value: { toString: 'x' } }]
+        },
+        'Invalid AST: ContentStatement value must be a string'
+      );
+    });
+
+    it('should reject AST with non-string hash pair keys', function() {
+      shouldRejectAst(
+        {
+          type: 'Program',
+          body: [
+            {
+              type: 'MustacheStatement',
+              escaped: true,
+              strip: { open: false, close: false },
+              path: {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: ['helper'],
+                original: 'helper'
+              },
+              params: [],
+              hash: {
+                type: 'Hash',
+                pairs: [
+                  { type: 'HashPair', key: 1, value: { type: 'NullLiteral' } }
                 ]
               }
-            ]
-          })();
+            }
+          ]
         },
-        Error,
-        'Invalid AST: BooleanLiteral.value must be a boolean'
+        'Invalid AST: Hash pair keys must be strings'
       );
     });
 
-    it('should ignore loc metadata while validating AST nodes', function() {
+    it('should reject AST with non-array hash pairs', function() {
+      shouldRejectAst(
+        {
+          type: 'Program',
+          body: [
+            {
+              type: 'MustacheStatement',
+              escaped: true,
+              strip: { open: false, close: false },
+              path: {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: ['helper'],
+                original: 'helper'
+              },
+              params: [],
+              hash: { type: 'Hash', pairs: {} }
+            }
+          ]
+        },
+        'Invalid AST: Hash pairs must be an array'
+      );
+    });
+
+    it('should reject AST with non-string known helper name parts', function() {
+      shouldRejectAst(
+        {
+          type: 'Program',
+          body: [
+            {
+              type: 'MustacheStatement',
+              escaped: true,
+              strip: { open: false, close: false },
+              path: {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: [['if']],
+                original: 'if'
+              },
+              params: [{ type: 'BooleanLiteral', value: true, original: true }]
+            }
+          ]
+        },
+        'Invalid AST: PathExpression parts must only contain strings'
+      );
+    });
+
+    it('should compile number literals too large to be finite', function() {
+      // The parser turns very long number literals into Infinity, which is
+      // safe to emit into generated code.
+      var digits = new Array(401).join('9'),
+        template = '{{echo ' + digits + '}} {{echo -' + digits + '}}',
+        options = {
+          helpers: {
+            echo: function(value) {
+              return value;
+            }
+          }
+        };
+      equal(Handlebars.compile(template)({}, options), 'Infinity -Infinity');
+      equal(
+        Handlebars.compile(template, { stringParams: true })({}, options),
+        'Infinity -Infinity'
+      );
+    });
+
+    it('should compile an AST without loc that invokes a helper', function() {
+      // Helper calls embed the source location in the generated code; a
+      // missing loc must not produce a syntax error.
+      var ast = {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['greet'],
+              original: 'greet'
+            },
+            params: [
+              { type: 'StringLiteral', value: 'world', original: 'world' }
+            ]
+          }
+        ]
+      };
+      var options = {
+        helpers: {
+          greet: function(name, options) {
+            return 'hello ' + name + (options.loc === undefined ? '' : '!');
+          }
+        }
+      };
+      equal(Handlebars.compile(ast)({}, options), 'hello world');
+      equal(
+        Handlebars.compile(ast, { strict: true })({}, options),
+        'hello world'
+      );
+    });
+
+    it('should ignore loc metadata in AST nodes', function() {
       equal(
         Handlebars.compile({
           type: 'Program',
