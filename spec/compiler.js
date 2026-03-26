@@ -128,121 +128,90 @@ describe('compiler', function() {
       );
     });
 
-    it('should reject AST with invalid PathExpression depth', function() {
-      shouldThrow(
-        function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: '0',
-                  parts: ['this'],
-                  original: 'this'
-                },
-                params: []
-              }
-            ]
-          })();
-        },
-        Error,
-        'Invalid AST: PathExpression.depth must be an integer'
-      );
+    function createPathExpressionAST(depth, parts) {
+      return {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: depth,
+              parts: parts,
+              original: 'this'
+            },
+            params: []
+          }
+        ]
+      };
+    }
+
+    it('should safely handle AST with non-integer PathExpression depth', function() {
+      // depth '0' is coerced to 0 via Number(), compiles safely
+      var result = Handlebars.compile(createPathExpressionAST('0', ['this']))();
+      expect(result).to.be.a('string');
     });
 
-    it('should reject AST with non-array PathExpression parts', function() {
-      shouldThrow(
-        function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: 0,
-                  parts: 'this',
-                  original: 'this'
-                },
-                params: []
-              }
-            ]
-          })();
-        },
-        Error,
-        'Invalid AST: PathExpression.parts must be an array'
-      );
+    it('should safely handle AST with negative PathExpression depth', function() {
+      // Negative depth is clamped to 0
+      var result = Handlebars.compile(createPathExpressionAST(-1, ['this']))();
+      expect(result).to.be.a('string');
     });
 
-    it('should reject AST with non-string PathExpression part', function() {
-      shouldThrow(
-        function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: 0,
-                  parts: [1],
-                  original: 'this'
-                },
-                params: []
-              }
-            ]
-          })();
-        },
-        Error,
-        'Invalid AST: PathExpression.parts must only contain strings'
-      );
+    it('should safely handle AST with fractional PathExpression depth', function() {
+      // Fractional depth is floored to an integer
+      var result = Handlebars.compile(createPathExpressionAST(0.5, ['this']))();
+      expect(result).to.be.a('string');
     });
 
-    it('should reject AST with invalid BooleanLiteral value type', function() {
-      shouldThrow(
-        function() {
-          Handlebars.compile({
-            type: 'Program',
-            body: [
-              {
-                type: 'MustacheStatement',
-                escaped: true,
-                strip: { open: false, close: false },
-                path: {
-                  type: 'PathExpression',
-                  data: false,
-                  depth: 0,
-                  parts: ['if'],
-                  original: 'if'
-                },
-                params: [
-                  {
-                    type: 'BooleanLiteral',
-                    value: 'true',
-                    original: true
-                  }
-                ]
-              }
-            ]
-          })();
-        },
-        Error,
-        'Invalid AST: BooleanLiteral.value must be a boolean'
-      );
+    it('should safely handle AST with non-array PathExpression parts', function() {
+      // Non-array parts are coerced to empty array, compiles safely
+      var result = Handlebars.compile(createPathExpressionAST(0, 'this'))();
+      expect(result).to.be.a('string');
     });
 
-    it('should ignore loc metadata while validating AST nodes', function() {
+    it('should safely handle AST with non-string PathExpression part', function() {
+      // Non-string parts are coerced to strings via String()
+      var result = Handlebars.compile(createPathExpressionAST(0, [1]))();
+      expect(result).to.be.a('string');
+    });
+
+    it('should safely handle AST with non-boolean BooleanLiteral value type', function() {
+      // The compiler coerces BooleanLiteral.value via === true before
+      // emitting a pushLiteral opcode, so a non-boolean value like the
+      // string 'true' becomes the literal 'false'.
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 10 }
+      };
+      var result = Handlebars.compile({
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            loc: loc,
+            path: {
+              type: 'BooleanLiteral',
+              value: 'true',
+              original: true,
+              loc: loc
+            },
+            params: []
+          }
+        ]
+      })();
+      // 'true' !== true, so the compiler emits pushLiteral('false').
+      // Handlebars does not render falsy values, so the output is empty.
+      expect(result).to.equal('');
+    });
+
+    it('should ignore loc metadata in AST nodes', function() {
       equal(
         Handlebars.compile({
           type: 'Program',

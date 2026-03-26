@@ -444,12 +444,17 @@ describe('security issues', function() {
     });
   });
 
-  describe('GHSA-2w6w-674q-4c4q, GHSA-xhpv-hc6g-r9c6, GHSA-3mfm-83xf-c92r: untrusted AST inputs', function() {
+  describe('GHSA-2w6w-674q-4c4q, GHSA-xhpv-hc6g-r9c6, GHSA-3mfm-83xf-c92r, GHSA-8r5x-fm3f-whwj: untrusted AST inputs', function() {
     if (!Handlebars.compile) {
       return;
     }
 
     function createInjectedProgram() {
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 20 }
+      };
       return {
         type: 'Program',
         body: [
@@ -460,12 +465,14 @@ describe('security issues', function() {
               open: false,
               close: false
             },
+            loc: loc,
             path: {
               type: 'PathExpression',
               data: false,
               depth: 0,
               parts: ['lookup'],
-              original: 'lookup'
+              original: 'lookup',
+              loc: loc
             },
             params: [
               {
@@ -473,12 +480,14 @@ describe('security issues', function() {
                 data: false,
                 depth: 0,
                 parts: [],
-                original: 'this'
+                original: 'this',
+                loc: loc
               },
               {
                 type: 'NumberLiteral',
                 value: '{},{})) + (Function) + (({}',
-                original: 1
+                original: 1,
+                loc: loc
               }
             ]
           }
@@ -486,11 +495,13 @@ describe('security issues', function() {
       };
     }
 
-    it('should reject AST NumberLiteral type confusion in compile()', function() {
-      expect(function() {
-        var template = Handlebars.compile(createInjectedProgram());
-        template({});
-      }).to.throw(/Invalid AST/);
+    it('should neutralize AST NumberLiteral type confusion in compile()', function() {
+      // The compiler coerces NumberLiteral.value via Number() before
+      // emitting a pushLiteral opcode, so a type-confused string value
+      // becomes NaN, preventing code injection.
+      var template = Handlebars.compile(createInjectedProgram());
+      var result = template({});
+      expect(result).to.not.contain('Function');
     });
 
     it('should reject AST objects passed via dynamic partial lookup', function() {
@@ -499,7 +510,113 @@ describe('security issues', function() {
         template({
           payload: createInjectedProgram()
         });
-      }).to.throw(/Invalid AST|could not be found/);
+      }).to.throw(/could not be found/);
+    });
+
+    it('should sanitize param depth in stringParams mode', function() {
+      // pushParam passes val.depth directly to the getContext opcode.
+      // In stringParams mode, getContext stores the depth in lastContext,
+      // which contextName interpolates into generated code as
+      // 'depths[' + depth + ']'. A malicious depth string can escape the
+      // bracket expression and inject arbitrary code at template runtime.
+      //
+      // With sanitization the depth becomes 0, producing 'depth0' (safe).
+      // Without sanitization the injected expression executes and throws.
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 20 }
+      };
+      var maliciousAST = {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            loc: loc,
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['lookup'],
+              original: 'lookup',
+              loc: loc
+            },
+            params: [
+              {
+                type: 'PathExpression',
+                data: false,
+                depth: 'function(){throw new Error("INJECTION")}()',
+                parts: [],
+                original: '',
+                loc: loc
+              }
+            ]
+          }
+        ]
+      };
+
+      var template = Handlebars.compile(maliciousAST, {
+        stringParams: true
+      });
+      // After sanitization the depth is 0, so the template runs without
+      // executing the injected throw expression.
+      expect(function() {
+        template({});
+      }).to.not.throw();
+    });
+
+    it('should sanitize param length in blockParams mode', function() {
+      // The compiler reads program.blockParams.length directly from the AST
+      // and stores it as child.blockParams. javascript-compiler.js then
+      // interpolates that value verbatim into a container.program(...) call
+      // string via programParams.join(', '). A malicious blockParams object
+      // whose length property is an arbitrary string can therefore inject
+      // arbitrary JavaScript that executes when the compiled template runs.
+      //
+      // With sanitization blockParams.length is coerced via Number(), turning
+      // any non-numeric string into NaN and then 0, so only a safe integer
+      // ever reaches the code generator.
+      var maliciousAST = {
+        type: 'Program',
+        loc: { start: { line: 1, column: 0 } },
+        body: [
+          {
+            type: 'BlockStatement',
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['rce'],
+              original: 'rce',
+              loc: { start: { line: 1, column: 0 } }
+            },
+            params: [],
+            program: {
+              type: 'Program',
+              blockParams: {
+                length: "(()=>{throw new Error('INJECTION')})()"
+              },
+              body: [],
+              loc: { start: { line: 1, column: 0 } }
+            },
+            openStrip: { open: false, close: false },
+            inverseStrip: { open: false, close: false },
+            closeStrip: { open: false, close: false },
+            loc: { start: { line: 1, column: 0 } }
+          }
+        ]
+      };
+
+      var template = Handlebars.compile(maliciousAST, {
+        stringParams: true
+      });
+      // After sanitization blockParams is 0, so the template runs without
+      // executing the injected expression.
+      expect(function() {
+        template({});
+      }).to.not.throw();
     });
   });
 
