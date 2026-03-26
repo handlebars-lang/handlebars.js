@@ -40,6 +40,19 @@ describe('utils', function() {
       };
       equals(Handlebars.Utils.escapeExpression(obj), 'foo<&"\'>');
     });
+    it('should escape objects whose "toHTML" is not a function', function() {
+      var obj = {
+        toHTML: '<b>',
+        toString: function() {
+          return '<i>';
+        }
+      };
+      equals(Handlebars.Utils.escapeExpression(obj), '&lt;i&gt;');
+
+      expectTemplate('{{value}}')
+        .withInput({ value: JSON.parse('{"toHTML": 1}') })
+        .toCompileTo('[object Object]');
+    });
     it('should handle falsy', function() {
       equals(Handlebars.Utils.escapeExpression(''), '');
       equals(Handlebars.Utils.escapeExpression(undefined), '');
