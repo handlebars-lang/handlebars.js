@@ -697,6 +697,28 @@ describe('security issues', function() {
       });
     });
 
+    it('should not compile data objects passed via dynamic partial lookup', function() {
+      // resolvePartial() used to accept any value with a truthy "call"
+      // property as a compiled partial. A JSON object with "call" and
+      // "type": "Program" then reached env.compile() and was rendered as a
+      // template. Such values are now treated as partial names instead.
+      var payload = createInjectedProgram();
+      payload.call = 1;
+      payload.body[0].escaped = false;
+
+      expect(function() {
+        var template = Handlebars.compile('{{> (lookup . "payload")}}');
+        template({ payload: payload });
+      }).to.throw(/could not be found/);
+    });
+
+    it('should not compile AST-shaped objects registered as partials', function() {
+      expect(function() {
+        var template = Handlebars.compile('{{> payload}}');
+        template({}, { partials: { payload: createInjectedProgram() } });
+      }).to.throw(/must be strings or functions/);
+    });
+
     it('should only dispatch known AST node types when parsing', function() {
       // Visitor#accept() (used by WhitespaceControl before compilation)
       // dispatches on node.type as well. Body statements are visited there,
