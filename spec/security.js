@@ -809,6 +809,147 @@ describe('security issues', function() {
     });
   });
 
+  describe('GHSA-xw65-4hp5-5hc7: precompiled output must be safe in script tags', function() {
+    var name = '</script><script>alert(1)</script>';
+
+    function expectSafePrecompile(template, options) {
+      if (Handlebars.precompile) {
+        var precompiled = Handlebars.precompile(template, options);
+
+        expect(precompiled).to.not.match(/<(!--|\/?script)/i);
+        return precompiled;
+      }
+    }
+
+    it('should escape script tag delimiters in static content', function() {
+      var template = 'safe</ScRiPt ><span>alert(1)</script><SCRIPT>';
+      var precompiled = expectSafePrecompile(template);
+      if (precompiled) {
+        expect(precompiled).to.contain('\\u003C/ScRiPt >');
+        expect(precompiled).to.contain('\\u003CSCRIPT>');
+      }
+      expectTemplate(template).toCompileTo(template);
+    });
+
+    it('should escape HTML comment openers in static content', function() {
+      var template = '<!--<script>';
+      var precompiled = expectSafePrecompile(template);
+      if (precompiled) {
+        expect(precompiled).to.contain('\\u003C!--\\u003Cscript>');
+      }
+      expectTemplate(template).toCompileTo(template);
+    });
+
+    it('should not escape other markup in static content', function() {
+      var template = '<div class="a"><span>b</span></div><!- ->';
+      var precompiled = expectSafePrecompile(template);
+      if (precompiled) {
+        expect(precompiled).to.contain(
+          '<div class=\\"a\\"><span>b</span></div><!- ->'
+        );
+      }
+      expectTemplate(template).toCompileTo(template);
+    });
+
+    it('should escape script tag delimiters in string literals', function() {
+      expectSafePrecompile('{{echo "' + name + '" key="' + name + '"}}');
+      expectTemplate('{{{echo "' + name + '" key="' + name + '"}}}')
+        .withHelper('echo', function(value, options) {
+          return value + options.hash.key;
+        })
+        .toCompileTo(name + name);
+    });
+
+    it('should escape script tag delimiters in property lookups', function() {
+      var input = {};
+      input[name] = 'success';
+      expectSafePrecompile('{{[' + name + ']}}');
+      expectTemplate('{{[' + name + ']}}')
+        .withInput(input)
+        .toCompileTo('success');
+      expectSafePrecompile('{{foo.[' + name + ']}}');
+      expectTemplate('{{foo.[' + name + ']}}')
+        .withInput({ foo: input })
+        .toCompileTo('success');
+    });
+
+    it('should escape script tag delimiters in data lookups', function() {
+      var data = {};
+      data[name] = 'success';
+      expectSafePrecompile('{{@[' + name + ']}}');
+      expectTemplate('{{@[' + name + ']}}')
+        .withRuntimeOptions({ data: data })
+        .toCompileTo('success');
+    });
+
+    it('should escape script tag delimiters in helper and partial names', function() {
+      expectSafePrecompile('{{#[' + name + ']}}x{{/[' + name + ']}}');
+      expectTemplate('{{#[' + name + ']}}x{{/[' + name + ']}}')
+        .withHelper(name, function(options) {
+          return options.fn(this);
+        })
+        .toCompileTo('x');
+      expectSafePrecompile('{{> [' + name + ']}}');
+      expectTemplate('{{> [' + name + ']}}')
+        .withPartial(name, 'success')
+        .toCompileTo('success');
+    });
+
+    it('should escape script tag delimiters in compat mode lookups', function() {
+      var input = {};
+      input[name] = 'success';
+      expectSafePrecompile('{{[' + name + ']}}', { compat: true });
+      expectTemplate('{{[' + name + ']}}')
+        .withCompileOptions({ compat: true })
+        .withInput(input)
+        .toCompileTo('success');
+    });
+
+    it('should escape script tag delimiters in tracked block param ids', function() {
+      var template =
+        '{{#each items as |item|}}{{{id item.[' + name + ']}}}{{/each}}';
+      var item = {};
+      item[name] = 'value';
+      expectSafePrecompile(template, { trackIds: true });
+      expectTemplate(template)
+        .withCompileOptions({ trackIds: true })
+        .withHelper('id', function(value, options) {
+          return options.ids[0];
+        })
+        .withInput({ items: [item] })
+        .toCompileTo('items.0.' + name);
+    });
+
+    it('should escape script tag delimiters in source locations', function() {
+      if (!Handlebars.precompile) {
+        return;
+      }
+      // Source locations, which include the srcName option, are emitted as
+      // JSON object literals for helper calls.
+      var code = Handlebars.precompile('{{echo}}', { srcName: name }).code;
+      expect(code).to.not.match(/<(!--|\/?script)/i);
+
+      var loc = code.match(/"loc":(\{.*?\}\})/);
+      expect(JSON.parse(loc[1]).source).to.equal(name);
+    });
+
+    it('should escape line separators in source locations', function() {
+      if (!Handlebars.precompile) {
+        return;
+      }
+      // U+2028 and U+2029 end string literals in ES5.
+      var separators =
+          String.fromCharCode(0x2028) + String.fromCharCode(0x2029),
+        srcName = 'a' + separators + 'b';
+      var code = Handlebars.precompile('{{echo}}', { srcName: srcName }).code;
+      expect(code).to.not.contain(String.fromCharCode(0x2028));
+      expect(code).to.not.contain(String.fromCharCode(0x2029));
+
+      var loc = code.match(/"loc":(\{.*?\}\})/);
+      expect(JSON.parse(loc[1]).source).to.equal(srcName);
+    });
+  });
+
   describe('GHSA-new: @partial-block must not resolve from polluted prototype', function() {
     if (!Handlebars.compile) {
       return;
