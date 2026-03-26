@@ -65,7 +65,7 @@ var argv = parseArgs({
   },
   'r': {
     'type': 'string',
-    'description': 'Template root. Base value that will be stripped from template names.',
+    'description': 'Template root. Base value that will be stripped from template names; it does not restrict filesystem access.',
     'alias': 'root'
   },
   'p': {
