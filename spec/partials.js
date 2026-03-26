@@ -288,6 +288,19 @@ describe('partials', function() {
       .toCompileTo('Dudes: ');
   });
 
+  it('throws on a function partial that returns no output', function() {
+    expectTemplate('{{> dude}}')
+      .withPartials({
+        dude: function() {
+          return null;
+        }
+      })
+      .toThrow(
+        Error,
+        'The partial dude returned no output: partials must return a string'
+      );
+  });
+
   it('throw on missing partial', function() {
     var compile = handlebarsEnv.compile;
     var compileWithPartial = CompilerContext.compileWithPartial;
@@ -460,6 +473,22 @@ describe('partials', function() {
       expectTemplate(
         '{{#*inline "myPartial"}}success{{/inline}}{{> myPartial}}'
       ).toCompileTo('success');
+    });
+
+    it('should support recursively invoked inline partials', function() {
+      expectTemplate(
+        '{{#*inline "node"}}{{name}}{{#if children}}<{{#each children}}{{> node}}{{/each}}>{{/if}}{{/inline}}{{> node}}'
+      )
+        .withInput({
+          name: 'root',
+          children: [
+            {
+              name: 'child',
+              children: [{ name: 'leaf' }]
+            }
+          ]
+        })
+        .toCompileTo('root<child<leaf>>');
     });
 
     it('should overwrite multiple partials in the same template', function() {
