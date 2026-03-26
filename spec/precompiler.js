@@ -439,6 +439,30 @@ describe('precompiler', function() {
       expect(output).to.not.match(/\['evil'\];global\.__xjpjName=1/);
     });
 
+    it('should escape script tag delimiters in template names', function() {
+      var name = '</script><script>alert(1)</script><!--';
+      var output = runCliAndCaptureOutput({
+        templates: [{ name: name, source: '' }]
+      });
+
+      expect(output).to.not.match(/<(!--|\/?script)/i);
+      var quotedName = output.match(/templates\[("(?:[^"\\]|\\.)*")\]/);
+      expect(JSON.parse(quotedName[1])).to.equal(name);
+    });
+
+    it('should escape line separators in template names', function() {
+      var name =
+        'a' + String.fromCharCode(0x2028) + 'b' + String.fromCharCode(0x2029);
+      var output = runCliAndCaptureOutput({
+        templates: [{ name: name, source: '' }]
+      });
+
+      expect(output).to.not.contain(String.fromCharCode(0x2028));
+      expect(output).to.not.contain(String.fromCharCode(0x2029));
+      var quotedName = output.match(/templates\[("(?:[^"\\]|\\.)*")\]/);
+      expect(JSON.parse(quotedName[1])).to.equal(name);
+    });
+
     it('should not inject raw commonjs option values into generated code', function() {
       var output = runCliAndCaptureOutput({
         templates: [{ name: 'safe', source: '' }],
