@@ -268,6 +268,21 @@ describe('basic context', function() {
       })
       .withMessage('functions are bound to the context')
       .toCompileTo('More awesome');
+
+    expectTemplate('{{nested.awesome}}')
+      .withInput({
+        nested: {
+          awesome: function() {
+            return this.more;
+          },
+          more: 'Deeply awesome'
+        },
+        more: 'More awesome'
+      })
+      .withMessage(
+        'functions in nested objects are bound to that object, consistent with JS spec'
+      )
+      .toCompileTo('Deeply awesome');
   });
 
   it('functions with context argument', function() {
