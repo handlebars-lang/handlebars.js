@@ -1,5 +1,3 @@
-import Handlebars = require('handlebars')
+import Handlebars = require('handlebars');
 
-declare module "handlebars/runtime" {
-   
-}
+export = Handlebars;
