@@ -793,6 +793,71 @@ describe('builtin helpers', function () {
       expectTemplate('{{log}}').withInput({ blah: 'whee' }).toCompileTo('');
       expect(called).to.be.true();
     });
+
+    it('should handle hash depth parameter', function () {
+      var levelArg, depthArg, logArg;
+      handlebarsEnv.log = function (level, ...args) {
+        levelArg = level;
+        // Check if the first arg is a number (depth)
+        if (typeof args[0] === 'number') {
+          depthArg = args[0];
+          logArg = args[1];
+        } else {
+          logArg = args[0];
+        }
+      };
+
+      expectTemplate('{{log blah depth=5}}')
+        .withInput({ blah: 'whee' })
+        .toCompileTo('');
+      equals(1, levelArg);
+      equals(5, depthArg);
+      equals('whee', logArg);
+    });
+
+    it('should handle data depth parameter', function () {
+      var levelArg, depthArg, logArg;
+      handlebarsEnv.log = function (level, ...args) {
+        levelArg = level;
+        // Check if the first arg is a number (depth)
+        if (typeof args[0] === 'number') {
+          depthArg = args[0];
+          logArg = args[1];
+        } else {
+          logArg = args[0];
+        }
+      };
+
+      expectTemplate('{{log blah}}')
+        .withInput({ blah: 'whee' })
+        .withRuntimeOptions({ data: { depth: 3 } })
+        .withCompileOptions({ data: true })
+        .toCompileTo('');
+      equals(1, levelArg);
+      equals(3, depthArg);
+      equals('whee', logArg);
+    });
+
+    it('should handle both level and depth parameters', function () {
+      var levelArg, depthArg, logArg;
+      handlebarsEnv.log = function (level, ...args) {
+        levelArg = level;
+        // Check if the first arg is a number (depth)
+        if (typeof args[0] === 'number') {
+          depthArg = args[0];
+          logArg = args[1];
+        } else {
+          logArg = args[0];
+        }
+      };
+
+      expectTemplate('{{log blah level="error" depth=10}}')
+        .withInput({ blah: 'whee' })
+        .toCompileTo('');
+      equals('error', levelArg);
+      equals(10, depthArg);
+      equals('whee', logArg);
+    });
     /* eslint-enable no-console */
   });
 
