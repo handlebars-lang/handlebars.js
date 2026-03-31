@@ -798,9 +798,13 @@ describe('builtin helpers', function () {
       var levelArg, depthArg, logArg;
       handlebarsEnv.log = function (level, ...args) {
         levelArg = level;
-        // Check if the first arg is a number (depth)
-        if (typeof args[0] === 'number') {
-          depthArg = args[0];
+        // Check if the first arg is a sentinel object with depth
+        if (
+          args[0] != null &&
+          typeof args[0] === 'object' &&
+          args[0].__handlebarsLoggerDepth !== undefined
+        ) {
+          depthArg = args[0].__handlebarsLoggerDepth;
           logArg = args[1];
         } else {
           logArg = args[0];
@@ -819,9 +823,13 @@ describe('builtin helpers', function () {
       var levelArg, depthArg, logArg;
       handlebarsEnv.log = function (level, ...args) {
         levelArg = level;
-        // Check if the first arg is a number (depth)
-        if (typeof args[0] === 'number') {
-          depthArg = args[0];
+        // Check if the first arg is a sentinel object with depth
+        if (
+          args[0] != null &&
+          typeof args[0] === 'object' &&
+          args[0].__handlebarsLoggerDepth !== undefined
+        ) {
+          depthArg = args[0].__handlebarsLoggerDepth;
           logArg = args[1];
         } else {
           logArg = args[0];
@@ -842,9 +850,13 @@ describe('builtin helpers', function () {
       var levelArg, depthArg, logArg;
       handlebarsEnv.log = function (level, ...args) {
         levelArg = level;
-        // Check if the first arg is a number (depth)
-        if (typeof args[0] === 'number') {
-          depthArg = args[0];
+        // Check if the first arg is a sentinel object with depth
+        if (
+          args[0] != null &&
+          typeof args[0] === 'object' &&
+          args[0].__handlebarsLoggerDepth !== undefined
+        ) {
+          depthArg = args[0].__handlebarsLoggerDepth;
           logArg = args[1];
         } else {
           logArg = args[0];
@@ -857,6 +869,47 @@ describe('builtin helpers', function () {
       equals('error', levelArg);
       equals(10, depthArg);
       equals('whee', logArg);
+    });
+
+    it('should log numeric messages correctly', function () {
+      var called;
+
+      console.info = console.log = function (log) {
+        equals(1, log);
+        called = true;
+        console.log = $log;
+      };
+
+      expectTemplate('{{log 1}}').withInput({}).toCompileTo('');
+      equals(true, called);
+    });
+
+    it('should log zero as a message', function () {
+      var called;
+
+      console.info = console.log = function (log) {
+        equals(0, log);
+        called = true;
+        console.log = $log;
+      };
+
+      expectTemplate('{{log 0}}').withInput({}).toCompileTo('');
+      equals(true, called);
+    });
+
+    it('should log multiple numeric messages', function () {
+      var called;
+
+      console.info = console.log = function (log1, log2, log3) {
+        equals(1, log1);
+        equals(2, log2);
+        equals(3, log3);
+        called = true;
+        console.log = $log;
+      };
+
+      expectTemplate('{{log 1 2 3}}').withInput({}).toCompileTo('');
+      equals(true, called);
     });
     /* eslint-enable no-console */
   });

@@ -262,10 +262,11 @@ export interface Logger {
   WARN: number;
   ERROR: number;
   level: number;
+  depth: number;
 
   methodMap: { [level: number]: string };
 
-  log(level: number, obj: string): void;
+  log(level: number, ...message: any[]): void;
 }
 
 export type CompilerInfo = [number/* revision */, string /* versions */];
