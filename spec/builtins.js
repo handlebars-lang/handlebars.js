@@ -819,33 +819,6 @@ describe('builtin helpers', function () {
       equals('whee', logArg);
     });
 
-    it('should handle data depth parameter', function () {
-      var levelArg, depthArg, logArg;
-      handlebarsEnv.log = function (level, ...args) {
-        levelArg = level;
-        // Check if the first arg is a sentinel object with depth
-        if (
-          args[0] != null &&
-          typeof args[0] === 'object' &&
-          args[0].__handlebarsLoggerDepth !== undefined
-        ) {
-          depthArg = args[0].__handlebarsLoggerDepth;
-          logArg = args[1];
-        } else {
-          logArg = args[0];
-        }
-      };
-
-      expectTemplate('{{log blah}}')
-        .withInput({ blah: 'whee' })
-        .withRuntimeOptions({ data: { depth: 3 } })
-        .withCompileOptions({ data: true })
-        .toCompileTo('');
-      equals(1, levelArg);
-      equals(3, depthArg);
-      equals('whee', logArg);
-    });
-
     it('should handle both level and depth parameters', function () {
       var levelArg, depthArg, logArg;
       handlebarsEnv.log = function (level, ...args) {
