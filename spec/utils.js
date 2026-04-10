@@ -28,12 +28,15 @@ describe('utils', function () {
       var string = new Handlebars.SafeString('foo<&"\'>');
       expect(Handlebars.Utils.escapeExpression(string)).toBe('foo<&"\'>');
 
+      // Plain objects with toHTML should no longer bypass escaping (GH-2146)
+      // They are coerced to string like any other non-SafeString object
       var obj = {
         toHTML: function () {
           return 'foo<&"\'>';
         },
       };
-      expect(Handlebars.Utils.escapeExpression(obj)).toBe('foo<&"\'>');
+      // Object coerces to '[object Object]' which has no special chars
+      expect(Handlebars.Utils.escapeExpression(obj)).toBe('[object Object]');
     });
     it('should handle falsy', function () {
       expect(Handlebars.Utils.escapeExpression('')).toBe('');

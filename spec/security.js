@@ -426,6 +426,52 @@ describe('security issues', function () {
     });
   });
 
+  describe('GH-2146: Proto-access control bypass via Map Symbol.toStringTag spoofing', function () {
+    it('should not treat objects with spoofed Symbol.toStringTag as Maps', function () {
+      var maliciousObj = {
+        get: function (key) {
+          return 'spoofed-' + key;
+        },
+      };
+      Object.defineProperty(maliciousObj, Symbol.toStringTag, {
+        value: 'Map',
+      });
+
+      // The spoofed object should NOT be treated as a Map,
+      // so proto-access controls should still apply
+      expectTemplate('{{constructor}}').withInput(maliciousObj).toCompileTo('');
+    });
+
+    it('should still treat real Maps correctly', function () {
+      var realMap = new Map();
+      realMap.set('key', 'value');
+
+      expectTemplate('{{key}}').withInput(realMap).toCompileTo('value');
+    });
+  });
+
+  describe('GH-2146: HTML escape bypass via toHTML duck-typing', function () {
+    it('should not call toHTML on non-SafeString objects', function () {
+      var maliciousObj = {
+        toHTML: function () {
+          return '<script>alert("xss")</script>';
+        },
+      };
+
+      // escapeExpression should NOT call toHTML on plain objects
+      var result = Handlebars.Utils.escapeExpression(maliciousObj);
+      expect(result).not.toBe('<script>alert("xss")</script>');
+      // It should coerce to string and escape
+      expect(result).not.toContain('<script>');
+    });
+
+    it('should still allow SafeString through escapeExpression', function () {
+      var safe = new Handlebars.SafeString('<b>safe</b>');
+      var result = Handlebars.Utils.escapeExpression(safe);
+      expect(result).toBe('<b>safe</b>');
+    });
+  });
+
   describe('escapes template variables', function () {
     it('in compat mode', function () {
       expectTemplate("{{'a\\b'}}")
