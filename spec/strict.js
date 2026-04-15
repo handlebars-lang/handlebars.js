@@ -121,6 +121,63 @@ describe('strict', function () {
     });
   });
 
+  describe('strict and compat mode', function () {
+    it('GH-1741: should render a simple variable', function () {
+      expectTemplate('{{v}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ v: 'a' })
+        .toCompileTo('a');
+    });
+
+    it('should throw for a missing variable', function () {
+      expectTemplate('{{v}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .toThrow(Exception, /"v" not defined in/);
+    });
+
+    it('GH-2149: should render correctly when block context is a boolean', function () {
+      expectTemplate('{{#foo}}Hello {{bar}}{{/foo}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ foo: true, bar: 'World' })
+        .toCompileTo('Hello World');
+    });
+
+    it('GH-2149: should render correctly when looking up a property on each item', function () {
+      expectTemplate('{{#each items}}{{name}}{{/each}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ items: [{ name: 'Hello' }] })
+        .toCompileTo('Hello');
+    });
+
+    it('should still throw when a property is missing at all depths', function () {
+      expectTemplate('{{#each items}}{{name}}{{/each}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ items: [1, 2] })
+        .toThrow(Exception, /"name" not defined in/);
+    });
+
+    it('should still perform recursive lookup when a property is not in the current context', function () {
+      expectTemplate('{{#each items}}{{name}}{{/each}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: 'root', items: [{}] })
+        .toCompileTo('root');
+    });
+
+    it('should still perform recursive lookup with a multi-part path not in context', function () {
+      expectTemplate('{{#with child}}{{name.first}}{{/with}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: { first: 'root' }, child: { name: null } })
+        .toCompileTo('root');
+    });
+
+    it('should directly return an explicitly null property', function () {
+      expectTemplate('{{#each items}}{{name}}{{/each}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: 'root', items: [{ name: null }] })
+        .toCompileTo('');
+    });
+  });
+
   describe('assume objects', function () {
     it('should ignore missing property', function () {
       expectTemplate('{{hello}}')
