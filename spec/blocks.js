@@ -259,6 +259,13 @@ describe('blocks', function () {
   });
 
   describe('compat mode', function () {
+    it('should directly return an explicitly null property', function () {
+      expectTemplate('{{#each items}}{{name}}{{/each}}')
+        .withCompileOptions({ compat: true })
+        .withInput({ name: 'root', items: [{ name: null }] })
+        .toCompileTo('');
+    });
+
     it('block with deep recursive lookup lookup', function () {
       expectTemplate(
         '{{#outer}}Goodbye {{#inner}}cruel {{omg}}{{/inner}}{{/outer}}'

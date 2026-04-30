@@ -388,6 +388,18 @@ describe('basic context', function () {
       .toCompileTo('Goodbye beautiful world!');
   });
 
+  it('compat mode resolves Map values through depthed lookup', function () {
+    expectTemplate('{{#with nested}}{{value}}/{{constructor}}{{/with}}')
+      .withInput({
+        nested: new Map([
+          ['value', 'map-value'],
+          ['constructor', 'map-constructor'],
+        ]),
+      })
+      .withCompileOptions({ compat: true })
+      .toCompileTo('map-value/map-constructor');
+  });
+
   it('nested paths with empty string value', function () {
     expectTemplate('Goodbye {{alan/expression}} world!')
       .withInput({ alan: { expression: '' } })

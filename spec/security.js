@@ -302,6 +302,16 @@ describe('security issues', function () {
           })
           .toCompileTo('abc');
       });
+
+      it('should not cause recursive lookup if allowed through options(in "compat+strict" mode)', function () {
+        expectTemplate('{{#aString}}{{trim}}{{/aString}}')
+          .withInput({ aString: '  abc  ', trim: 'trim' })
+          .withCompileOptions({ compat: true, strict: true })
+          .withRuntimeOptions({
+            allowedProtoMethods: { trim: true },
+          })
+          .toCompileTo('abc');
+      });
     });
 
     describe('control access to prototype non-methods via "allowedProtoProperties" and "allowProtoPropertiesByDefault', function () {
