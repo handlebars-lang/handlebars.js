@@ -93,9 +93,31 @@ describe('utils', function () {
       expect(Handlebars.Utils.isMap(new Map())).toBe(true);
     });
 
+    it('should not treat Symbol.toStringTag-spoofed objects as Map', function () {
+      var spoofed = {
+        get: function () {
+          return 'pwned';
+        },
+      };
+      spoofed[Symbol.toStringTag] = 'Map';
+      expect(Object.prototype.toString.call(spoofed)).toBe('[object Map]');
+      expect(Handlebars.Utils.isMap(spoofed)).toBe(false);
+    });
+
     it('should check if variable is type Set', function () {
       expect(Handlebars.Utils.isSet('string')).toBe(false);
       expect(Handlebars.Utils.isSet(new Set())).toBe(true);
+    });
+
+    it('should not treat Symbol.toStringTag-spoofed objects as Set', function () {
+      var spoofed = {
+        has: function () {
+          return true;
+        },
+      };
+      spoofed[Symbol.toStringTag] = 'Set';
+      expect(Object.prototype.toString.call(spoofed)).toBe('[object Set]');
+      expect(Handlebars.Utils.isSet(spoofed)).toBe(false);
     });
   });
 });

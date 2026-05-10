@@ -1,4 +1,24 @@
 describe('security issues', function () {
+  describe('GH-2146: Symbol.toStringTag-spoofed Map/Set should not bypass proto-access guards', function () {
+    it('should not treat a plain object spoofing Map via Symbol.toStringTag as a Map', function () {
+      var spoofed = {};
+      spoofed[Symbol.toStringTag] = 'Map';
+      // Without `instanceof Map`, runtime.lookupProperty would have skipped its
+      // proto-access guard for this object, exposing `constructor` and other
+      // dangerous keys. Verify both the template-level outcome and the helper.
+      expectTemplate('{{constructor.name}}').withInput(spoofed).toCompileTo('');
+      expectTemplate('{{lookup this "constructor"}}')
+        .withInput(spoofed)
+        .toCompileTo('');
+    });
+
+    it('should not treat a plain object spoofing Set via Symbol.toStringTag as a Set', function () {
+      var spoofed = {};
+      spoofed[Symbol.toStringTag] = 'Set';
+      expectTemplate('{{constructor.name}}').withInput(spoofed).toCompileTo('');
+    });
+  });
+
   describe('GH-1495: Prevent Remote Code Execution via constructor', function () {
     it('should not allow constructors to be accessed', function () {
       expectTemplate('{{lookup (lookup this "constructor") "name"}}')
