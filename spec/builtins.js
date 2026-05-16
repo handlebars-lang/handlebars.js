@@ -528,6 +528,22 @@ describe('builtin helpers', function () {
         .toCompileTo('not-in-each');
     });
 
+    it('each on Map should expose actual entry values as block params', function () {
+      var map = new Map([
+        ['constructor', 'constructor-value'],
+        ['toString', 'toString-value'],
+        ['normal', 'normal-value'],
+      ]);
+
+      expectTemplate('{{#each map as |value key|}}{{key}}={{value}};{{/each}}')
+        .withInput({ map: map })
+        .toCompileTo(
+          'constructor=constructor-value;' +
+            'toString=toString-value;' +
+            'normal=normal-value;'
+        );
+    });
+
     it('each on Set', function () {
       var set = new Set([1, 2, 3]);
 
