@@ -27,6 +27,25 @@ describe('strict', function () {
         .toCompileTo('');
     });
 
+    it('should handle array length', function () {
+      expectTemplate('{{hello.length}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ hello: [1, 2, 3] })
+        .toCompileTo('3');
+    });
+
+    it('should handle string length', function () {
+      expectTemplate('{{hello.length}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ hello: 'world' })
+        .toCompileTo('5');
+
+      expectTemplate('{{hello.length}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ hello: '' })
+        .toCompileTo('0');
+    });
+
     it('should error on missing property lookup in known helpers mode', function () {
       expectTemplate('{{hello}}')
         .withCompileOptions({
