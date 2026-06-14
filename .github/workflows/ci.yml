@@ -14,16 +14,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
   test:
     name: Test (Node)
@@ -41,24 +45,28 @@ jobs:
         with:
           submodules: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: npm run test
+        run: pnpm run test
 
       - name: Test (Publish)
         if: matrix.node-version != '20'
-        run: npx vitest run --project publish
+        run: pnpm exec vitest run --project publish
 
       - name: Test (Integration)
         if: matrix.operating-system == 'ubuntu-latest'
-        run: npm run test:integration
+        run: pnpm run test:integration
 
   browser:
     name: Test (Browser)
@@ -69,23 +77,27 @@ jobs:
         with:
           submodules: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright
         run: |
-          npx playwright install-deps
-          npx playwright install
+          pnpm exec playwright install-deps
+          pnpm exec playwright install
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Test
         run: |
-          npm run test:browser-smoke
-          npm run test:browser
+          pnpm run test:browser-smoke
+          pnpm run test:browser

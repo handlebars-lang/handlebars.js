@@ -47,7 +47,7 @@ async function main() {
     )
   );
 
-  execSync('npm run build', { stdio: 'inherit' });
+  execSync('pnpm run build', { stdio: 'inherit' });
 }
 
 export async function replaceAndAdd(filePath, regex, value) {

@@ -110,23 +110,23 @@ The project includes a comprehensive benchmark suite (powered by [tinybench](htt
 
 ```bash
 # Run benchmarks (auto-labels with current git branch)
-npm run bench
+pnpm run bench
 
 # Run with a custom label
-npm run bench -- --label my-optimization
+pnpm run bench -- --label my-optimization
 
 # Filter templates by name (regex, case-insensitive)
-npm run bench -- --grep "complex|recursive"
+pnpm run bench -- --grep "complex|recursive"
 
 # Run only specific sections (regex, case-insensitive)
-npm run bench -- --section precompil
-npm run bench -- --section "compilation|precompil"
+pnpm run bench -- --section precompil
+pnpm run bench -- --section "compilation|precompil"
 
 # Compare results
-npm run bench:compare
+pnpm run bench:compare
 
 # Or specify files explicitly
-npm run bench:compare -- bench/results/bench-*-main.md bench/results/bench-*-feat.md
+pnpm run bench:compare -- bench/results/bench-*-main.md bench/results/bench-*-feat.md
 ```
 
 Results are saved as timestamped Markdown files in `bench/results/`. Each report includes ops/sec, avg latency, p50/p75/p99 percentiles, and sample counts.
@@ -134,9 +134,9 @@ Results are saved as timestamped Markdown files in `bench/results/`. Each report
 Typical workflow for comparing branches:
 
 ```bash
-git checkout main && npm run bench
-git checkout my-feature && npm run bench
-npm run bench:compare
+git checkout main && pnpm run bench
+git checkout my-feature && pnpm run bench
+pnpm run bench:compare
 ```
 
 When run without arguments, `bench:compare` auto-selects two result files: if a file labelled "main" exists it is always used as the baseline, otherwise the older file is the baseline. The comparison uses p75 latency for the diff to filter outliers, and marks changes with `!` (>2%) and `!!` (>5%).
