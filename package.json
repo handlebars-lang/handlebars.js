@@ -28,7 +28,6 @@
     "runtime.d.ts"
   ],
   "type": "module",
-  "packageManager": "pnpm@11.6.0",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "imports": {
@@ -96,7 +95,7 @@
     "lint-staged": "^16.3.2",
     "mock-stdin": "^0.3.0",
     "oxfmt": "^0.36.0",
-    "oxlint": "^1.51.0",
+    "oxlint": "1.51.0",
     "semver": "^5.0.1",
     "tinybench": "^6.0.0",
     "tstyche": "^6.2.0",
@@ -129,5 +128,6 @@
   ],
   "engines": {
     "node": ">=20"
-  }
+  },
+  "packageManager": "pnpm@11.6.0"
 }

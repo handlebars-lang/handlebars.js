@@ -37,7 +37,9 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest', 'windows-latest']
         # https://nodejs.org/en/about/releases/
-        node-version: ['20', '22', '24']
+        # Node 20 is supported at runtime (see "engines" in package.json) but is
+        # not exercised in CI because pnpm >=11 requires Node >=22.13.
+        node-version: ['22', '24']
 
     steps:
       - name: Checkout
@@ -61,7 +63,6 @@ jobs:
         run: pnpm run test
 
       - name: Test (Publish)
-        if: matrix.node-version != '20'
         run: pnpm exec vitest run --project publish
 
       - name: Test (Integration)
