@@ -166,7 +166,7 @@ describe('strict', function () {
     it('should still perform recursive lookup with a multi-part path not in context', function () {
       expectTemplate('{{#with child}}{{name.first}}{{/with}}')
         .withCompileOptions({ strict: true, compat: true })
-        .withInput({ name: { first: 'root' }, child: { name: null } })
+        .withInput({ name: { first: 'root' }, child: { x: 'y' } })
         .toCompileTo('root');
     });
 
