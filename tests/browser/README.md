@@ -10,5 +10,5 @@ Execute the following commands in the project root:
 pnpm install
 pnpm run build
 docker pull mcr.microsoft.com/playwright:focal
-docker run -it --rm --volume $(pwd):/srv/app --workdir /srv/app --ipc=host mcr.microsoft.com/playwright:focal pnpm run test:browser
+docker run -it --rm --volume $(pwd):/srv/app --workdir /srv/app --ipc=host mcr.microsoft.com/playwright:focal sh -c "corepack enable && pnpm run test:browser"
 ```

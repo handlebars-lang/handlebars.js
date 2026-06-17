@@ -41,6 +41,8 @@ Before building, you need to make sure that the Git submodule `spec/mustache` is
 
 This project uses [pnpm](https://pnpm.io/) as its package manager (the required version is pinned in the `packageManager` field of `package.json`). The easiest way to get the right version is via [Corepack](https://nodejs.org/api/corepack.html), which ships with Node.js: run `corepack enable` once, and pnpm commands will automatically use the pinned version.
 
+> **Note:** While Handlebars itself supports Node.js >=20 at runtime (see `engines` in `package.json`), the development tooling requires a newer Node.js for the pinned pnpm version: pnpm 11 requires Node.js >=22.13. Use Node.js 22.13 or later when building and testing locally.
+
 Project dependencies may be installed via `pnpm install`.
 
 To build Handlebars.js from scratch, run `pnpm run build` in the root of the project. That will compile CJS modules via SWC and bundle UMD distributions via rspack, outputting results to the dist/ folder. To run tests, use `pnpm test`.
