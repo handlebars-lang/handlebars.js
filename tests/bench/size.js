@@ -24,7 +24,7 @@ async function measureDistSizes() {
       }
     });
   } catch {
-    console.warn('dist/ directory not found — run `npm run build` first.');
+    console.warn('dist/ directory not found — run `pnpm run build` first.');
     return [];
   }
 

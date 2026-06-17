@@ -49,28 +49,28 @@
   },
   "scripts": {
     "clean": "node --input-type=module -e \"import fs from 'fs';fs.rmSync('dist',{recursive:true,force:true});fs.rmSync('tmp',{recursive:true,force:true})\"",
-    "build": "npm run clean && rspack build",
-    "release": "npm run build",
-    "publish:aws": "npm run build && npm run test:tasks && node tasks/publish-to-aws.js",
+    "build": "pnpm run clean && rspack build",
+    "release": "pnpm run build",
+    "publish:aws": "pnpm run build && pnpm run test:tasks && node tasks/publish-to-aws.js",
     "format": "oxfmt --write . && oxlint --fix .",
-    "lint": "npm run lint:oxlint && npm run lint:format && npm run lint:types && npm run lint:compat",
+    "lint": "pnpm run lint:oxlint && pnpm run lint:format && pnpm run lint:types && pnpm run lint:compat",
     "lint:oxlint": "oxlint --max-warnings 0 .",
     "lint:format": "oxfmt --check .",
     "lint:types": "tstyche",
     "lint:compat": "eslint",
-    "test": "npm run build && vitest run --project node --project tasks --project rspack --coverage",
+    "test": "pnpm run build && vitest run --project node --project tasks --project rspack --coverage",
     "test:browser": "vitest run --project browser",
     "test:unit": "vitest run --project node",
     "test:tasks": "vitest run --project tasks",
-    "test:publish": "npm run build && vitest run --project publish",
+    "test:publish": "pnpm run build && vitest run --project publish",
     "test:browser-smoke": "playwright test --config tests/browser/playwright.config.js",
-    "test:serve": "npx serve -l 9999 .",
-    "test:integration": "npm run build && ./tests/integration/run-integration-tests.sh",
+    "test:serve": "pnpm dlx serve -l 9999 .",
+    "test:integration": "pnpm run build && ./tests/integration/run-integration-tests.sh",
     "bench": "node tests/bench/perf.js",
     "bench:compare": "node tests/bench/compare.js",
     "bench:size": "node tests/bench/size.js",
     "--- combined tasks ---": "",
-    "check-before-pull-request": "concurrently --kill-others-on-fail npm:lint npm:test"
+    "check-before-pull-request": "concurrently --kill-others-on-fail \"pnpm run lint\" \"pnpm run test\""
   },
   "dependencies": {
     "@handlebars/parser": "^2.2.2",
@@ -95,7 +95,7 @@
     "lint-staged": "^16.3.2",
     "mock-stdin": "^0.3.0",
     "oxfmt": "^0.36.0",
-    "oxlint": "^1.51.0",
+    "oxlint": "1.51.0",
     "semver": "^5.0.1",
     "tinybench": "^6.0.0",
     "tstyche": "^6.2.0",
@@ -128,5 +128,6 @@
   ],
   "engines": {
     "node": ">=20"
-  }
+  },
+  "packageManager": "pnpm@11.6.0"
 }

@@ -14,16 +14,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
 
   test:
     name: Test (Node)
@@ -33,7 +37,10 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest', 'windows-latest']
         # https://nodejs.org/en/about/releases/
-        node-version: ['20', '22', '24']
+        # Node 20 is supported at runtime (see "engines" in package.json) but is not
+        # part of this pnpm matrix because pnpm >=11 requires Node >=22.13. It is
+        # validated separately in the "Test (Node 20)" job below using npm.
+        node-version: ['22', '24']
 
     steps:
       - name: Checkout
@@ -41,27 +48,35 @@ jobs:
         with:
           submodules: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Test
-        run: npm run test
+        run: pnpm run test
 
       - name: Test (Publish)
-        if: matrix.node-version != '20'
-        run: npx vitest run --project publish
+        run: pnpm exec vitest run --project publish
 
       - name: Test (Integration)
         if: matrix.operating-system == 'ubuntu-latest'
-        run: npm run test:integration
+        run: pnpm run test:integration
 
-  browser:
-    name: Test (Browser)
+  test-node20:
+    # Node 20 is a supported runtime (see "engines" in package.json) but cannot run
+    # the pinned pnpm (pnpm >=11 requires Node >=22.13), so it is excluded from the
+    # main "test" matrix. This job validates Node 20 compatibility of the library by
+    # installing with npm and running the full unit test suite, which imports the
+    # library source directly (no build/tooling step required).
+    name: Test (Node 20)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,20 +87,47 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
+          node-version: '20'
+
+      # No package-lock.json is committed (the repo uses pnpm-lock.yaml), so install
+      # with `npm install` rather than `npm ci`. --legacy-peer-deps mirrors the
+      # existing bundler integration tests.
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Test (unit)
+        run: npm run test:unit
+
+  browser:
+    name: Test (Browser)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
           node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright
         run: |
-          npx playwright install-deps
-          npx playwright install
+          pnpm exec playwright install-deps
+          pnpm exec playwright install
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Test
         run: |
-          npm run test:browser-smoke
-          npm run test:browser
+          pnpm run test:browser-smoke
+          pnpm run test:browser

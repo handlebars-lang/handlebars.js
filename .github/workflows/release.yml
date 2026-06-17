@@ -19,19 +19,23 @@ jobs:
         with:
           submodules: true
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Publish
         run: |
           git config --global user.email "release@handlebarsjs.com"
           git config --global user.name "handlebars-lang"
-          npm run publish:aws
+          pnpm run publish:aws
         env:
           S3_BUCKET_NAME: 'builds.handlebarsjs.com'
           S3_REGION: 'us-east-1'

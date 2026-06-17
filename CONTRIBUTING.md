@@ -39,9 +39,13 @@ To build Handlebars.js you'll need Node.js installed.
 
 Before building, you need to make sure that the Git submodule `spec/mustache` is included (i.e. the directory `spec/mustache` should not be empty). To include it, if using Git version 1.6.5 or newer, use `git clone --recursive` rather than `git clone`. Or, if you already cloned without `--recursive`, use `git submodule update --init`.
 
-Project dependencies may be installed via `npm install`.
+This project uses [pnpm](https://pnpm.io/) as its package manager (the required version is pinned in the `packageManager` field of `package.json`). The easiest way to get the right version is via [Corepack](https://nodejs.org/api/corepack.html), which ships with Node.js: run `corepack enable` once, and pnpm commands will automatically use the pinned version.
 
-To build Handlebars.js from scratch, run `npm run build` in the root of the project. That will compile CJS modules via SWC and bundle UMD distributions via rspack, outputting results to the dist/ folder. To run tests, use `npm test`.
+> **Note:** While Handlebars itself supports Node.js >=20 at runtime (see `engines` in `package.json`), the development tooling requires a newer Node.js for the pinned pnpm version: pnpm 11 requires Node.js >=22.13. Use Node.js 22.13 or later when building and testing locally.
+
+Project dependencies may be installed via `pnpm install`.
+
+To build Handlebars.js from scratch, run `pnpm run build` in the root of the project. That will compile CJS modules via SWC and bundle UMD distributions via rspack, outputting results to the dist/ folder. To run tests, use `pnpm test`.
 
 If you notice any problems, please report them to the GitHub issue tracker at
 [http://github.com/handlebars-lang/handlebars.js/issues](http://github.com/handlebars-lang/handlebars.js/issues).
@@ -51,7 +55,7 @@ If you notice any problems, please report them to the GitHub issue tracker at
 To run tests locally, first install all dependencies.
 
 ```sh
-npm install
+pnpm install
 ```
 
 Clone the mustache specs into the spec/mustache folder.
@@ -65,7 +69,7 @@ git clone https://github.com/mustache/spec.git mustache
 From the root directory, run the tests.
 
 ```sh
-npm test
+pnpm test
 ```
 
 ## Linting and Formatting
@@ -75,10 +79,10 @@ Committed files are linted and formatted in a pre-commit hook.
 
 You can use the following scripts to make sure that the CI job does not fail:
 
-- **npm run lint** will run all linters and fail on warnings
-- **npm run format** will format all files
-- **npm run check-before-pull-request** will perform all checks that our CI job does, excluding integration tests.
-- **npm run test:integration** will run integration tests (bundler compatibility with webpack, rollup, etc.)
+- **pnpm run lint** will run all linters and fail on warnings
+- **pnpm run format** will format all files
+- **pnpm run check-before-pull-request** will perform all checks that our CI job does, excluding integration tests.
+- **pnpm run test:integration** will run integration tests (bundler compatibility with webpack, rollup, etc.)
   These tests only work on Linux.
 
 ## Releasing the latest version
@@ -96,9 +100,9 @@ _When releasing a previous version of Handlebars, please look into the CONTRIBUN
 A full release may be completed with the following:
 
 ```
-npm ci
-npm run build
-npm publish
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm publish
 ```
 
 After the release, you should check that all places have really been updated. Especially verify that the `latest`-tags

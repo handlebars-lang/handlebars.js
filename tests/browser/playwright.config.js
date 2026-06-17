@@ -18,7 +18,7 @@ const config = {
   ],
   reporter: 'list',
   webServer: {
-    command: 'npm run test:serve',
+    command: 'pnpm run test:serve',
     port: 9999,
     reuseExistingServer: false,
   },
