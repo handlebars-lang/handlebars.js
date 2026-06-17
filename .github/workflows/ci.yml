@@ -37,8 +37,9 @@ jobs:
       matrix:
         operating-system: ['ubuntu-latest', 'windows-latest']
         # https://nodejs.org/en/about/releases/
-        # Node 20 is supported at runtime (see "engines" in package.json) but is
-        # not exercised in CI because pnpm >=11 requires Node >=22.13.
+        # Node 20 is supported at runtime (see "engines" in package.json) but is not
+        # part of this pnpm matrix because pnpm >=11 requires Node >=22.13. It is
+        # validated separately in the "Test (Node 20)" job below using npm.
         node-version: ['22', '24']
 
     steps:
@@ -68,6 +69,34 @@ jobs:
       - name: Test (Integration)
         if: matrix.operating-system == 'ubuntu-latest'
         run: pnpm run test:integration
+
+  test-node20:
+    # Node 20 is a supported runtime (see "engines" in package.json) but cannot run
+    # the pinned pnpm (pnpm >=11 requires Node >=22.13), so it is excluded from the
+    # main "test" matrix. This job validates Node 20 compatibility of the library by
+    # installing with npm and running the full unit test suite, which imports the
+    # library source directly (no build/tooling step required).
+    name: Test (Node 20)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      # No package-lock.json is committed (the repo uses pnpm-lock.yaml), so install
+      # with `npm install` rather than `npm ci`. --legacy-peer-deps mirrors the
+      # existing bundler integration tests.
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Test (unit)
+        run: npm run test:unit
 
   browser:
     name: Test (Browser)
