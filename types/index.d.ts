@@ -288,11 +288,6 @@ export interface Logger {
 
 export type CompilerInfo = [number /* revision */, string /* versions */];
 
-declare module 'handlebars/runtime' {
-  const runtime: typeof Handlebars;
-  export default runtime;
-}
-
 // Named exports matching lib/index.js for ESM/CJS interop
 export const create: typeof Handlebars.create;
 export const compile: typeof Handlebars.compile;
