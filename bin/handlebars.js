@@ -102,7 +102,10 @@ loadTemplates(argv, function (err, opts) {
     throw err;
   }
 
-  if (opts.help || (!opts.templates.length && !opts.version)) {
+  if (
+    opts.help ||
+    (!opts.templates.length && !opts.hasDirectory && !opts.version)
+  ) {
     parser.showHelp('log');
   } else {
     // cli() is async (returns a Promise), so errors would become unhandled
