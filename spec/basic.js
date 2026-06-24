@@ -111,6 +111,22 @@ describe('basic context', function () {
       .toCompileTo('num: 0');
   });
 
+  it('does not add adjacent numeric values with noEscape or raw mustaches', function () {
+    expectTemplate('{{a}}{{b}}')
+      .withCompileOptions({ noEscape: true })
+      .withInput({ a: 1, b: 2 })
+      .toCompileTo('12');
+
+    expectTemplate('{{a}}{{b}}{{c}}')
+      .withCompileOptions({ noEscape: true })
+      .withInput({ a: 1, b: 2, c: 3 })
+      .toCompileTo('123');
+
+    expectTemplate('{{{a}}}{{{b}}}')
+      .withInput({ a: 1, b: 2 })
+      .toCompileTo('12');
+  });
+
   it('false', function () {
     /* eslint-disable no-new-wrappers */
     expectTemplate('val1: {{val1}}, val2: {{val2}}')
