@@ -111,7 +111,7 @@ describe('basic context', function () {
       .toCompileTo('num: 0');
   });
 
-  it('does not add adjacent numeric values with noEscape', function () {
+  it('does not add adjacent numeric values with noEscape or raw mustaches', function () {
     expectTemplate('{{a}}{{b}}')
       .withCompileOptions({ noEscape: true })
       .withInput({ a: 1, b: 2 })
