@@ -70,6 +70,18 @@ describe('partials', function () {
       );
   });
 
+  it('dynamic partials should not resolve prototype properties', function () {
+    expectTemplate('{{> (partial)}}')
+      .withHelper('partial', function () {
+        return 'constructor';
+      })
+      .withPartials({})
+      .toThrow(
+        Handlebars.Exception,
+        'The partial "constructor" could not be found'
+      );
+  });
+
   it('partials with context', function () {
     expectTemplate('Dudes: {{>dude dudes}}')
       .withInput({
