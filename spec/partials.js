@@ -163,6 +163,17 @@ describe('partials', function () {
     );
   });
 
+  it('static partial fallback should not resolve prototype properties', function () {
+    var partials = Object.create({ constructor: 'fail' });
+
+    expectTemplate('{{> constructor}}')
+      .withPartials(partials)
+      .toThrow(
+        Handlebars.Exception,
+        'The partial "constructor" could not be found'
+      );
+  });
+
   it('registering undefined partial throws an exception', function () {
     expect(function () {
       handlebarsEnv.registerPartial('undefined_test', undefined);
