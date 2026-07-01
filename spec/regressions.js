@@ -502,4 +502,12 @@ describe('Regressions', function () {
         .toCompileTo('bar');
     });
   });
+
+  describe('GH-1762: parent context lost for undefined #each item inside a block helper', function () {
+    it('should keep the parent context when iterating an array with undefined items', function () {
+      expectTemplate('{{#each arr}}{{#if 1}}{{../foo}}|{{/if}}{{/each}}')
+        .withInput({ arr: [1, undefined, 3], foo: 'foo' })
+        .toCompileTo('foo|foo|foo|');
+    });
+  });
 });
