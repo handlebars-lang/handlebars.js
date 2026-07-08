@@ -140,6 +140,48 @@ describe('strict', function () {
     });
   });
 
+  describe('strict partials', function () {
+    it('GH-1708: should error on missing variable referenced inside a partial', function () {
+      expectTemplate('{{> myPartial}}')
+        .withCompileOptions({ strict: true })
+        .withPartial('myPartial', 'Hello {{name}}')
+        .toThrow(Exception, /"name" not defined in/);
+
+      expectTemplate('{{> myPartial}}')
+        .withCompileOptions({ strict: true })
+        .withPartial('myPartial', 'Hello {{name}}')
+        .withInput({ name: 'World' })
+        .toCompileTo('Hello World');
+    });
+
+    it('GH-1708: should error on missing hash argument passed to a partial', function () {
+      expectTemplate('{{> myPartial name=name}}')
+        .withCompileOptions({ strict: true })
+        .withPartial('myPartial', 'Hello {{name}}')
+        .toThrow(Exception, /"name" not defined in/);
+
+      expectTemplate('{{> myPartial name=name}}')
+        .withCompileOptions({ strict: true })
+        .withPartial('myPartial', 'Hello {{name}}')
+        .withInput({ name: 'World' })
+        .toCompileTo('Hello World');
+    });
+
+    it('GH-1708: should error on missing context argument passed to a partial', function () {
+      expectTemplate('{{> myPartial person}}')
+        .withCompileOptions({ strict: true })
+        .withPartial('myPartial', 'Hello {{name}}')
+        .toThrow(Exception, /"person" not defined in/);
+    });
+
+    it('GH-1708: should error on a missing @data hash argument passed to a partial', function () {
+      expectTemplate('{{> myPartial name=@missing}}')
+        .withCompileOptions({ strict: true })
+        .withPartial('myPartial', 'Hello {{name}}')
+        .toThrow(Exception, /"missing" not defined in/);
+    });
+  });
+
   describe('strict and compat mode', function () {
     it('GH-1741: should render a simple variable', function () {
       expectTemplate('{{v}}')
