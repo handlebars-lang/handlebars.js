@@ -16,6 +16,8 @@ describe('precompiler', function () {
 
   var log,
     logFunction,
+    warnLog,
+    warnLogFunction,
     errorLog,
     errorLogFunction,
     precompile,
@@ -40,6 +42,11 @@ describe('precompiler', function () {
     console.log = function () {
       log += Array.prototype.join.call(arguments, '');
     };
+    warnLogFunction = console.warn;
+    warnLog = '';
+    console.warn = function () {
+      warnLog += Array.prototype.join.call(arguments, '');
+    };
     errorLogFunction = console.error;
     errorLog = '';
     console.error = function () {
@@ -56,6 +63,7 @@ describe('precompiler', function () {
     uglify.minify = minify;
     fs.writeFileSync = writeFileSync;
     console.log = logFunction;
+    console.warn = warnLogFunction;
     console.error = errorLogFunction;
   });
 
@@ -68,12 +76,23 @@ describe('precompiler', function () {
       'Must define at least one template or directory.'
     );
   });
-  it('should handle empty/filtered directories', async function () {
+  it('should warn and stop when directories contain no matching templates', async function () {
     Handlebars.precompile = function () {
       return 'simple';
     };
-    await Precompiler.cli({ hasDirectory: true, templates: [] });
-    // Success is not throwing
+    await Precompiler.cli({
+      hasDirectory: true,
+      templates: [],
+      files: ['spec/artifacts'],
+      extension: 'handlebars',
+      output: 'ignored.js',
+    });
+
+    expect(warnLog).toBe(
+      'Warning: No files matching *.handlebars found under spec/artifacts. Pass --extension <ext> if your templates use a different extension.'
+    );
+    expect(file).toBe(undefined);
+    expect(log).toBe('');
   });
   it('should throw when combining simple and minimized', async function () {
     await expect(
