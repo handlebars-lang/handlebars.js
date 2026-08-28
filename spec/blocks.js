@@ -168,6 +168,20 @@ describe('blocks', function () {
         .toCompileTo('Right On!');
     });
 
+    it('inverted section with empty string value', function () {
+      expectTemplate(
+        '{{#goodbyes}}{{this}}{{/goodbyes}}{{^goodbyes}}Right On!{{/goodbyes}}'
+      )
+        .withInput({ goodbyes: '' })
+        .withMessage('Inverted section rendered when value is an empty string.')
+        .toCompileTo('Right On!');
+
+      expectTemplate('{{#a.b}}yes{{else}}no{{/a.b}}')
+        .withInput({ a: { b: '' } })
+        .withMessage('Else section rendered for a pathed empty string value.')
+        .toCompileTo('no');
+    });
+
     it('block inverted sections', function () {
       expectTemplate('{{#people}}{{name}}{{^}}{{none}}{{/people}}')
         .withInput({ none: 'No people' })
