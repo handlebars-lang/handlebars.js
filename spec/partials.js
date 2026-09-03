@@ -604,6 +604,25 @@ describe('partials', function () {
           'Dudes:\n  Yehuda\n http://yehuda!\n  Alan\n http://alan!\n'
         );
     });
+
+    it('indented partial-block whose content is a SafeString (GH-1695)', function () {
+      expectTemplate('{{#>myPartial}}{{#safe}}success{{/safe}}{{/myPartial}}')
+        .withHelper('safe', function (options) {
+          return new Handlebars.SafeString(options.fn(this));
+        })
+        .withPartial('myPartial', '  {{> @partial-block }}')
+        .toCompileTo('  success');
+    });
+
+    it('indented inline partial whose content is a SafeString (GH-1695)', function () {
+      expectTemplate(
+        '{{#*inline "myPartial"}}{{#safe}}success{{/safe}}{{/inline}}\n  {{> myPartial}}'
+      )
+        .withHelper('safe', function (options) {
+          return new Handlebars.SafeString(options.fn(this));
+        })
+        .toCompileTo('\n  success');
+    });
   });
 
   describe('compat mode', function () {
