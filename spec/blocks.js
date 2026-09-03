@@ -266,6 +266,31 @@ describe('blocks', function () {
         .toCompileTo('');
     });
 
+    it('should find a parent value named like an Object.prototype member', function () {
+      expectTemplate('{{#each items}}{{constructor}}/{{valueOf}}{{/each}}')
+        .withCompileOptions({ compat: true })
+        .withInput({
+          constructor: 'root-constructor',
+          valueOf: 'root-valueOf',
+          items: [{ id: 1 }],
+        })
+        .toCompileTo('root-constructor/root-valueOf');
+    });
+
+    it('should stop at a depth whose match is an allowed prototype method', function () {
+      class Item {
+        greeting() {
+          return 'item-greeting';
+        }
+      }
+
+      expectTemplate('{{#each items}}{{greeting}}{{/each}}')
+        .withCompileOptions({ compat: true })
+        .withInput({ greeting: 'root-greeting', items: [new Item()] })
+        .withRuntimeOptions({ allowedProtoMethods: { greeting: true } })
+        .toCompileTo('item-greeting');
+    });
+
     it('block with deep recursive lookup lookup', function () {
       expectTemplate(
         '{{#outer}}Goodbye {{#inner}}cruel {{omg}}{{/inner}}{{/outer}}'
