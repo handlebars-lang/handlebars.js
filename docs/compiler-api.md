@@ -320,40 +320,38 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 
 ### Example for the compiler api.
 
-This example changes all lookups of properties are performed by a helper (`lookupLowerCase`) which looks for `test` if `{{Test}}` occurs in the template. This is just to illustrate how compiler behavior can be change.
+This example makes context property lookups case-insensitive by lowercasing the
+name at compile time, so `{{#each Test}}` / `{{Value}}` resolve to `test` / `value`.
+This illustrates how compiler behavior can be changed.
 
-There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/162/) if you want to play around with it.
+Note: calling a registered helper from `nameLookup` (for example via
+`helpers.lookupLowerCase`) is not reliable since Handlebars 4.6, because helper
+wrappers treat the last argument as options. Lowercase the name, then delegate
+to the base `nameLookup` so the example keeps working as compiler internals change.
 
 ```javascript
 function MyCompiler() {
   Handlebars.JavaScriptCompiler.apply(this, arguments);
 }
-MyCompiler.prototype = new Handlebars.JavaScriptCompiler();
+MyCompiler.prototype = Object.create(Handlebars.JavaScriptCompiler.prototype);
+MyCompiler.prototype.constructor = MyCompiler;
 
-// Use this compile to compile BlockStatment-Blocks
+// Use this compiler for nested BlockStatement blocks
 MyCompiler.prototype.compiler = MyCompiler;
 
 MyCompiler.prototype.nameLookup = function (parent, name, type) {
   if (type === 'context') {
-    return this.source.functionCall('helpers.lookupLowerCase', '', [
-      parent,
-      JSON.stringify(name),
-    ]);
-  } else {
-    return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(
-      this,
-      parent,
-      name,
-      type
-    );
+    name = String(name).toLowerCase();
   }
+  return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(
+    this,
+    parent,
+    name,
+    type
+  );
 };
 
 var env = Handlebars.create();
-env.registerHelper('lookupLowerCase', function (parent, name) {
-  return parent[name.toLowerCase()];
-});
-
 env.JavaScriptCompiler = MyCompiler;
 
 var template = env.compile('{{#each Test}} ({{Value}}) {{/each}}');
