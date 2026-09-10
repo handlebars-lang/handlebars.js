@@ -219,6 +219,57 @@ describe('partials', function () {
     );
   });
 
+  it('runtime helpers override registered helpers in same-environment partials', function () {
+    var env = Handlebars.create();
+    env.registerHelper('foo', function () {
+      return 'registered';
+    });
+    env.registerPartial('part', env.compile('{{foo}}'));
+    var template = env.compile('{{foo}}/{{> part}}');
+
+    expect(
+      template(
+        {},
+        {
+          helpers: {
+            foo: function () {
+              return 'runtime';
+            },
+          },
+        }
+      )
+    ).toBe('runtime/runtime');
+    expect(template({})).toBe('registered/registered');
+  });
+
+  it('runtime helpers reach nested cross-environment partials without leaking between renders', function () {
+    var partialEnv = Handlebars.create();
+    partialEnv.registerHelper('foo', function () {
+      return 'partial';
+    });
+    var templateEnv = Handlebars.create();
+    templateEnv.registerHelper('foo', function () {
+      return 'template';
+    });
+    templateEnv.registerPartial('inner', partialEnv.compile('{{foo}}'));
+    templateEnv.registerPartial('part', partialEnv.compile('{{> inner}}'));
+    var template = templateEnv.compile('{{foo}}/{{> part}}');
+
+    expect(
+      template(
+        {},
+        {
+          helpers: {
+            foo: function () {
+              return 'runtime';
+            },
+          },
+        }
+      )
+    ).toBe('runtime/runtime');
+    expect(template({})).toBe('template/partial');
+  });
+
   it('GH-14: a partial preceding a selector', function () {
     expectTemplate('Dudes: {{>dude}} {{anotherDude}}')
       .withInput({ name: 'Jeepers', anotherDude: 'Creepers' })
