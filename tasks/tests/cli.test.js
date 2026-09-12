@@ -1,5 +1,6 @@
 import fs from 'fs';
-import { exec } from 'child_process';
+import { exec, spawnSync } from 'child_process';
+import { runInNewContext } from 'vm';
 import { execCommand, FileTestHelper } from 'cli-testlab';
 import Handlebars from '../../lib/index.js';
 
@@ -169,6 +170,40 @@ describe('bin/handlebars', function () {
       const result = await execCommand(`${cli} -i "<div>hello</div>"`);
       // Unnamed single template defaults to simple mode
       expect(result.stdout).toMatch(/function/);
+    });
+  });
+
+  describe('minification', function () {
+    const inputs = [
+      { name: 'inline', args: ['-i', 'test'] },
+      { name: 'stdin', args: ['-i', '-'], input: 'test' },
+    ];
+
+    it.each(inputs)('rejects unnamed $name input', function ({ args, input }) {
+      const result = spawnSync(
+        process.execPath,
+        ['./bin/handlebars.js', '-m', ...args],
+        { input, encoding: 'utf8' }
+      );
+
+      expect(result.error).toBeUndefined();
+      expect(result.status).toBe(1);
+      expect(result.stdout).toBe('');
+      expect(result.stderr).toContain('Unable to minimize simple output');
+    });
+
+    it.each(inputs)('compiles named $name input', function ({ args, input }) {
+      const result = spawnSync(
+        process.execPath,
+        ['./bin/handlebars.js', '-m', '-N', 'test', ...args],
+        { input, encoding: 'utf8' }
+      );
+
+      expect(result.error).toBeUndefined();
+      expect(result.status).toBe(0);
+      const environment = Handlebars.create();
+      runInNewContext(result.stdout, { Handlebars: environment });
+      expect(environment.templates.test({})).toBe('test');
     });
   });
 

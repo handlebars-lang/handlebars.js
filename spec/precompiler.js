@@ -80,6 +80,15 @@ describe('precompiler', function () {
       Precompiler.cli({ templates: [__dirname], simple: true, min: true })
     ).rejects.toThrow('Unable to minimize simple output');
   });
+  it('should reject simple minification before multiple templates', async function () {
+    await expect(
+      Precompiler.cli({
+        templates: [emptyTemplate, emptyTemplate],
+        simple: true,
+        min: true,
+      })
+    ).rejects.toThrow('Unable to minimize simple output');
+  });
   it('should throw when combining simple and multiple templates', async function () {
     await expect(
       Precompiler.cli({
