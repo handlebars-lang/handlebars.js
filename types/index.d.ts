@@ -97,6 +97,39 @@ declare namespace Handlebars {
 
   export function create(): typeof Handlebars;
 
+  /** Shared APIs available without the template compiler. */
+  export type RuntimeEnvironment = Pick<
+    typeof Handlebars,
+    | 'registerHelper'
+    | 'unregisterHelper'
+    | 'registerPartial'
+    | 'unregisterPartial'
+    | 'registerDecorator'
+    | 'unregisterDecorator'
+    | 'K'
+    | 'createFrame'
+    | 'blockParams'
+    | 'log'
+    | 'template'
+    | 'escapeExpression'
+    | 'logger'
+    | 'templates'
+    | 'helpers'
+    | 'partials'
+    | 'decorators'
+    | 'VERSION'
+    | 'Exception'
+    | 'SafeString'
+    | 'Utils'
+    | 'VM'
+  >;
+
+  /** The runtime singleton also provides environment creation and noConflict. */
+  export interface Runtime extends RuntimeEnvironment {
+    create(): RuntimeEnvironment;
+    noConflict(): Runtime;
+  }
+
   export const escapeExpression: typeof Utils.escapeExpression;
   //export const Utils: typeof hbs.Utils;
   export const logger: Logger;
@@ -287,11 +320,6 @@ export interface Logger {
 }
 
 export type CompilerInfo = [number /* revision */, string /* versions */];
-
-declare module 'handlebars/runtime' {
-  const runtime: typeof Handlebars;
-  export default runtime;
-}
 
 // Named exports matching lib/index.js for ESM/CJS interop
 export const create: typeof Handlebars.create;

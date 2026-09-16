@@ -1,5 +1,8 @@
 import { expect, test, describe } from 'tstyche';
 import Handlebars from 'handlebars';
+import runtime from 'handlebars/runtime';
+import * as runtimeModule from 'handlebars/runtime';
+import type runtimeRequire = require('handlebars/runtime');
 import {
   HandlebarsTemplatable,
   HandlebarsTemplateDelegate,
@@ -325,6 +328,139 @@ describe('Handlebars constants', () => {
 describe('Handlebars.create', () => {
   test('returns typeof Handlebars', () => {
     expect(Handlebars.create()).type.toBe<typeof Handlebars>();
+  });
+
+  test('retains compiler APIs on full environments', () => {
+    const instance = Handlebars.create();
+    expect(instance.compile<{ name: string }>('{{name}}')).type.toBe<
+      HandlebarsTemplateDelegate<{ name: string }>
+    >();
+    expect(instance.precompile('{{name}}')).type.toBe<TemplateSpecification>();
+    expect(
+      Handlebars.noConflict().compile('{{name}}')
+    ).type.toBe<HandlebarsTemplateDelegate>();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Handlebars runtime
+// ---------------------------------------------------------------------------
+describe('Handlebars runtime', () => {
+  test('does not expose compiler APIs', () => {
+    expect(runtime.compile).type.toRaiseError(2339);
+    expect(runtime.precompile).type.toRaiseError(2339);
+    expect(runtime.parse).type.toRaiseError(2339);
+    expect(runtime.parseWithoutProcessing).type.toRaiseError(2339);
+    expect(runtime.AST).type.toRaiseError(2339);
+    expect(runtime.Visitor).type.toRaiseError(2339);
+  });
+
+  test('creates runtime-only environments', () => {
+    const instance = runtime.create();
+    expect(instance.compile).type.toRaiseError(2339);
+    expect(instance.precompile).type.toRaiseError(2339);
+    expect(instance.parse).type.toRaiseError(2339);
+    expect(instance.parseWithoutProcessing).type.toRaiseError(2339);
+    expect(instance.AST).type.toRaiseError(2339);
+    expect(instance.Visitor).type.toRaiseError(2339);
+    expect(instance.create).type.toRaiseError(2339);
+    expect(instance.noConflict).type.toRaiseError(2339);
+    expect(instance.template<{ name: string }>({})).type.toBe<
+      HandlebarsTemplateDelegate<{ name: string }>
+    >();
+    expect(
+      instance.registerHelper('greet', (name: string) => name)
+    ).type.toBe<void>();
+  });
+
+  test('noConflict preserves the runtime-only singleton', () => {
+    const instance = runtime.noConflict();
+    expect(instance).type.toBe<typeof runtime>();
+    expect(instance.compile).type.toRaiseError(2339);
+    expect(instance.precompile).type.toRaiseError(2339);
+    expect(instance.create().compile).type.toRaiseError(2339);
+    expect(instance.create().precompile).type.toRaiseError(2339);
+    expect(instance.template({})).type.toBe<HandlebarsTemplateDelegate>();
+  });
+
+  test('namespace imports retain a runtime-only default export', () => {
+    expect(runtimeModule.default).type.toBe<typeof runtime>();
+    expect(runtimeModule.default.compile).type.toRaiseError(2339);
+    expect(runtimeModule.default.precompile).type.toRaiseError(2339);
+    expect(runtimeModule.default.create().compile).type.toRaiseError(2339);
+    expect(runtimeModule.default.create().precompile).type.toRaiseError(2339);
+    expect(
+      runtimeModule.default.template({})
+    ).type.toBe<HandlebarsTemplateDelegate>();
+  });
+
+  test('CommonJS imports retain a runtime-only default export', () => {
+    expect<typeof runtimeRequire.default>().type.toBe<typeof runtime>();
+    expect<typeof runtimeRequire.default>().type.not.toHaveProperty('compile');
+    expect<typeof runtimeRequire.default>().type.not.toHaveProperty(
+      'precompile'
+    );
+    expect<
+      ReturnType<typeof runtimeRequire.default.create>
+    >().type.not.toHaveProperty('compile');
+    expect<
+      ReturnType<typeof runtimeRequire.default.create>
+    >().type.not.toHaveProperty('precompile');
+    expect<
+      ReturnType<typeof runtimeRequire.default.noConflict>
+    >().type.not.toHaveProperty('compile');
+    expect<
+      ReturnType<typeof runtimeRequire.default.noConflict>
+    >().type.not.toHaveProperty('precompile');
+    expect<typeof runtimeRequire.default.template>().type.toBe<
+      typeof Handlebars.template
+    >();
+    expect<typeof runtimeRequire.default.registerHelper>().type.toBe<
+      typeof Handlebars.registerHelper
+    >();
+  });
+
+  test('preserves template generics and runtime options', () => {
+    const template = runtime.template<{ name: string }>({});
+    expect(template).type.toBe<HandlebarsTemplateDelegate<{ name: string }>>();
+    expect(
+      template({ name: 'Ada' }, { data: { root: {} } })
+    ).type.toBe<string>();
+    expect(template({ name: 123 })).type.toRaiseError(2322);
+    expect(runtime.template({})).type.toBe<HandlebarsTemplateDelegate>();
+  });
+
+  test('preserves registration overloads', () => {
+    expect(
+      runtime.registerHelper('greet', (name: string) => name)
+    ).type.toBe<void>();
+    expect(
+      runtime.registerHelper({ greet: (name: string) => name })
+    ).type.toBe<void>();
+    expect(runtime.unregisterHelper('greet')).type.toBe<void>();
+    expect(
+      runtime.registerPartial('greeting', runtime.template({}))
+    ).type.toBe<void>();
+    expect(
+      runtime.registerPartial({ greeting: runtime.template({}) })
+    ).type.toBe<void>();
+    expect(runtime.unregisterPartial('greeting')).type.toBe<void>();
+    expect(runtime.registerDecorator('decorate', () => {})).type.toBe<void>();
+    expect(runtime.unregisterDecorator('decorate')).type.toBe<void>();
+  });
+
+  test('preserves runtime classes, utilities, and registries', () => {
+    expect(new runtime.SafeString('<b>')).type.toBe<Handlebars.SafeString>();
+    expect(new runtime.Exception('error')).type.toBe<Handlebars.Exception>();
+    expect(runtime.Utils).type.toBe<typeof Handlebars.Utils>();
+    expect(runtime.VM).type.toBe<typeof Handlebars.VM>();
+    expect(runtime.escapeExpression('<b>')).type.toBe<string>();
+    expect(runtime.createFrame({})).type.toBe<any>();
+    expect(runtime.VERSION).type.toBe<string>();
+    expect(runtime.helpers).type.toBe<typeof Handlebars.helpers>();
+    expect(runtime.partials).type.toBe<typeof Handlebars.partials>();
+    expect(runtime.decorators).type.toBe<typeof Handlebars.decorators>();
+    expect(runtime.logger).type.toBe<Logger>();
   });
 });
 
