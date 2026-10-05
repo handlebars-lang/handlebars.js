@@ -2,7 +2,26 @@
 
 ## Development
 
-[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.9...master)
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.10...master)
+
+## v4.7.10 - October 5th, 2026
+- security: Sanitize the source map URL when minifying - f37c599
+- security: Iterate lazily in #each and strip whitespace in linear time - 812c226
+- security: Escape `<!--` and `<script` in precompiled output - 609d1b1 GHSA-xw65-4hp5-5hc7
+- security: Don't trust special properties on context data - ceec388 GHSA-p8wg-vrv2-v86f
+- security: Only compile partials that are template strings - c28ee7a
+- security: Only dispatch known node types in the Compiler and Visitor - 7d501a5
+- security: Validate AST values in the compiler instead of the parser - 703fdcc GHSA-8r5x-fm3f-whwj
+- Clarify that --root does not restrict filesystem access - 0fcf25c
+- Bump minimist to ^1.2.8 - ea8ed82
+- Fix Ruby component publishing documentation - d069c1c
+- Fix Composer component definition - 6714e07
+
+Compatibility notes:
+- `{{#each}}` iterates iterables such as `Map`, `Set` and generators lazily, like `for...of`, instead of
+  copying them into an array first. Values added to the iterable while the block renders are now visited too.
+
+[Commits](https://github.com/handlebars-lang/handlebars.js/compare/v4.7.9...v4.7.10)
 
 ## v4.7.9 - March 26th, 2026
 - fix: enable shell mode for spawn to resolve Windows EINVAL issue - e0137c2
