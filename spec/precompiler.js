@@ -259,6 +259,37 @@ describe('precompiler', function () {
 
       expect(log).not.toMatch(/sourceMappingURL=[^\n]*\n;global\.__xjpjMap=1/);
     });
+
+    it('should sanitize sourceMappingURL comment values when minifying', async function () {
+      await Precompiler.cli({
+        templates: [{ name: 'safe', path: 'safe.handlebars', source: 'x' }],
+        min: true,
+        map: 'good.js.map\n;global.__xjpjMinMap=1;//',
+      });
+
+      expect(log).toContain(
+        'sourceMappingURL=good.js.map;global.__xjpjMinMap=1;//'
+      );
+      expect(log).not.toMatch(
+        /sourceMappingURL=[^\n]*\n;global\.__xjpjMinMap=1/
+      );
+    });
+
+    it('should percent-encode "<" in sourceMappingURL comment values', async function () {
+      for (const min of [false, true]) {
+        log = '';
+        await Precompiler.cli({
+          templates: [{ name: 'safe', path: 'safe.handlebars', source: 'x' }],
+          min: min,
+          map: '</script><!--<script>.map',
+        });
+
+        expect(log).toContain(
+          'sourceMappingURL=%3C/script>%3C!--%3Cscript>.map'
+        );
+        expect(log).not.toMatch(/<(!--|\/?script)/i);
+      }
+    });
   });
 
   describe('#loadTemplates', function () {
