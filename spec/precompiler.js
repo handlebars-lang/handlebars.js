@@ -211,6 +211,30 @@ describe('precompiler', function () {
       expect(log).not.toMatch(/\['evil'\];global\.__xjpjName=1/);
     });
 
+    it('should escape script tag delimiters in template names', async function () {
+      var name = '</script><script>alert(1)</script><!--';
+      await Precompiler.cli({
+        templates: [{ name: name, source: '' }],
+      });
+
+      expect(log).not.toMatch(/<(!--|\/?script)/i);
+      var quotedName = log.match(/templates\[("(?:[^"\\]|\\.)*")\]/);
+      expect(JSON.parse(quotedName[1])).toBe(name);
+    });
+
+    it('should escape line separators in template names', async function () {
+      var name =
+        'a' + String.fromCharCode(0x2028) + 'b' + String.fromCharCode(0x2029);
+      await Precompiler.cli({
+        templates: [{ name: name, source: '' }],
+      });
+
+      expect(log).not.toContain(String.fromCharCode(0x2028));
+      expect(log).not.toContain(String.fromCharCode(0x2029));
+      var quotedName = log.match(/templates\[("(?:[^"\\]|\\.)*")\]/);
+      expect(JSON.parse(quotedName[1])).toBe(name);
+    });
+
     it('should reject invalid namespace expressions', async function () {
       await expect(
         Precompiler.cli({

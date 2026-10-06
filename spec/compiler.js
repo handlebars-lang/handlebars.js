@@ -416,6 +416,37 @@ describe('compiler', function () {
   });
 
   describe('#precompile', function () {
+    it('should escape control characters and lone surrogates in lookup names', function () {
+      var nul = String.fromCharCode(0),
+        loneSurrogate = String.fromCharCode(0xd800),
+        template = '{{[a' + nul + 'b]}}{{[c' + loneSurrogate + ']}}',
+        context = {};
+      context['a' + nul + 'b'] = 'x';
+      context['c' + loneSurrogate] = 'y';
+
+      var precompiled = Handlebars.precompile(template);
+      expect(precompiled).not.toContain(nul);
+      expect(precompiled).not.toContain(loneSurrogate);
+      // oxlint-disable-next-line no-new-func
+      var templateSpec = new Function('return ' + precompiled)();
+      expect(Handlebars.template(templateSpec)(context)).toBe('xy');
+    });
+
+    it('should escape surrogate pairs on every engine', function () {
+      // JSON.stringify leaves surrogate pairs (and, before ES2019, lone
+      // surrogates) unescaped, so they are escaped explicitly.
+      var emoji = String.fromCharCode(0xd83d, 0xde00),
+        template = emoji + '{{[' + emoji + ']}}',
+        context = {};
+      context[emoji] = emoji;
+
+      var precompiled = Handlebars.precompile(template);
+      expect(precompiled).not.toMatch(/[\ud800-\udfff]/);
+      // oxlint-disable-next-line no-new-func
+      var templateSpec = new Function('return ' + precompiled)();
+      expect(Handlebars.template(templateSpec)(context)).toBe(emoji + emoji);
+    });
+
     it('should fail with invalid input', function () {
       expect(function () {
         Handlebars.precompile(null);

@@ -324,6 +324,8 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 
 This example changes all lookups of properties are performed by a helper (`lookupLowerCase`) which looks for `test` if `{{Test}}` occurs in the template. This is just to illustrate how compiler behavior can be change.
 
+Names and other strings from the template must be written into the generated code with `this.quotedString()`, as in the example. It escapes them so that the code stays safe to inline in a `<script>` element; `JSON.stringify` does not.
+
 There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/162/) if you want to play around with it.
 
 ```javascript
@@ -339,7 +341,7 @@ MyCompiler.prototype.nameLookup = function (parent, name, type) {
   if (type === 'context') {
     return this.source.functionCall('helpers.lookupLowerCase', '', [
       parent,
-      JSON.stringify(name),
+      this.quotedString(name),
     ]);
   } else {
     return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(
