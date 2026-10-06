@@ -134,11 +134,13 @@ describe('security issues', function () {
       '{{__defineGetter__}}',
       '{{__defineSetter__}}',
       '{{__lookupGetter__}}',
+      '{{__lookupSetter__}}',
       '{{__proto__}}',
       '{{lookup this "constructor"}}',
       '{{lookup this "__defineGetter__"}}',
       '{{lookup this "__defineSetter__"}}',
       '{{lookup this "__lookupGetter__"}}',
+      '{{lookup this "__lookupSetter__"}}',
       '{{lookup this "__proto__"}}',
     ];
 
@@ -455,6 +457,152 @@ describe('security issues', function () {
         .withCompileOptions({ strict: true })
         .withInput({ 'a\\b': 'c' })
         .toCompileTo('c');
+    });
+  });
+
+  describe('GHSA-2qvq-rjwj-gvw9: partial resolution must not use polluted prototypes', function () {
+    if (!Handlebars.compile) {
+      return;
+    }
+
+    afterEach(function () {
+      delete Object.prototype.widget;
+    });
+
+    it('should not resolve partial names from Object.prototype', function () {
+      // eslint-disable-next-line no-extend-native
+      Object.prototype.widget = '<img src=x onerror="alert(1)">';
+
+      expect(function () {
+        Handlebars.compile('<div>{{> widget}}</div>')({});
+      }).toThrow(/could not be found/);
+    });
+  });
+
+  describe('GHSA-2w6w-674q-4c4q, GHSA-xhpv-hc6g-r9c6, GHSA-3mfm-83xf-c92r: untrusted AST inputs', function () {
+    if (!Handlebars.compile) {
+      return;
+    }
+
+    function createInjectedProgram() {
+      return {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: {
+              open: false,
+              close: false,
+            },
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['lookup'],
+              original: 'lookup',
+            },
+            params: [
+              {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: [],
+                original: 'this',
+              },
+              {
+                type: 'NumberLiteral',
+                value: '{},{})) + (Function) + (({}',
+                original: 1,
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    it('should reject AST objects passed via dynamic partial lookup', function () {
+      expect(function () {
+        var template = Handlebars.compile('{{> (lookup . "payload")}}');
+        template({
+          payload: createInjectedProgram(),
+        });
+      }).toThrow(/could not be found/);
+    });
+  });
+
+  describe('GHSA-442j-39wm-28r2: lookup must return checked value', function () {
+    it('should use the validated value from lookupProperty() in compat mode', function () {
+      var input = { child: {} };
+      var readCount = 0;
+      Object.defineProperty(input, 'unstable', {
+        enumerable: true,
+        get: function () {
+          readCount++;
+          return readCount === 1 ? 'first-read' : 'second-read';
+        },
+      });
+
+      expectTemplate('{{#with child}}{{unstable}}{{/with}}')
+        .withInput(input)
+        .withCompileOptions({ compat: true })
+        .toCompileTo('first-read');
+    });
+  });
+
+  describe('GHSA-9cx6-37pm-9jff: malformed decorators should fail safely', function () {
+    if (!Handlebars.compile) {
+      return;
+    }
+
+    it('should throw a controlled error for unknown decorators', function () {
+      var template = Handlebars.compile('{{*notRegistered}}');
+      expect(function () {
+        template({});
+      }).toThrow(/Missing decorator|not registered/);
+    });
+  });
+
+  describe('GHSA-new: @partial-block must not resolve from polluted prototype', function () {
+    if (!Handlebars.compile) {
+      return;
+    }
+
+    afterEach(function () {
+      delete Object.prototype['partial-block'];
+    });
+
+    it('should not resolve @partial-block from Object.prototype', function () {
+      // eslint-disable-next-line no-extend-native
+      Object.prototype['partial-block'] = '<img src=x onerror="alert(1)">';
+
+      expect(function () {
+        Handlebars.compile('{{> @partial-block}}')({});
+      }).toThrow(/could not be found/);
+    });
+
+    it('should not resolve @partial-block from Object.prototype inside a partial', function () {
+      // eslint-disable-next-line no-extend-native
+      Object.prototype['partial-block'] = '<img src=x onerror="alert(1)">';
+
+      Handlebars.registerPartial('testPartial', '{{> @partial-block}}');
+      try {
+        expect(function () {
+          Handlebars.compile('{{> testPartial}}')({});
+        }).toThrow(/could not be found/);
+      } finally {
+        Handlebars.unregisterPartial('testPartial');
+      }
+    });
+
+    it('should still render legitimate @partial-block content', function () {
+      Handlebars.registerPartial('wrapper', '<div>{{> @partial-block}}</div>');
+      try {
+        var result = Handlebars.compile('{{#> wrapper}}hello{{/wrapper}}')({});
+        expect(result).toBe('<div>hello</div>');
+      } finally {
+        Handlebars.unregisterPartial('wrapper');
+      }
     });
   });
 });

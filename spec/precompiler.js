@@ -197,6 +197,46 @@ describe('precompiler', function () {
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
   });
 
+  describe('GHSA-xjpj-3mr7-gcpf: precompiler output escaping', function () {
+    it('should not inject raw template names into generated code', async function () {
+      await Precompiler.cli({
+        templates: [
+          {
+            name: "evil'];global.__xjpjName=1;//",
+            source: '',
+          },
+        ],
+      });
+
+      expect(log).not.toMatch(/\['evil'\];global\.__xjpjName=1/);
+    });
+
+    it('should reject invalid namespace expressions', async function () {
+      await expect(
+        Precompiler.cli({
+          templates: [{ name: 'safe', source: '' }],
+          namespace: 'App.ns;global.__xjpjNamespace=1;//',
+        })
+      ).rejects.toThrow(/Invalid namespace/);
+    });
+
+    it('should sanitize sourceMappingURL comment values', async function () {
+      Handlebars.precompile = function () {
+        return {
+          code: '""',
+          map: '{"version":3,"sources":[],"names":[],"mappings":""}',
+        };
+      };
+
+      await Precompiler.cli({
+        templates: [{ name: 'safe', source: '' }],
+        map: 'good.js.map\n;global.__xjpjMap=1;//',
+      });
+
+      expect(log).not.toMatch(/sourceMappingURL=[^\n]*\n;global\.__xjpjMap=1/);
+    });
+  });
+
   describe('#loadTemplates', function () {
     function loadTemplatesAsync(inputOpts) {
       return new Promise(function (resolve, reject) {

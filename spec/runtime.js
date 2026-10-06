@@ -36,6 +36,12 @@ describe('runtime', function () {
         /Template was precompiled with an older version of Handlebars than the current runtime/
       );
     });
+
+    it('should safely resolve missing partial map entries', function () {
+      expect(
+        Handlebars.VM.resolvePartial(undefined, {}, { name: 'missing' })
+      ).toBeUndefined();
+    });
   });
 
   describe('#noConflict', function () {
