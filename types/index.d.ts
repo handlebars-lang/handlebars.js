@@ -83,10 +83,18 @@ declare namespace Handlebars {
   export function blockParams(obj: any[], ids: any[]): any[];
   export function log(level: number, obj: any): void;
 
+  /**
+   * @param input A template source string, or an AST built by your application.
+   *   An AST is compiled to JavaScript, so never pass one from untrusted input.
+   */
   export function compile<T = any>(
     input: any,
     options?: CompileOptions
   ): HandlebarsTemplateDelegate<T>;
+  /**
+   * @param input A template source string, or an AST built by your application.
+   *   An AST is compiled to JavaScript, so never pass one from untrusted input.
+   */
   export function precompile(
     input: any,
     options?: PrecompileOptions

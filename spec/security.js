@@ -479,12 +479,17 @@ describe('security issues', function () {
     });
   });
 
-  describe('GHSA-2w6w-674q-4c4q, GHSA-xhpv-hc6g-r9c6, GHSA-3mfm-83xf-c92r: untrusted AST inputs', function () {
+  describe('GHSA-2w6w-674q-4c4q, GHSA-xhpv-hc6g-r9c6, GHSA-3mfm-83xf-c92r, GHSA-8r5x-fm3f-whwj: untrusted AST inputs', function () {
     if (!Handlebars.compile) {
       return;
     }
 
     function createInjectedProgram() {
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 20 },
+      };
       return {
         type: 'Program',
         body: [
@@ -495,12 +500,14 @@ describe('security issues', function () {
               open: false,
               close: false,
             },
+            loc: loc,
             path: {
               type: 'PathExpression',
               data: false,
               depth: 0,
               parts: ['lookup'],
               original: 'lookup',
+              loc: loc,
             },
             params: [
               {
@@ -509,17 +516,28 @@ describe('security issues', function () {
                 depth: 0,
                 parts: [],
                 original: 'this',
+                loc: loc,
               },
               {
                 type: 'NumberLiteral',
                 value: '{},{})) + (Function) + (({}',
                 original: 1,
+                loc: loc,
               },
             ],
           },
         ],
       };
     }
+
+    it('should reject AST NumberLiteral type confusion in compile()', function () {
+      // NumberLiteral.value is emitted as a raw JavaScript literal, so the
+      // compiler rejects anything that is not a number.
+      expect(function () {
+        var template = Handlebars.compile(createInjectedProgram());
+        template({});
+      }).toThrow(/Invalid AST: NumberLiteral value must be a number/);
+    });
 
     it('should reject AST objects passed via dynamic partial lookup', function () {
       expect(function () {
@@ -528,6 +546,137 @@ describe('security issues', function () {
           payload: createInjectedProgram(),
         });
       }).toThrow(/could not be found/);
+    });
+
+    it('should reject a non-integer param depth', function () {
+      // The depth of a path is written into the generated code (e.g. as
+      // 'depths[' + depth + ']'), so a depth that is not a non-negative
+      // integer is rejected.
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 20 },
+      };
+      var maliciousAST = {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            loc: loc,
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['lookup'],
+              original: 'lookup',
+              loc: loc,
+            },
+            params: [
+              {
+                type: 'PathExpression',
+                data: false,
+                depth: 'function(){throw new Error("INJECTION")}()',
+                parts: [],
+                original: '',
+                loc: loc,
+              },
+            ],
+          },
+        ],
+      };
+
+      expect(function () {
+        var template = Handlebars.compile(maliciousAST);
+        template({});
+      }).toThrow(
+        /Invalid AST: PathExpression depth must be a non-negative integer/
+      );
+    });
+
+    it('should reject non-array blockParams', function () {
+      // The compiler reads program.blockParams.length from the AST and
+      // javascript-compiler.js interpolates that value verbatim into a
+      // container.program(...) call. blockParams must therefore be an array
+      // of strings, so that the length is always a safe integer.
+      var maliciousAST = {
+        type: 'Program',
+        loc: { start: { line: 1, column: 0 } },
+        body: [
+          {
+            type: 'BlockStatement',
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['rce'],
+              original: 'rce',
+              loc: { start: { line: 1, column: 0 } },
+            },
+            params: [],
+            program: {
+              type: 'Program',
+              blockParams: {
+                length: "(()=>{throw new Error('INJECTION')})()",
+              },
+              body: [],
+              loc: { start: { line: 1, column: 0 } },
+            },
+            openStrip: { open: false, close: false },
+            inverseStrip: { open: false, close: false },
+            closeStrip: { open: false, close: false },
+            loc: { start: { line: 1, column: 0 } },
+          },
+        ],
+      };
+
+      expect(function () {
+        var template = Handlebars.compile(maliciousAST);
+        template({});
+      }).toThrow(/Invalid AST: Program blockParams must be an array - 1:0/);
+    });
+
+    it('should reject non-number NumberLiteral values', function () {
+      // The code generator concatenates array chunks verbatim, so a
+      // NumberLiteral value that is an array of code must be rejected.
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 20 },
+      };
+      var maliciousAST = {
+        type: 'Program',
+        body: [
+          {
+            type: 'MustacheStatement',
+            escaped: true,
+            strip: { open: false, close: false },
+            loc: loc,
+            path: {
+              type: 'PathExpression',
+              data: false,
+              depth: 0,
+              parts: ['helper'],
+              original: 'helper',
+              loc: loc,
+            },
+            params: [
+              {
+                type: 'NumberLiteral',
+                value: ['(function(){throw new Error("INJECTION")})()'],
+                original: 1,
+                loc: loc,
+              },
+            ],
+          },
+        ],
+      };
+
+      expect(function () {
+        var template = Handlebars.compile(maliciousAST);
+        template({});
+      }).toThrow(/Invalid AST: NumberLiteral value must be a number/);
     });
   });
 
