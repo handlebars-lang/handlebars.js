@@ -57,7 +57,7 @@ const parser = yargs(process.argv.slice(2))
   .option('r', {
     type: 'string',
     description:
-      'Template root. Base value that will be stripped from template names.',
+      'Template root. Base value that will be stripped from template names; it does not restrict filesystem access.',
     alias: 'root',
   })
   .option('p', {
