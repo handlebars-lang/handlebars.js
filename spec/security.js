@@ -678,6 +678,50 @@ describe('security issues', function () {
         template({});
       }).toThrow(/Invalid AST: NumberLiteral value must be a number/);
     });
+
+    it('should only dispatch known AST node types', function () {
+      // Compiler#accept() dispatches on node.type. Without an allowlist, a
+      // crafted type would call an arbitrary Compiler method with the node as
+      // its argument. Params are used because WhitespaceControl does not
+      // visit them, so they reach the compiler unchecked.
+      var loc = {
+        source: null,
+        start: { line: 1, column: 0 },
+        end: { line: 1, column: 20 },
+      };
+      [
+        'compile',
+        'opcode',
+        'pushParam',
+        'constructor',
+        'hasOwnProperty',
+        '__proto__',
+      ].forEach(function (type) {
+        var template = Handlebars.compile({
+          type: 'Program',
+          body: [
+            {
+              type: 'MustacheStatement',
+              escaped: true,
+              strip: { open: false, close: false },
+              loc: loc,
+              path: {
+                type: 'PathExpression',
+                data: false,
+                depth: 0,
+                parts: ['helper'],
+                original: 'helper',
+                loc: loc,
+              },
+              params: [{ type: type, loc: loc }],
+            },
+          ],
+        });
+        expect(function () {
+          template({});
+        }).toThrow(/Unknown type: /);
+      });
+    });
   });
 
   describe('GHSA-442j-39wm-28r2: lookup must return checked value', function () {
