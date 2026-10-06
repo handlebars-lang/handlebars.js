@@ -35,6 +35,19 @@ describe('utils', function () {
       };
       expect(Handlebars.Utils.escapeExpression(obj)).toBe('foo<&"\'>');
     });
+    it('should escape objects whose "toHTML" is not a function', function () {
+      var obj = {
+        toHTML: '<b>',
+        toString: function () {
+          return '<i>';
+        },
+      };
+      expect(Handlebars.Utils.escapeExpression(obj)).toBe('&lt;i&gt;');
+
+      expectTemplate('{{value}}')
+        .withInput({ value: JSON.parse('{"toHTML": 1}') })
+        .toCompileTo('[object Object]');
+    });
     it('should handle falsy', function () {
       expect(Handlebars.Utils.escapeExpression('')).toBe('');
       expect(Handlebars.Utils.escapeExpression(undefined)).toBe('');

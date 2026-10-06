@@ -32,6 +32,34 @@ describe('security issues', function () {
         .withInput({ constructor: { name: 'here we go' } })
         .toCompileTo('here we go');
     });
+
+    it('should not allow constructors to be accessed through prototype objects', function () {
+      expectTemplate('{{lookup (lookup fn "__proto__") "constructor"}}')
+        .withInput({ fn: function () {} })
+        .withRuntimeOptions({ allowProtoMethodsByDefault: true })
+        .toCompileTo('');
+    });
+
+    it('should allow own "constructor" data that is not a function', function () {
+      // Data whose "prototype" points back to its parent is not a constructor.
+      var data = {};
+      data.constructor = { name: 'cyclic', prototype: data };
+      expectTemplate('{{constructor.name}}')
+        .withInput(data)
+        .toCompileTo('cyclic');
+
+      // The "prototype" of data that is not a function is never read.
+      var guarded = {};
+      Object.defineProperty(guarded, 'prototype', {
+        get: function () {
+          throw new Error('prototype was read');
+        },
+      });
+      guarded.name = 'guarded';
+      expectTemplate('{{constructor.name}}')
+        .withInput({ constructor: guarded })
+        .toCompileTo('guarded');
+    });
   });
 
   describe('GH-1558: Prevent explicit call of helperMissing-helpers', function () {
