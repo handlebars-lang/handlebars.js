@@ -4,9 +4,11 @@ There are a number of formal APIs that tool implementors may interact with.
 
 ## AST
 
-Other tools may interact with the formal AST as defined below. Any JSON structure matching this pattern may be used and passed into the `compile` and `precompile` methods in the same way as the text for a template.
+Other tools may interact with the formal AST as defined below. An AST built by your application that matches this pattern may be passed into the `compile` and `precompile` methods in the same way as the text for a template.
 
 AST structures may be generated either with the `Handlebars.parse` method and then manipulated, via the `Handlebars.AST` objects of the same name, or constructed manually as a generic JavaScript object matching the structure defined below.
+
+**Security:** `compile` and `precompile` turn an AST into JavaScript, so treat it like code. Only pass ASTs that your application built itself. Never pass an AST that comes from untrusted input, such as JSON from a request body or from storage that users can write to. The compiler hardens the values it writes into generated code, but that is defense in depth, not a guarantee. To cache or transfer templates, store the template source and parse it where it is compiled.
 
 ```javascript
 var ast = Handlebars.parse(myTemplate);
@@ -322,6 +324,8 @@ The `Handlebars.JavaScriptCompiler` object has a number of methods that may be c
 
 This example changes all lookups of properties are performed by a helper (`lookupLowerCase`) which looks for `test` if `{{Test}}` occurs in the template. This is just to illustrate how compiler behavior can be change.
 
+Names and other strings from the template must be written into the generated code with `this.quotedString()`, as in the example. It escapes them so that the code stays safe to inline in a `<script>` element; `JSON.stringify` does not.
+
 There is also [a jsfiddle with this code](https://jsfiddle.net/9D88g/162/) if you want to play around with it.
 
 ```javascript
@@ -337,7 +341,7 @@ MyCompiler.prototype.nameLookup = function (parent, name, type) {
   if (type === 'context') {
     return this.source.functionCall('helpers.lookupLowerCase', '', [
       parent,
-      JSON.stringify(name),
+      this.quotedString(name),
     ]);
   } else {
     return Handlebars.JavaScriptCompiler.prototype.nameLookup.call(

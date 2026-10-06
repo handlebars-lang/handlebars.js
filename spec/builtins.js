@@ -593,6 +593,176 @@ describe('builtin helpers', function () {
             'each with array argument ignores the contents when empty'
           )
           .toCompileTo('cruel world!');
+
+        expectTemplate('{{#each it}}{{#if @last}}{{text}}!{{/if}}{{/each}}')
+          .withInput({
+            it: new Iterable([
+              { text: 'goodbye' },
+              { text: 'Goodbye' },
+              { text: 'GOODBYE' },
+            ]),
+          })
+          .withMessage('each on iterable sets @last for the final item')
+          .toCompileTo('GOODBYE!');
+
+        expectTemplate(
+          '{{#each it as |value index|}}{{index}}:{{value.text}} {{/each}}'
+        )
+          .withInput({
+            it: new Iterable([{ text: 'goodbye' }, { text: 'Goodbye' }]),
+          })
+          .withMessage('each on iterable passes values as block params')
+          .toCompileTo('0:goodbye 1:Goodbye ');
+      });
+
+      it('each on Map passes values as block params', function () {
+        expectTemplate(
+          '{{#each map as |value key|}}{{key}}={{value}} {{/each}}'
+        )
+          .withInput({
+            map: new Map([
+              ['a', 1],
+              ['b', 2],
+            ]),
+          })
+          .toCompileTo('a=1 b=2 ');
+      });
+
+      it('each on Map passes stored values for keys named like prototype properties', function () {
+        // Block params used to be read with map[key], which resolves these
+        // keys to Map.prototype or Object.prototype members instead of the
+        // stored values, and made calling them throw a TypeError.
+        var keys = [
+          'constructor',
+          'get',
+          'set',
+          'has',
+          'delete',
+          'entries',
+          'keys',
+          'values',
+          'forEach',
+          'clear',
+          '__defineGetter__',
+          '__defineSetter__',
+          'toString',
+          'size',
+          'hasOwnProperty',
+        ];
+        var map = new Map(
+          keys.map(function (key) {
+            return [key, 'stored ' + key];
+          })
+        );
+
+        expectTemplate(
+          '{{#each map as |value key|}}{{key}}={{value}};{{/each}}'
+        )
+          .withInput({ map: map })
+          .toCompileTo(
+            keys
+              .map(function (key) {
+                return key + '=stored ' + key + ';';
+              })
+              .join('')
+          );
+      });
+
+      describe('each on iterable with lazy iterator', function () {
+        var pulled, closed;
+
+        function countingIterable(length, withReturn) {
+          var iterable = {};
+          iterable[global.Symbol.iterator] = function () {
+            var iterator = {
+              next: function () {
+                pulled++;
+                return { value: pulled, done: pulled > length };
+              },
+            };
+            if (withReturn === 'throwing getter') {
+              Object.defineProperty(iterator, 'return', {
+                get: function () {
+                  closed = true;
+                  throw new Error('getter failed');
+                },
+              });
+            } else if (withReturn) {
+              iterator['return'] = function () {
+                // Only count calls with the iterator as the receiver.
+                closed = this === iterator;
+                if (withReturn === 'throw') {
+                  throw new Error('cleanup failed');
+                }
+                return { done: true };
+              };
+            }
+            return iterator;
+          };
+          return iterable;
+        }
+
+        function failOn(failingValue) {
+          return function (value) {
+            if (value === failingValue) {
+              throw new Error('render failed');
+            }
+          };
+        }
+
+        beforeEach(function () {
+          pulled = 0;
+          closed = false;
+        });
+
+        it('renders while iterating instead of collecting all values first', function () {
+          expectTemplate('{{#each items}}{{pulledCount}}{{/each}}')
+            .withInput({ items: countingIterable(3, true) })
+            .withHelper('pulledCount', function () {
+              return pulled;
+            })
+            .toCompileTo('234');
+        });
+
+        it('closes the iterator when the block throws', function () {
+          expectTemplate('{{#each items}}{{fail this}}{{/each}}')
+            .withInput({ items: countingIterable(3, true) })
+            .withHelper('fail', failOn(2))
+            .toThrow(Error, 'render failed');
+          expect(closed).toBe(true);
+          expect(pulled).toBe(3);
+        });
+
+        it('does not close an exhausted iterator when the last block throws', function () {
+          expectTemplate('{{#each items}}{{fail this}}{{/each}}')
+            .withInput({ items: countingIterable(3, true) })
+            .withHelper('fail', failOn(3))
+            .toThrow(Error, 'render failed');
+          expect(closed).toBe(false);
+        });
+
+        it('rethrows the block error when closing the iterator fails', function () {
+          expectTemplate('{{#each items}}{{fail this}}{{/each}}')
+            .withInput({ items: countingIterable(3, 'throw') })
+            .withHelper('fail', failOn(2))
+            .toThrow(Error, 'render failed');
+          expect(closed).toBe(true);
+        });
+
+        it('rethrows the block error when reading the return method fails', function () {
+          expectTemplate('{{#each items}}{{fail this}}{{/each}}')
+            .withInput({ items: countingIterable(3, 'throwing getter') })
+            .withHelper('fail', failOn(2))
+            .toThrow(Error, 'render failed');
+          expect(closed).toBe(true);
+        });
+
+        it('rethrows block errors for iterators without a return method', function () {
+          expectTemplate('{{#each items}}{{fail this}}{{/each}}')
+            .withInput({ items: countingIterable(3, false) })
+            .withHelper('fail', failOn(2))
+            .toThrow(Error, 'render failed');
+        });
       });
     }
   });

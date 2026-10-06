@@ -13,7 +13,8 @@ Options:
                    multiple templates.                                                                                [string]
   -i, --string     Generates a template from the passed CLI argument.
                    "-" is treated as a special value and causes stdin to be read for the template value.              [string]
-  -r, --root       Template root. Base value that will be stripped from template names.                               [string]
+  -r, --root       Template root. Base value that will be stripped from template names; it does not restrict filesystem
+                   access.                                                                                            [string]
   -p, --partial    Compiling a partial template                                                                      [boolean]
   -d, --data       Include data when compiling                                                                       [boolean]
   -e, --extension  Template extension.                                                        [string] [default: "handlebars"]

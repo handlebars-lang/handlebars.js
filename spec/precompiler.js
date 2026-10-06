@@ -197,6 +197,101 @@ describe('precompiler', function () {
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
   });
 
+  describe('GHSA-xjpj-3mr7-gcpf: precompiler output escaping', function () {
+    it('should not inject raw template names into generated code', async function () {
+      await Precompiler.cli({
+        templates: [
+          {
+            name: "evil'];global.__xjpjName=1;//",
+            source: '',
+          },
+        ],
+      });
+
+      expect(log).not.toMatch(/\['evil'\];global\.__xjpjName=1/);
+    });
+
+    it('should escape script tag delimiters in template names', async function () {
+      var name = '</script><script>alert(1)</script><!--';
+      await Precompiler.cli({
+        templates: [{ name: name, source: '' }],
+      });
+
+      expect(log).not.toMatch(/<(!--|\/?script)/i);
+      var quotedName = log.match(/templates\[("(?:[^"\\]|\\.)*")\]/);
+      expect(JSON.parse(quotedName[1])).toBe(name);
+    });
+
+    it('should escape line separators in template names', async function () {
+      var name =
+        'a' + String.fromCharCode(0x2028) + 'b' + String.fromCharCode(0x2029);
+      await Precompiler.cli({
+        templates: [{ name: name, source: '' }],
+      });
+
+      expect(log).not.toContain(String.fromCharCode(0x2028));
+      expect(log).not.toContain(String.fromCharCode(0x2029));
+      var quotedName = log.match(/templates\[("(?:[^"\\]|\\.)*")\]/);
+      expect(JSON.parse(quotedName[1])).toBe(name);
+    });
+
+    it('should reject invalid namespace expressions', async function () {
+      await expect(
+        Precompiler.cli({
+          templates: [{ name: 'safe', source: '' }],
+          namespace: 'App.ns;global.__xjpjNamespace=1;//',
+        })
+      ).rejects.toThrow(/Invalid namespace/);
+    });
+
+    it('should sanitize sourceMappingURL comment values', async function () {
+      Handlebars.precompile = function () {
+        return {
+          code: '""',
+          map: '{"version":3,"sources":[],"names":[],"mappings":""}',
+        };
+      };
+
+      await Precompiler.cli({
+        templates: [{ name: 'safe', source: '' }],
+        map: 'good.js.map\n;global.__xjpjMap=1;//',
+      });
+
+      expect(log).not.toMatch(/sourceMappingURL=[^\n]*\n;global\.__xjpjMap=1/);
+    });
+
+    it('should sanitize sourceMappingURL comment values when minifying', async function () {
+      await Precompiler.cli({
+        templates: [{ name: 'safe', path: 'safe.handlebars', source: 'x' }],
+        min: true,
+        map: 'good.js.map\n;global.__xjpjMinMap=1;//',
+      });
+
+      expect(log).toContain(
+        'sourceMappingURL=good.js.map;global.__xjpjMinMap=1;//'
+      );
+      expect(log).not.toMatch(
+        /sourceMappingURL=[^\n]*\n;global\.__xjpjMinMap=1/
+      );
+    });
+
+    it('should percent-encode "<" in sourceMappingURL comment values', async function () {
+      for (const min of [false, true]) {
+        log = '';
+        await Precompiler.cli({
+          templates: [{ name: 'safe', path: 'safe.handlebars', source: 'x' }],
+          min: min,
+          map: '</script><!--<script>.map',
+        });
+
+        expect(log).toContain(
+          'sourceMappingURL=%3C/script>%3C!--%3Cscript>.map'
+        );
+        expect(log).not.toMatch(/<(!--|\/?script)/i);
+      }
+    });
+  });
+
   describe('#loadTemplates', function () {
     function loadTemplatesAsync(inputOpts) {
       return new Promise(function (resolve, reject) {

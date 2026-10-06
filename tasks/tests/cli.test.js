@@ -162,7 +162,7 @@ describe('bin/handlebars', function () {
       const result = await execCommand(
         `${cli} -i "<div>hello</div>" -N myTemplate`
       );
-      expect(result.stdout).toContain("templates['myTemplate']");
+      expect(result.stdout).toContain('templates["myTemplate"]');
     });
 
     it('-i compiles simple unnamed inline template', async function () {
