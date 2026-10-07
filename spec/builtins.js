@@ -361,6 +361,115 @@ describe('builtin helpers', function () {
         .toCompileTo('goodbye! cruel world!');
     });
 
+    it('each sparse array marks the first visited entry', function () {
+      var values = [];
+      values.length = 6;
+      values[2] = 'a';
+      values[4] = 'b';
+      expectTemplate(
+        '{{#each values}}{{@index}}:{{this}}:{{@first}}:{{@last}};{{/each}}'
+      )
+        .withInput({ values: values })
+        .toCompileTo('2:a:true:false;4:b:false:false;');
+    });
+
+    it('each sparse array marks a single explicitly undefined entry first', function () {
+      var values = [];
+      values.length = 3;
+      values[1] = undefined;
+      expectTemplate(
+        '{{#each values}}{{@index}}:{{this}}:{{@first}}:{{@last}};{{/each}}'
+      )
+        .withInput({ values: values })
+        .toCompileTo('1::true:false;');
+    });
+
+    it('each sparse array includes inherited entries in first-step tracking', function () {
+      var values = [];
+      var prototype = Object.create(Array.prototype);
+      prototype[1] = 'a';
+      Object.setPrototypeOf(values, prototype);
+      values[3] = 'b';
+      expectTemplate('{{#each values}}{{@index}}:{{@first}};{{/each}}')
+        .withInput({ values: values })
+        .toCompileTo('1:true;3:false;');
+    });
+
+    it('each sparse array keeps nested first-step tracking independent', function () {
+      var values = [];
+      values[1] = 'a';
+      values[3] = 'b';
+      expectTemplate(
+        '{{#each values}}{{@index}}:{{@first}}[{{#each ../values}}{{@index}}:{{@first}};{{/each}}]{{@first}};{{/each}}'
+      )
+        .withInput({ values: values })
+        .toCompileTo(
+          '1:true[1:true;3:false;]true;3:false[1:true;3:false;]false;'
+        );
+    });
+
+    it('each sparse array still visits holes filled by a block helper', function () {
+      var values = ['a'];
+      values.length = 3;
+      expectTemplate(
+        '{{#each values}}{{fill @index}}{{@index}}:{{this}}:{{@first}}:{{@last}};{{/each}}'
+      )
+        .withInput({ values: values })
+        .withHelpers({
+          fill: function (index) {
+            if (index === 0) {
+              values[2] = 'c';
+            }
+            return '';
+          },
+        })
+        .toCompileTo('0:a:true:false;2:c:false:true;');
+    });
+
+    it('each sparse array still visits entries created by a getter', function () {
+      var values = [];
+      values.length = 3;
+      Object.defineProperty(values, 0, {
+        get: function () {
+          values[2] = 'c';
+          return 'a';
+        },
+      });
+      expectTemplate(
+        '{{#each values}}{{@index}}:{{this}}:{{@first}}:{{@last}};{{/each}}'
+      )
+        .withInput({ values: values })
+        .toCompileTo('0:a:true:false;2:c:false:true;');
+    });
+
+    it('each sparse array checks presence only when reaching an entry', function () {
+      var rendered = false;
+      var seen = new Set();
+      var target = ['a'];
+      target.length = 3;
+      target[2] = 'c';
+      var values = new Proxy(target, {
+        has: function (array, key) {
+          if (seen.has(key) || (key !== '0' && !rendered)) {
+            throw new Error('array presence observed out of order');
+          }
+          seen.add(key);
+          return key in array;
+        },
+      });
+      expectTemplate(
+        '{{#each values}}{{observe}}{{@index}}:{{this}}:{{@first}}:{{@last}};{{/each}}'
+      )
+        .withInput({ values: values })
+        .withHelpers({
+          observe: function () {
+            rendered = true;
+            return '';
+          },
+        })
+        .toCompileTo('0:a:true:false;2:c:false:true;');
+    });
+
     it('each with nested @first', function () {
       expectTemplate(
         '{{#each goodbyes}}({{#if @first}}{{text}}! {{/if}}{{#each ../goodbyes}}{{#if @first}}{{text}}!{{/if}}{{/each}}{{#if @first}} {{text}}!{{/if}}) {{/each}}cruel {{world}}!'
