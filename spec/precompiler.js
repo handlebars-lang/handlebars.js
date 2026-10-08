@@ -252,6 +252,53 @@ describe('precompiler', function () {
       expect(opts.templates[0].source).toBe('a');
     });
 
+    it('should preserve template names with a trailing root separator', async function () {
+      for (const root of [
+        __dirname + '/artifacts',
+        __dirname + '/artifacts/',
+      ]) {
+        var opts = await loadTemplatesAsync({
+          files: [__dirname + '/artifacts/empty.handlebars'],
+          root: root,
+        });
+        expect(opts.templates[0].name).toBe('empty');
+      }
+    });
+
+    it('should preserve nested template names with a trailing root separator', async function () {
+      for (const root of [__dirname, __dirname + '/']) {
+        var opts = await loadTemplatesAsync({
+          files: [__dirname + '/artifacts/empty.handlebars'],
+          root: root,
+        });
+        expect(opts.templates[0].name).toBe('artifacts/empty');
+      }
+    });
+
+    it('should enumerate directories with a trailing root separator', async function () {
+      for (const directory of [
+        __dirname + '/artifacts',
+        __dirname + '/artifacts/',
+      ]) {
+        var opts = await loadTemplatesAsync({
+          files: [directory],
+          extension: 'hbs',
+        });
+        expect(opts.templates.map((template) => template.name)).toEqual([
+          'example_2',
+          'non.default.extension',
+        ]);
+      }
+    });
+
+    it('should not strip a root that only matches part of a directory name', async function () {
+      var opts = await loadTemplatesAsync({
+        files: [__dirname + '/artifacts/empty.handlebars'],
+        root: __dirname + '/art',
+      });
+      expect(opts.templates[0].name).toBe(__dirname + '/artifacts/empty');
+    });
+
     it('should handle different root', async function () {
       var opts = await loadTemplatesAsync({
         files: [__dirname + '/artifacts/empty.handlebars'],
