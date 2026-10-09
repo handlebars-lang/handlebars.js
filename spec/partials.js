@@ -194,6 +194,41 @@ describe('partials', function () {
       .toCompileTo('Dudes: Yehuda (http://yehuda) Alan (http://alan) ');
   });
 
+  it('renders function partials with a null prototype', function () {
+    var partial = function (context) {
+      return context.name;
+    };
+    Object.setPrototypeOf(partial, null);
+
+    expectTemplate('Hello {{> dude}}!')
+      .withInput({ name: 'Alan' })
+      .withPartial('dude', partial)
+      .toCompileTo('Hello Alan!');
+  });
+
+  it('renders function partials with a custom prototype', function () {
+    var partial = function (context) {
+      return context.name;
+    };
+    Object.setPrototypeOf(partial, {});
+
+    expectTemplate('Hello {{> dude}}!')
+      .withInput({ name: 'Yehuda' })
+      .withPartial('dude', partial)
+      .toCompileTo('Hello Yehuda!');
+  });
+
+  it('renders empty output from function partials with a null prototype', function () {
+    var partial = function () {
+      return '';
+    };
+    Object.setPrototypeOf(partial, null);
+
+    expectTemplate('Hello {{> dude}}!')
+      .withPartial('dude', partial)
+      .toCompileTo('Hello !');
+  });
+
   it('GH-14: a partial preceding a selector', function () {
     expectTemplate('Dudes: {{>dude}} {{anotherDude}}')
       .withInput({ name: 'Jeepers', anotherDude: 'Creepers' })
