@@ -197,6 +197,7 @@ describe('security issues', function() {
     TestClass.prototype.aMethod = function() {
       return 'returnValue';
     };
+    TestClass.prototype.nested = new TestClass();
 
     beforeEach(function() {
       handlebarsEnv.resetLoggedPropertyAccesses();
@@ -207,17 +208,25 @@ describe('security issues', function() {
     });
 
     describe('control access to prototype methods via "allowedProtoMethods"', function() {
-      checkProtoMethodAccess({});
+      checkProtoMethodAccess('{{aMethod}}', {});
 
       describe('in compat mode', function() {
-        checkProtoMethodAccess({ compat: true });
+        checkProtoMethodAccess('{{aMethod}}', { compat: true });
       });
 
-      function checkProtoMethodAccess(compileOptions) {
+      describe('GH-1858: for nested object', function() {
+        checkProtoMethodAccess('{{nested.aMethod}}', {});
+
+        describe('in compat mode', function() {
+          checkProtoMethodAccess('{{nested.aMethod}}', { compat: true });
+        });
+      });
+
+      function checkProtoMethodAccess(template, compileOptions) {
         it('should be prohibited by default and log a warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
@@ -229,12 +238,12 @@ describe('security issues', function() {
         it('should only log the warning once', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
 
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
@@ -246,7 +255,7 @@ describe('security issues', function() {
         it('can be allowed, which disables the warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -262,7 +271,7 @@ describe('security issues', function() {
         it('can be turned on by default, which disables the warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -276,7 +285,7 @@ describe('security issues', function() {
         it('can be turned off by default, which disables the warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -288,7 +297,7 @@ describe('security issues', function() {
         });
 
         it('can be turned off, if turned on by default', function() {
-          expectTemplate('{{aMethod}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -322,21 +331,33 @@ describe('security issues', function() {
     });
 
     describe('control access to prototype non-methods via "allowedProtoProperties" and "allowProtoPropertiesByDefault', function() {
-      checkProtoPropertyAccess({});
+      checkProtoPropertyAccess('{{aProperty}}', {});
 
       describe('in compat-mode', function() {
-        checkProtoPropertyAccess({ compat: true });
+        checkProtoPropertyAccess('{{aProperty}}', { compat: true });
       });
 
       describe('in strict-mode', function() {
-        checkProtoPropertyAccess({ strict: true });
+        checkProtoPropertyAccess('{{aProperty}}', { strict: true });
       });
 
-      function checkProtoPropertyAccess(compileOptions) {
+      describe('GH-1858: for nested object', function() {
+        checkProtoPropertyAccess('{{nested.aProperty}}', {});
+
+        describe('in compat-mode', function() {
+          checkProtoPropertyAccess('{{nested.aProperty}}', { compat: true });
+        });
+
+        describe('in strict-mode', function() {
+          checkProtoPropertyAccess('{{nested.aProperty}}', { strict: true });
+        });
+      });
+
+      function checkProtoPropertyAccess(template, compileOptions) {
         it('should be prohibited by default and log a warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aProperty}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .toCompileTo('');
@@ -348,7 +369,7 @@ describe('security issues', function() {
         it('can be explicitly prohibited by default, which disables the warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aProperty}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -362,7 +383,7 @@ describe('security issues', function() {
         it('can be turned on, which disables the warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aProperty}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -378,7 +399,7 @@ describe('security issues', function() {
         it('can be turned on by default, which disables the warning', function() {
           var spy = sinon.spy(console, 'error');
 
-          expectTemplate('{{aProperty}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
@@ -390,7 +411,7 @@ describe('security issues', function() {
         });
 
         it('can be turned off, if turned on by default', function() {
-          expectTemplate('{{aProperty}}')
+          expectTemplate(template)
             .withInput(new TestClass())
             .withCompileOptions(compileOptions)
             .withRuntimeOptions({
