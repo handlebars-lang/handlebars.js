@@ -404,6 +404,22 @@ describe('security issues', function () {
             })
             .toCompileTo('');
         });
+
+        it('applies the runtime options of each call to the same template', function () {
+          vi.spyOn(console, 'error').mockImplementation(function () {});
+          var template = Handlebars.compile('{{aProperty}}', compileOptions);
+          var input = new TestClass();
+
+          expect(template(input)).toBe('');
+          expect(
+            template(input, { allowedProtoProperties: { aProperty: true } })
+          ).toBe('propertyValue');
+          expect(template(input)).toBe('');
+          expect(template(input, { allowProtoPropertiesByDefault: true })).toBe(
+            'propertyValue'
+          );
+          expect(template(input)).toBe('');
+        });
       }
     });
 
