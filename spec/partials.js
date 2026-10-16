@@ -604,6 +604,42 @@ describe('partials', function () {
           'Dudes:\n  Yehuda\n http://yehuda!\n  Alan\n http://alan!\n'
         );
     });
+
+    it('indented partial-block returning a SafeString (GH-1695)', function () {
+      expectTemplate('{{#> dude}}{{#bold}}Yehuda\nAlan{{/bold}}{{/dude}}')
+        .withHelper('bold', function (options) {
+          return new Handlebars.SafeString('<b>' + options.fn(this) + '</b>');
+        })
+        .withPartial('dude', 'Dudes:\n  {{> @partial-block}}\n')
+        .toCompileTo('Dudes:\n  <b>Yehuda\n  Alan</b>');
+    });
+
+    it('indented inline partial returning a SafeString (GH-1695)', function () {
+      expectTemplate(
+        '{{#*inline "dude"}}{{#bold}}{{name}}\n{{url}}{{/bold}}{{/inline}}' +
+          'Dudes:\n{{#dudes}}\n  {{> dude}}\n{{/dudes}}'
+      )
+        .withInput({
+          dudes: [
+            { name: 'Yehuda', url: 'http://yehuda' },
+            { name: 'Alan', url: 'http://alan' },
+          ],
+        })
+        .withHelper('bold', function (options) {
+          return new Handlebars.SafeString('<b>' + options.fn(this) + '</b>\n');
+        })
+        .toCompileTo(
+          'Dudes:\n  <b>Yehuda\n  http://yehuda</b>\n  <b>Alan\n  http://alan</b>\n'
+        );
+    });
+
+    it('indented function partial returning a SafeString (GH-1695)', function () {
+      expectTemplate('Dudes:\n  {{> dude}}\n')
+        .withPartial('dude', function () {
+          return new Handlebars.SafeString('<b>Yehuda</b>\n<b>Alan</b>\n');
+        })
+        .toCompileTo('Dudes:\n  <b>Yehuda</b>\n  <b>Alan</b>\n');
+    });
   });
 
   describe('compat mode', function () {
