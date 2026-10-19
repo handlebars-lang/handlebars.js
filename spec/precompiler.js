@@ -197,6 +197,118 @@ describe('precompiler', function () {
     expect(log.match(/sourceMappingURL=/g).length).toBe(1);
   });
 
+  it.each([false, true])(
+    'should resolve the map relative to the output file (min: %s)',
+    async function (min) {
+      var writes = {};
+      fs.writeFileSync = function (name, value) {
+        writes[name] = value;
+      };
+      await Precompiler.cli({
+        templates: [emptyTemplate],
+        output: 'dist/templates.js',
+        map: 'maps/templates.js.map',
+        min: min,
+      });
+      expect(writes['maps/templates.js.map']).toBeDefined();
+      expect(
+        writes['dist/templates.js'].match(/sourceMappingURL=(.*)/)[1]
+      ).toBe('../maps/templates.js.map');
+    }
+  );
+
+  it.each([false, true])(
+    'should resolve an absolute map path relative to the output (min: %s)',
+    async function (min) {
+      var writes = {};
+      fs.writeFileSync = function (name, value) {
+        writes[name] = value;
+      };
+      var output = path.resolve('dist/templates.js');
+      var map = path.resolve('dist/templates.js.map');
+      await Precompiler.cli({
+        templates: [emptyTemplate],
+        output: output,
+        map: map,
+        min: min,
+      });
+      expect(writes[map]).toBeDefined();
+      expect(writes[output].match(/sourceMappingURL=(.*)/)[1]).toBe(
+        'templates.js.map'
+      );
+    }
+  );
+
+  it.each([false, true])(
+    'should URL-encode map filename components (min: %s)',
+    async function (min) {
+      var writes = {};
+      fs.writeFileSync = function (name, value) {
+        writes[name] = value;
+      };
+      await Precompiler.cli({
+        templates: [emptyTemplate],
+        output: 'dist/templates.js',
+        map: 'dist/template #1%.js.map',
+        min: min,
+      });
+      expect(writes['dist/template #1%.js.map']).toBeDefined();
+      expect(
+        writes['dist/templates.js'].match(/sourceMappingURL=(.*)/)[1]
+      ).toBe('template%20%231%25.js.map');
+    }
+  );
+
+  describe.runIf(process.platform === 'win32')('Windows map URLs', function () {
+    it.each([
+      [
+        'C:\\dist\\templates.js',
+        'E:\\maps\\template #1%.map',
+        'file:///E:/maps/template%20%231%25.map',
+      ],
+      [
+        'C:\\dist\\templates.js',
+        'c:\\maps\\templates.map',
+        '../maps/templates.map',
+      ],
+      [
+        '\\\\server\\share\\dist\\templates.js',
+        '\\\\server\\share\\maps\\templates.map',
+        '../maps/templates.map',
+      ],
+      [
+        '\\\\server\\share\\dist\\templates.js',
+        '\\\\server\\other\\maps\\templates.map',
+        'file://server/other/maps/templates.map',
+      ],
+      [
+        '\\\\server\\share\\dist\\templates.js',
+        '\\\\other\\share\\maps\\templates.map',
+        'file://other/share/maps/templates.map',
+      ],
+      [
+        'C:\\dist\\templates.js',
+        '\\\\server\\share\\maps\\templates.map',
+        'file://server/share/maps/templates.map',
+      ],
+      [
+        '\\\\server\\share\\dist\\templates.js',
+        'E:\\maps\\templates.map',
+        'file:///E:/maps/templates.map',
+      ],
+    ])('should link %s to %s', async function (output, map, expected) {
+      for (const min of [false, true]) {
+        const writes = {};
+        fs.writeFileSync = function (name, value) {
+          writes[name] = value;
+        };
+        await Precompiler.cli({ templates: [emptyTemplate], output, map, min });
+        expect(writes[map]).toBeDefined();
+        expect(writes[output].match(/sourceMappingURL=(.*)/)[1]).toBe(expected);
+      }
+    });
+  });
+
   describe('#loadTemplates', function () {
     function loadTemplatesAsync(inputOpts) {
       return new Promise(function (resolve, reject) {
