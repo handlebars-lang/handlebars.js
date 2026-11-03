@@ -231,6 +231,30 @@ describe('strict', function () {
         .toThrow(Error);
     });
 
+    it('should resolve a Map entry, which is an entry and not a property', function () {
+      // A Map answers `has`, never `name in obj`, so strict mode used to throw on
+      // a key the map holds while the same lookup resolved outside strict mode.
+      // The sibling lookups already took the Map branch.
+      var map = new Map([['name', 'x']]);
+
+      expectTemplate('{{map.name}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ map: map })
+        .toCompileTo('x');
+
+      expectTemplate('{{name}}')
+        .withCompileOptions({ strict: true })
+        .withInput(map)
+        .toCompileTo('x');
+    });
+
+    it('should still throw on a Map key the map does not hold', function () {
+      expectTemplate('{{map.missing}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ map: new Map([['name', 'x']]) })
+        .toThrow(/"missing" not defined/);
+    });
+
     it('should execute blockHelperMissing', function () {
       expectTemplate('{{^hello}}foo{{/hello}}')
         .withCompileOptions({ assumeObjects: true })
