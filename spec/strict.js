@@ -231,6 +231,28 @@ describe('strict', function () {
         .toThrow(Error);
     });
 
+    it('should not treat a present undefined as missing in compat mode', function () {
+      // `lookup` answers undefined for a name the context lacks and for one it
+      // has with that value, so strict+compat used to throw where plain strict
+      // renders nothing. Plain strict asks whether the name is there.
+      expectTemplate('{{name}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ name: undefined })
+        .toCompileTo('');
+
+      expectTemplate('{{name}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: undefined })
+        .toCompileTo('');
+    });
+
+    it('should still throw on a name the context lacks, in compat mode', function () {
+      expectTemplate('{{missing}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: 'x' })
+        .toThrow(/"missing" not defined/);
+    });
+
     it('should execute blockHelperMissing', function () {
       expectTemplate('{{^hello}}foo{{/hello}}')
         .withCompileOptions({ assumeObjects: true })
