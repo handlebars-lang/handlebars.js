@@ -557,6 +557,56 @@ describe('partials', function () {
     }
   });
 
+  it('should pass compiler flags to a partial a precompiled template compiles at render time', function () {
+    if (Handlebars.compile) {
+      var env = Handlebars.create();
+      var options = { explicitPartialContext: true };
+      var input = '{{> outer secret}}';
+      var data = { secret: { value: 'SECRET' } };
+      function partials() {
+        return { outer: '{{> inner}}', inner: '{{value}}' };
+      }
+
+      /* eslint-disable-next-line no-new-func */
+      var spec = new Function(
+        'return (' + env.precompile(input, options) + ')'
+      )();
+
+      // compile() passes its options straight to the runtime compile of the
+      // string partials; the precompiled spec has to carry them itself or the
+      // partial silently falls back to the defaults and sees the caller's
+      // context, which explicitPartialContext is there to prevent.
+      expect(env.template(spec)(data, { partials: partials() })).toBe(
+        env.compile(input, options)(data, { partials: partials() })
+      );
+      expect(env.template(spec)(data, { partials: partials() })).toBe('');
+    }
+  });
+
+  it('should keep strict mode in a partial a precompiled template compiles at render time', function () {
+    if (Handlebars.compile) {
+      var env = Handlebars.create();
+      var options = { strict: true };
+      var input = '{{> outer}}';
+      var data = {};
+      function partials() {
+        return { outer: '{{missing}}' };
+      }
+
+      /* eslint-disable-next-line no-new-func */
+      var spec = new Function(
+        'return (' + env.precompile(input, options) + ')'
+      )();
+
+      expect(function () {
+        env.compile(input, options)(data, { partials: partials() });
+      }).toThrow();
+      expect(function () {
+        env.template(spec)(data, { partials: partials() });
+      }).toThrow();
+    }
+  });
+
   describe('standalone partials', function () {
     it('indented partials', function () {
       expectTemplate('Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}')
