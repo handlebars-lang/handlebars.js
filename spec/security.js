@@ -407,6 +407,41 @@ describe('security issues', function () {
       }
     });
 
+    it('never reads a denied inherited accessor', function () {
+      // `lookupProperty` used to read the property before checking whether the
+      // prototype-access rules allowed it, so a denied getter ran anyway and a
+      // throwing one aborted the render. The owner's data is still not exposed:
+      // the property resolves to nothing, exactly as before.
+      var calls = 0;
+      var proto = {};
+      Object.defineProperty(proto, 'deniedGetter', {
+        enumerable: true,
+        get: function () {
+          calls += 1;
+          return 'value';
+        },
+      });
+
+      expectTemplate('{{deniedGetter}}')
+        .withInput(Object.create(proto))
+        .toCompileTo('');
+      expect(calls).toBe(0);
+    });
+
+    it('does not abort on a denied inherited accessor that throws', function () {
+      var proto = {};
+      Object.defineProperty(proto, 'throwingGetter', {
+        enumerable: true,
+        get: function () {
+          throw new Error('the getter ran despite the deny');
+        },
+      });
+
+      expectTemplate('{{throwingGetter}}')
+        .withInput(Object.create(proto))
+        .toCompileTo('');
+    });
+
     describe('compatibility with old runtimes, that do not provide the function "container.lookupProperty"', function () {
       beforeEach(function simulateRuntimeWithoutLookupProperty() {
         var oldTemplateMethod = handlebarsEnv.template;
