@@ -89,8 +89,16 @@ declare namespace Handlebars {
   ): HandlebarsTemplateDelegate<T>;
   export function precompile(
     input: any,
-    options?: PrecompileOptions
-  ): TemplateSpecification;
+    options: PrecompileOptions & { srcName: string }
+  ): { code: string; map: string };
+  export function precompile(
+    input: any,
+    options?: PrecompileOptions & { srcName?: undefined }
+  ): string;
+  export function precompile(
+    input: any,
+    options: PrecompileOptions
+  ): string | { code: string; map: string };
   export function template<T = any>(
     precompilation: TemplateSpecification
   ): HandlebarsTemplateDelegate<T>;

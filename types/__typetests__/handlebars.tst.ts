@@ -4,6 +4,7 @@ import {
   HandlebarsTemplatable,
   HandlebarsTemplateDelegate,
   HandlebarsTemplates,
+  PrecompileOptions,
   TemplateSpecification,
   KnownHelpers,
   BuiltinHelperName,
@@ -53,16 +54,24 @@ describe('Handlebars.compile', () => {
 // Handlebars.precompile
 // ---------------------------------------------------------------------------
 describe('Handlebars.precompile', () => {
-  test('returns TemplateSpecification', () => {
+  test('returns a string without srcName', () => {
+    expect(Handlebars.precompile('{{name}}')).type.toBe<string>();
     expect(
-      Handlebars.precompile('{{name}}')
-    ).type.toBe<TemplateSpecification>();
+      Handlebars.precompile('{{name}}', { knownHelpersOnly: true })
+    ).type.toBe<string>();
   });
 
-  test('accepts PrecompileOptions', () => {
+  test('returns the code and source map with srcName', () => {
     expect(
       Handlebars.precompile('test', { srcName: 'a.hbs', destName: 'a.js' })
-    ).type.not.toRaiseError();
+    ).type.toBe<{ code: string; map: string }>();
+  });
+
+  test('returns either form when srcName is not known', () => {
+    const options: PrecompileOptions = {};
+    expect(Handlebars.precompile('test', options)).type.toBe<
+      string | { code: string; map: string }
+    >();
   });
 });
 
