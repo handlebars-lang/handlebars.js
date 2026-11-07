@@ -104,8 +104,40 @@ describe('strict', function () {
         .toCompileTo('success');
     });
 
+    it('should allow undefined nested parameters when passed to helpers', function () {
+      expectTemplate('{{#unless foo.bar}}success{{/unless}}')
+        .withCompileOptions({ strict: true })
+        .toCompileTo('success');
+
+      expectTemplate('{{#unless foo.bar.baz}}success{{/unless}}')
+        .withCompileOptions({ strict: true })
+        .toCompileTo('success');
+    });
+
+    it('should pass undefined nested parameters to helpers when context is missing', function () {
+      expectTemplate('{{#unless myObject.prop.prop}}success{{/unless}}')
+        .withCompileOptions({ strict: true })
+        .withInput({})
+        .toCompileTo('success');
+    });
+
     it('should allow undefined hash when passed to helpers', function () {
       expectTemplate('{{helper value=@foo}}')
+        .withCompileOptions({
+          strict: true,
+        })
+        .withHelpers({
+          helper: function (options) {
+            expect(options.hash).toHaveProperty('value');
+            expect(options.hash.value).toBeUndefined();
+            return 'success';
+          },
+        })
+        .toCompileTo('success');
+    });
+
+    it('should allow undefined nested hash when passed to helpers', function () {
+      expectTemplate('{{helper value=foo.bar}}')
         .withCompileOptions({
           strict: true,
         })
