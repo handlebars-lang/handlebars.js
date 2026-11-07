@@ -557,6 +557,46 @@ describe('partials', function () {
     }
   });
 
+  it('should keep class instances intact when a partial is invoked with a hash', function () {
+    if (Handlebars.compile) {
+      function Car(colour) {
+        this.colour = colour;
+      }
+      Car.prototype.hasFourWheels = function () {
+        return true;
+      };
+
+      var env = Handlebars.create();
+      env.registerHelper('hasFour', function () {
+        return this.hasFourWheels ? this.hasFourWheels() : 'no-method';
+      });
+      env.registerHelper('isCar', function () {
+        return this instanceof Car;
+      });
+      env.registerPartial('partial', '{{hasFour}} {{isCar}} {{colour}}');
+
+      expect(env.compile('{{> partial hashValue=1}}')(new Car('red'))).toBe(
+        'true true red'
+      );
+    }
+  });
+
+  it('should keep hash override of context values when a class instance is passed', function () {
+    if (Handlebars.compile) {
+      function Car(colour) {
+        this.colour = colour;
+      }
+
+      var env = Handlebars.create();
+      env.registerPartial('partial', '{{colour}}');
+
+      expect(env.compile('{{> partial colour="pink"}}')(new Car('red'))).toBe(
+        'pink'
+      );
+      expect(env.compile('{{> partial}}')(new Car('red'))).toBe('red');
+    }
+  });
+
   describe('standalone partials', function () {
     it('indented partials', function () {
       expectTemplate('Dudes:\n{{#dudes}}\n  {{>dude}}\n{{/dudes}}')
