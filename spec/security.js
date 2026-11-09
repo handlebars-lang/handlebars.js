@@ -442,6 +442,104 @@ describe('security issues', function () {
         .toCompileTo('');
     });
 
+    it('terminates when a proxy reports itself as its own prototype', function () {
+      // A Proxy may answer its getPrototypeOf trap with itself; the descriptor
+      // walk has to remember the prototypes it has visited.
+      var calls = 0;
+      var proxy = new Proxy(
+        {},
+        {
+          getPrototypeOf: function () {
+            calls += 1;
+            if (calls > 1000) {
+              throw new Error('prototype walk did not terminate');
+            }
+            return proxy;
+          },
+        }
+      );
+
+      expectTemplate('{{missing}}').withInput(proxy).toCompileTo('');
+    });
+
+    it('does not inspect descriptors of an allowed inherited name', function () {
+      // A name a whitelist allows goes straight to the read below; walking the
+      // prototype chain first would run a Proxy's descriptor trap, which may
+      // throw even though the read succeeds.
+      var target = { allowed: 'value' };
+      var proto = new Proxy(target, {
+        getOwnPropertyDescriptor: function (target, propertyName) {
+          if (propertyName === 'allowed') {
+            throw new Error('descriptor trap ran for an allowed name');
+          }
+          return Reflect.getOwnPropertyDescriptor(target, propertyName);
+        },
+      });
+
+      expectTemplate('{{allowed}}')
+        .withInput(Object.create(proto))
+        .withRuntimeOptions({ allowedProtoProperties: { allowed: true } })
+        .toCompileTo('value');
+    });
+
+    it('reads an allowed inherited accessor once', function () {
+      var calls = 0;
+      var proto = {};
+      Object.defineProperty(proto, 'allowedGetter', {
+        get: function () {
+          calls += 1;
+          return 'value';
+        },
+      });
+
+      expectTemplate('{{allowedGetter}}')
+        .withInput(Object.create(proto))
+        .withRuntimeOptions({ allowedProtoProperties: { allowedGetter: true } })
+        .toCompileTo('value');
+      expect(calls).toBe(1);
+    });
+
+    it('still checks the value type of an accessor allowed only as a method', function () {
+      // The name-only check must not replace the value-type check: a string
+      // returned by a getter the method whitelist allows is still denied, and
+      // the getter is read exactly once to learn that.
+      var calls = 0;
+      var proto = {};
+      Object.defineProperty(proto, 'stringGetter', {
+        get: function () {
+          calls += 1;
+          return 'value';
+        },
+      });
+
+      expectTemplate('{{stringGetter}}')
+        .withInput(Object.create(proto))
+        .withRuntimeOptions({ allowedProtoMethods: { stringGetter: true } })
+        .toCompileTo('');
+      expect(calls).toBe(1);
+    });
+
+    it('still checks the value type of an accessor allowed only as a property', function () {
+      var calls = 0;
+      var proto = {};
+      Object.defineProperty(proto, 'functionGetter', {
+        get: function () {
+          calls += 1;
+          return function () {
+            return 'value';
+          };
+        },
+      });
+
+      expectTemplate('{{functionGetter}}')
+        .withInput(Object.create(proto))
+        .withRuntimeOptions({
+          allowedProtoProperties: { functionGetter: true },
+        })
+        .toCompileTo('');
+      expect(calls).toBe(1);
+    });
+
     describe('compatibility with old runtimes, that do not provide the function "container.lookupProperty"', function () {
       beforeEach(function simulateRuntimeWithoutLookupProperty() {
         var oldTemplateMethod = handlebarsEnv.template;
