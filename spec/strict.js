@@ -231,6 +231,49 @@ describe('strict', function () {
         .toThrow(Error);
     });
 
+    it('should not treat a present undefined as missing in compat mode', function () {
+      // `lookup` answers undefined for a name the context lacks and for one it
+      // has with that value, so strict+compat used to throw where plain strict
+      // renders nothing. Plain strict asks whether the name is there.
+      expectTemplate('{{name}}')
+        .withCompileOptions({ strict: true })
+        .withInput({ name: undefined })
+        .toCompileTo('');
+
+      expectTemplate('{{name}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: undefined })
+        .toCompileTo('');
+    });
+
+    it('should still throw on a name the context lacks, in compat mode', function () {
+      expectTemplate('{{missing}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput({ name: 'x' })
+        .toThrow(/"missing" not defined/);
+    });
+
+    it('should read an accessor once in compat mode', function () {
+      // `lookup` has already read the property; the presence check must not
+      // read it again, or a getter that answers differently on each access
+      // makes compat mode disagree with plain strict.
+      var calls = 0;
+      var input = {};
+      Object.defineProperty(input, 'v', {
+        enumerable: true,
+        get: function () {
+          calls += 1;
+          return calls === 1 ? undefined : 'x';
+        },
+      });
+
+      expectTemplate('{{v}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput(input)
+        .toCompileTo('');
+      expect(calls).toBe(1);
+    });
+
     it('should execute blockHelperMissing', function () {
       expectTemplate('{{^hello}}foo{{/hello}}')
         .withCompileOptions({ assumeObjects: true })
