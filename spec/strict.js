@@ -195,6 +195,24 @@ describe('strict', function () {
         .withInput({ name: 'root', items: [{ name: null }] })
         .toCompileTo('');
     });
+
+    it('should not throw for a denied inherited accessor returning null', function () {
+      // `lookupProperty` no longer runs a denied accessor, so it answers
+      // undefined where it used to pass the getter's null through. The name is
+      // present, so this is not "not defined": render nothing, as plain strict
+      // and as this template did before the accessor was guarded.
+      var proto = {};
+      Object.defineProperty(proto, 'v', {
+        get: function () {
+          return null;
+        },
+      });
+
+      expectTemplate('{{v}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput(Object.create(proto))
+        .toCompileTo('');
+    });
   });
 
   describe('assume objects', function () {
