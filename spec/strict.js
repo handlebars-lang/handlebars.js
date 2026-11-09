@@ -253,6 +253,27 @@ describe('strict', function () {
         .toThrow(/"missing" not defined/);
     });
 
+    it('should read an accessor once in compat mode', function () {
+      // `lookup` has already read the property; the presence check must not
+      // read it again, or a getter that answers differently on each access
+      // makes compat mode disagree with plain strict.
+      var calls = 0;
+      var input = {};
+      Object.defineProperty(input, 'v', {
+        enumerable: true,
+        get: function () {
+          calls += 1;
+          return calls === 1 ? undefined : 'x';
+        },
+      });
+
+      expectTemplate('{{v}}')
+        .withCompileOptions({ strict: true, compat: true })
+        .withInput(input)
+        .toCompileTo('');
+      expect(calls).toBe(1);
+    });
+
     it('should execute blockHelperMissing', function () {
       expectTemplate('{{^hello}}foo{{/hello}}')
         .withCompileOptions({ assumeObjects: true })
