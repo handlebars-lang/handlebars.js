@@ -120,6 +120,23 @@ describe('bin/handlebars', function () {
     });
   });
 
+  it.skipIf(process.platform === 'win32')(
+    'precompiles a directory containing a dangling non-template symlink',
+    async function () {
+      const directory = fs.mkdtempSync('cli-test-');
+      try {
+        fs.writeFileSync(`${directory}/greeting.handlebars`, 'Hello {{name}}');
+        fs.symlinkSync('missing.txt', `${directory}/link.txt`);
+
+        const result = await execCommand(`${cli} ${directory}`);
+
+        expect(result.stdout).toContain("templates['greeting']");
+      } finally {
+        fs.rmSync(directory, { recursive: true, force: true });
+      }
+    }
+  );
+
   describe('template options', function () {
     it('-e sets custom extension', async function () {
       const result = await execCommand(
